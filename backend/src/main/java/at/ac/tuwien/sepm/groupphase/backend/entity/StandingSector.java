@@ -1,0 +1,44 @@
+package at.ac.tuwien.sepm.groupphase.backend.entity;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
+
+import javax.persistence.*;
+import java.util.Objects;
+
+@Entity
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
+public class StandingSector extends Sector {
+
+    @Column(nullable = false)
+    private Integer capacity;
+
+    @Embedded
+    private Point point1;
+
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "x", column = @Column(name = "x2")),
+        @AttributeOverride(name = "y", column = @Column(name = "y2"))
+    })
+    private Point point2;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        StandingSector that = (StandingSector) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+}
