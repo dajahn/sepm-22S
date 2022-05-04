@@ -28,8 +28,12 @@ public class SeatSector extends Seat {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
         SeatSector that = (SeatSector) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }

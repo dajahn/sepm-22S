@@ -9,9 +9,11 @@ import javax.persistence.Embeddable;
 @Data
 public class Point {
 
+    @SuppressWarnings("checkstyle:membername")
     @Column(nullable = false)
     private Integer x;
 
+    @SuppressWarnings("checkstyle:membername")
     @Column(nullable = false)
     private Integer y;
 }
