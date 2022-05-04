@@ -10,22 +10,22 @@ import org.springframework.stereotype.Service;
 public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
-    public void create( Invoice invoice ) {
+    public void create(Invoice invoice) {
         throw new NotImplementedException();
     }
 
     @Override
-    public void save( Invoice invoice ) {
+    public void save(Invoice invoice) {
         throw new NotImplementedException();
     }
 
     @Override
-    public void generate( Invoice invoice ) {
+    public void generate(Invoice invoice) {
         throw new NotImplementedException();
     }
 
     @Override
-    public void send( Invoice invoice ) {
+    public void send(Invoice invoice) {
         throw new NotImplementedException();
     }
 

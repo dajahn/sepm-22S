@@ -11,7 +11,7 @@ import java.io.File;
 public class EmailServiceImpl implements at.ac.tuwien.sepm.groupphase.backend.service.EmailService {
 
     @Override
-    public void send( HtmlTemplate template, String subject, String recipient, File attachment ) {
+    public void send(HtmlTemplate template, String subject, String recipient, File attachment) {
         throw new NotImplementedException();
     }
 }

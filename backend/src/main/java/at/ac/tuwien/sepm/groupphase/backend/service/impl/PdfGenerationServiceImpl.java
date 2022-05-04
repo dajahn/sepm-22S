@@ -12,7 +12,7 @@ import java.util.Map;
 public class PdfGenerationServiceImpl implements PdfGenerationService {
 
     @Override
-    public void generate( HtmlTemplate template, String location, Map<String, String> data ) {
+    public void generate(HtmlTemplate template, String location, Map<String, String> data) {
         throw new NotImplementedException();
     }
 }

@@ -18,7 +18,7 @@ public class Invoice {
     private File pdf;
 
     /**
-     * retrieve the pdf of the invoice if it exists
+     * Retrieve the pdf of the invoice if it exists.
      *
      * @return the pdf and loads it if it hasn't been loaded yet, if no pdf exists null is returned
      */
@@ -27,11 +27,11 @@ public class Invoice {
     }
 
     /**
-     * Loads the pdf from the specified path
+     * Loads the pdf from the specified path.
      *
      * @param path the path of the file
      */
-    private void loadFile( String path ) {
+    private void loadFile(String path) {
         throw new NotImplementedException();
     }
 }
