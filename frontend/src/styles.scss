@@ -100,22 +100,22 @@ h2 {
 h3 {
   font-size: 1.56em;
   color: var(--text-c-highlight);
-}
 
-h3.logo {
-  font-style: italic;
-  font-weight: var(--font-w-bold);
+  &.logo {
+    font-style: italic;
+    font-weight: var(--font-w-bold);
+  }
 }
 
 h4 {
   font-size: 1.125em;
   color: var(--text-c-highlight);
   font-weight: var(--font-w-regular);
-}
 
-h4.headline {
-  text-transform: uppercase;
-  letter-spacing: 0.3em;
+  &.headline {
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+  }
 }
 
 h5 {
@@ -147,17 +147,17 @@ input[type=text] {
   border: 3px solid var(--text-c-highlight);
   border-radius: 10px;
   padding: 16px 12px;
-}
 
-input[type=text]::placeholder {
-  font-size: 0.9375em;
-  color: var(--text-c-highlight);
-  font-weight: var(--font-w-regular);
-}
+  &::placeholder {
+    font-size: 0.9375em;
+    color: var(--text-c-highlight);
+    font-weight: var(--font-w-regular);
+  }
 
-input[type=text]:focus {
-  outline: none !important;
-  border:3px solid var(--accent-orange);
+  &:focus {
+    outline: none !important;
+    border:3px solid var(--accent-orange);
+  }
 }
 
 /* ## Buttons */
@@ -169,38 +169,38 @@ input[type=button]{
   border: none;
   border-radius: 10px;
   padding: 7px 20px;
-}
 
-input[type=button]:hover{
-  transform: scale(1.1);
-}
+  &:hover{
+    transform: scale(1.1);
+  }
 
-input[type=button].white {
-  font-size: 1.25em;
-  font-weight: var(--font-w-bold);
-  background-color: transparent;
-  border: 3px solid var(--text-c-highlight);
-  padding: 12.25px 12px;
-}
+  &.white {
+    font-size: 1.25em;
+    font-weight: var(--font-w-bold);
+    background-color: transparent;
+    border: 3px solid var(--text-c-highlight);
+    padding: 12.25px 12px;
+  }
 
-input[type=button].orange {
-  background: var(--gradient-orange);
-}
+  &.orange {
+    background: var(--gradient-orange);
+  }
 
-input[type=button].blue {
-  background: var(--gradient-blue);
+  &.blue {
+    background: var(--gradient-blue);
+  }
 }
 
 /* ## Icons */
 i {
   font-size: 2em;
   color: var(--text-c-lowlight);
-}
 
-i:hover {
-  color: var(--text-c-primary);
-}
+  &:hover {
+    color: var(--text-c-primary);
+  }
 
-i:focus {
-  color: var(--text-c-highlight);
+  &:focus {
+    color: var(--text-c-highlight);
+  }
 }
