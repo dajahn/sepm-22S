@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Address;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,9 @@ import javax.persistence.OneToMany;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * This entity represents a location, at which events can be performed.
+ */
 @Entity
 @Getter
 @Setter

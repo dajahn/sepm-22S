@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.enums.EventCategory;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -16,7 +17,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -24,6 +24,9 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * This entity represents an event, consisting of multiple performances.
+ */
 @Entity
 @Getter
 @Setter
@@ -47,11 +50,10 @@ public class Event {
 
     @OneToOne
     @JoinColumn(name = "thumbnail_id")
-    private Image thumbnail;
+    private File thumbnail;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @Column(nullable = false)
+    private EventCategory category;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "holding",

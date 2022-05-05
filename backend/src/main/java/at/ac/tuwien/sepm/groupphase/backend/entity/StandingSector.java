@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Point;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,9 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import java.util.Objects;
 
+/**
+ * This entity represents a standing sector at a location.
+ */
 @Entity
 @Getter
 @Setter

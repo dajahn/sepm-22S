@@ -1,35 +1,48 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.converter.MediaTypeConverter;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.springframework.http.MediaType;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import java.util.Objects;
 
+/**
+ * This entity represents a file with a mime type and data that can be served via HTTP.
+ */
 @Entity
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Category {
+public class File {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
     private Long id;
 
-    @Column(nullable = false, length = 127)
-    private String name;
+    @Convert(converter = MediaTypeConverter.class)
+    @Column(nullable = false)
+    private MediaType type;
 
-    @Column(nullable = false, length = 1023)
-    private String description;
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(nullable = false)
+    @ToString.Exclude
+    private byte[] data;
 
     @Override
     public boolean equals(Object o) {
@@ -39,8 +52,8 @@ public class Category {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        Category category = (Category) o;
-        return id != null && Objects.equals(id, category.id);
+        File file = (File) o;
+        return id != null && Objects.equals(id, file.id);
     }
 
     @Override

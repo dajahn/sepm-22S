@@ -15,6 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.util.Objects;
 
+/**
+ * This entity represents a sector at a location.
+ */
 @Entity
 @Getter
 @Setter
@@ -34,9 +37,6 @@ public abstract class Sector {
     @Column(nullable = false)
     private Double price;
 
-    @Column(nullable = false)
-    private Type type;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -52,11 +52,5 @@ public abstract class Sector {
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    public enum Type {
-        NONE,
-        PR,
-        VIP
     }
 }

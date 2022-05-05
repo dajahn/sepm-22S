@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
+import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -17,11 +18,11 @@ public class UserRepository {
         user = new User();
         user.setEmail("user@email.com");
         user.setPassword(passwordEncoder.encode("password"));
-        user.setRole(User.Role.CUSTOMER);
+        user.setRole(UserRole.CUSTOMER);
         admin = new User();
         admin.setEmail("admin@email.com");
         admin.setPassword(passwordEncoder.encode("password"));
-        admin.setRole(User.Role.ADMIN);
+        admin.setRole(UserRole.ADMIN);
     }
 
     public User findUserByEmail(String email) {

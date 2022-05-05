@@ -1,12 +1,21 @@
-package at.ac.tuwien.sepm.groupphase.backend.entity;
+package at.ac.tuwien.sepm.groupphase.backend.entity.embeddable;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+/**
+ * This class is used to represent an address. It can be embedded in entities.
+ */
 @Embeddable
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 public class Address {
 
     @Column(nullable = false, length = 255)

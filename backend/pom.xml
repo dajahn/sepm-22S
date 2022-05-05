@@ -161,7 +161,7 @@
                 <version>${jib-maven-plugin.version}</version>
                 <configuration>
                     <from>
-                        <image>registry.reset.inso-w.at/pub/docker/eclipse-temurin:17</image>
+                        <file>registry.reset.inso-w.at/pub/docker/eclipse-temurin:17</file>
                     </from>
                     <container>
                         <ports>

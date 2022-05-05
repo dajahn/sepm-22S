@@ -13,10 +13,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.time.LocalDate;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * This entity represents the performance of an event at a certain location, date and time.
+ */
 @Entity
+@Table(uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"date_time", "location_id", "event_id"})
+})
 @Getter
 @Setter
 @ToString
@@ -28,8 +36,8 @@ public class Performance {
     @Column(nullable = false, updatable = false)
     private Long id;
 
-    @Column(nullable = false)
-    private LocalDate date;
+    @Column(name = "date_time", nullable = false)
+    private LocalDateTime dateTime;
 
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)

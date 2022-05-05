@@ -13,6 +13,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Objects;
 
+/**
+ * This entity represents an artist that can perform events.
+ */
 @Entity
 @Getter
 @Setter

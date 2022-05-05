@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Address;
+import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
+import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -15,6 +18,9 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * This entity represents a user of this application.
+ */
 @Entity
 @Getter
 @Setter
@@ -43,10 +49,10 @@ public class User {
     private Address address;
 
     @Column(nullable = false)
-    private Role role;
+    private UserRole role;
 
     @Column(nullable = false)
-    private boolean locked;
+    private UserStatus status;
 
     @Column(name = "last_news_read")
     private LocalDateTime lastNewsRead;
@@ -66,10 +72,5 @@ public class User {
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    public enum Role {
-        CUSTOMER,
-        ADMIN
     }
 }

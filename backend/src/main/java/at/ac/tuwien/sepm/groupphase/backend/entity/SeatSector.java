@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -14,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * This entity represents a seat sector at a location, consisting of seats.
+ */
 @Entity
 @Getter
 @Setter
@@ -22,9 +26,12 @@ import java.util.Objects;
 public class SeatSector extends Seat {
 
     @OneToMany(cascade = {CascadeType.ALL})
-    @OrderBy("row, seat")
+    @OrderBy("row, column")
     @ToString.Exclude
     private List<Seat> seats = new ArrayList<>();
+
+    @Column(nullable = false)
+    private Type type;
 
     @Override
     public boolean equals(Object o) {
@@ -41,5 +48,11 @@ public class SeatSector extends Seat {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public enum Type {
+        NONE,
+        PR,
+        VIP
     }
 }

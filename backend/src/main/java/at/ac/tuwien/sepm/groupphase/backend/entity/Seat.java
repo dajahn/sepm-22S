@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Point;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -14,9 +15,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.util.Objects;
 
+/**
+ * This entity represents a seat in a sector at a location.
+ */
 @Entity
+@Table(uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"sector_id", "seat_row", "column"})
+})
 @Getter
 @Setter
 @ToString
@@ -36,7 +45,7 @@ public class Seat {
     private Integer row;
 
     @Column(nullable = false)
-    private Integer seat;
+    private Integer column;
 
     @Embedded
     private Point point;
@@ -49,8 +58,8 @@ public class Seat {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        Seat seat1 = (Seat) o;
-        return seat != null && Objects.equals(seat, seat1.seat);
+        Seat seat = (Seat) o;
+        return id != null && Objects.equals(id, seat.id);
     }
 
     @Override
