@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.templates.HtmlTemplate;
 
-import java.nio.file.Path;
 import java.util.Map;
 
 public interface PdfGenerationService {

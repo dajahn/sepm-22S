@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class HtmlTemplate {
 
-    public static HtmlTemplate EXAMPLE = new HtmlTemplate("example.html", new String[]{"test", "test2"});
+    public static final HtmlTemplate EXAMPLE = new HtmlTemplate("example.html", new String[]{"test", "test2"});
 
     private File file;
     private final String[] requiredKeys;

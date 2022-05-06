@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity.embeddable;
 
+import at.ac.tuwien.sepm.groupphase.backend.enums.Country;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,6 @@ public class Address {
     @Column(nullable = false, length = 127)
     private String city;
 
-    @Column(nullable = false, length = 127)
-    private String country;
+    @Column(nullable = false)
+    private Country country;
 }
