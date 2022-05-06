@@ -1,4 +1,206 @@
-/* You can add global styles to this file, and also import other style files */
-body {
-  background-color: whitesmoke;
+/* IMPORTS */
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
+
+
+/* CUSTOM FONTS */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  src: url('/assets/fonts/Montserrat-VariableFont_wght.ttf') format("truetype-variations");
+  font-weight: 1 999;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: italic;
+  src: url('/assets/fonts/Montserrat-Italic-VariableFont_wght.ttf') format("truetype-variations");
+  font-weight: 1 999;
+}
+
+
+
+/* DEFAULT / LIGHT MODE */
+:root {
+  /* # COLORS: */
+  /* ## Background Colors */
+  --bg-primary: #EFF0F2;
+  --bg-secondary: #F9F9FA;
+  --bg-tertiary: #FFFFFF;
+
+  /* ## Text Colors */
+  --text-c-primary: #2b2b2b;
+  --text-c-highlight: #1A1A1A;
+  --text-c-lowlight: #3b3b3b;
+  --text-c-link: #4351AD;
+
+  /* ## Accent Colors */
+  --accent-orange: #F1936D;
+  --accent-purple: #B227F6;
+  --accent-blue: #7172F8;
+
+  /* ## Gradients */
+  --gradient-orange: linear-gradient(90deg, rgba(241,147,109,1) 0%, rgba(240,113,169,1) 100%);
+  --gradient-purple: linear-gradient(90deg, rgba(178,39,246,1) 0%, rgba(224,125,250,1) 100%);
+  --gradient-blue: linear-gradient(90deg, rgba(113,114,248,1) 0%, rgba(156,161,250,1) 100%);
+  --gradient-rainbow: linear-gradient(90deg, rgba(241,147,109,1) 0%, rgba(178,39,246,1) 50%, rgba(113,114,248,1) 100%);
+  --gradient-rainbow-bg-secondary : linear-gradient(90deg, rgba(241,147,109,1) 0%, rgba(178,39,246,1) 25%, rgba(113,114,248,1) 50%, var(--bg-tertiary) 100%);
+
+  /* # FONT WEIGHT: */
+  --font-w-light: 300;
+  --font-w-regular: 400;
+  --font-w-medium: 500;
+  --font-w-bold: 700;
+}
+
+/* DARK MODE */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* # COLORS: */
+    /* ## Background Colors */
+    --bg-primary: #222540;
+    --bg-secondary: #25284C;
+    --bg-tertiary: #2D3154;
+
+    /* ## Text Colors */
+    --text-c-primary: #8F92A6;
+    --text-c-highlight: #EDEFF5;
+    --text-c-lowlight: #5C607F;
+  }
+}
+
+
+
+/* # CHANGED TAGS + CLASSES: */
+/* ## General */
+html, body {
+  background: var(--bg-primary);
+}
+
+* {
+  margin: 0;
+  font-size: 1em;
+  color: var(--text-c-primary);
+  font-family: Montserrat, serif;
+}
+
+/* ## Headings */
+h1 {
+  font-size: 2.8em;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-medium);
+}
+
+h2 {
+  font-size: 2em;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-regular);
+}
+
+h3 {
+  font-size: 1.56em;
+  color: var(--text-c-highlight);
+
+  &.logo {
+    font-style: italic;
+    font-weight: var(--font-w-bold);
+  }
+}
+
+h4 {
+  font-size: 1.125em;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-regular);
+
+  &.headline {
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+  }
+}
+
+h5 {
+  font-size: 1em;
+  color: var(--text-c-primary);
+  font-weight: var(--font-w-regular);
+}
+
+/* ## Link */
+a {
+  font-size: 1em;
+  text-decoration: none;
+  color: var(--text-c-link);
+}
+
+/* ## Text field */
+label {
+  font-size: 0.75em;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-regular);
+  margin-bottom: 0.3125em;
+}
+
+input[type=text] {
+  font-size: 0.9375em;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-medium);
+  background-color: transparent;
+  border: 3px solid var(--text-c-highlight);
+  border-radius: 10px;
+  padding: 16px 12px;
+
+  &::placeholder {
+    font-size: 0.9375em;
+    color: var(--text-c-highlight);
+    font-weight: var(--font-w-regular);
+  }
+
+  &:focus {
+    outline: none !important;
+    border:3px solid var(--accent-orange);
+  }
+}
+
+/* ## Buttons */
+input[type=button]{
+  transition: all .2s ease-in-out;
+  font-size: 1em;
+  font-weight: var(--font-w-bold);
+  color: var(--text-c-highlight);
+  border: none;
+  border-radius: 10px;
+  padding: 7px 20px;
+
+  &:hover{
+    transform: scale(1.1);
+  }
+
+  &.white {
+    font-size: 1.25em;
+    font-weight: var(--font-w-bold);
+    background-color: transparent;
+    border: 3px solid var(--text-c-highlight);
+    padding: 12.25px 12px;
+  }
+
+  &.orange {
+    background: var(--gradient-orange);
+  }
+
+  &.blue {
+    background: var(--gradient-blue);
+  }
+}
+
+/* ## Icons */
+i {
+  font-size: 2em;
+  color: var(--text-c-lowlight);
+
+  &:hover {
+    color: var(--text-c-primary);
+  }
+
+  &:focus {
+    color: var(--text-c-highlight);
+  }
 }
