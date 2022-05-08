@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Message;
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
+import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PdfGenerationService;
 import at.ac.tuwien.sepm.groupphase.backend.templates.HtmlTemplate;
 import org.junit.jupiter.api.Test;
@@ -22,16 +24,11 @@ import java.util.Map;
 @ActiveProfiles("test")
 public class PdfGenerationServiceTest implements TestData {
 
-    private final Message message = Message.MessageBuilder.aMessage()
-        .withId(ID)
-        .withTitle(TEST_NEWS_TITLE)
-        .withSummary(TEST_NEWS_SUMMARY)
-        .withText(TEST_NEWS_TEXT)
-        .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
-        .build();
-
     @Autowired
     private PdfGenerationService pdfGenerationService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Test
     public void givenInvoiceExists_whenNewPdfIsGenerated_thenPdfIsGenerated() {
@@ -56,7 +53,12 @@ public class PdfGenerationServiceTest implements TestData {
         data.put("event.date", "8.5.2022 18:00 - 20:00");
         data.put("event.location", "WUK Vienna");
 
-        pdfGenerationService.generate(HtmlTemplate.PDF_INVOICE, data);
+        File pdf = pdfGenerationService.generate(HtmlTemplate.PDF_INVOICE, data);
+
+        System.out.println(pdf);
+
+        emailService.sendInvoiceNotification(new Invoice(), pdf); // todo convert from FileEntity to File
+
     }
 
     private String formatPrice(float price) {

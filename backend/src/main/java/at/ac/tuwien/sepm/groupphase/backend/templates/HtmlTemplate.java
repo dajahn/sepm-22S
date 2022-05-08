@@ -11,13 +11,37 @@ import java.util.stream.Stream;
 
 public class HtmlTemplate {
 
-    public static final HtmlTemplate PDF_INVOICE = new HtmlTemplate("pdf_invoice", new String[]{"test1", "test2"});
+    /**
+     * Template for creating the invoice pdf. <br>
+     * parameter: tbd // todo define parameters
+     */
+    public static final HtmlTemplate PDF_INVOICE = new HtmlTemplate("pdf_invoice", new String[]{"test1", "test2"}); // todo update required keys
 
+    /**
+     * Template for generic emails, including a title and some content. <br>
+     * parameters: title, content
+     */
+    public static final HtmlTemplate EMAIL_GENERIC = new HtmlTemplate("email_generic", new String[]{"title", "content"}); // todo: load images locally (not web)
+
+    /**
+     * Template for notifying the user about a new invoice. <br>
+     * parameters: title, content
+     *
+     * @see #EMAIL_GENERIC
+     */
+    public static final HtmlTemplate EMAIL_INVOICE_NOTIFICATION = EMAIL_GENERIC;
+
+    /**
+     * Stores global values for reusability and single point of truth.
+     */
     private static final Map<String, String> GLOBALS = Stream.of(new String[][]{
         {"global.company.name", "Ticketline Inc."},
+        {"global.company.title", "Ticketline"},
         {"global.company.address", "Some Street 10, 1010 Vienna - Austria"},
         {"global.company.uid", "ATU12345678"},
+        {"global.company.homepage", "https://this-would-link-to-our-homepage.dev"},
     }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
+
 
     private final String[] requiredKeys;
     private final Template template;
