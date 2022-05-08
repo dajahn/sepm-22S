@@ -160,6 +160,27 @@ input[type=text] {
   }
 }
 
+input[type=email] {
+  font-size: 0.9375em;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-medium);
+  background-color: transparent;
+  border: 3px solid var(--text-c-highlight);
+  border-radius: 10px;
+  padding: 16px 12px;
+
+  &::placeholder {
+    font-size: 0.9375em;
+    color: var(--text-c-highlight);
+    font-weight: var(--font-w-regular);
+  }
+
+  &:focus {
+    outline: none !important;
+    border:3px solid var(--accent-orange);
+  }
+}
+
 input[type=password] {
   font-size: 0.9375em;
   color: var(--text-c-highlight);
@@ -201,6 +222,7 @@ input[type=button]{
     background-color: transparent;
     border: 3px solid var(--text-c-highlight);
     padding: 12.25px 12px;
+    color: var(--text-c-highlight);
   }
 
   &.orange {
