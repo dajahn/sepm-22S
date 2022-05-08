@@ -1,0 +1,195 @@
+<!-- DEFAULT NAVIGATION -->
+<div id="default-navigation">
+
+  <!-- # Top Navigation: -->
+  <nav class="navbar navbar-expand-lg justify-content-between navbar-custom fixed-top">
+
+    <!-- ## Logo -->
+    <a class="navbar-brand" [routerLink]="routerLinks.home">
+      <h3 class="logo">
+        <span style="font-style: normal">🎟️</span>
+        TICKETLINE
+      </h3>
+    </a>
+
+    <div>
+      <!-- ## Logged Out -->
+      <div *ngIf="!authService.isLoggedIn(); else loggedIn">
+        <input type="button" class="blue" [routerLink]="[routerLinks.signUp]" value="SIGN UP 🤙🏼">
+        <a class="a-gray" [routerLink]="routerLinks.logIn">Log in</a>
+      </div>
+
+      <!-- ## Logged In -->
+      <ng-template #loggedIn>
+        <div>
+          <span style="font-style: italic; font-weight: var(--font-w-semi-bold); color: var(--text-c-lowlight)">
+            WHAT'S UP,&nbsp;
+            <!-- TODO Get name from logged in user & check length -->
+            <a class="edit-profile" [routerLink]="routerLinks.editProfile">Marvin Arduç</a>?
+          </span>
+          <a class="a-gray" [routerLink]="routerLinks.logIn">Sign out</a>
+        </div>
+      </ng-template>
+    </div>
+
+  </nav>
+
+  <!-- # Side Navigation: -->
+  <div id="side-menu">
+    <ul class="nav flex-column">
+      <!-- ## Homepage -->
+      <li class="nav-item">
+        <a class="nav-link active" [routerLink]="routerLinks.home">
+          <i class="bi bi-house"></i>
+        </a>
+      </li>
+
+      <!-- ## News -->
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="routerLinks.news">
+          <i class="bi bi-newspaper"></i>
+        </a>
+      </li>
+
+      <!-- ## Top 10 -->
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="routerLinks.topTen">
+          <i class="bi bi-trophy"></i>
+        </a>
+      </li>
+
+      <!-- ## Search -->
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="routerLinks.search">
+          <i class="bi bi-search"></i>
+        </a>
+      </li>
+
+      <!-- ## Cart -->
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="routerLinks.cart">
+          <i class="bi bi-cart"></i>
+        </a>
+      </li>
+
+      <!-- ## Reservations -->
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="routerLinks.reservations">
+          <i class="bi bi-clipboard"></i>
+        </a>
+      </li>
+
+      <!-- TODO Show if admin is signed in  -->
+      <!-- ## Admin -->
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="routerLinks.adminTools">
+          <i class="bi bi-tools"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+
+
+<!-- MOBILE NAVIGATION -->
+<div id="mobile-navigation" class="fixed-top">
+
+  <!-- # Top Navigation: -->
+  <nav class="navbar navbar-expand-lg navbar-custom justify-content-between">
+    <!-- ## Logo -->
+    <a class="navbar-brand" [routerLink]="routerLinks.home">
+      <h3 class="logo">
+        <span style="font-style: normal">🎟️</span>
+        TICKETLINE
+      </h3>
+    </a>
+
+    <!-- ## Burger -->
+    <span (click)="openMobileMenu()">
+        <i class="bi bi-list burger" *ngIf="!showMobileMenu; else closeMenu"></i>
+        <ng-template #closeMenu>
+          <i class="bi bi-x-lg burger"></i>
+        </ng-template>
+    </span>
+  </nav>
+
+  <!-- # Expanded Navigation: -->
+  <div id="expanded-menu" *ngIf="showMobileMenu">
+    <hr/>
+
+    <div id="expanded-menu-item-container">
+      <!-- ## Navigation Items -->
+      <ul class="nav flex-column">
+        <!-- ### Homepage -->
+        <li class="nav-item">
+          <a class="nav-link active" [routerLink]="routerLinks.home">
+            <i class="bi bi-house"> Home</i>
+          </a>
+        </li>
+
+        <!-- ### News -->
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="routerLinks.news">
+            <i class="bi bi-newspaper"> News</i>
+          </a>
+        </li>
+
+        <!-- ### Top 10 -->
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="routerLinks.topTen">
+            <i class="bi bi-trophy"> Top 10</i>
+          </a>
+        </li>
+
+        <!-- ### Cart -->
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="routerLinks.cart">
+            <i class="bi bi-cart"> Cart</i>
+          </a>
+        </li>
+
+        <!-- ### Search -->
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="routerLinks.search">
+            <i class="bi bi-search"> Search</i>
+          </a>
+        </li>
+
+        <!-- ### Reservations -->
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="routerLinks.reservations">
+            <i class="bi bi-clipboard"> Reservation</i>
+          </a>
+        </li>
+
+        <!-- ### Admin -->
+        <!-- TODO Show if admin is signed in  -->
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="routerLinks.adminTools">
+            <i class="bi bi-tools"> Admin Tools</i>
+          </a>
+        </li>
+      </ul>
+
+      <!-- ## Logged Out -->
+      <div class="d-flex flex-column" *ngIf="!authService.isLoggedIn(); else loggedIn">
+        <input type="button" class="blue" [routerLink]="[routerLinks.signUp]" value="SIGN UP 🤙🏼">
+        <a class="a-gray" [routerLink]="routerLinks.logIn">Log in</a>
+      </div>
+
+      <!-- ## Logged In -->
+      <ng-template #loggedIn>
+        <div class="d-flex flex-column">
+          <span class="whats-up">WHAT'S UP?</span>
+          <!-- TODO Get name from logged in user & check length -->
+          <a class="edit-profile" [routerLink]="routerLinks.editProfile">Marvin Arduç</a>
+          <a class="a-gray" [routerLink]="routerLinks.logIn">Sign out</a>
+        </div>
+      </ng-template>
+
+    </div>
+  </div>
+
+</div>
