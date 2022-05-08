@@ -2,11 +2,19 @@
   margin-top: 20rem;
 }
 
-//.container {
-//  background: var(--gradient-rainbow);
-//}
+.content {
+  margin-top:9em;
+}
 
-#loginButton {
+a {
+  color: var(--accent-orange);
+}
+
+p {
+  color: var(--text-c-highlight)
+}
+
+#loginButtonSm, #loginButtonLg {
   font-size: 0.9em;
   padding: 9.25px 9px;
 }

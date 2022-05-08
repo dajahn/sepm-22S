@@ -75,6 +75,7 @@
 /* ## General */
 html, body {
   background: var(--bg-primary);
+  min-height: 100vh;
 }
 
 * {
