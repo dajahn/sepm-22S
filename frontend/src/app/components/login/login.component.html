@@ -1,11 +1,30 @@
-
 <div class="page-container container">
-  <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
-    <strong>Authentication problems!</strong> {{ errorMessage }}
-    <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
+  <div id="header">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <a class="navbar-brand ml-lg-5" href="">
+        <i class="bi bi-ticket-detailed"></i>
+        <h3 class="logo" style="display: inline"> TICKETLINE</h3>
+      </a>
+
+<!--      TODO find out why collapsing navbar does not work -->
+<!--      <button class="navbar-toggler" type="button" data-toggle="collapse"-->
+<!--              data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--        <span class="navbar-toggler-icon"></span>-->
+<!--      </button>-->
+
+<!--      add collapse in class tag for collapsing, but it does not work-->
+      <div class=" navbar-collapse navbar-right justify-content-end" id="navbarSupportedContent">
+        <ul class="navbar-nav nav mr-auto">
+          <li class="nav-item" style="display: inline-block">
+            <h4 class="nav-link">New to TICKETLINE? <input type="button" id="loginButton" class="white" routerLink="/sign-up" value="Sign up"
+                                          style="margin-left: 1rem;" routerLinkActive="active"></h4>
+          </li>
+        </ul>
+      </div>
+    </nav>
   </div>
+
+
 
   <div class="pt-5">
     <div class="row">
@@ -18,35 +37,37 @@
     <div class="row">
       <div class="col-2"></div>
       <div class="col">
-        <h4 class="text-center logo">New to TICKETLINE? <a routerLink="sign-up">Sign up</a></h4>
+        <h4 class="text-center logo">New to TICKETLINE? <a routerLink="/sign-up">Sign up</a></h4>
       </div>
       <div class="col-2"></div>
     </div>
     <form class="form" [formGroup]="loginForm" (ngSubmit)="loginUser()">
-      <div class="row mt-5">
-        <div class="col-3"></div>
-        <div class="col-6">
+      <div class="row mt-3">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
           <div class="form-group">
-            <label for="inputUsername">Username</label>
-            <input type="text" name="username" formControlName="username" class="form-control" id="inputUsername"
-                   aria-describedby="usernameHelp" placeholder="Enter username">
+            <label for="inputEmail">Email address</label>
+            <input type="email" name="email" formControlName="email" class="form-control" id="inputEmail"
+                   aria-describedby="emailHelp" placeholder="Enter your email address">
 
-            <div *ngIf="submitted && loginForm.controls.username.errors" class="error">
-              <small class="form-text text-warning" *ngIf="loginForm.controls.username.errors.required">Your username is
+            <div *ngIf="submitted && loginForm.controls.email.errors" class="error">
+              <small class="form-text text-warning" *ngIf="loginForm.controls.email.errors.required">Your email address is
                 required!
+              </small>
+              <small class="form-text text-warning" *ngIf="loginForm.controls.email.errors.email">Please enter a valid email address.
               </small>
             </div>
           </div>
         </div>
-        <div class="col-3"></div>
+        <div class="col-lg-4"></div>
       </div>
-      <div class="row mt-5">
-        <div class="col-3"></div>
-        <div class="col-6">
+      <div class="row mt-3">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
           <div class="form-group">
             <label for="password">Password</label>
             <input type="password" name="password" formControlName="password" class="form-control" id="password"
-                   placeholder="Password">
+                   placeholder="Enter your password">
             <div *ngIf="submitted && loginForm.controls.password.errors" class="error">
               <small class="form-text text-warning" *ngIf="loginForm.controls.password.errors.required">Your password
                 is
@@ -58,27 +79,48 @@
             </div>
           </div>
         </div>
-        <div class="col-3"></div>
+        <div class="col-lg-4"></div>
       </div>
 
+      <div class="row"  *ngIf="error">
+        <div class="col-lg-4">
+        </div>
+        <div class="col-lg-4" >
+          <div class="mt-3 alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="row">
+              <div class="col-11">  <strong>Wrong Username or password!</strong></div>
+            <div class="col-1">
+              <button type="button" style="padding: 0;" (click)="vanishError()" class="close btn"
+                      data-dismiss="alert" aria-label="Close">
+                <i class="bi bi-x-circle"></i>
+              </button>
+            </div>
+            </div>
 
-      <div class="row mt-5">
-        <div class="col-3"></div>
-        <div class="col-6">
-          <div class="form-group d-grid">
-            <input type="button" name="button" value="Login" (click)="loginUser()" class="btn white">
+
+
           </div>
         </div>
-        <div class="col-3"></div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+          <div class="form-group d-grid">
+            <input type="button" name="button" value="Log in" (click)="loginUser()" class="btn white">
+          </div>
+        </div>
+        <div class="col-lg-4"></div>
       </div>
 
 
     </form>
 
     <div class="row terms-of-use">
-      <div class="col-3"></div>
-      <div class="col-6">
-        <p>By clicking, you agree to TICKETLINE's <a routerLink="">Term of Use</a> & <a routerLink="">Privacy Policy</a> </p>
+      <div class="col-lg-4"></div>
+      <div class="col-lg-4">
+        <p class="text-center small">By clicking, you agree to TICKETLINE's <a routerLink="">Term of Use</a> & <a routerLink="">Privacy Policy</a>
+        </p>
       </div>
 
     </div>

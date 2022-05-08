@@ -1,7 +1,46 @@
 .terms-of-use {
   margin-top: 20rem;
 }
-html{
-  height: 100%;
-  background: var(--gradient-rainbow-bg-secondary) !important;
+
+//.container {
+//  background: var(--gradient-rainbow);
+//}
+
+#loginButton {
+  font-size: 0.9em;
+  padding: 9.25px 9px;
+}
+
+button {
+  transition: all .2s ease-in-out;
+  font-size: 1em;
+  font-weight: var(--font-w-bold);
+  color: var(--text-c-highlight);
+  border: none;
+  border-radius: 10px;
+  padding: 7px 20px;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &.white {
+    font-size: 1.25em;
+    font-weight: var(--font-w-bold);
+    background-color: transparent;
+    border: 3px solid var(--text-c-highlight);
+    padding: 12.25px 12px;
+  }
+
+  &.orange {
+    background: var(--gradient-orange);
+  }
+
+  &.blue {
+    background: var(--gradient-blue);
+  }
+}
+
+i {
+  font-size: 1.6em;
 }
