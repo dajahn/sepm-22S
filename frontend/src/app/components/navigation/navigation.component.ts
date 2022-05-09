@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from "../../services/auth.service";
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-navigation',
@@ -12,18 +12,18 @@ export class NavigationComponent implements OnInit {
   showMobileMenu = false;
 
   // TODO Add router links to different pages
-  routerLinks = {
-    home: "/",
-    logIn: "/login",
-    signUp: "",
-    editProfile: "",
-    search: "",
-    news: "",
-    topTen: "",
-    cart: "",
-    reservations: "",
-    adminTools: ""
-  }
+  readonly routerLinks = {
+    home: '/',
+    logIn: '/login',
+    signUp: '',
+    editProfile: '',
+    search: '',
+    news: '',
+    topTen: '',
+    cart: '',
+    reservations: '',
+    adminTools: ''
+  };
 
 
 
@@ -38,9 +38,9 @@ export class NavigationComponent implements OnInit {
   openMobileMenu() {
     // disables scrollbar when mobile menu is expanded
     if(this.showMobileMenu){
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = 'auto';
     } else {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
     }
     this.showMobileMenu = !this.showMobileMenu;
   }

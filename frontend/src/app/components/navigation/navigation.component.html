@@ -2,7 +2,7 @@
 <div id="default-navigation">
 
   <!-- # Top Navigation: -->
-  <nav class="navbar navbar-expand-lg justify-content-between navbar-custom fixed-top">
+  <div class="d-flex flex-row navbar-custom justify-content-between align-items-center fixed-top">
 
     <!-- ## Logo -->
     <a class="navbar-brand" [routerLink]="routerLinks.home">
@@ -12,7 +12,7 @@
       </h3>
     </a>
 
-    <div>
+    <div >
       <!-- ## Logged Out -->
       <div *ngIf="!authService.isLoggedIn(); else loggedIn">
         <input type="button" class="blue" [routerLink]="[routerLinks.signUp]" value="SIGN UP 🤙🏼">
@@ -22,17 +22,16 @@
       <!-- ## Logged In -->
       <ng-template #loggedIn>
         <div>
-          <span style="font-style: italic; font-weight: var(--font-w-semi-bold); color: var(--text-c-lowlight)">
+          <span style="font-style: italic; font-weight: var(--font-w-semi-bold); color: var(--text-c-lowlight);">
             WHAT'S UP,&nbsp;
-            <!-- TODO Get name from logged in user & check length -->
-            <a class="edit-profile" [routerLink]="routerLinks.editProfile">Marvin Arduç</a>?
+            <a class="edit-profile" [routerLink]="routerLinks.editProfile">{{authService.getFirstName() + ' ' + authService.getLastName()}}</a>?
           </span>
-          <a class="a-gray" [routerLink]="routerLinks.logIn">Sign out</a>
+          <a class="a-gray" [routerLink]="routerLinks.home">Sign out</a>
         </div>
       </ng-template>
     </div>
 
-  </nav>
+  </div>
 
   <!-- # Side Navigation: -->
   <div id="side-menu">
@@ -79,9 +78,8 @@
         </a>
       </li>
 
-      <!-- TODO Show if admin is signed in  -->
       <!-- ## Admin -->
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="authService.getUserRole() === 'ADMIN'">
         <a class="nav-link" [routerLink]="routerLinks.adminTools">
           <i class="bi bi-tools"></i>
         </a>
@@ -165,8 +163,7 @@
         </li>
 
         <!-- ### Admin -->
-        <!-- TODO Show if admin is signed in  -->
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="authService.getUserRole() === 'ADMIN'">
           <a class="nav-link" [routerLink]="routerLinks.adminTools">
             <i class="bi bi-tools"> Admin Tools</i>
           </a>
@@ -183,9 +180,8 @@
       <ng-template #loggedIn>
         <div class="d-flex flex-column">
           <span class="whats-up">WHAT'S UP?</span>
-          <!-- TODO Get name from logged in user & check length -->
-          <a class="edit-profile" [routerLink]="routerLinks.editProfile">Marvin Arduç</a>
-          <a class="a-gray" [routerLink]="routerLinks.logIn">Sign out</a>
+          <a class="edit-profile" [routerLink]="routerLinks.editProfile">{{authService.getFirstName() + ' ' + authService.getLastName()}}</a>
+          <a class="a-gray" [routerLink]="routerLinks.home">Sign out</a>
         </div>
       </ng-template>
 

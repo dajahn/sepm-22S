@@ -33,6 +33,7 @@
   color: var(--text-c-lowlight);
   margin-left: 1.5rem;
   font-weight: var(--font-w-medium);
+  white-space: nowrap;
 
   &:hover {
     color: var(--text-c-primary);
@@ -43,6 +44,9 @@
   color: #5A67BC;
   font-weight: var(--font-w-bold);
   text-decoration: underline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   &:hover {
     color: #6A79DD;
