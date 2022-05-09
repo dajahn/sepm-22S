@@ -52,7 +52,7 @@ public class UserDataGenerator {
         } else {
             LOGGER.debug("Generating {} User entities and {} admin entities", NUMBER_OF_USERS_TO_GENERATE, NUMBER_OF_ADMINS_TO_GENERATE);
             Address address;
-            User user, admin;
+            User user;
             for (int i = 0; i < NUMBER_OF_USERS_TO_GENERATE; i++) {
                 address = new Address();
                 address.setStreet(TEST_ADDRESS_STREET + i);
@@ -78,16 +78,16 @@ public class UserDataGenerator {
                 address.setCity(TEST_ADDRESS_CITY);
                 address.setCountry(TEST_ADDRESS_COUNTRY);
 
-                admin = new User();
-                admin.setFirstName(TEST_ADMIN_FIRST_NAME + i);
-                admin.setLastName(TEST_ADMIN_LAST_NAME + i);
-                admin.setEmail(TEST_ADMIN_EMAIL_PREFIX + i + TEST_EMAIL_POSTFIX);
-                admin.setPassword(passwordEncoder.encode(TEST_PASSWORD));
-                admin.setAddress(address);
-                admin.setRole(UserRole.ADMIN);
-                admin.setStatus(UserStatus.OK);
-                admin.setLastNewsRead(LocalDateTime.now());
-                userRepository.save(admin);
+                user = new User();
+                user.setFirstName(TEST_ADMIN_FIRST_NAME + i);
+                user.setLastName(TEST_ADMIN_LAST_NAME + i);
+                user.setEmail(TEST_ADMIN_EMAIL_PREFIX + i + TEST_EMAIL_POSTFIX);
+                user.setPassword(passwordEncoder.encode(TEST_PASSWORD));
+                user.setAddress(address);
+                user.setRole(UserRole.ADMIN);
+                user.setStatus(UserStatus.OK);
+                user.setLastNewsRead(LocalDateTime.now());
+                userRepository.save(user);
             }
         }
     }
