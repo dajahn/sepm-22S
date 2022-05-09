@@ -89,25 +89,6 @@ public class UserDataGenerator {
                 admin.setLastNewsRead(LocalDateTime.now());
                 userRepository.save(admin);
             }
-//            address = new Address();
-//            address.setStreet("Getreidemarkt 7");
-//            address.setZipCode("1010");
-//            address.setCity("Vienna");
-//            address.setCountry(Country.AT);
-//
-//            User user = new User();
-//            user.setFirstName("Hans");
-//            user.setLastName("Gittenberger");
-//            user.setEmail("user@email.com");
-//            user.setPassword(passwordEncoder.encode("password"));
-//            user.setAddress(address);
-//            user.setRole(UserRole.CUSTOMER);
-//            user.setStatus(UserStatus.OK);
-//            user.setLastNewsRead(LocalDateTime.now());
-//
-//
-//            userRepository.save(admin);
         }
-
     }
 }
