@@ -47,7 +47,7 @@ public class UserDataGenerator {
 
     @PostConstruct
     private void generateUserData() {
-        if (userRepository.findAll().size() > 0) {
+        if (userRepository.count() > 0) {
             LOGGER.debug("User already generated");
         } else {
             LOGGER.debug("Generating {} User entities and {} admin entities", NUMBER_OF_USERS_TO_GENERATE, NUMBER_OF_ADMINS_TO_GENERATE);
