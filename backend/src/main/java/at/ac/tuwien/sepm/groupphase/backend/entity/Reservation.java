@@ -1,50 +1,45 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Address;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * This entity represents a location, at which events can be performed.
- */
 @Entity
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Location {
+public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
     private Long id;
 
-    @Column(nullable = false, length = 127)
-    private String name;
+    @Column(nullable = false)
+    private LocalDateTime dateTime;
 
-    @Embedded
-    private Address address;
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private User user;
 
-    @OneToMany(fetch = javax.persistence.FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Sector> sectors = new java.util.ArrayList<>();
-
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany
     @ToString.Exclude
-    private List<Performance> performances;
+    private List<Ticket> tickets;
 
     @Override
     public boolean equals(Object o) {
@@ -54,8 +49,8 @@ public class Location {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        Location location = (Location) o;
-        return id != null && Objects.equals(id, location.id);
+        Reservation reservation = (Reservation) o;
+        return id != null && Objects.equals(id, reservation.id);
     }
 
     @Override
