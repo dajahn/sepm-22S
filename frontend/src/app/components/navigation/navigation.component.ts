@@ -31,6 +31,10 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  /**
+   * Shows and hides the mobile extended navigation
+   * Disables scroll on the menu is shown
+   */
   openMobileMenu() {
     // disables scrollbar when mobile menu is expanded
     if(this.showMobileMenu){
