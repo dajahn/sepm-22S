@@ -62,6 +62,25 @@ export class AuthService {
     return 'UNDEFINED';
   }
 
+  /**
+   * Returns the firstname of the logged-in user
+   */
+  getFirstName() {
+    if (this.getToken() != null) {
+      const decoded: any = jwt_decode(this.getToken());
+      return decoded.firstname;
+    }
+  }
+  /**
+   * Returns the lastname of the logged-in user
+   */
+  getLastName() {
+    if (this.getToken() != null) {
+      const decoded: any = jwt_decode(this.getToken());
+      return decoded.lastname;
+    }
+  }
+
   private setToken(authResponse: string) {
     localStorage.setItem('authToken', authResponse);
   }
