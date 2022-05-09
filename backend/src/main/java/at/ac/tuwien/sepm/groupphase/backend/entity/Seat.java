@@ -37,7 +37,8 @@ public class Seat {
     @Column(nullable = false, updatable = false)
     private Long id;
 
-    @ManyToOne
+    @ToString.Exclude
+    @ManyToOne(fetch = javax.persistence.FetchType.LAZY)
     @JoinColumn
     private SeatSector sector;
 

@@ -23,6 +23,7 @@ import javax.persistence.OrderBy;
 import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * This entity represents an event, consisting of multiple performances.
@@ -60,7 +61,7 @@ public class Event {
         joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "artist_id", referencedColumnName = "id"))
     @OrderBy("name")
-    private List<Artist> artists;
+    private Set<Artist> artists;
 
     @OneToMany(cascade = {CascadeType.ALL})
     @ToString.Exclude

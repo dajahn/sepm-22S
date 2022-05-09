@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Point;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,11 @@ public class StandingSector extends Sector {
         @AttributeOverride(name = "y", column = @Column(name = "y2"))
     })
     private Point point2;
+
+    @Override
+    public SectorDto mapToDto() {
+        return SectorMapper.INSTANCE.standingSectorToStandingSectorDto(this);
+    }
 
     @Override
     public boolean equals(Object o) {
