@@ -28,6 +28,13 @@
             "accessibility": "explicit"
           }
         ],
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "enumMember",
+            "format": ["UPPER_CASE"]
+          }
+        ],
         "brace-style": [
           "error",
           "1tbs"

@@ -12,6 +12,9 @@ import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
+import { CreateEventComponent } from './components/create-event/create-event.component';
+import { CreatePerformanceComponent } from './components/create-performance/create-performance.component';
+import { CreateEventAddArtistComponent } from './components/create-event-add-artist/create-event-add-artist.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +24,9 @@ import {httpInterceptorProviders} from './interceptors';
     HomeComponent,
     LoginComponent,
     MessageComponent,
+    CreateEventComponent,
+    CreatePerformanceComponent,
+    CreateEventAddArtistComponent,
   ],
   imports: [
     BrowserModule,

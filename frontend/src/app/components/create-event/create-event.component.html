@@ -1,0 +1,106 @@
+<div class="container pt-5">
+
+  <div class="row pt-3">
+    <!--  Placeholder-->
+    <div class="col-3">
+    </div>
+
+    <div class="col-6">
+      <div class="row">
+        <div class="col-12">
+          <h1 class="text-center">Create Event</h1>
+        </div>
+      </div>
+
+      <div class="row">
+        <!--      TODO add form group-->
+        <form class="form" [formGroup]="eventForm" (ngSubmit)="addEvent()">
+          <div class="row mt-3">
+            <div class="col-12">
+              <label for="title">Title</label>
+              <input type="text" required name="title" formControlName="title" class="form-control" id="title"
+                     aria-describedby="titleHelp" placeholder="Title">
+              <!--          TODO add error messages-->
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-12">
+              <label for="description">Description</label>
+              <textarea type="text" required name="description" formControlName="description" class="form-control"
+                        id="description"
+                        aria-describedby="descriptionHelp" placeholder="Description"></textarea>
+              <!--          TODO add error messages-->
+            </div>
+
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-3">
+              <label for="duration">Duration</label>
+              <ngb-timepicker required formControlName="duration" id="duration" [spinners]="false"
+                              aria-describedby="durationHelp" [(ngModel)]="time"></ngb-timepicker>
+              <!--          TODO add error messages-->
+            </div>
+
+            <div class="col-9">
+              <label for="category">Category</label>
+              <select class="form-control" required name="category" formControlName="category" id="category">
+                <option value="{{eventCategory.CONCERT}}">Concert</option>
+                <option value="{{eventCategory.CONFERENCE}}">Conference</option>
+              </select>
+              <!--          TODO add error messages-->
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col">
+              <label for="btnArtist">Artist(s)</label>
+              <div class="form-group d-grid">
+                <input type="button" id="btnArtist" name="btnArtist" value="&#10133;" class="btn white"
+                       (click)="addArtist()">
+
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngFor="let art of artists; let i = index">
+            <app-create-event-add-artist (deleteArtistWithNumber)="deleteArtist($event)" (updateArtistEmitter)="updateArtist($event)" [number]="i"></app-create-event-add-artist>
+          </div>
+
+
+          <div class="row mt-3">
+            <div class="col-3">
+              <label>Thumbnail</label>
+              <label for="file-upload" id="file-upload-label" class="custom-file-upload white d-flex justify-content-center align-items-center">
+                <i class="bi bi-image"></i>
+              </label>
+              <input id="file-upload" required formControlName="thumbnail" name="thumbnail" class="form-control"
+                     type="file" accept="image/png, image/jpeg"/>
+              <!--          TODO add error messages-->
+            </div>
+            <div class="col-9">
+              <label for="btnPerformance">Performance(s)</label>
+              <div class="form-group d-grid">
+                <input type="button" id="btnPerformance" name="btnPerformance" value="&#10133;" class="btn white"
+                       (click)="addPerformance()">
+
+              </div>
+
+            </div>
+          </div>
+          <div class="row" *ngFor="let perf of performances; let i = index">
+            <app-create-performance (deletePerformanceWithNumber)="deletePerformance($event)" (updatePerformanceEmitter)="updatePerformance($event)" [number]="i" [performance]="perf"></app-create-performance>
+          </div>
+          <div class="row mt-3">
+            <div class="col-12">
+              <div class="form-group d-grid">
+                <input type="button" id="submit" name="submit" value="Add" class="btn white">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>

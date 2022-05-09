@@ -159,9 +159,29 @@ input[type=text] {
     border:3px solid var(--accent-orange);
   }
 }
+ textarea { // added extra selection cause everywhere has to be "!important" for textarea
+   font-size: 0.9375em !important;
+   color: var(--text-c-highlight) !important;
+   font-weight: var(--font-w-medium) !important;
+   background-color: transparent !important;
+   border: 3px solid var(--text-c-highlight) !important;
+   border-radius: 10px !important;
+   padding: 16px 12px !important;
+
+   &::placeholder {
+     font-size: 0.9375em !important;
+     color: var(--text-c-highlight) !important;
+     font-weight: var(--font-w-regular) !important;
+   }
+
+   &:focus {
+     outline: none !important;
+     border:3px solid var(--accent-orange) !important;
+   }
+ }
 
 /* ## Buttons */
-input[type=button]{
+input[type=button], button{
   transition: all .2s ease-in-out;
   font-size: 1em;
   font-weight: var(--font-w-bold);

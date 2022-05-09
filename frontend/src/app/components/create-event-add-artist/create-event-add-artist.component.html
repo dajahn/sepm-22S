@@ -1,0 +1,25 @@
+<div class="row mt-2">
+  <div class="col-1 mt-4">
+    <button type="button" class="white" id="delButton" (click)="delete()">X</button>
+  </div>
+  <div class="col-11">
+    <div class="row">
+      <div class="col">
+        <!--        Location TODO typeahead-->
+        <label for="artistName">Artist Name</label>
+<!--        <input type="text" required name="artistName" class="form-control" id="artistName" [(ngModel)]="artistName"-->
+<!--               aria-describedby="artistNameHelp" placeholder="Artist Name" (ngModelChange)="updateArtist()">-->
+        <input [(ngModel)]="artist"
+               placeholder="Search Artist by Name" class="form-control"
+               name="artistName" type="text" id="artistName" required
+               [class.is-invalid]="searchArtistFailed" [ngbTypeahead]="searchArtist"
+               [resultFormatter]="resultFormatArtistListValue"
+               [inputFormatter]="inputFormatArtistListValue">
+
+
+      </div>
+    </div>
+
+
+  </div>
+</div>

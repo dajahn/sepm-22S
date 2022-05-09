@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="col">
+    <hr/>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-1 mt-5">
+    <button type="button" class="white" id="delButton" (click)="delete()">X</button>
+  </div>
+  <div class="col-11">
+    <div class="row">
+      <div class="col">
+        <!--        Location TODO typeahead-->
+        <label for="location">Location</label>
+        <input type="text" required name="location" class="form-control" id="location" [(ngModel)]="location"
+               aria-describedby="locationHelp" placeholder="Location" (ngModelChange)="updatePerformance()">
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-8">
+        <label for="date">Date</label>
+        <div class="input-group">
+          <input required id="date" placeholder="yyyy-mm-dd" type="text"
+                 name="date" [(ngModel)]="dateModel" ngbDatepicker #d="ngbDatepicker" (ngModelChange)="updatePerformance()">
+          <button class="btn white" (click)="d.toggle()" type="button">	📅</button>
+<!--          TODO icon does not work again as HTML encoded value-->
+        </div>
+      </div>
+      <div class="col-4">
+        <label for="time">Time</label>
+        <ngb-timepicker required id="time" name="time" [spinners]="false"
+                        aria-describedby="durationHelp" [(ngModel)]="time" (ngModelChange)="updatePerformance()"></ngb-timepicker>
+      </div>
+    </div>
+
+    <div class="row mt-2">
+
+    </div>
+
+  </div>
+
+</div>
