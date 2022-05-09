@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -12,8 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.util.Objects;
@@ -22,7 +19,6 @@ import java.util.Objects;
  * This entity represents a sector at a location.
  */
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
 @ToString
@@ -34,15 +30,12 @@ public abstract class Sector {
     @Column(nullable = false, updatable = false)
     private Long id;
 
-    @ToString.Exclude
-    @ManyToOne(fetch = javax.persistence.FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private Location location;
 
     @Column(nullable = false)
     private Double price;
-
-    public abstract SectorDto mapToDto();
 
     @Override
     public boolean equals(Object o) {

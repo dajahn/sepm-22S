@@ -39,8 +39,9 @@ public class Location {
     @Embedded
     private Address address;
 
-    @OneToMany(fetch = javax.persistence.FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Sector> sectors = new java.util.ArrayList<>();
+    @OneToMany(cascade = {CascadeType.ALL})
+    @ToString.Exclude
+    private List<Sector> sectors;
 
     @OneToMany(cascade = {CascadeType.ALL})
     @ToString.Exclude
