@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
     this.renderer.setStyle(document.body, 'background',
       'linear-gradient(90deg, rgba(241,147,109,1) 0%, rgba(178,39,246,1) 50%, rgba(113,114,248,1) 100%)');
     this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.minLength(4), Validators.email]],
+      email: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
