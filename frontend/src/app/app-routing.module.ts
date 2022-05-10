@@ -1,3 +1,4 @@
+import { NewsComponent } from './components/news/news.component';
 import { NewsCreateComponent } from './components/news-create/news-create.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -10,6 +11,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'message', canActivate: [AuthGuard], component: MessageComponent },
+  { path: 'news',/*canActivate:[AuthGuard]*/ component: NewsComponent },
   { path: 'news/create', /*canActivate: [AuthGuard],*/ component: NewsCreateComponent }
 ];
 

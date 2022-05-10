@@ -13,6 +13,8 @@ import { MessageComponent } from './components/message/message.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { httpInterceptorProviders } from './interceptors';
 import { NewsCreateComponent } from './components/news-create/news-create.component';
+import { NewsComponent } from './components/news/news.component';
+import { NewsDetailComponent } from './components/news-detail/news-detail.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,8 @@ import { NewsCreateComponent } from './components/news-create/news-create.compon
     LoginComponent,
     MessageComponent,
     NewsCreateComponent,
+    NewsComponent,
+    NewsDetailComponent,
   ],
   imports: [
     BrowserModule,
