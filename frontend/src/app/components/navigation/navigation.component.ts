@@ -20,7 +20,7 @@ export class NavigationComponent implements OnInit {
     search: '',
     news: '',
     topTen: '',
-    cart: '',
+    cart: '/cart',
     reservations: '',
     adminTools: ''
   };

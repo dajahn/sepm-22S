@@ -1,0 +1,23 @@
+.ticket-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 535px);
+  grid-gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.price {
+  color: var(--text-c-lowlight);
+  margin-left: 1rem;
+}
+
+
+
+/* MEDIA QUERIES */
+@media (max-width: 600px) {
+
+  /* # Mobile: */
+  .ticket-grid {
+    grid-template-columns: repeat(auto-fit, 100%);
+  }
+}

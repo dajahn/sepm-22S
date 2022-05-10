@@ -12,6 +12,8 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { NavigationComponent } from './components/navigation/navigation.component';
+import { CartComponent } from './components/cart/cart.component';
+import { CartTicketComponent } from './components/cart/cart-ticket/cart-ticket.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { NavigationComponent } from './components/navigation/navigation.componen
     HomeComponent,
     LoginComponent,
     MessageComponent,
+    CartComponent,
+    CartTicketComponent,
   ],
   imports: [
     BrowserModule,
