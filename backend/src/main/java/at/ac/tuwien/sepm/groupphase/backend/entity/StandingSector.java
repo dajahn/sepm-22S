@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Point;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,13 +25,16 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @RequiredArgsConstructor
 public class StandingSector extends Sector {
 
     @Column(nullable = false)
+    @NonNull
     private Integer capacity;
 
     @Embedded
+    @NonNull
     private Point point1;
 
     @Embedded
@@ -37,6 +42,7 @@ public class StandingSector extends Sector {
         @AttributeOverride(name = "x", column = @Column(name = "x2")),
         @AttributeOverride(name = "y", column = @Column(name = "y2"))
     })
+    @NonNull
     private Point point2;
 
     @Override

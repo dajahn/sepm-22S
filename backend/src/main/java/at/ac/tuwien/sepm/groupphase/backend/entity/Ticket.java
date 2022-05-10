@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,8 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import java.util.Objects;
 
@@ -20,6 +20,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @RequiredArgsConstructor
 public abstract class Ticket {
 
@@ -29,6 +30,7 @@ public abstract class Ticket {
     private Long id;
 
     @ManyToOne
+    @NonNull
     private Performance performance;
 
     public abstract Sector getSector();

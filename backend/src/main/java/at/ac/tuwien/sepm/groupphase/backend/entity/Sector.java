@@ -2,6 +2,8 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,6 +28,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @RequiredArgsConstructor
 public abstract class Sector {
 
@@ -37,9 +40,11 @@ public abstract class Sector {
     @ToString.Exclude
     @ManyToOne(fetch = javax.persistence.FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false)
+    @NonNull
     private Location location;
 
     @Column(nullable = false)
+    @NonNull
     private Double price;
 
     public abstract SectorDto mapToDto();

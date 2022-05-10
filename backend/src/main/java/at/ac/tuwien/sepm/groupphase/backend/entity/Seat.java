@@ -2,6 +2,8 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Point;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,6 +31,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @RequiredArgsConstructor
 public class Seat {
 
@@ -43,12 +46,15 @@ public class Seat {
     private SeatSector sector;
 
     @Column(nullable = false, name = "seat_row")
+    @NonNull
     private Integer row;
 
     @Column(nullable = false)
+    @NonNull
     private Integer column;
 
     @Embedded
+    @NonNull
     private Point point;
 
     @Override

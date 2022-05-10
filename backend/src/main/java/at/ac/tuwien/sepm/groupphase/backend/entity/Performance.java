@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,6 +30,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @RequiredArgsConstructor
 public class Performance {
 
@@ -37,14 +40,17 @@ public class Performance {
     private Long id;
 
     @Column(name = "date_time", nullable = false)
+    @NonNull
     private LocalDateTime dateTime;
 
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
+    @NonNull
     private Location location;
 
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
+    @NonNull
     private Event event;
 
     @Override

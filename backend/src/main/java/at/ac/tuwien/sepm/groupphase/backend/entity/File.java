@@ -2,6 +2,8 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.converter.MediaTypeConverter;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,6 +28,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @RequiredArgsConstructor
 public class File {
 
@@ -36,11 +39,13 @@ public class File {
 
     @Convert(converter = MediaTypeConverter.class)
     @Column(nullable = false)
+    @NonNull
     private MediaType type;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(nullable = false)
+    @NonNull
     @ToString.Exclude
     private byte[] data;
 

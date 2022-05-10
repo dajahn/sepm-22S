@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,6 +24,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @RequiredArgsConstructor
 public class Purchase {
 
@@ -31,13 +34,16 @@ public class Purchase {
     private Long id;
 
     @Column(nullable = false)
+    @NonNull
     private LocalDateTime dateTime;
 
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
+    @NonNull
     private User user;
 
     @OneToMany
+    @NonNull
     @ToString.Exclude
     private List<Ticket> tickets;
 

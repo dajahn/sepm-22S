@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
 import at.ac.tuwien.sepm.groupphase.backend.enums.SeatType;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,15 +27,18 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @RequiredArgsConstructor
 public class SeatSector extends Sector {
 
+    @Column(nullable = false)
+    @NonNull
+    private SeatType seatType;
+
     @OneToMany(fetch = javax.persistence.FetchType.EAGER, cascade = CascadeType.ALL)
     @OrderBy("row, column")
+    @NonNull
     private List<Seat> seats = new ArrayList<>();
-
-    @Column(nullable = false)
-    private SeatType seatType;
 
     @Override
     public SectorDto mapToDto() {
