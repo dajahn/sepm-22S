@@ -45,8 +45,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and()
             .csrf().disable()
             .addFilter(new JwtAuthenticationFilter(authenticationManager(), securityProperties, jwtTokenizer))
-            .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityProperties))
-            .headers().frameOptions().disable();
+            .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityProperties));
+
+        // needed for viewing the h2 console
+        http.headers().frameOptions().disable();
+        http.headers().frameOptions().sameOrigin();
+>>>>>>> backend/src/main/java/at/ac/tuwien/sepm/groupphase/backend/config/SecurityConfig.java
     }
 
     @Override
