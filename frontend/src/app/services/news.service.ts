@@ -16,8 +16,6 @@ export class NewsService {
     formData.append('title', news.title);
     formData.append('eventId', news.eventId.toString());
     formData.append('description', news.description);
-    //TODO: Default Date?
-    formData.append('date', news.date ? news.date : '1970-01-01');
 
     return this.httpClient.post(this.baseURI, formData);
   }

@@ -24,8 +24,16 @@ export class NewsCreateComponent implements OnInit {
   onSubmit(e: Event) {
     e.preventDefault();
 
+    //TODO: Add validation to toast
+    if (this.news.title.trim() == "" || this.news.title.length > 255) {
+      console.error("News title not accepted!");
+      return;
+    } else if (this.news.description.trim() == "" || this.news.description.length > 255) {
+      console.error("News description not accepted!");
+      return;
+    }
+
     this.newsService.createNews(this.news).subscribe((resp) => {
-      debugger;
       console.log(resp);
     });
   }

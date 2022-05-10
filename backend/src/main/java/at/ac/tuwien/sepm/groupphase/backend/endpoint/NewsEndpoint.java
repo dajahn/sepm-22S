@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.entity.converter.MediaTypeConverter;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,6 +63,9 @@ public class NewsEndpoint {
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ValidationException e) {
+            LOGGER.error(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         return this.newsMapper.entityToNewsDto(news);
