@@ -2,35 +2,48 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
 import at.ac.tuwien.sepm.groupphase.backend.entity.InvoiceId;
+import at.ac.tuwien.sepm.groupphase.backend.repository.InvoiceRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceProcessingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceService;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
 
-    @Override
-    public void create(Invoice invoice) {
-        throw new NotImplementedException();
+    private final InvoiceRepository invoiceRepository;
+    private final InvoiceProcessingService invoiceProcessingService;
+
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, InvoiceProcessingService invoiceProcessingService) {
+        this.invoiceRepository = invoiceRepository;
+        this.invoiceProcessingService = invoiceProcessingService;
     }
 
     @Override
-    public void save(Invoice invoice) {
-        throw new NotImplementedException();
+    public Invoice create(Invoice invoice) {
+        this.setNextFreeInvoiceId(invoice);
+        invoiceProcessingService.process(invoice); // runs asynchronous
+        return invoice;
     }
 
     @Override
-    public void generate(Invoice invoice) {
-        throw new NotImplementedException();
+    @Transactional
+    public void setNextFreeInvoiceId(Invoice invoice) {
+        Invoice last = invoiceRepository.findFirstByOrderByIdDesc();
+        InvoiceId lastId = last != null ? last.getIdentification() : null;
+
+        LocalDateTime today = LocalDateTime.now();
+        boolean isFirstOfYear = lastId == null || lastId.getYear() != today.getYear();
+        InvoiceId newId = new InvoiceId(today.getYear(), isFirstOfYear ? 1 : lastId.getId() + 1);
+        invoice.setIdentification(newId);
+
+        this.save(invoice);
     }
 
     @Override
-    public void send(Invoice invoice) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public InvoiceId getNextInvoiceId() {
-        return null;
+    public Invoice save(Invoice invoice) {
+        return invoiceRepository.save(invoice);
     }
 }

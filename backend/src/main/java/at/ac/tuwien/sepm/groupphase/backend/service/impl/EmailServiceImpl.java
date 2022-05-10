@@ -48,7 +48,6 @@ public class EmailServiceImpl implements EmailService {
             if (attachment != null) {
                 MimeBodyPart attachmentBody = new MimeBodyPart();
                 ByteArrayDataSource dataSource = new ByteArrayDataSource(attachment.getData(), attachment.getType().toString());
-                System.out.println(attachment.getType().toString());
                 attachmentBody.setDataHandler(new DataHandler(dataSource));
 
                 if (attachmentName != null) {
@@ -66,7 +65,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendInvoiceNotification(Invoice invoice, File attachment) {
+    public void sendInvoiceNotification(Invoice invoice) {
         HashMap<String, Object> data = new HashMap<>();
 
         data.put("title", "New Invoice!");
@@ -76,10 +75,9 @@ public class EmailServiceImpl implements EmailService {
             HtmlTemplate.EMAIL_INVOICE_NOTIFICATION,
             data,
             "New Ticketline invoice",
-            "invoice@example.com",
-            attachment,
-            "invoice.pdf"
+            "invoice@example.com", // todo load recipient after merging order
+            invoice.getPdf(),
+            "invoice" + invoice.getIdentification().toString() + ".pdf"
         );
-        // todo load recipient + add invoice number to attachmentName
     }
 }

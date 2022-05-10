@@ -10,7 +10,7 @@ public class MediaTypeConverter implements AttributeConverter<MediaType, String>
 
     @Override
     public String convertToDatabaseColumn(MediaType mediaType) {
-        return mediaType.getType();
+        return mediaType.toString();
     }
 
     @Override

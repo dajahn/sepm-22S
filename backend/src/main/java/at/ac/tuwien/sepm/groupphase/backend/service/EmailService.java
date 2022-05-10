@@ -40,8 +40,7 @@ public interface EmailService {
     /**
      * Send a notification about a new invoice to the user including the invoice as an attachment.
      *
-     * @param invoice    the invoice which the user should be notified about
-     * @param attachment the invoice pfd file, which gets attached to the email
+     * @param invoice the invoice which the user should be notified about
      */
-    void sendInvoiceNotification(Invoice invoice, File attachment);
+    void sendInvoiceNotification(Invoice invoice);
 }

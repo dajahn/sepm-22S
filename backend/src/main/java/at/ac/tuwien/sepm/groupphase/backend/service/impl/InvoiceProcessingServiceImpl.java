@@ -1,0 +1,77 @@
+package at.ac.tuwien.sepm.groupphase.backend.service.impl;
+
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
+import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceStatus;
+import at.ac.tuwien.sepm.groupphase.backend.repository.InvoiceRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
+import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceProcessingService;
+import at.ac.tuwien.sepm.groupphase.backend.service.PdfGenerationService;
+import at.ac.tuwien.sepm.groupphase.backend.templates.HtmlTemplate;
+import at.ac.tuwien.sepm.groupphase.backend.util.Formatter;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+@Service
+public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
+
+    private final PdfGenerationService pdfGenerationService;
+    private final EmailService emailService;
+    private final InvoiceRepository invoiceRepository;
+
+    public InvoiceProcessingServiceImpl(PdfGenerationService pdfGenerationService, EmailService emailService, InvoiceRepository invoiceRepository) {
+        this.pdfGenerationService = pdfGenerationService;
+        this.emailService = emailService;
+        this.invoiceRepository = invoiceRepository;
+    }
+
+    @Override
+    @Async("invoiceProcessingPoolTaskExecutor")
+    public void process(Invoice invoice) {
+        this.generatePdf(invoice);
+        this.sendNotification(invoice);
+    }
+
+    @Override
+    public void generatePdf(Invoice invoice) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("invoice.number", invoice.getIdentification().toString());
+
+        // todo make values dynamic
+        data.put("tickets", Arrays.asList(new Object() {
+            final String sector = "Standing";
+            final int amount = 5;
+            final String singlePrice = Formatter.formatPrice(5.5f);
+            final String totalPrice = Formatter.formatPrice(5 * 5.5f);
+        }, new Object() {
+            final String sector = "VIP";
+            final int amount = 2;
+            final String singlePrice = Formatter.formatPrice(13.2f);
+            final String totalPrice = Formatter.formatPrice(2 * 13.2f);
+        }));
+        data.put("totalPrice", Formatter.formatPrice(22.5f));
+        data.put("totalTaxes", Formatter.formatPrice(2.5f));
+
+        data.put("event.title", "Sport records tour");
+        data.put("event.date", "8.5.2022 18:00 - 20:00");
+        data.put("event.location", "WUK Vienna");
+
+        File pdf = pdfGenerationService.generate(HtmlTemplate.PDF_INVOICE, data);
+
+        invoice.setStatus(InvoiceStatus.GENERATED);
+        invoiceRepository.save(invoice);
+
+        invoice.setPdf(pdf);
+    }
+
+    @Override
+    public void sendNotification(Invoice invoice) {
+        emailService.sendInvoiceNotification(invoice);
+        invoice.setStatus(InvoiceStatus.DISTRIBUTED);
+        invoiceRepository.save(invoice);
+    }
+}
