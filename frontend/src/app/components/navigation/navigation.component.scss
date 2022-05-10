@@ -1,0 +1,189 @@
+/* GENERAL */
+/* (i) disables functionality to highlight text */
+* {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+
+
+/* DEFAULT */
+/* # Top Navigation: */
+.navbar-custom {
+  background-color: var(--bg-tertiary);
+  padding-right: 2rem;
+  height: 4rem;
+}
+
+/* ## Button */
+.blue {
+  margin-right: 0.3rem;
+}
+
+/* ## Links */
+.logo {
+  margin-bottom: 0;
+  margin-left: 1rem;
+}
+
+.a-gray {
+  color: var(--text-c-lowlight);
+  margin-left: 1.5rem;
+  font-weight: var(--font-w-medium);
+
+  &:hover {
+    color: var(--text-c-primary);
+  }
+}
+
+.edit-profile {
+  color: #5A67BC;
+  font-weight: var(--font-w-bold);
+  text-decoration: underline;
+
+  &:hover {
+    color: #6A79DD;
+  }
+}
+
+/* # Side Navigation: */
+#side-menu {
+  background-color: var(--bg-tertiary);
+  height: 100%;
+  display: inline-block;
+  position: fixed;
+  margin-top: 4rem;
+  padding-bottom: 4rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  top: 0;
+  width: 4rem;
+
+  ul {
+    display:inline-block;
+  }
+
+  ul li {
+    white-space:nowrap;
+    margin-bottom: 0.4rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+/* ## Icons */
+.active {
+  color: var(--text-c-highlight);
+
+  i {
+    color: var(--text-c-highlight);
+  }
+}
+
+
+
+/* MOBILE */
+/* (i) hide mobile menu */
+#mobile-navigation {
+  display: none;
+}
+
+
+.burger {
+  color: var(--text-c-highlight);
+  cursor: pointer;
+}
+
+hr {
+  margin: 0;
+  height: 2px;
+  background-color: var(--text-c-highlight);
+  opacity: 1;
+}
+
+/* # Open Mobile Navigation: */
+#expanded-menu {
+  height: 100vh;
+  background-color: var(--bg-tertiary);
+}
+
+#expanded-menu-item-container {
+  margin: 1rem 1.5rem 0 1.5rem;
+
+  /* ## List Items */
+  li {
+    border-bottom: 1px solid var(--text-c-lowlight);
+
+    &:hover{
+      cursor: pointer;
+
+      i {
+        color: var(--text-c-primary);
+      }
+    }
+
+    i {
+      margin-left: 1rem;
+    }
+  }
+
+  /* ## Buttons */
+  .blue {
+    margin-top: 3rem;
+    font-size: 1.6em;
+
+    &:hover{
+      transform: scale(1.025);
+    }
+  }
+
+  /* ## Links */
+  .a-gray {
+    text-align: center;
+    font-size: 1.8em;
+    margin-top: 0.5rem;
+    padding-right: 2rem;
+  }
+
+  .edit-profile {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 2rem;
+  }
+
+  .whats-up {
+    font-style: italic;
+    font-weight: var(--font-w-semi-bold);
+    color: var(--text-c-lowlight);
+    text-align: center;
+    font-size: 1.2em;
+    margin-top: 2rem;
+  }
+}
+
+
+
+/* MEDIA QUERIES */
+@media (max-width: 900px) {
+
+  /* # Default Navigation: */
+  /* (i) hide default navigation */
+  #default-navigation {
+    display: none;
+  }
+
+  /* # Mobile Navigation: */
+  /* (i) show mobile navigation */
+  #mobile-navigation {
+    display: block;
+  }
+
+  .navbar-custom {
+    padding-right: 1rem;
+  }
+}
