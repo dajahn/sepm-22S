@@ -35,7 +35,7 @@ label{
     }
     .content{
         background-color: var(--bg-tertiary);
-        //background-image: var(--gradient-rainbow);
+
         border-radius: 10px;
         width:360px;
         .previewIcon{
@@ -75,15 +75,19 @@ label{
     position: relative;
     max-width: 1200px;
     margin: 0 auto;
-  }
+}
   
-  /* The actual timeline (the vertical ruler) */
-  .timeline::after {
-    content: '';
-    position: absolute;
-    width: 1px;
-    background-color: var(--text-c-lowlight);
-    top: 0;
-    bottom: 0;
-    margin-left: -3px;
-  }
+/* The actual timeline (the vertical ruler) */
+.timeline::after {
+content: '';
+position: absolute;
+width: 1px;
+background-color: var(--text-c-lowlight);
+top: 0;
+bottom: 0;
+margin-left: -3px;
+}
+
+.rainbowBackground{
+    background-image: var(--gradient-rainbow);
+}

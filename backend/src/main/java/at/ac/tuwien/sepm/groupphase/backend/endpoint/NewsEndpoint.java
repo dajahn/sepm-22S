@@ -9,12 +9,15 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.converter.MediaTypeConverter;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
+import at.ac.tuwien.sepm.groupphase.backend.util.ImageUtility;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
@@ -75,6 +80,19 @@ public class NewsEndpoint {
     @GetMapping
     @Operation(summary = "Gets all the news Entries", security = @SecurityRequirement(name = "apiKey"))
     public List<NewsDto> getNews() {
-        return this.newsService.getAll().stream().map(n -> this.newsMapper.entityToNewsDto(n)).toList();
+
+        List<News> news = this.newsService.getAll();
+
+        List<NewsDto> newsDtos = news.stream().map(n -> this.newsMapper.entityToNewsDto(n)).toList();
+
+        //TODO : return image in news element -> configure mapper?
+        /*
+        for (int i = 0; i < newsDtos.size(); i++) {
+            File f = news.get(i).getFile();
+            MultipartFile multipartFile = new MockMultipartFile("file", "file", f.getType().toString(), ImageUtility.decompressImage(f.getData()));
+            newsDtos.get(i).setImage(multipartFile);
+        }
+        */
+        return newsDtos;
     }
 }

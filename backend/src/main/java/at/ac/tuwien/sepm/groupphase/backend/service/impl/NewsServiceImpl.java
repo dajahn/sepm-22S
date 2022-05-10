@@ -20,7 +20,6 @@ public class NewsServiceImpl implements NewsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final NewsRepository newsRepository;
-
     private final NewsValidator newsValidator;
 
     public NewsServiceImpl(NewsRepository newsRepository, NewsValidator newsValidator) {
@@ -46,6 +45,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<News> getAll() {
-        return this.newsRepository.findAll();
+        List<News> news = this.newsRepository.findAll();
+        return news;
     }
 }

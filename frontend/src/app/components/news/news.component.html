@@ -3,10 +3,13 @@
 
 <label class="header-label mb-5">Unread News</label>
 
+<!-- Todo Load Image from database
+-->
 <div class="timeline">
-    <div *ngFor="let n of news" class="eventPreview d-flex align-items-center mb-5">
+    <div *ngFor="let n of news;let i = index" class="eventPreview d-flex align-items-center mb-5"
+        (click)="handelOnClick(i)">
         <label class="date me-3">{{n.date}}</label>
-        <div class="content d-flex align-items-center">
+        <div class="content d-flex align-items-center" [ngClass]="{'rainbowBackground': i === currentSelectedId}">
             <div class="previewIcon">
                 <i class="bi bi-bullseye"></i>
             </div>
@@ -26,6 +29,6 @@
 </div>
 
 <!-- TODO: display detail view -->
-<div class="float-end">
-    <app-news-detail></app-news-detail>
+<div *ngIf="currentSelectedId !== -1" class="float-end">
+    <app-news-detail [news]="news[currentSelectedId]"></app-news-detail>
 </div>

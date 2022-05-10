@@ -1,5 +1,5 @@
 import { NewsService } from './../../services/news.service';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { News } from 'src/app/dtos/news';
 
 @Component({

@@ -10,6 +10,8 @@ import { News } from 'src/app/dtos/news';
 export class NewsComponent implements OnInit {
   public news: News[];
 
+  public currentSelectedId: number = -1;
+
   constructor(private newsService: NewsService) { }
 
   ngOnInit(): void {
@@ -19,7 +21,12 @@ export class NewsComponent implements OnInit {
   private loadNews() {
     this.newsService.getAllNews().subscribe((news: News[]) => {
       this.news = news;
+      console.dir(this.news);
     });
+  }
+
+  public handelOnClick(index: number) {
+    this.currentSelectedId = index;
   }
 
 }
