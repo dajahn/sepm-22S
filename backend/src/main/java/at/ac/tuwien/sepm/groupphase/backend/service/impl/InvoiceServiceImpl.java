@@ -43,7 +43,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice save(Invoice invoice) {
-        return invoiceRepository.save(invoice);
+    public void save(Invoice invoice) {
+        invoiceRepository.save(invoice);
     }
 }

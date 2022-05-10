@@ -23,6 +23,6 @@ public interface InvoiceService {
      *
      * @param invoice the invoice which should be saved
      */
-    Invoice save(Invoice invoice);
+    void save(Invoice invoice);
 
 }
