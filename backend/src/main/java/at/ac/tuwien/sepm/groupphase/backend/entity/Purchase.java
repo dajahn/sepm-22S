@@ -1,8 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Address;
-import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
-import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -12,60 +9,43 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
-/**
- * This entity represents a user of this application.
- */
 @Entity
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class User {
+public class Purchase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
     private Long id;
 
-    @Column(nullable = false, name = "first_name", length = 127)
-    @NonNull
-    private String firstName;
-
-    @Column(nullable = false, name = "last_name", length = 127)
-    @NonNull
-    private String lastName;
-
-    @Column(nullable = false, unique = true, length = 255)
-    @NonNull
-    private String email;
-
-    @Column(nullable = false, length = 255)
-    @NonNull
-    private String password;
-
-    @Embedded
-    @NonNull
-    private Address address;
-
     @Column(nullable = false)
     @NonNull
-    private UserRole role;
+    private LocalDateTime dateTime;
 
-    @Column(nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     @NonNull
-    private UserStatus status;
+    private User user;
 
-    @Column(name = "last_news_read")
-    private LocalDateTime lastNewsRead;
+    @OneToMany
+    @NonNull
+    @ToString.Exclude
+    private List<Ticket> tickets;
 
     @Override
     public boolean equals(Object o) {
@@ -75,8 +55,8 @@ public class User {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        User user = (User) o;
-        return id != null && Objects.equals(id, user.id);
+        Purchase purchase = (Purchase) o;
+        return id != null && Objects.equals(id, purchase.id);
     }
 
     @Override

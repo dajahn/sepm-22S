@@ -3,10 +3,11 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 import lombok.Data;
 
 @Data
-public class ArtistDto {
+public class SeatDto {
 
     private Long id;
-    private String name;
-    private String description;
+    private Integer row;
+    private Integer column;
+    private PointDto point;
 }
 

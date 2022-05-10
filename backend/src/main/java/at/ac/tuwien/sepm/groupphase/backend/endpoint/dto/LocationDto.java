@@ -1,12 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
-
 import lombok.Data;
 
 @Data
-public class ArtistDto {
+public class LocationDto {
 
-    private Long id;
+    private long id;
     private String name;
-    private String description;
+    private AddressDto address;
+    private SectorDto[] sectors;
 }
 
