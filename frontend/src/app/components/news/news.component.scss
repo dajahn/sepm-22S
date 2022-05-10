@@ -1,0 +1,89 @@
+.header-font-weight{
+    font-weight: var(--font-w-light);
+}
+label{
+    font-weight: var(--font-w-light);
+}
+.header-label{
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.eventPreview{
+    position: relative;
+    margin-left: 1rem;
+
+    &::after{
+        content: '';
+        position: absolute;
+        width: 7px;
+        height: 7px;
+        left: -22px;
+        background-color: var(--text-c-primary);
+        border: 1px solid var(--text-c-primary);
+        top: 26px;
+        border-radius: 50%;
+        z-index: 1;
+    }
+
+    &:hover{
+        cursor: pointer;
+    }
+
+    .date{
+        font-weight: var(--font-w-light);
+    }
+    .content{
+        background-color: var(--bg-tertiary);
+        //background-image: var(--gradient-rainbow);
+        border-radius: 10px;
+        width:360px;
+        .previewIcon{
+            padding:5px;
+            width: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .previewNews{
+            padding: 7px;
+            width: 300px;
+
+            .title{
+                color:var(--text-c-highlight);
+            }
+            .description{
+                padding-right: 7px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                color:var(--text-c-highlight);
+                display: inline-block;
+                width: inherit;
+                margin-right: 5px;
+
+                &:hover{
+                    cursor: pointer;
+                }
+            }
+        }
+
+    }
+}
+
+.timeline {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* The actual timeline (the vertical ruler) */
+  .timeline::after {
+    content: '';
+    position: absolute;
+    width: 1px;
+    background-color: var(--text-c-lowlight);
+    top: 0;
+    bottom: 0;
+    margin-left: -3px;
+  }

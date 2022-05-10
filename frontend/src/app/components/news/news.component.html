@@ -1,0 +1,31 @@
+<h1 class="header-font-weight ms-5">News</h1>
+<div class="header-font-weight mb-5">Get informed about the latest events.</div>
+
+<label class="header-label mb-5">Unread News</label>
+
+<div class="timeline">
+    <div *ngFor="let n of news" class="eventPreview d-flex align-items-center mb-5">
+        <label class="date me-3">{{n.date}}</label>
+        <div class="content d-flex align-items-center">
+            <div class="previewIcon">
+                <i class="bi bi-bullseye"></i>
+            </div>
+            <div class="previewNews">
+                <div class="title">{{n.title}}</div>
+                <label class="description">{{n.description}}</label>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- TODO: expandable-->
+<div class="d-flex align-items-center">
+    <i class="bi bi-plus"></i>
+    <label class="header-label">Read all news</label>
+</div>
+
+<!-- TODO: display detail view -->
+<div class="float-end">
+    <app-news-detail></app-news-detail>
+</div>

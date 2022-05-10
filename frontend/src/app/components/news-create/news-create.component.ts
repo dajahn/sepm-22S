@@ -9,6 +9,7 @@ import { News } from 'src/app/dtos/news';
 })
 export class NewsCreateComponent implements OnInit {
   public news: News = {
+    id: 0,
     title: '',
     description: '',
     eventId: 0,
@@ -35,12 +36,6 @@ export class NewsCreateComponent implements OnInit {
 
     this.newsService.createNews(this.news).subscribe((resp) => {
       console.log(resp);
-    });
-  }
-
-  loadNews() {
-    this.newsService.getNews().subscribe((news) => {
-      console.dir(news);
     });
   }
 
