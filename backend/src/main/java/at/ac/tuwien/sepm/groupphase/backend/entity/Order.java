@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.enums.OrderType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -16,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +28,8 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class Reservation {
+@Table(name = "Orders")
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +50,13 @@ public class Reservation {
     @ToString.Exclude
     private List<Ticket> tickets;
 
+    @Column
+    @NonNull
+    private OrderType type;
+
+    @Column(nullable = false)
+    private LocalDateTime validUntil;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -55,8 +65,8 @@ public class Reservation {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        Reservation reservation = (Reservation) o;
-        return id != null && Objects.equals(id, reservation.id);
+        Order order = (Order) o;
+        return id != null && Objects.equals(id, order.id);
     }
 
     @Override

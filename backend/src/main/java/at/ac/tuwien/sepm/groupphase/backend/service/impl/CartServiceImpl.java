@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.repository.CartRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.MessageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +12,10 @@ import java.lang.invoke.MethodHandles;
 public class CartServiceImpl implements CartService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final CartRepository cartRepository;
+    private final OrderRepository orderRepository;
 
-    public CartServiceImpl(CartRepository cartRepository) {
-        this.cartRepository = cartRepository;
+    public CartServiceImpl(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
     }
 
 }
