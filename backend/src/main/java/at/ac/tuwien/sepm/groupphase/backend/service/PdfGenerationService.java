@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
-import at.ac.tuwien.sepm.groupphase.backend.templates.HtmlTemplate;
+import at.ac.tuwien.sepm.groupphase.backend.util.HtmlTemplate;
 
 import java.util.Map;
 

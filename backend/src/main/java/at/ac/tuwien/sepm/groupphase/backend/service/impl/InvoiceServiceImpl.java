@@ -2,6 +2,9 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
 import at.ac.tuwien.sepm.groupphase.backend.entity.InvoiceId;
+import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceStatus;
+import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.InvoiceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceProcessingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceService;
@@ -45,5 +48,32 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public void save(Invoice invoice) {
         invoiceRepository.save(invoice);
+    }
+
+    @Override
+    @Transactional
+    public Invoice cancel(Invoice invoice) {
+
+        if (invoice.getType() != InvoiceType.NORMAL) {
+            throw new ValidationException("The invoice which should be canceled must be from type 'NORMAL'.");
+        }
+
+        // create cancellation invoice
+        Invoice cancellation = Invoice.builder()
+            .reference(invoice)
+            .type(InvoiceType.CANCELLATION)
+            .status(InvoiceStatus.CREATED)
+            .build();
+
+        // todo add order / tickets
+
+        this.create(cancellation);
+
+        // update existing invoice
+        invoice.setType(InvoiceType.CANCELED);
+        invoice.setReference(cancellation);
+        this.save(invoice);
+
+        return cancellation;
     }
 }

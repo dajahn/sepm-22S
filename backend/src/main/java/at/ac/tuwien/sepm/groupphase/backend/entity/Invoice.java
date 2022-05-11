@@ -3,6 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.converter.InvoiceIdConverter;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceStatus;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -18,6 +20,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 
 @Entity
@@ -26,12 +29,14 @@ import javax.persistence.ManyToOne;
 @ToString
 @RequiredArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Invoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     @NonNull
@@ -45,8 +50,29 @@ public class Invoice {
     @Column(nullable = false)
     private InvoiceId identification;
 
+    /**
+     * Reference to an invoice.
+     * Meaning defined by type:
+     * - CANCELLATION ==> referencing the initial invoice
+     * - CANCELED ==> referencing the cancellation invoice
+     * - NORMAL ==> no meaning
+     */
+    @OneToOne
+    @JoinColumn(referencedColumnName = "id")
+    @ToString.Exclude
+    private Invoice reference;
+
+    /**
+     * Used for displaying the reference when executing toString without creating a stackoverflow.
+     *
+     * @return String representation of the reference
+     */
+    @ToString.Include(name = "reference")
+    private String toStringAttachReference() {
+        return this.reference == null ? null : Invoice.class.getSimpleName() + "(id=" + this.reference.getId() + ")";
+    }
+
     @ManyToOne
     @JoinColumn
     private File pdf;
-
 }

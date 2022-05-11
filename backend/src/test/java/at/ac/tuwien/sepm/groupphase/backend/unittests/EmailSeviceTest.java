@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
-import at.ac.tuwien.sepm.groupphase.backend.templates.HtmlTemplate;
+import at.ac.tuwien.sepm.groupphase.backend.util.HtmlTemplate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class EmailSeviceTest implements TestData {
     @Test
     public void givenInvoiceExists_whenNewPdfIsGenerated_thenPdfIsGenerated() { // TODO change name
         HashMap<String, Object> data = new HashMap<>();
-        
+
         data.put("title", "New Invoice!");
         data.put("content", "You received a new invoice for your order at Ticketline. The invoice can be found in the attachment of this email.");
 

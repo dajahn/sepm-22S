@@ -3,7 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.PdfGenerationService;
-import at.ac.tuwien.sepm.groupphase.backend.templates.HtmlTemplate;
+import at.ac.tuwien.sepm.groupphase.backend.util.HtmlTemplate;
 import com.lowagie.text.DocumentException;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;

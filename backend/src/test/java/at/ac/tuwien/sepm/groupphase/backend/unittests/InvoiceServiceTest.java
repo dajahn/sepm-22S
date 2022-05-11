@@ -24,17 +24,31 @@ public class InvoiceServiceTest implements TestData {
     private InvoiceRepository invoiceRepository;
 
     @Test
-    public void whenNewInvoiceIsCreated_thenNewInvoiceIsStoredInTheDatabase() {
+    public void whenNewInvoiceIsCreated_thenNewInvoiceIsStoredInTheDatabase() throws InterruptedException {
         for (int i = 0; i < 10; i++) {
             Invoice invoice = new Invoice(InvoiceType.NORMAL);
             invoiceService.create(invoice);
             System.out.println(invoice);
         }
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         System.out.println(invoiceRepository.findAllByOrderByIdDesc());
+        Thread.sleep(10000); // wait for pdfs to be generated
+        System.out.println(invoiceRepository.findAllByOrderByIdDesc());
+    }
+
+    @Test
+    public void whenInvoiceIsCanceled_thenCancellationInvoiceIsCreated() throws InterruptedException {
+        Invoice invoice = new Invoice(InvoiceType.NORMAL);
+        invoiceService.create(invoice);
+
+        System.out.println(invoice);
+
+        Invoice cancellation = invoiceService.cancel(invoice);
+        System.out.println(invoice);
+        System.out.println(cancellation);
+
+        Thread.sleep(10000); // wait for pdfs to be generated
+
+        System.out.println(invoice);
+        System.out.println(cancellation);
     }
 }

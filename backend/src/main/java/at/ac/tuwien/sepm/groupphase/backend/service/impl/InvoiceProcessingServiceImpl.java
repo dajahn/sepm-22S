@@ -3,12 +3,13 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceStatus;
+import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.InvoiceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceProcessingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PdfGenerationService;
-import at.ac.tuwien.sepm.groupphase.backend.templates.HtmlTemplate;
 import at.ac.tuwien.sepm.groupphase.backend.util.Formatter;
+import at.ac.tuwien.sepm.groupphase.backend.util.HtmlTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -60,7 +61,12 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
         data.put("event.date", "8.5.2022 18:00 - 20:00");
         data.put("event.location", "WUK Vienna");
 
-        File pdf = pdfGenerationService.generate(HtmlTemplate.PDF_INVOICE, data);
+        File pdf;
+        if (invoice.getType() == InvoiceType.CANCELLATION) {
+            pdf = pdfGenerationService.generate(HtmlTemplate.PDF_CANCELLATION_INVOICE, data);
+        } else {
+            pdf = pdfGenerationService.generate(HtmlTemplate.PDF_INVOICE, data);
+        }
 
         invoice.setStatus(InvoiceStatus.GENERATED);
         invoiceRepository.save(invoice);
@@ -70,7 +76,11 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
 
     @Override
     public void sendNotification(Invoice invoice) {
-        emailService.sendInvoiceNotification(invoice);
+        if (invoice.getType() == InvoiceType.CANCELLATION) {
+            emailService.sendCancellationInvoiceNotification(invoice);
+        } else {
+            emailService.sendInvoiceNotification(invoice);
+        }
         invoice.setStatus(InvoiceStatus.DISTRIBUTED);
         invoiceRepository.save(invoice);
     }

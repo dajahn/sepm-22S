@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
-import at.ac.tuwien.sepm.groupphase.backend.templates.HtmlTemplate;
+import at.ac.tuwien.sepm.groupphase.backend.util.HtmlTemplate;
 
 import java.util.Map;
 
@@ -43,4 +43,11 @@ public interface EmailService {
      * @param invoice the invoice which the user should be notified about
      */
     void sendInvoiceNotification(Invoice invoice);
+
+    /**
+     * Send a notification about a canceled invoice to the user including the cancellation invoice as an attachment.
+     *
+     * @param invoice the cancellation invoice which the user should be notified about
+     */
+    void sendCancellationInvoiceNotification(Invoice invoice);
 }
