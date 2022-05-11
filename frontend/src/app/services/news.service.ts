@@ -1,3 +1,4 @@
+import { environment } from './../../environments/environment';
 import { News } from './../dtos/news';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -6,8 +7,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class NewsService {
-  private baseURI: string = "http://localhost:8080/api/v1/news";
-
   constructor(private httpClient: HttpClient) { }
 
   public createNews(news: News) {
@@ -17,10 +16,10 @@ export class NewsService {
     formData.append('eventId', news.eventId.toString());
     formData.append('description', news.description);
 
-    return this.httpClient.post(this.baseURI, formData);
+    return this.httpClient.post(environment.baseURI, formData);
   }
 
-  public getAllNews() {
-    return this.httpClient.get(this.baseURI);
+  public getNews() {
+    return this.httpClient.get(environment.baseURI);
   }
 }

@@ -39,7 +39,7 @@ public class News {
     @Column(nullable = false, name = "description", length = 1023)
     private String description;
 
-    @Column(name = "date")
+    @Column()
     private LocalDate date;
 
     @ManyToOne
