@@ -10,12 +10,14 @@ import java.util.List;
 @Mapper
 public interface ArtistMapper {
 
-    ArtistMapper INSTANCE = Mappers.getMapper( ArtistMapper.class );
+    ArtistMapper INSTANCE = Mappers.getMapper(ArtistMapper.class);
 
 
     ArtistDto artistToArtistDto(Artist artist);
 
+    List<ArtistDto> artistToArtistDto(List<Artist> artist);
+
     Artist artistDtoToArtist(ArtistDto artistDto);
 
-    List<ArtistDto> artistToArtistDto(List<Artist> artist);
+
 }

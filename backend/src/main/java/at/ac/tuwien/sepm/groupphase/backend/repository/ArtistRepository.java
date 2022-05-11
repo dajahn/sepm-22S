@@ -12,15 +12,17 @@ import java.util.List;
 public interface ArtistRepository extends JpaRepository<Artist, Long> {
 
     /**
-     * Returns all artists with the name parameter contained in their name
-     * @param name to search for
+     * Returns all artists with the name parameter contained in their name.
+     *
+     * @param name     to search for
      * @param pageable maximum amount of artists to return
      * @return returns a list of artists with matching name, at maximum a specified number
      */
     List<Artist> findByNameContaining(@Param("name") String name, Pageable pageable);
 
     /**
-     * Returns all artists with the name parameter contained in their name
+     * Returns all artists with the name parameter contained in their name.
+     *
      * @param name to search for
      * @return a list of all artists with matching name
      */

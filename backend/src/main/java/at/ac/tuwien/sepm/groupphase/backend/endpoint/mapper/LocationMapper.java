@@ -7,13 +7,15 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = SectorMapper.class)
 public interface LocationMapper {
-    LocationMapper INSTANCE = Mappers.getMapper( LocationMapper.class );
+    LocationMapper INSTANCE = Mappers.getMapper(LocationMapper.class);
 
     LocationDto locationToLocationDto(Location location);
 
+    List<LocationDto> locationToLocationDto(List<Location> locations);
+
     Location locationDtoToLocation(LocationDto locationDto);
 
-    List<LocationDto> locationToLocationDto (List<Location> locations);
+
 }

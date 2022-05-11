@@ -29,8 +29,8 @@ public class ArtistDataGenerator {
         Artist artist;
         for (int i = 0; i < NUMBER_OF_Artists_TO_GENERATE; i++) {
             artist = new Artist();
-            artist.setDescription(TEST_ARTISTS_DESCRIPTION+i);
-            artist.setName(TEST_ARTISTS_NAME +i);
+            artist.setDescription(TEST_ARTISTS_DESCRIPTION + i);
+            artist.setName(TEST_ARTISTS_NAME + i);
             artistRepository.save(artist);
         }
     }

@@ -6,6 +6,8 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 public interface EventService {
 
     /**
+     * Inserts an event.
+     *
      * @param eventDto Event to insert
      * @return The inserted event
      */

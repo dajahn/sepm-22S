@@ -17,24 +17,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/v1/artists")
 public class ArtistEndpoint {
-        private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-        private final ArtistService artistService;
-        private final ArtistMapper artistMapper;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final ArtistService artistService;
+    private final ArtistMapper artistMapper;
 
-        @Autowired
-        public ArtistEndpoint(ArtistService artistService, ArtistMapper artistMapper) {
-            this.artistService = artistService;
-            this.artistMapper = artistMapper;
-        }
+    @Autowired
+    public ArtistEndpoint(ArtistService artistService, ArtistMapper artistMapper) {
+        this.artistService = artistService;
+        this.artistMapper = artistMapper;
+    }
 
-        @Secured("ROLE_USER")
-        @GetMapping
-        @Operation(summary = "Get list of artists. If name is specified, only whose artists with matching name will come as a result.", security = @SecurityRequirement(name = "apiKey"))
-        public List<ArtistDto> findAll(ArtistSearchDto artistSearchDto) {
-            LOGGER.info("GET /api/v1/artists with {}", artistSearchDto);
-            return artistMapper.artistToArtistDto(artistService.find(artistSearchDto));
-        }
+    @Secured("ROLE_USER")
+    @GetMapping
+    @Operation(summary = "Get list of artists. If name is specified, only whose artists with matching name will come as a result.", security = @SecurityRequirement(name = "apiKey"))
+    public List<ArtistDto> findAll(ArtistSearchDto artistSearchDto) {
+        LOGGER.info("GET /api/v1/artists with {}", artistSearchDto);
+        return artistMapper.artistToArtistDto(artistService.find(artistSearchDto));
+    }
 }

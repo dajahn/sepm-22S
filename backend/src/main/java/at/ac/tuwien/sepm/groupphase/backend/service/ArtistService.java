@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface ArtistService {
 
-    /** Returns a list of artists with matching criteria or all artists if every attribute is null
+    /**
+     * Returns a list of artists with matching criteria or all artists if every attribute is null.
+     *
      * @param artistSearchDto Dto that contains search parameters
      * @return a list of artists with matching criteria or all artists
      */

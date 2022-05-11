@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface EventMapper {
-    EventMapper INSTANCE = Mappers.getMapper( EventMapper.class );
+    EventMapper INSTANCE = Mappers.getMapper(EventMapper.class);
 
 
     EventDto eventToEventDto(Event event);
