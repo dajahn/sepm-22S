@@ -26,6 +26,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public File create(FileDto f) throws IOException {
+        LOGGER.trace("create() FileDto:{}", f);
 
         File file = File.builder()
             .type(f.getType())

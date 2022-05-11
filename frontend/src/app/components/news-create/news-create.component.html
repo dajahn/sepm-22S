@@ -1,18 +1,17 @@
 <div class="newsContainer ">
     <h1>Create News</h1>
 
-    <form>
+    <form [formGroup]="newsForm">
 
         <div class="form-group col-md-12 mb-2">
             <label for="title" class="control-label">Title</label>
-            <input type="text" [(ngModel)]="news.title" class="form-control" id="title" placeholder="Title"
-                name="title">
+            <input type="text" formControlName="title" class="form-control" id="title" placeholder="Title" name="title">
         </div>
 
         <div class="col-md-12 mb-2">
             <label for="description" class="form-label">Description</label>
-            <textarea class="form-control inputStyling" id="description" rows="3" [(ngModel)]="news.description"
-                name="description" placeholder="Description"></textarea>
+            <textarea class="form-control inputStyling" id="description" rows="3" name="description"
+                formControlName="description" placeholder="Description"></textarea>
         </div>
 
         <div class="row mb-5">

@@ -50,11 +50,12 @@ public class NewsEndpoint {
         this.newsMapper = newsMapper;
     }
 
+    //TODO: ROLE_ADMIN but admin user was not working
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Creates a new News Entry", security = @SecurityRequirement(name = "apiKey"))
-    public NewsDto createNews(@ModelAttribute NewsDto newsDto) {
+    public NewsDto createNews(@ModelAttribute NewsDto newsDto) throws IOException {
         LOGGER.info("POST /api/v1/news body: {}", newsDto);
 
         File file;
@@ -65,11 +66,8 @@ public class NewsEndpoint {
 
             file = this.fileService.create(fileDto);
             news = this.newsService.createNews(newsDto, file);
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ValidationException e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("{}", e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
@@ -82,6 +80,7 @@ public class NewsEndpoint {
     public List<NewsDto> getNews() {
         LOGGER.info("GET /api/v1/news");
 
+        //TODO: change to not return image as byte[] but as file link
         List<NewsDto> newsDtos = this.newsService.getAll();
 
         return newsDtos;

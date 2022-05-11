@@ -34,7 +34,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public News createNews(NewsDto newsDto, File file) throws IOException {
-        LOGGER.debug("createNews {}", newsDto);
+        LOGGER.trace("createNews {}", newsDto);
 
         this.newsValidator.validateNews(newsDto);
 
@@ -51,7 +51,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDto> getAll() {
-        LOGGER.debug("getAll()");
+        LOGGER.trace("getAll()");
 
         List<News> news = this.newsRepository.findAll();
 

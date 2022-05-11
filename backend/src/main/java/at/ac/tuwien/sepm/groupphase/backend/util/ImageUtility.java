@@ -4,6 +4,10 @@ import java.io.ByteArrayOutputStream;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+/**
+ * This class has basic Image methods.
+ * Like compress and decompress byte[].
+ */
 public class ImageUtility {
 
     public static byte[] compressImage(byte[] data) {
