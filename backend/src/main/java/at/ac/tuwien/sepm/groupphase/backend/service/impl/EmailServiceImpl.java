@@ -97,6 +97,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendCancellationInvoiceNotification(Invoice invoice) {
+        LOGGER.trace("sendCancellationInvoiceNotification(Invoice invoice) with invoice={}", invoice);
         HashMap<String, Object> data = new HashMap<>();
 
         data.put("title", "New Cancellation Invoice!");

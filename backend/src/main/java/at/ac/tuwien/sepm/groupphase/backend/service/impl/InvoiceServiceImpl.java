@@ -60,6 +60,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     @Transactional
     public Invoice cancel(Invoice invoice) {
+        LOGGER.trace("cancel(Invoice invoice) with invoice={}", invoice);
 
         if (invoice.getType() != InvoiceType.NORMAL) {
             throw new ValidationException("The invoice which should be canceled must be from type 'NORMAL'.");
