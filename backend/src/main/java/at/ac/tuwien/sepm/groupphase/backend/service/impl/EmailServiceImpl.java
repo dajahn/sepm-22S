@@ -91,7 +91,7 @@ public class EmailServiceImpl implements EmailService {
             "New Ticketline invoice",
             invoice.getOrder().getUser().getEmail(),
             invoice.getPdf(),
-            "invoice" + invoice.getIdentification().toString() + ".pdf"
+            "invoice-" + invoice.getIdentification().toString() + ".pdf"
         );
     }
 
@@ -107,9 +107,9 @@ public class EmailServiceImpl implements EmailService {
             HtmlTemplate.EMAIL_INVOICE_NOTIFICATION,
             data,
             "New Ticketline cancellation invoice",
-            "invoice@example.com", // todo load recipient after merging order
+            invoice.getOrder().getUser().getEmail(),
             invoice.getPdf(),
-            "invoice" + invoice.getIdentification().toString() + ".pdf"
+            "invoice-" + invoice.getIdentification().toString() + ".pdf"
         );
     }
 }
