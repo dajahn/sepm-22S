@@ -46,7 +46,7 @@ export class TicketComponent implements OnInit {
           emoji: '💎',
           background: 'var(--gradient-rainbow)'
         };
-      case 'Premium':
+      case 'PREMIUM':
         return {
           acronym: 'PR',
           emoji: '🔥',
