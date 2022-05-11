@@ -2,6 +2,10 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.SeatTicket;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceStatus;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.InvoiceRepository;
@@ -16,8 +20,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -51,23 +56,37 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
         data.put("invoice.date", Formatter.formatDate(invoice.getDate()));
 
         // todo make values dynamic
-        data.put("tickets", Arrays.asList(new Object() {
-            final String sector = "Standing";
-            final int amount = 5;
-            final String singlePrice = Formatter.formatPrice(5.5f);
-            final String totalPrice = Formatter.formatPrice(5 * 5.5f);
-        }, new Object() {
-            final String sector = "VIP";
-            final int amount = 2;
-            final String singlePrice = Formatter.formatPrice(13.2f);
-            final String totalPrice = Formatter.formatPrice(2 * 13.2f);
-        }));
-        data.put("totalPrice", Formatter.formatPrice(22.5f));
-        data.put("totalTaxes", Formatter.formatPrice(2.5f));
 
-        data.put("event.title", "Sport records tour");
-        data.put("event.date", "8.5.2022 18:00 - 20:00");
-        data.put("event.location", "WUK Vienna");
+        List<Object> tickets = new ArrayList<>();
+
+        float totalPrice = 0;
+
+        Order order = invoice.getOrder();
+
+        for (Ticket ticket : order.getTickets()) { // todo add grouping for seats with same price and sector
+            float price = (float) ((double) ticket.getSector().getPrice());
+            int ticketAmount = 1;
+
+            totalPrice += price * ticketAmount;
+
+            tickets.add(new Object() {
+                final String sector = ticket instanceof SeatTicket ? Formatter.formatSeatType(((SeatTicket) ticket).getSeatType()) : "Standing";
+                final int amount = ticketAmount;
+                final String singlePrice = Formatter.formatPrice(price);
+                final String totalPrice = Formatter.formatPrice(price * ticketAmount);
+            });
+        }
+
+        data.put("ticket", tickets);
+
+        data.put("totalPrice", Formatter.formatPrice(totalPrice));
+        data.put("totalTaxes", Formatter.formatPrice(totalPrice * 0.2f));
+
+        Performance performance = order.getTickets().get(0).getPerformance(); // todo change if we want to support multiple performances
+
+        data.put("event.title", performance.getEvent().getName());
+        data.put("event.date", Formatter.formatDateTime(performance.getDateTime())); // todo add duration when it is added to the data structure
+        data.put("event.location", performance.getLocation().getName());
 
         HtmlTemplate template = invoice.getType() == InvoiceType.CANCELLATION ? HtmlTemplate.PDF_CANCELLATION_INVOICE : HtmlTemplate.PDF_INVOICE;
 

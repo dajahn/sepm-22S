@@ -89,7 +89,7 @@ public class EmailServiceImpl implements EmailService {
             HtmlTemplate.EMAIL_INVOICE_NOTIFICATION,
             data,
             "New Ticketline invoice",
-            "invoice@example.com", // todo load recipient after merging order
+            invoice.getOrder().getUser().getEmail(),
             invoice.getPdf(),
             "invoice" + invoice.getIdentification().toString() + ".pdf"
         );

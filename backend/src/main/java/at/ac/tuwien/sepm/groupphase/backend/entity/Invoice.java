@@ -38,6 +38,11 @@ public class Invoice {
     @Column(nullable = false, updatable = false)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn
+    @NonNull
+    private Order order;
+
     @Column(nullable = false)
     @NonNull
     private InvoiceStatus status = InvoiceStatus.CREATED;
