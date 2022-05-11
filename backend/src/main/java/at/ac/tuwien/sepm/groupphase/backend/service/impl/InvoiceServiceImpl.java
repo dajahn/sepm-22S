@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -71,6 +72,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             .reference(invoice)
             .type(InvoiceType.CANCELLATION)
             .status(InvoiceStatus.CREATED)
+            .date(LocalDate.now())
             .build();
 
         // todo add order / tickets
