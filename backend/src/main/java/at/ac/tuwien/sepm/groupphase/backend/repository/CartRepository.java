@@ -7,5 +7,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
+    /**
+     * Find the Cart of a user by their ID.
+     *
+     * @param userId the ID of the user
+     * @return the cart uf the user
+     */
     Cart findCartByUserId(long userId);
 }

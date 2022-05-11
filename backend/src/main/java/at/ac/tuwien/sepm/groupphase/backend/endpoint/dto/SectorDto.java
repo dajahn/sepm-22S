@@ -10,7 +10,7 @@ import lombok.Data;
 public abstract class SectorDto {
 
     private Long id;
-    private double price;
+    private Float price;
     private final SectorType type;
 
     public SectorDto() {
