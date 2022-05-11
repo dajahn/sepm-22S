@@ -13,14 +13,22 @@
       </div>
 
       <div class="row">
-        <!--      TODO add form group-->
         <form class="form" [formGroup]="eventForm" (ngSubmit)="addEvent()">
           <div class="row mt-3">
             <div class="col-12">
               <label for="title">Title</label>
               <input type="text" required name="title" formControlName="title" class="form-control" id="title"
                      aria-describedby="titleHelp" placeholder="Title">
-              <!--          TODO add error messages-->
+              <div class="row mt-1">
+                <div class="col">
+                  <ng-container *ngFor="let validation of eventFormMessages.title">
+                    <div class="error"
+                         *ngIf="eventForm.controls.title.hasError(validation.type) && (eventForm.controls.title.dirty || eventForm.controls.title.touched)">
+                      <small class="form-text text-warning">{{ validation.message }} </small>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -30,7 +38,16 @@
               <textarea type="text" required name="description" formControlName="description" class="form-control"
                         id="description"
                         aria-describedby="descriptionHelp" placeholder="Description"></textarea>
-              <!--          TODO add error messages-->
+              <div class="row mt-1">
+                <div class="col">
+                  <ng-container *ngFor="let validation of eventFormMessages.description">
+                    <div class="error"
+                         *ngIf="eventForm.controls.description.hasError(validation.type) && (eventForm.controls.description.dirty || eventForm.controls.description.touched)">
+                      <small class="form-text text-warning">{{ validation.message }} </small>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -40,7 +57,28 @@
               <label for="duration">Duration</label>
               <ngb-timepicker required formControlName="duration" id="duration" [spinners]="false"
                               aria-describedby="durationHelp" [(ngModel)]="time"></ngb-timepicker>
-              <!--          TODO add error messages-->
+              <div class="row mt-1">
+                <div class="col">
+                  <ng-container *ngFor="let validation of eventFormMessages.duration">
+                    <div class="error"
+                         *ngIf="eventForm.controls.duration.hasError(validation.type) && (eventForm.controls.duration.dirty || eventForm.controls.duration.touched)">
+                      <small class="form-text text-warning">{{ validation.message }} </small>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+
+              <div class="row mt-1">
+                <div class="col">
+                  <ng-container>
+                    <div class="error"
+                         *ngIf="eventForm.controls.duration.value !== null && eventForm.controls.duration.value !== undefined
+                         && eventForm.controls.duration.value.hour ===0 && eventForm.controls.duration.value.minute ===0 && (eventForm.controls.duration.dirty || eventForm.controls.duration.touched)">
+                      <small class="form-text text-warning">{{ eventFormMessages.duration[1].message }}</small>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
             </div>
 
             <div class="col-9">
@@ -49,7 +87,16 @@
                 <option value="{{eventCategory.CONCERT}}">Concert</option>
                 <option value="{{eventCategory.CONFERENCE}}">Conference</option>
               </select>
-              <!--          TODO add error messages-->
+              <div class="row mt-1">
+                <div class="col">
+                  <ng-container *ngFor="let validation of eventFormMessages.category">
+                    <div class="error"
+                         *ngIf="eventForm.controls.category.hasError(validation.type) && (eventForm.controls.category.dirty || eventForm.controls.category.touched)">
+                      <small class="form-text text-warning">{{ validation.message }} </small>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -61,10 +108,20 @@
                        (click)="addArtist()">
 
               </div>
+              <div class="row mt-1">
+                <div class="col">
+                  <ng-container *ngFor="let validation of eventFormMessages.artists">
+                    <div class="error"
+                        *ngIf="artists.length===0 && artistButtonClicked">
+                      <small class="form-text text-warning">{{ validation.message }} </small>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="row" *ngFor="let art of artists; let i = index">
-            <app-create-event-add-artist (deleteArtistWithNumber)="deleteArtist($event)" (updateArtistEmitter)="updateArtist($event)" [number]="i"></app-create-event-add-artist>
+          <div class="row" *ngFor="let item of [].constructor(artists.length); let i = index">
+            <app-create-event-add-artist (deleteArtistWithNumber)="deleteArtist($event)" (updateArtistEmitter)="updateArtist($event)" [number]="i" ></app-create-event-add-artist>
           </div>
 
 
@@ -74,9 +131,21 @@
               <label for="file-upload" id="file-upload-label" class="custom-file-upload white d-flex justify-content-center align-items-center">
                 <i class="bi bi-image"></i>
               </label>
-              <input id="file-upload" required formControlName="thumbnail" name="thumbnail" class="form-control"
+              <input id="file-upload" required formControlName="thumbnail" name="thumbnail" class="form-control" (change)="handleFileInput($event.target.files)" (click)="imageButtonClicked=true"
                      type="file" accept="image/png, image/jpeg"/>
-              <!--          TODO add error messages-->
+
+              <div class="row mt-1">
+                <div class="col">
+                  <ng-container>
+                    <div class="error"
+                         *ngIf="imageButtonClicked && (image === null || image === undefined)">
+                      <small class="form-text text-warning">{{ eventFormMessages.thumbnail[0].message }}</small>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+
+
             </div>
             <div class="col-9">
               <label for="btnPerformance">Performance(s)</label>
@@ -85,16 +154,25 @@
                        (click)="addPerformance()">
 
               </div>
-
+              <div class="row mt-1">
+                <div class="col">
+                  <ng-container *ngFor="let validation of eventFormMessages.performances">
+                    <div class="error"
+                         *ngIf="performances.length===0 && performanceButtonClicked">
+                      <small class="form-text text-warning">{{ validation.message }} </small>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="row" *ngFor="let perf of performances; let i = index">
-            <app-create-performance (deletePerformanceWithNumber)="deletePerformance($event)" (updatePerformanceEmitter)="updatePerformance($event)" [number]="i" [performance]="perf"></app-create-performance>
+          <div class="row" *ngFor="let item of [].constructor(performances.length); let i = index">
+            <app-create-performance (deletePerformanceWithNumber)="deletePerformance($event)" (updatePerformanceEmitter)="updatePerformance($event)" [number]="i"></app-create-performance>
           </div>
           <div class="row mt-3">
             <div class="col-12">
               <div class="form-group d-grid">
-                <input type="button" id="submit" name="submit" value="Add" class="btn white">
+                <input type="button" id="submit" name="submit" value="Add" class="btn white" (click)="addEvent()">
               </div>
             </div>
           </div>

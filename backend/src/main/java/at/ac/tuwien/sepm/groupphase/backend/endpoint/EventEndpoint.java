@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
 
@@ -29,13 +31,15 @@ public class EventEndpoint {
         this.eventService = eventService;
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Creates a new Event Entry", security = @SecurityRequirement(name = "apiKey"))
-    public EventDto createNews(@RequestBody EventDto eventDto) {
+    public EventDto createEvent(@RequestBody EventDto eventDto) {
         LOGGER.info("POST /api/v1/events body: {}", eventDto);
+        //TODO fix mapping error
         return eventMapper.eventToEventDto(eventService.createEvent(eventDto));
+
 
     }
 

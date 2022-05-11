@@ -17,10 +17,13 @@ export class CreateEventAddArtistComponent implements OnInit {
   deleteArtistWithNumber = new EventEmitter<number>();
   @Output()
   updateArtistEmitter = new EventEmitter<{ number: number; artist: Artist }>();
+
   searchArtistFailed = false;
-  artistName: string;
+
   artist: Artist;
-  constructor(private artistService: ArtistService) { }
+
+  constructor(private artistService: ArtistService) {
+  }
 
   ngOnInit(): void {
   }
@@ -30,7 +33,13 @@ export class CreateEventAddArtistComponent implements OnInit {
   }
 
   updateArtist() {
-//TODO
+    const tmp = this.artist;
+    this.updateArtistEmitter.emit({
+      number: this.number,
+      artist: tmp
+    });
+
+    console.log(this.artist);
   }
 
 

@@ -5,18 +5,27 @@
   <div class="col-11">
     <div class="row">
       <div class="col">
-        <!--        Location TODO typeahead-->
-        <label for="artistName">Artist Name</label>
-<!--        <input type="text" required name="artistName" class="form-control" id="artistName" [(ngModel)]="artistName"-->
-<!--               aria-describedby="artistNameHelp" placeholder="Artist Name" (ngModelChange)="updateArtist()">-->
-        <input [(ngModel)]="artist"
+        <label for="artistName_{{number}}">Artist Name</label>
+        <input  [(ngModel)]="artist" (ngModelChange)="updateArtist()"
                placeholder="Search Artist by Name" class="form-control"
-               name="artistName" type="text" id="artistName" required
+               name="artistName_{{number}}" type="text" id="artistName_{{number}}" required
                [class.is-invalid]="searchArtistFailed" [ngbTypeahead]="searchArtist"
                [resultFormatter]="resultFormatArtistListValue"
                [inputFormatter]="inputFormatArtistListValue">
 
+<!--        -->
 
+<!--        <div class="row mt-1">-->
+<!--          <div class="col">-->
+<!--            <ng-container>-->
+<!--              <div class="error"-->
+<!--                   *ngIf="artistForm.controls.artist.hasError('required') && (artistForm.controls.artist.value === null || artistForm.controls.artist.value === undefined)-->
+<!--                    && (artistForm.controls.artist.dirty || artistForm.controls.artist.touched)">-->
+<!--                <small class="form-text text-warning">Artist is required </small>-->
+<!--              </div>-->
+<!--            </ng-container>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
     </div>
 

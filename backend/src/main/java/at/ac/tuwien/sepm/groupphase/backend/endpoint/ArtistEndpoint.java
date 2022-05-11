@@ -32,7 +32,7 @@ public class ArtistEndpoint {
 
         @Secured("ROLE_USER")
         @GetMapping
-        @Operation(summary = "Get list of artists. If name is specified, only whose artists with the exact same name will come as a result.", security = @SecurityRequirement(name = "apiKey"))
+        @Operation(summary = "Get list of artists. If name is specified, only whose artists with matching name will come as a result.", security = @SecurityRequirement(name = "apiKey"))
         public List<ArtistDto> findAll(ArtistSearchDto artistSearchDto) {
             LOGGER.info("GET /api/v1/artists with {}", artistSearchDto);
             return artistMapper.artistToArtistDto(artistService.find(artistSearchDto));
