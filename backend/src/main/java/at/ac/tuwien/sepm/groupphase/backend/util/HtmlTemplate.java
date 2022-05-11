@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.util;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,6 +58,9 @@ public class HtmlTemplate {
     private final String[] requiredKeys;
     private final Template template;
 
+    @Getter
+    private final String path;
+
     /**
      * Setup and loading of the template.
      *
@@ -65,6 +69,7 @@ public class HtmlTemplate {
      */
     public HtmlTemplate(String path, String[] requiredKeys) {
         this.requiredKeys = requiredKeys;
+        this.path = path;
 
         Template temp = null;
         try {
@@ -82,7 +87,7 @@ public class HtmlTemplate {
      * @return the html template string after computing and replacing the values
      */
     public String compile(Map<String, Object> values) {
-        LOGGER.trace("");
+        LOGGER.trace("compile(Map<String, Object> values) with values={}", values);
         for (String key : requiredKeys) {
             values.putIfAbsent(key, "");
             // TODO handle error properly
@@ -91,4 +96,8 @@ public class HtmlTemplate {
         return this.template.execute(values);
     }
 
+    @Override
+    public String toString() {
+        return path;
+    }
 }

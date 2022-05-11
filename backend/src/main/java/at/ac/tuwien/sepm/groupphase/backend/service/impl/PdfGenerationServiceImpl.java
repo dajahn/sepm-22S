@@ -30,6 +30,7 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
 
     @Override
     public File generate(HtmlTemplate template, Map<String, Object> data) {
+        LOGGER.trace("generate(HtmlTemplate template, Map<String, Object> data) with template={} data={}", template.getPath(), data);
         String html = template.compile(data);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();

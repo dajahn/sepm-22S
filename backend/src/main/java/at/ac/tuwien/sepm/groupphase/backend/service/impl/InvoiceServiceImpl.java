@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final InvoiceRepository invoiceRepository;
@@ -31,6 +31,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void create(Invoice invoice) {
+        LOGGER.trace("create(Invoice invoice) with invoice={}", invoice);
         this.setNextFreeInvoiceId(invoice);
         invoiceProcessingService.process(invoice); // runs asynchronous
     }
@@ -38,6 +39,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     @Transactional
     public void setNextFreeInvoiceId(Invoice invoice) {
+        LOGGER.trace("setNextFreeInvoiceId(Invoice invoice) with invoice={}", invoice);
         Invoice last = invoiceRepository.findFirstByOrderByIdDesc();
         InvoiceId lastId = last != null ? last.getIdentification() : null;
 
@@ -51,6 +53,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void save(Invoice invoice) {
+        LOGGER.trace("save(Invoice invoice) with invoice={}", invoice);
         invoiceRepository.save(invoice);
     }
 
