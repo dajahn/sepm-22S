@@ -4,6 +4,9 @@ import at.ac.tuwien.sepm.groupphase.backend.enums.SectorType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * Data transfer object of the standing sector entity.
+ */
 @Data()
 @EqualsAndHashCode(callSuper = true)
 public class StandingSectorDto extends SectorDto {

@@ -4,6 +4,9 @@ import lombok.Data;
 
 import javax.persistence.Column;
 
+/**
+ * Data transfer object of the point entity.
+ */
 @Data
 public class PointDto {
 

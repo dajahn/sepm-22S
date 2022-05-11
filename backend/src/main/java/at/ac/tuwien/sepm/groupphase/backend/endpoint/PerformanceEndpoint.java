@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedMessageDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedPerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +31,7 @@ public class PerformanceEndpoint {
     @Secured("ROLE_USER")
     @GetMapping(value = "/{id}")
     @Operation(summary = "Get detailed information about a specific performance", security = @SecurityRequirement(name = "apiKey"))
-    public DetailedPerformanceDto findById(@PathVariable Long id) {
+    public PerformanceDto findById(@PathVariable Long id) {
         LOGGER.info("GET /api/v1/performances/{}", id);
         return performanceMapper.performanceToDetailedPerformanceDto(performanceService.findById(id));
     }

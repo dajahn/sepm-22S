@@ -2,6 +2,9 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import lombok.Data;
 
+/**
+ * Data transfer object of the location entity.
+ */
 @Data
 public class LocationDto {
 
