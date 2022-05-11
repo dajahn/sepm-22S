@@ -18,5 +18,10 @@ public interface NewsService {
      */
     News createNews(NewsDto news, File file) throws IOException;
 
+
+    /**
+     *  Gets all the available news entries.
+     * @return all news entries
+     */
     List<News> getAll();
 }

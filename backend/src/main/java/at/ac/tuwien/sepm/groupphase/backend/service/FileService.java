@@ -11,6 +11,7 @@ public interface FileService {
      *
      * @param f file from User Input
      * @return Created File
+     * @throws IOException when file cannot be loaded
      */
     File create(FileDto f) throws IOException;
 }
