@@ -21,6 +21,5 @@ export class NewsService {
 
   public getAllNews() {
     return this.httpClient.get(environment.baseURI);
-
   }
 }

@@ -50,7 +50,7 @@ public class NewsEndpoint {
         this.newsMapper = newsMapper;
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Creates a new News Entry", security = @SecurityRequirement(name = "apiKey"))
@@ -61,7 +61,7 @@ public class NewsEndpoint {
         News news;
 
         try {
-            FileDto fileDto = new FileDto(null, MediaType.parseMediaType(newsDto.getImage().getContentType()), newsDto.getImage());
+            FileDto fileDto = new FileDto(null, MediaType.parseMediaType(newsDto.getImage().getContentType()), newsDto.getImage().getBytes());
 
             file = this.fileService.create(fileDto);
             news = this.newsService.createNews(newsDto, file);
@@ -82,17 +82,19 @@ public class NewsEndpoint {
     public List<NewsDto> getNews() {
 
         List<News> news = this.newsService.getAll();
-
         List<NewsDto> newsDtos = news.stream().map(n -> this.newsMapper.entityToNewsDto(n)).toList();
 
-        //TODO : return image in news element -> configure mapper?
-        /*
+        //Adds the corresponding filedto to the newsdto
         for (int i = 0; i < newsDtos.size(); i++) {
+            FileDto fileDto = new FileDto();
             File f = news.get(i).getFile();
-            MultipartFile multipartFile = new MockMultipartFile("file", "file", f.getType().toString(), ImageUtility.decompressImage(f.getData()));
-            newsDtos.get(i).setImage(multipartFile);
+
+            fileDto.setImage(ImageUtility.decompressImage(f.getData()));
+            fileDto.setType(f.getType());
+
+            newsDtos.get(i).setFileDto(fileDto);
         }
-        */
+
         return newsDtos;
     }
 }

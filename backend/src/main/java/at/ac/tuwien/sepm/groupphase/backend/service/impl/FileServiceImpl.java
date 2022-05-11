@@ -29,7 +29,7 @@ public class FileServiceImpl implements FileService {
 
         File file = File.builder()
             .type(f.getType())
-            .data(ImageUtility.compressImage(f.getImage().getBytes()))
+            .data(ImageUtility.compressImage(f.getImage()))
             .build();
 
         file = this.fileRepository.save(file);

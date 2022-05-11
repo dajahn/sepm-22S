@@ -22,4 +22,6 @@ public class NewsDto {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
+
+    private FileDto fileDto;
 }

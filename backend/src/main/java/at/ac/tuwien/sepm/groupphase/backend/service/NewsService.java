@@ -21,7 +21,8 @@ public interface NewsService {
 
     /**
      *  Gets all the available news entries.
-     * @return all news entries
+     *
+     *  @return all news entries
      */
     List<News> getAll();
 }

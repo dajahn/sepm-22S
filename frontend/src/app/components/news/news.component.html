@@ -11,7 +11,10 @@
         <label class="date me-3">{{n.date}}</label>
         <div class="content d-flex align-items-center" [ngClass]="{'rainbowBackground': i === currentSelectedId}">
             <div class="previewIcon">
-                <i class="bi bi-bullseye"></i>
+                <img [src]="n.fileDto.image">
+                <!--
+                    <i class="bi bi-bullseye"></i>
+                -->
             </div>
             <div class="previewNews">
                 <div class="title">{{n.title}}</div>

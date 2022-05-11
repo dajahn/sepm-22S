@@ -14,5 +14,5 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileDto {
     private Long id;
     private MediaType type;
-    private MultipartFile image;
+    private byte[] image;
 }

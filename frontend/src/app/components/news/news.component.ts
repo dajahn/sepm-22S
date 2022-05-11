@@ -21,6 +21,10 @@ export class NewsComponent implements OnInit {
   private loadNews() {
     this.newsService.getAllNews().subscribe((news: News[]) => {
       this.news = news;
+      console.log(this.news);
+      for (let n of this.news) {
+        n.fileDto.image = 'data:image/jpeg;base64,' + n.fileDto.image;
+      }
       console.dir(this.news);
     });
   }
