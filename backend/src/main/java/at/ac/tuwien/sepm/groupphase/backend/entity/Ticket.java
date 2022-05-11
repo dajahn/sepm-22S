@@ -33,6 +33,11 @@ public abstract class Ticket {
     @NonNull
     private Performance performance;
 
+    /**
+     * Gets either a StandingSector or a SeatSector corresponding to the StandingTicket or SeatTicket.
+     *
+     * @return the sector
+     */
     public abstract Sector getSector();
 
     @Override

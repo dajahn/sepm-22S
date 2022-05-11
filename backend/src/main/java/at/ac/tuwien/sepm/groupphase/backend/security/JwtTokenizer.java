@@ -18,17 +18,23 @@ public class JwtTokenizer {
         this.securityProperties = securityProperties;
     }
 
-    public String getAuthToken(String user, List<String> roles) {
+    public String getAuthToken(String email, String firstName, String lastName, List<String> roles) {
         byte[] signingKey = securityProperties.getJwtSecret().getBytes();
         String token = Jwts.builder()
             .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
             .setHeaderParam("typ", securityProperties.getJwtType())
             .setIssuer(securityProperties.getJwtIssuer())
             .setAudience(securityProperties.getJwtAudience())
-            .setSubject(user)
+            .setSubject(email)
             .setExpiration(new Date(System.currentTimeMillis() + securityProperties.getJwtExpirationTime()))
             .claim("rol", roles)
+            .claim("firstname", firstName)
+            .claim("lastname", lastName)
             .compact();
         return securityProperties.getAuthTokenPrefix() + token;
+    }
+
+    public String getAuthToken(String email, List<String> roles) {
+        return getAuthToken(email, null, null, roles);
     }
 }

@@ -5,7 +5,10 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Location;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Location;
+import org.springframework.stereotype.Repository;
 
+import java.util.stream.Stream;
 import java.util.List;
 
 public interface LocationRepository extends JpaRepository<Location, Long> {
@@ -24,4 +27,4 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
      * @return a list of all locations with matching name
      */
     List<Location> findByNameContaining(@Param("name") String name);
-}
+

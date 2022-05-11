@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.SeatSector;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatSectorDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.StandingSectorDto;
@@ -17,6 +16,13 @@ public interface SectorMapper {
 
     SectorMapper INSTANCE = Mappers.getMapper(SectorMapper.class);
 
+    /**
+     * This method is necessary because a Mapper cannot map abstract classes.
+     * Uses dynamic binding to create the corresponding SectorDto for a Sector.
+     *
+     * @param sector the Sector that should be mapped
+     * @return the mapped SectorDto
+     */
     default SectorDto sectorToSectorDto(Sector sector) {
         return sector.mapToDto();
     }
@@ -25,4 +31,3 @@ public interface SectorMapper {
 
     SeatSectorDto seatSectorToStandingSectorDto(SeatSector sector);
 }
-

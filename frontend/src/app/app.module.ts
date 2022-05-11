@@ -5,7 +5,6 @@ import {HttpClientModule} from '@angular/common/http';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
 import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
@@ -15,11 +14,12 @@ import {httpInterceptorProviders} from './interceptors';
 import { CreateEventComponent } from './components/create-event/create-event.component';
 import { CreatePerformanceComponent } from './components/create-performance/create-performance.component';
 import { CreateEventAddArtistComponent } from './components/create-event-add-artist/create-event-add-artist.component';
+import { NavigationComponent } from './components/navigation/navigation.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
+    NavigationComponent,
     FooterComponent,
     HomeComponent,
     LoginComponent,

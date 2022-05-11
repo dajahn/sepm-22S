@@ -1,14 +1,15 @@
 import {Artist} from './artist';
-import {Performance} from './performance';
-import {EventCategory} from '../enums/event-category';
 
 export interface Event {
-  id?: number;
+  id: number;
   name: string;
   description: string;
-  duration: string;
-  thumbnail: File;
-  category: EventCategory;
+  duration: number;
   artists: Artist[];
-  performances: Performance[];
+  category: EventCategory;
+}
+
+export enum EventCategory {
+  CONCERT = 'CONCERT',
+  CONFERENCE = 'CONFERENCE'
 }

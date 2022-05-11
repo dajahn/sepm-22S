@@ -4,4 +4,3 @@ public enum SectorType {
     STANDING_SECTOR,
     SEAT_SECTOR,
 }
-

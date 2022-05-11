@@ -47,6 +47,11 @@ public abstract class Sector {
     @NonNull
     private Double price;
 
+    /**
+     * Maps a StandingSector or SeatSector to its corresponding StandingSectorDto or SeatSectorDto.
+     *
+     * @return the sector DTO
+     */
     public abstract SectorDto mapToDto();
 
     @Override

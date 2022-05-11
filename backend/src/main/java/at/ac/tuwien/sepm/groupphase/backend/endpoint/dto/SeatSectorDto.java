@@ -5,6 +5,9 @@ import at.ac.tuwien.sepm.groupphase.backend.enums.SectorType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * Data transfer object of the seat sector entity.
+ */
 @Data()
 @EqualsAndHashCode(callSuper = true)
 public class SeatSectorDto extends SectorDto {
@@ -16,4 +19,3 @@ public class SeatSectorDto extends SectorDto {
         super(SectorType.SEAT_SECTOR);
     }
 }
-
