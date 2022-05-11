@@ -37,12 +37,14 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
     @Override
     @Async("invoiceProcessingPoolTaskExecutor")
     public void process(Invoice invoice) {
+        LOGGER.trace("process(Invoice invoice) with invoice={}", invoice);
         this.generatePdf(invoice);
         this.sendNotification(invoice);
     }
 
     @Override
     public void generatePdf(Invoice invoice) {
+        LOGGER.trace("generatePdf(Invoice invoice) with invoice={}", invoice);
         Map<String, Object> data = new HashMap<>();
         data.put("invoice.number", invoice.getIdentification().toString());
 
@@ -75,6 +77,7 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
 
     @Override
     public void sendNotification(Invoice invoice) {
+        LOGGER.trace("sendNotification(Invoice invoice) with invoice={}", invoice);
         emailService.sendInvoiceNotification(invoice);
         invoice.setStatus(InvoiceStatus.DISTRIBUTED);
         invoiceRepository.save(invoice);

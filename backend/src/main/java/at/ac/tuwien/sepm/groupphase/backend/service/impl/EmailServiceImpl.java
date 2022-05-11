@@ -30,6 +30,10 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void send(HtmlTemplate template, Map<String, Object> data, String subject, String recipient, File attachment, String attachmentName) {
+        LOGGER.trace(
+            "send(HtmlTemplate template, Map<String, Object> data, String subject, String recipient, File attachment, String attachmentName) with template={} data={} subject={} recipient={} attachment={} attachmentName={}",
+            template.getPath(), data, subject, recipient, attachment, attachmentName);
+
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setPort(1025);
         mailSender.setUsername("");
@@ -74,6 +78,8 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendInvoiceNotification(Invoice invoice) {
+        LOGGER.trace("sendInvoiceNotification(Invoice invoice) with invoice={}", invoice);
+
         HashMap<String, Object> data = new HashMap<>();
 
         data.put("title", "New Invoice!");
