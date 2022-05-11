@@ -48,6 +48,7 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
         LOGGER.trace("generatePdf(Invoice invoice) with invoice={}", invoice);
         Map<String, Object> data = new HashMap<>();
         data.put("invoice.number", invoice.getIdentification().toString());
+        data.put("invoice.date", Formatter.formatDate(invoice.getDate()));
 
         // todo make values dynamic
         data.put("tickets", Arrays.asList(new Object() {

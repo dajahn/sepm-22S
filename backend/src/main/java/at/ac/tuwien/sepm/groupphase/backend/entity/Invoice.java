@@ -21,7 +21,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -75,4 +75,9 @@ public class Invoice {
     @ManyToOne
     @JoinColumn
     private File pdf;
+
+    @Column(nullable = false)
+    @NonNull
+    private LocalDate date = LocalDate.now();
+    
 }

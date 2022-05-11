@@ -11,7 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -68,14 +67,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException {
-        User user = ((User) authResult.getPrincipal());
+        AuthenticatedUser user = ((AuthenticatedUser) authResult.getPrincipal());
 
         List<String> roles = user.getAuthorities()
             .stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
 
-        response.getWriter().write(jwtTokenizer.getAuthToken(user.getUsername(), roles));
+        response.getWriter().write(jwtTokenizer.getAuthToken(user.getUsername(), user.getEntity().getFirstName(), user.getEntity().getLastName(), roles));
         LOGGER.info("Successfully authenticated user {}", user.getUsername());
     }
 }

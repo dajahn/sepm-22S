@@ -1,6 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
+import at.ac.tuwien.sepm.groupphase.backend.enums.SeatType;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,16 +27,23 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @RequiredArgsConstructor
-public class SeatSector extends Seat {
-
-    @OneToMany(cascade = {CascadeType.ALL})
-    @OrderBy("row, column")
-    @ToString.Exclude
-    private List<Seat> seats = new ArrayList<>();
+public class SeatSector extends Sector {
 
     @Column(nullable = false)
-    private Type type;
+    @NonNull
+    private SeatType seatType;
+
+    @OneToMany(fetch = javax.persistence.FetchType.EAGER, cascade = CascadeType.ALL)
+    @OrderBy("row, column")
+    @NonNull
+    private List<Seat> seats = new ArrayList<>();
+
+    @Override
+    public SectorDto mapToDto() {
+        return SectorMapper.INSTANCE.seatSectorToStandingSectorDto(this);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -48,11 +60,5 @@ public class SeatSector extends Seat {
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    public enum Type {
-        NONE,
-        PR,
-        VIP
     }
 }
