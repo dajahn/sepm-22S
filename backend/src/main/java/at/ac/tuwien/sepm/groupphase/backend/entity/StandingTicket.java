@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -8,36 +9,21 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.util.Objects;
 
-/**
- * This entity represents an artist that can perform events.
- */
 @Entity
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class Artist {
+public class StandingTicket extends Ticket {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
-    private Long id;
-
-    @Column(nullable = false, length = 127)
+    @ManyToOne
     @NonNull
-    private String name;
-
-    @Column(nullable = false, length = 1023)
-    @NonNull
-    private String description;
+    private StandingSector sector;
 
     @Override
     public boolean equals(Object o) {
@@ -47,8 +33,8 @@ public class Artist {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        Artist artist = (Artist) o;
-        return id != null && Objects.equals(id, artist.id);
+        StandingTicket that = (StandingTicket) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override

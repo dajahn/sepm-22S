@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
 import at.ac.tuwien.sepm.groupphase.backend.enums.SeatType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,38 +9,30 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.ManyToOne;
 import java.util.Objects;
 
-/**
- * This entity represents a seat sector at a location, consisting of seats.
- */
 @Entity
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class SeatSector extends Sector {
+public class SeatTicket extends Ticket {
 
     @Column(nullable = false)
     @NonNull
     private SeatType seatType;
 
-    @OneToMany(fetch = javax.persistence.FetchType.EAGER, cascade = CascadeType.ALL)
-    @OrderBy("row, column")
+    @ManyToOne
     @NonNull
-    private List<Seat> seats = new ArrayList<>();
+    private Seat seat;
 
     @Override
-    public SectorDto mapToDto() {
-        return SectorMapper.INSTANCE.seatSectorToStandingSectorDto(this);
+    public SeatSector getSector() {
+        return seat.getSector();
     }
 
     @Override
@@ -53,7 +43,7 @@ public class SeatSector extends Sector {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        SeatSector that = (SeatSector) o;
+        SeatTicket that = (SeatTicket) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 

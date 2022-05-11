@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity.embeddable;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,14 +17,17 @@ import javax.persistence.Embeddable;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @RequiredArgsConstructor
 public class Point {
 
     @SuppressWarnings("checkstyle:membername")
     @Column(nullable = false)
+    @NonNull
     private Integer x;
 
     @SuppressWarnings("checkstyle:membername")
     @Column(nullable = false)
+    @NonNull
     private Integer y;
 }
