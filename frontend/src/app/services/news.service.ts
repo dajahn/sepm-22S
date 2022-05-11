@@ -19,7 +19,8 @@ export class NewsService {
     return this.httpClient.post(environment.baseURI, formData);
   }
 
-  public getNews() {
+  public getAllNews() {
     return this.httpClient.get(environment.baseURI);
+
   }
 }
