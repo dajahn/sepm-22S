@@ -9,8 +9,12 @@ import { News } from 'src/app/dtos/news';
 })
 export class NewsComponent implements OnInit {
   public news: News[];
+  public allNews: News[];
 
-  public currentSelectedId: number = -1;
+  public expandAllNews: boolean = false;
+  public currentSelectedIdUnreadNews: number = -1;
+  public currentSelectedIdAllNews: number = -1;
+
 
   constructor(private newsService: NewsService) { }
 
@@ -18,10 +22,11 @@ export class NewsComponent implements OnInit {
     this.loadNews();
   }
 
+  //TODO: Only load UNREAD news
   private loadNews() {
     this.newsService.getAllNews().subscribe((news: News[]) => {
       this.news = news;
-      console.log(this.news);
+
       for (let n of this.news) {
         n.fileDto.image = 'data:image/jpeg;base64,' + n.fileDto.image;
       }
@@ -29,8 +34,31 @@ export class NewsComponent implements OnInit {
     });
   }
 
-  public handelOnClick(index: number) {
-    this.currentSelectedId = index;
+  private loadAllNews() {
+    this.newsService.getAllNews().subscribe((news: News[]) => {
+      this.allNews = news;
+
+      for (let n of this.allNews) {
+        n.fileDto.image = 'data:image/jpeg;base64,' + n.fileDto.image;
+      }
+    });
+  }
+
+  public handelOnClickUnreadNews(index: number) {
+    this.currentSelectedIdUnreadNews = index;
+    this.currentSelectedIdAllNews = -1;
+  }
+
+  public handelOnClickAllNews(index: number) {
+    this.currentSelectedIdAllNews = index;
+    this.currentSelectedIdUnreadNews = -1;
+  }
+
+  public toggleExpandAllNews() {
+    this.expandAllNews = !this.expandAllNews;
+
+    //Load all news only when needed
+    this.loadAllNews();
   }
 
 }

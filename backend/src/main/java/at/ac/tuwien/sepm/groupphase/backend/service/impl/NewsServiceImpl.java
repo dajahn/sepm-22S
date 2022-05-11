@@ -1,10 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
+import at.ac.tuwien.sepm.groupphase.backend.util.ImageUtility;
 import at.ac.tuwien.sepm.groupphase.backend.util.NewsValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,15 +24,18 @@ public class NewsServiceImpl implements NewsService {
 
     private final NewsRepository newsRepository;
     private final NewsValidator newsValidator;
+    private NewsMapper newsMapper;
 
-    public NewsServiceImpl(NewsRepository newsRepository, NewsValidator newsValidator) {
+    public NewsServiceImpl(NewsRepository newsRepository, NewsValidator newsValidator, NewsMapper newsMapper) {
         this.newsRepository = newsRepository;
         this.newsValidator = newsValidator;
+        this.newsMapper = newsMapper;
     }
 
     @Override
     public News createNews(NewsDto newsDto, File file) throws IOException {
         LOGGER.debug("createNews {}", newsDto);
+
         this.newsValidator.validateNews(newsDto);
 
         //TODO: create reference with event
@@ -44,8 +50,24 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<News> getAll() {
+    public List<NewsDto> getAll() {
+        LOGGER.debug("getAll()");
+
         List<News> news = this.newsRepository.findAll();
-        return news;
+
+        List<NewsDto> newsDtos = news.stream().map(n -> this.newsMapper.entityToNewsDto(n)).toList();
+
+        //Adds the corresponding filedto to the newsdto
+        for (int i = 0; i < newsDtos.size(); i++) {
+            FileDto fileDto = new FileDto();
+            File f = news.get(i).getFile();
+
+            fileDto.setImage(ImageUtility.decompressImage(f.getData()));
+            fileDto.setType(f.getType());
+
+            newsDtos.get(i).setFileDto(fileDto);
+        }
+
+        return newsDtos;
     }
 }

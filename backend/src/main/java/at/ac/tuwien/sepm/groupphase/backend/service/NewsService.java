@@ -24,5 +24,5 @@ public interface NewsService {
      *
      *  @return all news entries
      */
-    List<News> getAll();
+    List<NewsDto> getAll();
 }

@@ -80,20 +80,9 @@ public class NewsEndpoint {
     @GetMapping
     @Operation(summary = "Gets all the news Entries", security = @SecurityRequirement(name = "apiKey"))
     public List<NewsDto> getNews() {
+        LOGGER.info("GET /api/v1/news");
 
-        List<News> news = this.newsService.getAll();
-        List<NewsDto> newsDtos = news.stream().map(n -> this.newsMapper.entityToNewsDto(n)).toList();
-
-        //Adds the corresponding filedto to the newsdto
-        for (int i = 0; i < newsDtos.size(); i++) {
-            FileDto fileDto = new FileDto();
-            File f = news.get(i).getFile();
-
-            fileDto.setImage(ImageUtility.decompressImage(f.getData()));
-            fileDto.setType(f.getType());
-
-            newsDtos.get(i).setFileDto(fileDto);
-        }
+        List<NewsDto> newsDtos = this.newsService.getAll();
 
         return newsDtos;
     }
