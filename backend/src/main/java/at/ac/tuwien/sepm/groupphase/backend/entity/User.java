@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Address;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,6 +27,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @RequiredArgsConstructor
 public class User {
 
@@ -34,24 +37,31 @@ public class User {
     private Long id;
 
     @Column(nullable = false, name = "first_name", length = 127)
+    @NonNull
     private String firstName;
 
     @Column(nullable = false, name = "last_name", length = 127)
+    @NonNull
     private String lastName;
 
     @Column(nullable = false, unique = true, length = 255)
+    @NonNull
     private String email;
 
     @Column(nullable = false, length = 255)
+    @NonNull
     private String password;
 
     @Embedded
+    @NonNull
     private Address address;
 
     @Column(nullable = false)
+    @NonNull
     private UserRole role;
 
     @Column(nullable = false)
+    @NonNull
     private UserStatus status;
 
     @Column(name = "last_news_read")

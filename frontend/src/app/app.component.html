@@ -1,7 +1,18 @@
-<app-header></app-header>
+<!-- NAVIGATION -->
+<!-- (i) hide navigation if 'register' or 'signup' route is activated -->
+<app-navigation *ngIf="!hasRoute('login' || 'signup')"></app-navigation>
 
-<div class="container">
-  <router-outlet></router-outlet>
+
+
+<!-- CONTENT -->
+<!-- (i) remove margin if 'register' or 'signup' route is activated -->
+<div id="wrapper" [ngStyle]="hasRoute('login' || 'signup') && { 'margin': '0'}" >
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
 </div>
 
+
+
+<!-- FOOTER -->
 <app-footer></app-footer>
