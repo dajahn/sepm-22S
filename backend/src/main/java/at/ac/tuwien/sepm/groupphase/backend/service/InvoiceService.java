@@ -9,10 +9,10 @@ public interface InvoiceService {
      *
      * @param invoice the invoice which should be created
      */
-    Invoice create(Invoice invoice);
+    void create(Invoice invoice);
 
     /**
-     * Finds the next available invoice id and set it to the invoice.
+     * Finds the next available invoice id of the year and sets it to the invoice.
      *
      * @param invoice the invoice which should be processed
      */

@@ -10,15 +10,20 @@ import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceProcessingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PdfGenerationService;
 import at.ac.tuwien.sepm.groupphase.backend.util.Formatter;
 import at.ac.tuwien.sepm.groupphase.backend.util.HtmlTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final PdfGenerationService pdfGenerationService;
     private final EmailService emailService;

@@ -8,13 +8,18 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.InvoiceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceProcessingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final InvoiceRepository invoiceRepository;
     private final InvoiceProcessingService invoiceProcessingService;
@@ -25,10 +30,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice create(Invoice invoice) {
+    public void create(Invoice invoice) {
         this.setNextFreeInvoiceId(invoice);
         invoiceProcessingService.process(invoice); // runs asynchronous
-        return invoice;
     }
 
     @Override

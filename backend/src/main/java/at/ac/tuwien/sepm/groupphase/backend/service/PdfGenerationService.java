@@ -12,7 +12,8 @@ public interface PdfGenerationService {
      *
      * @param template the path to the location of the templated used for generating the pdf
      * @param data     the data for replacing the values of the template
-     * @return FileEntity containing the pdfs data
+     * @return File containing the pdfs data
+     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotGeneratePdfException if there was an error generating the pdf
      */
     File generate(HtmlTemplate template, Map<String, Object> data);
 }

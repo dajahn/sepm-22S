@@ -2,9 +2,12 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
+import at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotDistributeException;
 import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepm.groupphase.backend.util.HtmlTemplate;
 import com.sun.istack.ByteArrayDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +18,15 @@ import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 @Service
 public class EmailServiceImpl implements EmailService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Override
     public void send(HtmlTemplate template, Map<String, Object> data, String subject, String recipient, File attachment, String attachmentName) {
@@ -29,19 +35,21 @@ public class EmailServiceImpl implements EmailService {
         mailSender.setUsername("");
         mailSender.setPassword("");
 
-        Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-
-        String text = template.compile(data);
-
-        MimeMessage message = mailSender.createMimeMessage();
         try {
+            mailSender.testConnection();
+
+            Properties props = mailSender.getJavaMailProperties();
+            props.put("mail.transport.protocol", "smtp");
+
+            MimeMessage message = mailSender.createMimeMessage();
+
             message.setFrom("office@example.com");
             message.setRecipients(Message.RecipientType.TO, recipient);
             message.setSubject(subject);
 
             Multipart body = new MimeMultipart();
             MimeBodyPart messageBody = new MimeBodyPart();
+            String text = template.compile(data);
             messageBody.setContent(text, "text/html");
             body.addBodyPart(messageBody);
 
@@ -60,7 +68,7 @@ public class EmailServiceImpl implements EmailService {
 
             mailSender.send(message);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            throw new CouldNotDistributeException(e);
         }
     }
 
