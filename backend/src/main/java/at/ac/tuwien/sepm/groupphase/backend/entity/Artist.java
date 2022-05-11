@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,6 +22,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @RequiredArgsConstructor
 public class Artist {
 
@@ -29,9 +32,11 @@ public class Artist {
     private Long id;
 
     @Column(nullable = false, length = 127)
+    @NonNull
     private String name;
 
     @Column(nullable = false, length = 1023)
+    @NonNull
     private String description;
 
     @Override

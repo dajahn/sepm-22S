@@ -28,6 +28,44 @@
             "accessibility": "explicit"
           }
         ],
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "enumMember",
+            "format": ["UPPER_CASE"]
+          }
+        ],
+        "@typescript-eslint/member-ordering": [
+          "error",
+          {
+            "default": {
+              "memberTypes": [
+                "signature",
+                "static-field",
+                "decorated-field",
+                "instance-field",
+                "abstract-field",
+                "field",
+                "constructor",
+                "static-get",
+                "decorated-get",
+                "instance-get",
+                "abstract-get",
+                "get",
+                "static-set",
+                "decorated-set",
+                "instance-set",
+                "abstract-set",
+                "set",
+                "static-method",
+                "decorated-method",
+                "instance-method",
+                "abstract-method",
+                "method"
+              ]
+            }
+          }
+        ],
         "brace-style": [
           "error",
           "1tbs"

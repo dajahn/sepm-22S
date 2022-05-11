@@ -14,4 +14,12 @@ public interface FileService {
      * @throws IOException when file cannot be loaded
      */
     File create(FileDto f) throws IOException;
+
+    /**
+     * Find a single file by id.
+     *
+     * @param id the id of the file
+     * @return the file
+     */
+    File findById(Long id);
 }
