@@ -8,6 +8,6 @@ export interface SeatSector extends Sector {
 
 export enum SeatType {
   NONE = 'NONE',
-  PR = 'PR',
+  PREMIUM = 'PREMIUM',
   VIP = 'VIP'
 }
