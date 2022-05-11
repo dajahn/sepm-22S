@@ -12,4 +12,7 @@ export class CartComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onRemove() {
+    alert('test');
+  }
 }

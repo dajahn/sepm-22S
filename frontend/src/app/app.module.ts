@@ -13,7 +13,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { CartComponent } from './components/cart/cart.component';
-import { CartTicketComponent } from './components/cart/cart-ticket/cart-ticket.component';
+import { TicketComponent } from './components/ticket/ticket.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +24,7 @@ import { CartTicketComponent } from './components/cart/cart-ticket/cart-ticket.c
     LoginComponent,
     MessageComponent,
     CartComponent,
-    CartTicketComponent,
+    TicketComponent,
   ],
   imports: [
     BrowserModule,
