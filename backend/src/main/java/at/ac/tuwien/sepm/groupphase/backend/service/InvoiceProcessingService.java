@@ -15,6 +15,7 @@ public interface InvoiceProcessingService {
      * Generates a file representation of the invoice.
      *
      * @param invoice the invoice which should be generated
+     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotGeneratePdfException if there was an error generating the invoice pdf
      */
     void generatePdf(Invoice invoice);
 
@@ -22,6 +23,7 @@ public interface InvoiceProcessingService {
      * Send the given invoice.
      *
      * @param invoice the invoice which should be sent
+     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotDistributeException if there was an error sending the invoice notification email
      */
     void sendNotification(Invoice invoice);
 }

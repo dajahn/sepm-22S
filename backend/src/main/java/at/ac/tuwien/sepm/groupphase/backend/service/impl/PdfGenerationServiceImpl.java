@@ -1,20 +1,26 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
+import at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotGeneratePdfException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.PdfGenerationService;
-import at.ac.tuwien.sepm.groupphase.backend.templates.HtmlTemplate;
+import at.ac.tuwien.sepm.groupphase.backend.util.HtmlTemplate;
 import com.lowagie.text.DocumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.Map;
 
 @Service
 public class PdfGenerationServiceImpl implements PdfGenerationService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final FileRepository fileRepository;
 
@@ -28,15 +34,13 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        //step1: render html to memory
         ITextRenderer renderer = new ITextRenderer();
         renderer.setDocumentFromString(html);
         renderer.layout();
         try {
             renderer.createPDF(out);
         } catch (DocumentException e) {
-            e.printStackTrace();
-            // TODO handle exception
+            throw new CouldNotGeneratePdfException(e);
         }
         byte[] pdfBytes = out.toByteArray();
 
@@ -44,8 +48,7 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
             out.flush();
             out.close();
         } catch (IOException e) {
-            e.printStackTrace();
-            // TODO handle exception
+            throw new CouldNotGeneratePdfException(e);
         }
 
         File fileEntity = new File();

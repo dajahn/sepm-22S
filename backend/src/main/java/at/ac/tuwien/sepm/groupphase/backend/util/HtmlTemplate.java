@@ -1,15 +1,20 @@
-package at.ac.tuwien.sepm.groupphase.backend.templates;
+package at.ac.tuwien.sepm.groupphase.backend.util;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.invoke.MethodHandles;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class HtmlTemplate {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /**
      * Template for creating the invoice pdf. <br>
@@ -71,6 +76,7 @@ public class HtmlTemplate {
      * @return the html template string after computing and replacing the values
      */
     public String compile(Map<String, Object> values) {
+        LOGGER.trace("");
         for (String key : requiredKeys) {
             values.putIfAbsent(key, "");
             // TODO handle error properly

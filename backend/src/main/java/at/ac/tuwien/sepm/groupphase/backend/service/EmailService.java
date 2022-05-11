@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
-import at.ac.tuwien.sepm.groupphase.backend.templates.HtmlTemplate;
+import at.ac.tuwien.sepm.groupphase.backend.util.HtmlTemplate;
 
 import java.util.Map;
 
@@ -16,6 +16,7 @@ public interface EmailService {
      * @param subject    the subject of the email
      * @param recipient  the recipient of the email
      * @param attachment an optional attachment which is added to the email
+     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotDistributeException if there is an error while sending the email
      */
     void send(HtmlTemplate template, Map<String, Object> data, String subject, String recipient, File attachment, String attachmentName);
 
@@ -41,6 +42,7 @@ public interface EmailService {
      * Send a notification about a new invoice to the user including the invoice as an attachment.
      *
      * @param invoice the invoice which the user should be notified about
+     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotDistributeException if there is an error while sending the email
      */
     void sendInvoiceNotification(Invoice invoice);
 }
