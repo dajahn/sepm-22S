@@ -66,12 +66,9 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
         data.put("event.date", "8.5.2022 18:00 - 20:00");
         data.put("event.location", "WUK Vienna");
 
-        File pdf;
-        if (invoice.getType() == InvoiceType.CANCELLATION) {
-            pdf = pdfGenerationService.generate(HtmlTemplate.PDF_CANCELLATION_INVOICE, data);
-        } else {
-            pdf = pdfGenerationService.generate(HtmlTemplate.PDF_INVOICE, data);
-        }
+        HtmlTemplate template = invoice.getType() == InvoiceType.CANCELLATION ? HtmlTemplate.PDF_CANCELLATION_INVOICE : HtmlTemplate.PDF_INVOICE;
+
+        File pdf = pdfGenerationService.generate(template, data);
 
         invoice.setStatus(InvoiceStatus.GENERATED);
         invoiceRepository.save(invoice);

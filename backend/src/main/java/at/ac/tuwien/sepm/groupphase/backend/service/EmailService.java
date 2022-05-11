@@ -50,6 +50,7 @@ public interface EmailService {
      * Send a notification about a canceled invoice to the user including the cancellation invoice as an attachment.
      *
      * @param invoice the cancellation invoice which the user should be notified about
+     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotDistributeException if there is an error while sending the email
      */
     void sendCancellationInvoiceNotification(Invoice invoice);
 }

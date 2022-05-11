@@ -29,7 +29,7 @@ public interface InvoiceService {
      * Cancels the given invoice and created a new cancellation invoice.
      *
      * @param invoice the invoice which should be canceled
-     * @return the newly created cancellation invoicew
+     * @return the newly created cancellation invoice
      * @throws at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException if the provided invoice does not match the required criteria
      */
     Invoice cancel(Invoice invoice);
