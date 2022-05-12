@@ -11,6 +11,7 @@ import { News } from 'src/app/dtos/news';
 export class NewsCreateComponent implements OnInit {
   public newsForm: FormGroup;
   public image: File;
+  public submitted: boolean = false;
 
   constructor(private newsService: NewsService, private formBuilder: FormBuilder) {
     this.newsForm = this.formBuilder.group({
@@ -24,14 +25,31 @@ export class NewsCreateComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  public getBase64(file: File) {
+    return new Promise<string>((resolve, reject) => {
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(<string>reader.result);
+      reader.onerror = (error) => reject(error);
+    })
+  }
+
   async onSubmit(e: Event) {
     e.preventDefault();
+
+    this.submitted = true;
+
+    let base64img = await this.getBase64(this.image);
+    base64img = base64img.split(',')[1];
 
     let news: News = {
       title: this.newsForm.controls.title.value,
       description: this.newsForm.controls.description.value,
       eventId: this.newsForm.controls.eventId.value,
-      image: this.image
+      fileDto: {
+        imageBase64: base64img,
+        type: this.image.type
+      }
     };
 
     //TODO: Add validation toast

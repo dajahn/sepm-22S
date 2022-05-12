@@ -1,6 +1,7 @@
 export class FileDto {
     id?: number;
-    mediaType: string;
-    //byte[]
-    image: any;
+    type: string;
+    url?: String;
+    imageBase64?: string;
+    imageType?: string;
 }

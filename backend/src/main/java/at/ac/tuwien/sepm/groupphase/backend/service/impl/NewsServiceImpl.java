@@ -54,7 +54,6 @@ public class NewsServiceImpl implements NewsService {
         LOGGER.trace("getAll()");
 
         List<News> news = this.newsRepository.findAll();
-
         List<NewsDto> newsDtos = news.stream().map(n -> this.newsMapper.entityToNewsDto(n)).toList();
 
         //Adds the corresponding filedto to the newsdto
@@ -62,8 +61,8 @@ public class NewsServiceImpl implements NewsService {
             FileDto fileDto = new FileDto();
             File f = news.get(i).getFile();
 
-            fileDto.setImage(ImageUtility.decompressImage(f.getData()));
             fileDto.setType(f.getType());
+            fileDto.setUrl("/files/" + f.getId().toString());
 
             newsDtos.get(i).setFileDto(fileDto);
         }

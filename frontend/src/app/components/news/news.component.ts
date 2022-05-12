@@ -1,3 +1,4 @@
+import { Globals } from './../../global/globals';
 import { NewsService } from './../../services/news.service';
 import { Component, OnInit } from '@angular/core';
 import { News } from 'src/app/dtos/news';
@@ -16,7 +17,7 @@ export class NewsComponent implements OnInit {
   public currentSelectedIdAllNews: number = -1;
 
 
-  constructor(private newsService: NewsService) { }
+  constructor(private newsService: NewsService, private globals: Globals) { }
 
   ngOnInit(): void {
     this.loadNews();
@@ -28,7 +29,7 @@ export class NewsComponent implements OnInit {
       this.news = news;
 
       for (let n of this.news) {
-        n.fileDto.image = 'data:image/jpeg;base64,' + n.fileDto.image;
+        n.fileDto.url = this.globals.backendUri + n.fileDto.url;
       }
       console.dir(this.news);
     });
@@ -39,7 +40,7 @@ export class NewsComponent implements OnInit {
       this.allNews = news;
 
       for (let n of this.allNews) {
-        n.fileDto.image = 'data:image/jpeg;base64,' + n.fileDto.image;
+        n.fileDto.url = this.globals.backendUri + n.fileDto.url;
       }
     });
   }

@@ -21,6 +21,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,16 +56,12 @@ public class NewsEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Creates a new News Entry", security = @SecurityRequirement(name = "apiKey"))
-    public NewsDto createNews(@ModelAttribute NewsDto newsDto) throws IOException {
+    public NewsDto createNews(@RequestBody NewsDto newsDto) throws IOException {
         LOGGER.info("POST /api/v1/news body: {}", newsDto);
-
-        File file;
         News news;
 
         try {
-            FileDto fileDto = new FileDto(null, MediaType.parseMediaType(newsDto.getImage().getContentType()), newsDto.getImage().getBytes());
-
-            file = this.fileService.create(fileDto);
+            File file = this.fileService.create(newsDto.getFileDto());
             news = this.newsService.createNews(newsDto, file);
         } catch (ValidationException e) {
             LOGGER.error("{}", e);
@@ -80,7 +77,6 @@ public class NewsEndpoint {
     public List<NewsDto> getNews() {
         LOGGER.info("GET /api/v1/news");
 
-        //TODO: change to not return image as byte[] but as file link
         List<NewsDto> newsDtos = this.newsService.getAll();
 
         return newsDtos;

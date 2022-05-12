@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../../services/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navigation',
@@ -18,7 +18,7 @@ export class NavigationComponent implements OnInit {
     signUp: '',
     editProfile: '',
     search: '',
-    news: '',
+    news: '/news',
     topTen: '',
     cart: '',
     reservations: '',
@@ -29,7 +29,7 @@ export class NavigationComponent implements OnInit {
 
   constructor(public authService: AuthService) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   /**
    * Shows and hides the mobile extended navigation
@@ -37,7 +37,7 @@ export class NavigationComponent implements OnInit {
    */
   openMobileMenu() {
     // disables scrollbar when mobile menu is expanded
-    if(this.showMobileMenu){
+    if (this.showMobileMenu) {
       document.body.style.overflow = 'auto';
     } else {
       document.body.style.overflow = 'hidden';

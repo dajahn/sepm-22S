@@ -9,7 +9,7 @@
         <div class="content d-flex align-items-center"
             [ngClass]="{'rainbowBackground': i === currentSelectedIdUnreadNews}">
             <div class="previewIcon">
-                <img [src]="n.fileDto.image">
+                <img [src]="n.fileDto.url">
             </div>
             <div class="previewNews">
                 <div class="title">{{n.title}}</div>
@@ -31,7 +31,7 @@
         <div class="content d-flex align-items-center"
             [ngClass]="{'rainbowBackground': i === currentSelectedIdAllNews}">
             <div class="previewIcon">
-                <img [src]="n.fileDto.image">
+                <img [src]="n.fileDto.url">
             </div>
             <div class="previewNews">
                 <div class="title">{{n.title}}</div>

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -29,9 +31,11 @@ public class FileServiceImpl implements FileService {
     public File create(FileDto f) throws IOException {
         LOGGER.trace("create() FileDto:{}", f);
 
+        byte[] toStore = Base64.getDecoder().decode(f.getImageBase64());
+
         File file = File.builder()
             .type(f.getType())
-            .data(ImageUtility.compressImage(f.getImage()))
+            .data(toStore)
             .build();
 
         file = this.fileRepository.save(file);
