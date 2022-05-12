@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
+import {NavigationEnd, Router} from '@angular/router';
+import {filter} from 'rxjs';
 
 @Component({
   selector: 'app-navigation',
@@ -8,6 +10,7 @@ import {AuthService} from '../../services/auth.service';
 })
 export class NavigationComponent implements OnInit {
 
+  currentRoute: string;
   // toggle extended mobile menu to hide/show
   showMobileMenu = false;
 
@@ -15,21 +18,33 @@ export class NavigationComponent implements OnInit {
   readonly routerLinks = {
     home: '/',
     logIn: '/login',
-    signUp: '',
-    editProfile: '',
-    search: '',
-    news: '',
-    topTen: '',
-    cart: '',
-    reservations: '',
-    adminTools: ''
+    signUp: '/register',
+    editProfile: '/edit',
+    search: '/search',
+    news: '/news',
+    topTen: '/topten',
+    cart: '/cart',
+    reservations: '/reservations',
+    adminTools: '/admintools'
   };
 
 
 
-  constructor(public authService: AuthService) { }
+  constructor(public authService: AuthService,
+              private router: Router) {
+
+    // Checks if the route is changing. If the route equals a navigation item, highlight it
+    router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      this.currentRoute = event.url;
+    });
+  }
 
   ngOnInit(): void {}
+
+
+
 
   /**
    * Shows and hides the mobile extended navigation
@@ -45,4 +60,60 @@ export class NavigationComponent implements OnInit {
     this.showMobileMenu = !this.showMobileMenu;
   }
 
+  /**
+   * Signs the current user out
+   */
+  signOut() {
+    this.authService.logoutUser();
+    this.showMobileMenu = false;
+  }
+
+  /**
+   * Navigates to the home page
+   */
+  clickHome() {
+    this.router.navigate([this.routerLinks.home]).then(r => this.showMobileMenu = false);
+  }
+
+  /**
+   * Navigates to the news page
+   */
+  clickNews() {
+    this.router.navigate([this.routerLinks.news]).then(r => this.showMobileMenu = false);
+  }
+
+  /**
+   * Navigates to the top 10 page
+   */
+  clickTopTen() {
+    this.router.navigate([this.routerLinks.topTen]).then(r => this.showMobileMenu = false);
+  }
+
+  /**
+   * Navigates to the search page
+   */
+  clickSearch() {
+    this.router.navigate([this.routerLinks.search]).then(r => this.showMobileMenu = false);
+  }
+
+  /**
+   * Navigates to the cart page
+   */
+  clickCart() {
+    this.router.navigate([this.routerLinks.cart]).then(r => this.showMobileMenu = false);
+  }
+
+  /**
+   * Navigates to the reservation page
+   */
+  clickReservations() {
+    this.router.navigate([this.routerLinks.reservations]).then(r => this.showMobileMenu = false);
+  }
+
+  /**
+   * Navigates to the admin page
+   */
+  clickAdmin() {
+    this.router.navigate([this.routerLinks.adminTools]).then(r => this.showMobileMenu = false);
+  }
 }
