@@ -26,7 +26,7 @@
             WHAT'S UP,&nbsp;
             <a class="edit-profile" [routerLink]="routerLinks.editProfile">{{authService.getFirstName() + ' ' + authService.getLastName()}}</a>?
           </span>
-          <a class="a-gray" [routerLink]="routerLinks.home">Sign out</a>
+          <a class="a-gray" [routerLink]="routerLinks.home" (click)="authService.logoutUser()">Sign out</a>
         </div>
       </ng-template>
     </div>

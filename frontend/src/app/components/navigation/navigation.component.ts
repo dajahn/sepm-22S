@@ -15,14 +15,14 @@ export class NavigationComponent implements OnInit {
   readonly routerLinks = {
     home: '/',
     logIn: '/login',
-    signUp: '',
-    editProfile: '',
-    search: '',
-    news: '',
-    topTen: '',
-    cart: '',
-    reservations: '',
-    adminTools: ''
+    signUp: '/register',
+    editProfile: '/edit',
+    search: '/search',
+    news: '/news',
+    topTen: '/topten',
+    cart: '/cart',
+    reservations: '/reservations',
+    adminTools: '/admintools'
   };
 
 
@@ -30,6 +30,9 @@ export class NavigationComponent implements OnInit {
   constructor(public authService: AuthService) { }
 
   ngOnInit(): void {}
+
+
+
 
   /**
    * Shows and hides the mobile extended navigation
