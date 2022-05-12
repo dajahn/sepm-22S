@@ -18,7 +18,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Profile("generateData")
 @Component
@@ -50,7 +52,7 @@ public class LocationDataGenerator {
                 address.setCountry(Country.AT);
                 location.setAddress(address);
 
-                List<Sector> sectors = new ArrayList<>();
+                Set<Sector> sectors = new HashSet<>();
                 for (int j = 0; j < 2 + i; j++) {
                     StandingSector sector = new StandingSector();
                     sector.setPrice(20d);

@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Message;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
@@ -23,13 +22,13 @@ public class PerformanceServiceImpl implements PerformanceService {
     }
 
     @Override
-    public Performance findById(Long id) {
-        LOGGER.debug("Find performance with id {}", id);
-        Optional<Performance> performance = performanceRepository.findById(id);
+    public Performance findOne(Long eventId, Long performanceId) {
+        LOGGER.debug("Find performance with id {} from event {}", performanceId, eventId);
+        Optional<Performance> performance = performanceRepository.findByEventIdAndId(eventId, performanceId);
         if (performance.isPresent()) {
             return performance.get();
         } else {
-            throw new NotFoundException(String.format("Could not find performance with id %s", id));
+            throw new NotFoundException(String.format("Could not find performance with id %d of event %d", performanceId, eventId));
         }
     }
 
