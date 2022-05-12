@@ -1,9 +1,13 @@
-import { Event } from './event';
 import { Location } from './location';
+import {SmallLocation} from './smallLocation';
 
 export interface Performance {
   id: number;
-  event: Event;
   dateTime: Date;
   location: Location;
+}
+export interface CreatePerformance{
+  eventId: number;
+  dateTime: Date;
+  location: SmallLocation;
 }

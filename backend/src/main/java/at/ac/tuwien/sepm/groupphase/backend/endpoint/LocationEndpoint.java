@@ -1,8 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.LocationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SearchLocationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SmallLocationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.LocationMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SmallLocationMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.LocationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -32,10 +33,8 @@ public class LocationEndpoint {
     @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Get list of small locations (only id and name). If name is specified, only whose artists with matching name will come as a result.", security = @SecurityRequirement(name = "apiKey"))
-    public List<LocationDto> findAll(SearchLocationDto searchLocationDto) {
+    public List<SmallLocationDto> findAll(SearchLocationDto searchLocationDto) {
         LOGGER.info("GET /api/v1/locations with {}", searchLocationDto);
-        return locationMapper.locationToLocationDto(locationService.find(searchLocationDto));
+        return locationMapper.locationToSmallLocationDto(locationService.find(searchLocationDto));
     }
-
-    //TODO
 }

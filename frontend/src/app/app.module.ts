@@ -15,6 +15,7 @@ import { CreateEventComponent } from './components/create-event/create-event.com
 import { CreatePerformanceComponent } from './components/create-performance/create-performance.component';
 import { CreateEventAddArtistComponent } from './components/create-event-add-artist/create-event-add-artist.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
+import { ToastComponentComponent } from './components/toast-component/toast-component.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { NavigationComponent } from './components/navigation/navigation.componen
     CreateEventComponent,
     CreatePerformanceComponent,
     CreateEventAddArtistComponent,
+    ToastComponentComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 
@@ -31,4 +33,17 @@ public class FileServiceImpl implements FileService {
             throw new NotFoundException(String.format("Could not find file with id %s", id));
         }
     }
+    //    @Override
+    //    public File create(FileDto f) throws IOException {
+    //
+    //        File file = File.builder()
+    //            .type(f.getType())
+    //            .data(ImageUtility.compressImage(f.getImage().getBytes()))
+    //            .build();
+    //
+    //        file = this.fileRepository.save(file);
+    //        return file;
+    //    }
+
+
 }

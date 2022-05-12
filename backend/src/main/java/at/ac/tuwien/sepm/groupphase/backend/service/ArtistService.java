@@ -14,4 +14,7 @@ public interface ArtistService {
      * @return a list of artists with matching criteria or all artists
      */
     List<Artist> find(ArtistSearchDto artistSearchDto);
+
+    Artist findById(Long id);
+
 }

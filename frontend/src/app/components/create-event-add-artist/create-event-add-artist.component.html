@@ -1,4 +1,4 @@
-<div class="row mt-2">
+<div class="row mt-2" *ngIf="!deleted">
   <div class="col-1 mt-4">
     <button type="button" class="white" id="delButton" (click)="delete()">X</button>
   </div>
@@ -15,17 +15,16 @@
 
 <!--        -->
 
-<!--        <div class="row mt-1">-->
-<!--          <div class="col">-->
-<!--            <ng-container>-->
-<!--              <div class="error"-->
-<!--                   *ngIf="artistForm.controls.artist.hasError('required') && (artistForm.controls.artist.value === null || artistForm.controls.artist.value === undefined)-->
-<!--                    && (artistForm.controls.artist.dirty || artistForm.controls.artist.touched)">-->
-<!--                <small class="form-text text-warning">Artist is required </small>-->
-<!--              </div>-->
-<!--            </ng-container>-->
-<!--          </div>-->
-<!--        </div>-->
+        <div class="row mt-1">
+          <div class="col">
+            <ng-container>
+              <div class="error"
+                   *ngIf="artistError">
+                <small class="form-text text-warning">Artist is required </small>
+              </div>
+            </ng-container>
+          </div>
+        </div>
       </div>
     </div>
 

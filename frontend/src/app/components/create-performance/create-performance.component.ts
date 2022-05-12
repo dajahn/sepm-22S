@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
-import {Performance} from '../../dtos/performance';
+import {CreatePerformance} from '../../dtos/performance';
 import {LocationService} from '../../services/location.service';
 import {catchError, debounceTime, distinctUntilChanged, Observable, of, OperatorFunction, switchMap} from 'rxjs';
 import {tap} from 'rxjs/operators';
@@ -19,23 +19,30 @@ export class CreatePerformanceComponent implements OnInit {
   @Output()
   deletePerformanceWithNumber = new EventEmitter<number>();
   @Output()
-  updatePerformanceEmitter = new EventEmitter<{ number: number; performance: Performance }>();
-  performance: Performance;
+  updatePerformanceEmitter = new EventEmitter<{ number: number; performance: CreatePerformance }>();
+  performance: CreatePerformance;
   time: any;
   dateModel: NgbDateStruct;
   location: SmallLocation;
   searchLocationFailed: boolean;
+  deleted= false;
+  today: NgbDateStruct;
 
   constructor(private locationService: LocationService) {
 
   }
 
   ngOnInit(): void {
+    const date = new Date();
+    this.today = {
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      day: date.getDate()
+    };
     this.performance = {
-      id: null,
+      eventId: null,
       location: null,
       dateTime: new Date(),
-      event: null
     };
     this.time = {
       hour: this.performance.dateTime.getHours(),
@@ -50,18 +57,23 @@ export class CreatePerformanceComponent implements OnInit {
 
   delete() {
     this.deletePerformanceWithNumber.emit(this.number);
+    this.deleted = true;
   }
 
   updatePerformance() {
-    this.performance.dateTime = new Date(this.dateModel.year,
-      this.dateModel.month - 1, this.dateModel.day, this.time.hour, this.time.minute);
-    this.performance.location = {
-      id: this.location.id,
-      performances: null,
-      name: this.location.name,
-      address: this.location.address,
-      sectors: null
-    };
+    if(this.time !== null) {
+      this.performance.dateTime = new Date(this.dateModel.year,
+        this.dateModel.month - 1, this.dateModel.day, this.time.hour, this.time.minute);
+    } else {
+      this.performance.dateTime = new Date(this.dateModel.year,
+        this.dateModel.month - 1, this.dateModel.day,null, null);
+    }
+    if(this.location !== undefined) {
+      this.performance.location = {
+        id: this.location.id,
+        name: this.location.name,
+      };
+    }
     this.updatePerformanceEmitter.emit({
       number: this.number,
       performance: this.performance
@@ -101,4 +113,5 @@ export class CreatePerformanceComponent implements OnInit {
         return of([]);
       })
     );
+
 }

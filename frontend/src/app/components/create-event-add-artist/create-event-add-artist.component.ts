@@ -19,8 +19,9 @@ export class CreateEventAddArtistComponent implements OnInit {
   updateArtistEmitter = new EventEmitter<{ number: number; artist: Artist }>();
 
   searchArtistFailed = false;
-
+  artistError = false;
   artist: Artist;
+  deleted = false;
 
   constructor(private artistService: ArtistService) {
   }
@@ -29,6 +30,7 @@ export class CreateEventAddArtistComponent implements OnInit {
   }
 
   delete() {
+    this.deleted = true;
     this.deleteArtistWithNumber.emit(this.number);
   }
 
@@ -38,8 +40,11 @@ export class CreateEventAddArtistComponent implements OnInit {
       number: this.number,
       artist: tmp
     });
-
-    console.log(this.artist);
+    if (typeof this.artist !== 'object' || this.artist === undefined || this.artist === null) {
+      this.artistError = true;
+    } else {
+      this.artistError = false;
+    }
   }
 
 
@@ -53,7 +58,6 @@ export class CreateEventAddArtistComponent implements OnInit {
     }
     return value;
   }
-
 
 
   searchArtist: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>

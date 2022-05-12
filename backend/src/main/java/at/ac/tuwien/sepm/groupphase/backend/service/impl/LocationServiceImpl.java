@@ -13,18 +13,18 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @Service
-public class LocationService implements at.ac.tuwien.sepm.groupphase.backend.service.LocationService {
+public class LocationServiceImpl implements at.ac.tuwien.sepm.groupphase.backend.service.LocationService {
     private final LocationRepository locationRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 
-    public LocationService(LocationRepository locationRepository) {
+    public LocationServiceImpl(LocationRepository locationRepository) {
         this.locationRepository = locationRepository;
     }
 
     @Override
     public List<Location> find(SearchLocationDto searchLocationDto) {
-        LOGGER.debug("Find locations with {}", searchLocationDto);
+        LOGGER.trace("Find with {}", searchLocationDto);
         if (searchLocationDto.name() == null && searchLocationDto.maxRecords() == null) {
             return locationRepository.findAll();
         } else if (searchLocationDto.name() != null && searchLocationDto.maxRecords() == null) {
@@ -36,5 +36,11 @@ public class LocationService implements at.ac.tuwien.sepm.groupphase.backend.ser
             Pageable topResults = PageRequest.of(0, searchLocationDto.maxRecords());
             return locationRepository.findByNameContaining(searchLocationDto.name(), topResults);
         }
+    }
+
+    @Override
+    public Location findById(Long id) {
+        LOGGER.trace("FindById with {}", id);
+        return locationRepository.getById(id);
     }
 }

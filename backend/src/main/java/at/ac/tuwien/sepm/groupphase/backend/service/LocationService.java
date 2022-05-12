@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface LocationService {
     List<Location> find(SearchLocationDto searchLocationDto);
+
+    Location findById(Long id);
 }
