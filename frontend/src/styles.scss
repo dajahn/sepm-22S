@@ -198,12 +198,4 @@ input[type=button], button, input[type=submit] {
 i {
   font-size: 2em;
   color: var(--text-c-lowlight);
-
-  &:hover {
-    color: var(--text-c-primary);
-  }
-
-  &:focus {
-    color: var(--text-c-highlight);
-  }
 }
