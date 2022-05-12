@@ -1,4 +1,4 @@
-import {Component, OnInit, Renderer2} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
@@ -19,14 +19,20 @@ export class LoginComponent implements OnInit {
   error = false;
   errorMessage = '';
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private renderer: Renderer2) {
-    this.renderer.setStyle(document.body, 'background',
-      'linear-gradient(90deg, rgba(241,147,109,1) 0%, rgba(178,39,246,1) 50%, rgba(113,114,248,1) 100%)');
+
+
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
+
+  ngOnInit() {
+  }
+
+
+
 
   /**
    * Form validation will start after the method is called, additionally an AuthRequest will be sent
@@ -71,9 +77,6 @@ export class LoginComponent implements OnInit {
    */
   vanishError() {
     this.error = false;
-  }
-
-  ngOnInit() {
   }
 
 }

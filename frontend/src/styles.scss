@@ -98,6 +98,7 @@ h2 {
   font-size: 2em;
   color: var(--text-c-highlight);
   font-weight: var(--font-w-regular);
+  margin-bottom: 0.6rem;
 }
 
 h3 {
@@ -118,6 +119,7 @@ h4 {
   &.headline {
     text-transform: uppercase;
     letter-spacing: 0.3em;
+    margin-bottom: 0.6rem;
   }
 }
 
@@ -125,6 +127,7 @@ h5 {
   font-size: 1em;
   color: var(--text-c-primary);
   font-weight: var(--font-w-regular);
+  margin-bottom: 2.5rem;
 }
 
 /* ## Link */
@@ -164,7 +167,7 @@ input[type=text], input[type=email], input[type=password] {
 }
 
 /* ## Buttons */
-input[type=button], button{
+input[type=button], button, input[type=submit] {
   transition: all .2s ease-in-out;
   font-size: 1em;
   font-weight: var(--font-w-bold);
@@ -199,12 +202,26 @@ input[type=button], button{
 i {
   font-size: 2em;
   color: var(--text-c-lowlight);
+}
 
-  &:hover {
-    color: var(--text-c-primary);
+
+
+/* MEDIA QUERIES */
+@media (max-width: 900px) {
+
+  /* # Mobile: */
+  h2 {
+    margin-bottom: 0.2rem;
   }
 
-  &:focus {
-    color: var(--text-c-highlight);
+  h4 {
+
+    &.headline {
+      margin-bottom: 0.3rem;
+    }
+  }
+
+  h5 {
+    margin-bottom: 1rem;
   }
 }

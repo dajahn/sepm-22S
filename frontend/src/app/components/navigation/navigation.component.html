@@ -26,7 +26,7 @@
             WHAT'S UP,&nbsp;
             <a class="edit-profile" [routerLink]="routerLinks.editProfile">{{authService.getFirstName() + ' ' + authService.getLastName()}}</a>?
           </span>
-          <a class="a-gray" [routerLink]="routerLinks.home">Sign out</a>
+          <a class="a-gray" [routerLink]="routerLinks.home" (click)="signOut()">Sign out</a>
         </div>
       </ng-template>
     </div>
@@ -38,51 +38,51 @@
     <ul class="nav flex-column">
       <!-- ## Homepage -->
       <li class="nav-item">
-        <a class="nav-link active" [routerLink]="routerLinks.home">
-          <i class="bi bi-house"></i>
-        </a>
+        <button class="nav-button" (click)="clickHome()">
+          <i [ngStyle]="currentRoute === routerLinks.home && {'color': 'var(--text-c-highlight)'}" class="bi bi-house"></i>
+        </button>
       </li>
 
       <!-- ## News -->
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="routerLinks.news">
-          <i class="bi bi-newspaper"></i>
-        </a>
+        <button class="nav-button" (click)="clickNews()">
+          <i [ngStyle]="currentRoute === routerLinks.news && {'color': 'var(--text-c-highlight)'}" class="bi bi-newspaper"></i>
+        </button>
       </li>
 
       <!-- ## Top 10 -->
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="routerLinks.topTen">
-          <i class="bi bi-trophy"></i>
-        </a>
+        <button class="nav-button" (click)="clickTopTen()">
+          <i [ngStyle]="currentRoute === routerLinks.topTen && {'color': 'var(--text-c-highlight)'}" class="bi bi-trophy"></i>
+        </button>
       </li>
 
       <!-- ## Search -->
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="routerLinks.search">
-          <i class="bi bi-search"></i>
-        </a>
+        <button class="nav-button" (click)="clickSearch()">
+          <i [ngStyle]="currentRoute === routerLinks.search && {'color': 'var(--text-c-highlight)'}" class="bi bi-search"></i>
+        </button>
       </li>
 
       <!-- ## Cart -->
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="routerLinks.cart">
-          <i class="bi bi-cart"></i>
-        </a>
+        <button class="nav-button" (click)="clickCart()">
+          <i [ngStyle]="currentRoute === routerLinks.cart && {'color': 'var(--text-c-highlight)'}" class="bi bi-cart"></i>
+        </button>
       </li>
 
       <!-- ## Reservations -->
       <li class="nav-item">
-        <a class="nav-link" [routerLink]="routerLinks.reservations">
-          <i class="bi bi-clipboard"></i>
-        </a>
+        <button class="nav-button" (click)="clickReservations()">
+          <i [ngStyle]="currentRoute === routerLinks.reservations && {'color': 'var(--text-c-highlight)'}" class="bi bi-clipboard"></i>
+        </button>
       </li>
 
       <!-- ## Admin -->
       <li class="nav-item" *ngIf="authService.getUserRole() === 'ADMIN'">
-        <a class="nav-link" [routerLink]="routerLinks.adminTools">
-          <i class="bi bi-tools"></i>
-        </a>
+        <button class="nav-button" (click)="clickAdmin()">
+          <i [ngStyle]="currentRoute === routerLinks.adminTools && {'color': 'var(--text-c-highlight)'}" class="bi bi-tools"></i>
+        </button>
       </li>
     </ul>
   </div>
@@ -122,51 +122,51 @@
       <ul class="nav flex-column">
         <!-- ### Homepage -->
         <li class="nav-item">
-          <a class="nav-link active" [routerLink]="routerLinks.home">
-            <i class="bi bi-house"> Home</i>
-          </a>
+          <button class="nav-button" (click)="clickHome()">
+            <i [ngStyle]="currentRoute === routerLinks.home && {'color': 'var(--text-c-highlight)'}" class="bi bi-house"> Home</i>
+          </button>
         </li>
 
         <!-- ### News -->
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="routerLinks.news">
-            <i class="bi bi-newspaper"> News</i>
-          </a>
+          <button class="nav-button" (click)="clickNews()">
+            <i [ngStyle]="currentRoute === routerLinks.news && {'color': 'var(--text-c-highlight)'}" class="bi bi-newspaper"> News</i>
+          </button>
         </li>
 
         <!-- ### Top 10 -->
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="routerLinks.topTen">
-            <i class="bi bi-trophy"> Top 10</i>
-          </a>
+          <button class="nav-button" (click)="clickTopTen()">
+            <i [ngStyle]="currentRoute === routerLinks.topTen && {'color': 'var(--text-c-highlight)'}" class="bi bi-trophy"> Top 10</i>
+          </button>
         </li>
 
         <!-- ### Cart -->
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="routerLinks.cart">
-            <i class="bi bi-cart"> Cart</i>
-          </a>
+          <button class="nav-button" (click)="clickSearch()">
+            <i [ngStyle]="currentRoute === routerLinks.search && {'color': 'var(--text-c-highlight)'}" class="bi bi-search"> Cart</i>
+          </button>
         </li>
 
         <!-- ### Search -->
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="routerLinks.search">
-            <i class="bi bi-search"> Search</i>
-          </a>
+          <button class="nav-button" (click)="clickCart()">
+            <i [ngStyle]="currentRoute === routerLinks.cart && {'color': 'var(--text-c-highlight)'}" class="bi bi-cart"> Search</i>
+          </button>
         </li>
 
         <!-- ### Reservations -->
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="routerLinks.reservations">
-            <i class="bi bi-clipboard"> Reservation</i>
-          </a>
+          <button class="nav-button" (click)="clickReservations()">
+            <i [ngStyle]="currentRoute === routerLinks.reservations && {'color': 'var(--text-c-highlight)'}" class="bi bi-clipboard"> Reservations</i>
+          </button>
         </li>
 
         <!-- ### Admin -->
         <li class="nav-item" *ngIf="authService.getUserRole() === 'ADMIN'">
-          <a class="nav-link" [routerLink]="routerLinks.adminTools">
-            <i class="bi bi-tools"> Admin Tools</i>
-          </a>
+          <button class="nav-button" (click)="clickAdmin()">
+            <i [ngStyle]="currentRoute === routerLinks.adminTools && {'color': 'var(--text-c-highlight)'}" class="bi bi-tools"> Admin Tools</i>
+          </button>
         </li>
       </ul>
 
@@ -181,7 +181,7 @@
         <div class="d-flex flex-column">
           <span class="whats-up">WHAT'S UP?</span>
           <a class="edit-profile" [routerLink]="routerLinks.editProfile">{{authService.getFirstName() + ' ' + authService.getLastName()}}</a>
-          <a class="a-gray" [routerLink]="routerLinks.home">Sign out</a>
+          <a class="a-gray" [routerLink]="routerLinks.home" (click)="signOut()">Sign out</a>
         </div>
       </ng-template>
 
