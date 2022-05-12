@@ -1,8 +1,16 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
 
 public interface InvoiceService {
+
+    /**
+     * Creates a new invoice for the supplised order.
+     *
+     * @param order the order from which an invoice should be created
+     */
+    void create(Order order);
 
     /**
      * Creates a new invoice as well as setting a unique id.
