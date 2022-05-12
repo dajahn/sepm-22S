@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
 import at.ac.tuwien.sepm.groupphase.backend.entity.InvoiceId;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceStatus;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
@@ -28,6 +29,14 @@ public class InvoiceServiceImpl implements InvoiceService {
     public InvoiceServiceImpl(InvoiceRepository invoiceRepository, InvoiceProcessingService invoiceProcessingService) {
         this.invoiceRepository = invoiceRepository;
         this.invoiceProcessingService = invoiceProcessingService;
+    }
+
+    @Override
+    public void create(Order order) {
+        LOGGER.trace("create(Order order) with order={}", order);
+
+        Invoice invoice = new Invoice(order, InvoiceType.NORMAL);
+        this.create(invoice);
     }
 
     @Override
