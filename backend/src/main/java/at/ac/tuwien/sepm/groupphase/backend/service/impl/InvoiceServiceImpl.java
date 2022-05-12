@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -81,10 +82,9 @@ public class InvoiceServiceImpl implements InvoiceService {
             .reference(invoice)
             .type(InvoiceType.CANCELLATION)
             .status(InvoiceStatus.CREATED)
+            .order(invoice.getOrder())
             .date(LocalDate.now())
             .build();
-
-        // todo add order / tickets
 
         this.create(cancellation);
 
@@ -94,5 +94,21 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.save(invoice);
 
         return cancellation;
+    }
+
+    @Transactional
+    @Override
+    public Invoice cancel(Order order) {
+        List<Invoice> invoices = invoiceRepository.findAllByOrderIdAndType(order.getId(), InvoiceType.NORMAL);
+
+        if (invoices == null || invoices.size() == 0) {
+            throw new ValidationException("There is no invoice with type 'NORMAL' for the given order.");
+        }
+
+        if (invoices.size() > 1) {
+            throw new ValidationException("There are to many invoice with type 'NORMAL' for the given order. Specify the invoice directly");
+        }
+        
+        return this.cancel(invoices.get(0));
     }
 }
