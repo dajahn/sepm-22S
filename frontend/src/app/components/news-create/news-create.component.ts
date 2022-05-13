@@ -61,7 +61,7 @@ export class NewsCreateComponent implements OnInit {
       return;
     }
 
-    //TOD: Add toast response
+    //TODO: Add toast response
     this.newsService.createNews(news).subscribe((resp) => {
       console.log(resp);
     });
