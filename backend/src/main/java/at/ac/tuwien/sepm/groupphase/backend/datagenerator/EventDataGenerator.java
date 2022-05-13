@@ -68,7 +68,7 @@ public class EventDataGenerator {
                 for (int j = 0;
                      j < artistNumber;
                      j++) {
-                    eventArtists.add(artists.get(faker.random().nextInt(0, 99)));
+                    eventArtists.add(artists.get(faker.random().nextInt(0, artists.size() - 1)));
                 }
                 event.setArtists(eventArtists);
 
