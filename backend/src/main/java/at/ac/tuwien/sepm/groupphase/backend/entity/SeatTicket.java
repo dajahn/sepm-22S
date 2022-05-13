@@ -47,11 +47,8 @@ public class SeatTicket extends Ticket {
         this.seatId = seatId;
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
     @Override
     public SeatTicketDto mapToDto(TicketMapper mapper) {
-        LOGGER.info("SeatTicket {}", getSector());
         return mapper.seatTicketToStandingTicketDto(this);
     }
 
