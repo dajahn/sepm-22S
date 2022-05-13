@@ -2,10 +2,10 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceStatus;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.InvoiceRepository;
@@ -61,32 +61,41 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
 
         float totalPrice = 0;
 
-        Order order = invoice.getOrder();
+        TicketOrder order = invoice.getOrder();
 
-        for (Ticket ticket : order.getTickets()) { // todo add grouping for seats with same price and sector
-            float price = (float) ((double) ticket.getSector().getPrice());
-            int ticketAmount = 1;
+        if (order != null) {
 
-            totalPrice += price * ticketAmount;
+            for (Ticket ticket : order.getTickets()) { // todo add grouping for seats with same price and sector
+                float price = (float) ((double) ticket.getSector().getPrice());
+                int ticketAmount = 1;
 
-            tickets.add(new Object() {
-                final String sector = ticket instanceof SeatTicket ? Formatter.formatSeatType(((SeatTicket) ticket).getSeatType()) : "Standing";
-                final int amount = ticketAmount;
-                final String singlePrice = Formatter.formatPrice(price);
-                final String totalPrice = Formatter.formatPrice(price * ticketAmount);
-            });
+                totalPrice += price * ticketAmount;
+
+                tickets.add(new Object() {
+                    final String sector = ticket instanceof SeatTicket ? Formatter.formatSeatType(((SeatTicket) ticket).getSector().getSeatType()) : "Standing";
+                    final int amount = ticketAmount;
+                    final String singlePrice = Formatter.formatPrice(price);
+                    final String totalPrice = Formatter.formatPrice(price * ticketAmount);
+                });
+            }
+
+            data.put("tickets", tickets);
+
+            Performance performance = order.getTickets().get(0).getPerformance(); // todo change if we want to support multiple performances
+
+            data.put("event.title", performance.getEvent().getName());
+            data.put("event.date", Formatter.formatDateTime(performance.getDateTime())); // todo add duration when it is added to the data structure
+            data.put("event.location", performance.getLocation().getName());
+
+        } else {
+            data.put("ticket", tickets);
+            data.put("event.title", "-");
+            data.put("event.date", "-"); // todo add duration when it is added to the data structure
+            data.put("event.location", "-");
         }
-
-        data.put("ticket", tickets);
 
         data.put("totalPrice", Formatter.formatPrice(totalPrice));
         data.put("totalTaxes", Formatter.formatPrice(totalPrice * 0.2f));
-
-        Performance performance = order.getTickets().get(0).getPerformance(); // todo change if we want to support multiple performances
-
-        data.put("event.title", performance.getEvent().getName());
-        data.put("event.date", Formatter.formatDateTime(performance.getDateTime())); // todo add duration when it is added to the data structure
-        data.put("event.location", performance.getLocation().getName());
 
         HtmlTemplate template = invoice.getType() == InvoiceType.CANCELLATION ? HtmlTemplate.PDF_CANCELLATION_INVOICE : HtmlTemplate.PDF_INVOICE;
 

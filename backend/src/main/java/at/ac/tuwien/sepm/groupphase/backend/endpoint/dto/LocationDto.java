@@ -11,5 +11,4 @@ public class LocationDto {
     private long id;
     private String name;
     private AddressDto address;
-    private SectorDto[] sectors;
 }

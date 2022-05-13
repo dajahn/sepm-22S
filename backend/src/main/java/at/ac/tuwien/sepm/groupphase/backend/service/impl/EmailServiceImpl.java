@@ -89,7 +89,7 @@ public class EmailServiceImpl implements EmailService {
             HtmlTemplate.EMAIL_INVOICE_NOTIFICATION,
             data,
             "New Ticketline invoice",
-            invoice.getOrder().getUser().getEmail(),
+            invoice.getOrder() != null ? invoice.getOrder().getUser().getEmail() : "nomailsupplied@example.com",
             invoice.getPdf(),
             "invoice-" + invoice.getIdentification().toString() + ".pdf"
         );
@@ -107,7 +107,7 @@ public class EmailServiceImpl implements EmailService {
             HtmlTemplate.EMAIL_INVOICE_NOTIFICATION,
             data,
             "New Ticketline cancellation invoice",
-            invoice.getOrder().getUser().getEmail(),
+            invoice.getOrder() != null ? invoice.getOrder().getUser().getEmail() : "nomailsupplied@example.com",
             invoice.getPdf(),
             "invoice-" + invoice.getIdentification().toString() + ".pdf"
         );

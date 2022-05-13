@@ -1,15 +1,22 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.StandingTicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
+import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.Hibernate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.util.Objects;
 
@@ -18,12 +25,25 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class StandingTicket extends Ticket {
 
-    @ManyToOne
+    @Column(name = "sector_id")
     @NonNull
+    private Long sectorId;
+
+    @ManyToOne
+    @JoinColumn(name = "sector_id", insertable = false, updatable = false)
     private StandingSector sector;
+
+    public StandingTicket(@NonNull Long performanceId, @NonNull Long orderId, @NonNull Long sectorId) {
+        super(performanceId, orderId);
+        this.sectorId = sectorId;
+    }
+
+    @Override
+    public StandingTicketDto mapToDto(TicketMapper mapper) {
+        return mapper.standingTicketToStandingTicketDto(this);
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -5,6 +5,6 @@ export interface Sector {
 }
 
 export enum SectorType {
-  STANDING_SECTOR = 'STANDING_SECTOR',
-  SEAT_SECTOR = 'SEAT_SECTOR',
+  STANDING = 'STANDING',
+  SEAT = 'SEAT',
 }

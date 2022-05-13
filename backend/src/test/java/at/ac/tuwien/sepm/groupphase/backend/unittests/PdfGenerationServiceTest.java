@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
 import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PdfGenerationService;
@@ -57,7 +58,7 @@ public class PdfGenerationServiceTest implements TestData {
 
         System.out.println(pdf);
 
-        emailService.sendInvoiceNotification(new Invoice(InvoiceType.NORMAL));
+        emailService.sendInvoiceNotification(new Invoice(new TicketOrder(), InvoiceType.NORMAL));
 
     }
 }

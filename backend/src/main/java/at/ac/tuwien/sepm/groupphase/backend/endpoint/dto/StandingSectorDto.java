@@ -16,6 +16,6 @@ public class StandingSectorDto extends SectorDto {
     private PointDto point2;
 
     public StandingSectorDto() {
-        super(SectorType.STANDING_SECTOR);
+        super(SectorType.STANDING);
     }
 }

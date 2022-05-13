@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
 import at.ac.tuwien.sepm.groupphase.backend.entity.InvoiceId;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Order;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceStatus;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
@@ -33,7 +33,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void create(Order order) {
+    public void create(TicketOrder order) {
         LOGGER.trace("create(Order order) with order={}", order);
 
         Invoice invoice = new Invoice(order, InvoiceType.NORMAL);
@@ -98,7 +98,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Transactional
     @Override
-    public Invoice cancel(Order order) {
+    public Invoice cancel(TicketOrder order) {
         List<Invoice> invoices = invoiceRepository.findAllByOrderIdAndType(order.getId(), InvoiceType.NORMAL);
 
         if (invoices == null || invoices.size() == 0) {
@@ -108,7 +108,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (invoices.size() > 1) {
             throw new ValidationException("There are to many invoice with type 'NORMAL' for the given order. Specify the invoice directly");
         }
-        
+
         return this.cancel(invoices.get(0));
     }
 }

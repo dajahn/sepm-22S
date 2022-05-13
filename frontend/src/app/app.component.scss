@@ -3,6 +3,7 @@
 #wrapper {
   margin-top: 4rem;
   margin-left: 4rem;
+  padding: 2rem 3rem 5rem;
 }
 
 
@@ -13,5 +14,15 @@
   /* # Mobile: */
   #wrapper {
     margin-left: 0;
+    padding: 1.5rem 1.5rem 5rem;
+  }
+}
+
+@media (max-width: 330px) {
+
+  /* # XS: */
+  #wrapper {
+    margin-left: 0;
+    padding: 1.5rem 0.5rem 5rem;
   }
 }
