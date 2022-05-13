@@ -1,61 +1,61 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.converter.MediaTypeConverter;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
-import org.springframework.http.MediaType;
 
-
-import lombok.NoArgsConstructor;
-import lombok.Data;
-import lombok.AllArgsConstructor;
-
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import java.time.LocalDate;
 import java.util.Objects;
 
-/**
- * This entity represents a file with a mime type and data that can be served via HTTP.
- */
 @Entity
 @Getter
 @Setter
 @ToString
 @Builder
-@NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class File {
+@NoArgsConstructor
+public class News {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
     private Long id;
 
-    @Convert(converter = MediaTypeConverter.class)
-    @Column(nullable = false)
     @NonNull
-    private MediaType type;
+    @Column(nullable = false, name = "title")
+    private String title;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(nullable = false)
     @NonNull
-    @ToString.Exclude
-    private byte[] data;
+    @Column(nullable = false, name = "description", length = 1023)
+    private String description;
+
+    @NonNull
+    @Column()
+    private LocalDate date;
+
+    @ManyToOne
+    @JoinColumn
+    private Event event;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn
+    private File file;
 
     @Override
     public boolean equals(Object o) {
@@ -65,8 +65,8 @@ public class File {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        File file = (File) o;
-        return id != null && Objects.equals(id, file.id);
+        News news = (News) o;
+        return id != null && Objects.equals(id, news.id);
     }
 
     @Override

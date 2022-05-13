@@ -11,6 +11,9 @@ import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
+import { NewsCreateComponent } from './components/news-create/news-create.component';
+import { NewsComponent } from './components/news/news.component';
+import { NewsDetailComponent } from './components/news-detail/news-detail.component';
 import { CreateEventComponent } from './components/create-event/create-event.component';
 import { CreatePerformanceComponent } from './components/create-performance/create-performance.component';
 import { CreateEventAddArtistComponent } from './components/create-event-add-artist/create-event-add-artist.component';
@@ -25,6 +28,9 @@ import { ToastComponentComponent } from './components/toast-component/toast-comp
     HomeComponent,
     LoginComponent,
     MessageComponent,
+    NewsCreateComponent,
+    NewsComponent,
+    NewsDetailComponent,
     CreateEventComponent,
     CreatePerformanceComponent,
     CreateEventAddArtistComponent,
