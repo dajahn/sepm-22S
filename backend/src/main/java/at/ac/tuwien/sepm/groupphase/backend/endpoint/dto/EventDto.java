@@ -17,7 +17,7 @@ public class EventDto {
     private String name;
     private String description;
     private Duration duration;
-    private MultipartFile thumbnail; //TODO
+    private FileDto thumbnail;
     private EventCategory category;
     private ArtistDto[] artists;
 }
