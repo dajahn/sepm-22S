@@ -3,11 +3,10 @@
 
 <label class="header-label mb-5">Unread News</label>
 <div class="timeline">
-    <div *ngFor="let n of news;let i = index" class="eventPreview d-flex align-items-center mb-5"
-        (click)="handelOnClickUnreadNews(i)">
+    <div *ngFor="let n of news;let i = index" class="eventPreview d-flex align-items-center mb-5">
         <label class="date me-3">{{n.date}}</label>
         <div class="content d-flex align-items-center"
-            [ngClass]="{'rainbowBackground': i === currentSelectedIdUnreadNews}">
+            [ngClass]="{'rainbowBackground': i === currentSelectedIdUnreadNews}" (click)="handelOnClickUnreadNews(i)">
             <div class="previewIcon">
                 <img [src]="n.fileDto.url">
             </div>
@@ -25,11 +24,10 @@
     <label class="header-label">Read all news</label>
 </div>
 <div *ngIf="expandAllNews" class="timeline">
-    <div *ngFor="let n of allNews;let i = index" class="eventPreview d-flex align-items-center mb-5"
-        (click)="handelOnClickAllNews(i)">
+    <div *ngFor="let n of allNews;let i = index" class="eventPreview d-flex align-items-center mb-5">
         <label class="date me-3">{{n.date}}</label>
-        <div class="content d-flex align-items-center"
-            [ngClass]="{'rainbowBackground': i === currentSelectedIdAllNews}">
+        <div class="content d-flex align-items-center" [ngClass]="{'rainbowBackground': i === currentSelectedIdAllNews}"
+            (click)="handelOnClickAllNews(i)">
             <div class="previewIcon">
                 <img [src]="n.fileDto.url">
             </div>

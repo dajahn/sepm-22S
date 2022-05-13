@@ -65,7 +65,7 @@ public class NewsEndpoint {
             news = this.newsService.createNews(newsDto, file);
         } catch (ValidationException e) {
             LOGGER.error("{}", e);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
         return this.newsMapper.entityToNewsDto(news);

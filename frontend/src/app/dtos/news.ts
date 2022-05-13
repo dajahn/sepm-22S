@@ -6,8 +6,6 @@ export class News {
     description: string;
     eventId: number;
     date?: string;
-    imageBase64?: string;
-    imageType?: string;
     fileDto?: FileDto;
     image?: File;
 }

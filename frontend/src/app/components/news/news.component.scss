@@ -72,6 +72,9 @@ label{
             }
         }
 
+        &:hover{
+            background-image: var(--gradient-rainbow-bg-secondary);
+        }
     }
 }
 
@@ -93,5 +96,5 @@ margin-left: -3px;
 }
 
 .rainbowBackground{
-    background-image: var(--gradient-rainbow);
+    background-image: var(--gradient-rainbow-bg-secondary);
 }
