@@ -52,6 +52,7 @@ public class CartEndpoint {
         cartService.addTicketsToCart(user.getId(), tickets);
     }
 
+    @Transactional(readOnly = true)
     @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Get information about a the items in the currently logged in users cart", security = @SecurityRequirement(name = "apiKey"))

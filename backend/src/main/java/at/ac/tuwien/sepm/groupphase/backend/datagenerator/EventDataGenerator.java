@@ -37,11 +37,15 @@ public class EventDataGenerator {
     private final EventRepository eventRepository;
     private final LocationRepository locationRepository;
     private final ArtistRepository artistRepository;
+    private final LocationDataGenerator locationDataGenerator;
+    private final ArtistDataGenerator artistDataGenerator;
 
-    public EventDataGenerator(EventRepository eventRepository, LocationRepository locationRepository, ArtistRepository artistRepository) {
+    public EventDataGenerator(EventRepository eventRepository, LocationRepository locationRepository, ArtistRepository artistRepository, LocationDataGenerator locationDataGenerator, ArtistDataGenerator artistDataGenerator) {
         this.eventRepository = eventRepository;
         this.locationRepository = locationRepository;
         this.artistRepository = artistRepository;
+        this.locationDataGenerator = locationDataGenerator;
+        this.artistDataGenerator = artistDataGenerator;
     }
 
     @PostConstruct
@@ -68,7 +72,7 @@ public class EventDataGenerator {
                 for (int j = 0;
                      j < artistNumber;
                      j++) {
-                    eventArtists.add(artists.get(faker.random().nextInt(0, 99)));
+                    eventArtists.add(artists.get(faker.random().nextInt(0, artists.size() - 1)));
                 }
                 event.setArtists(eventArtists);
 

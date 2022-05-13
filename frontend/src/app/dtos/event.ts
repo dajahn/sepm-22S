@@ -1,4 +1,5 @@
 import {Artist} from './artist';
+import {FileDto} from './file';
 
 export interface Event {
   id: number;
@@ -7,6 +8,7 @@ export interface Event {
   duration: number;
   artists: Artist[];
   category: EventCategory;
+  thumbnail: FileDto;
 }
 
 export enum EventCategory {
