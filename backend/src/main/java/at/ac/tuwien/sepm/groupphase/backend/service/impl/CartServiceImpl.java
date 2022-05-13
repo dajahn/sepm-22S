@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateTicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.StandingSector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.StandingTicket;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.OrderType;
@@ -47,45 +48,48 @@ public class CartServiceImpl implements CartService {
 
     @Transactional
     @Override
-    public void addTicketsToCart(List<CreateTicketDto> tickets) {
-        LOGGER.trace("addTicketsToCart(List<CreateTicketDto> tickets) with {} tickets", tickets.size());
-        TicketOrder cart = getCart();
-        for (CreateTicketDto ticket : tickets) {
-            switch (ticket.getType()) {
+    public void addTicketsToCart(Long userId, List<CreateTicketDto> tickets) {
+        LOGGER.trace("addTicketsToCart(Long userId, List<CreateTicketDto> tickets) with userId {} and {} tickets", userId, tickets.size());
+        TicketOrder cart = getCart(userId);
+        Ticket ticket;
+
+        for (CreateTicketDto ticketDto : tickets) {
+            switch (ticketDto.getType()) {
                 case STANDING -> {
-                    Optional<StandingSector> sector = standingSectorRepository.findById(ticket.getItem());
+                    Optional<StandingSector> sector = standingSectorRepository.findById(ticketDto.getItem());
                     if (!sector.isPresent()) {
                         throw new ValidationException("Sector of standing ticket does not exist.");
                     }
-                    if (standingTicketRepository.countByPerformanceIdAndStandingSectorId(ticket.getPerformance(), ticket.getItem()) >= sector.get().getCapacity()) {
+                    if (standingTicketRepository.countByPerformanceIdAndStandingSectorId(ticketDto.getPerformance(), ticketDto.getItem()) >= sector.get().getCapacity()) {
                         throw new ValidationException("Not enough tickets left in standing sector.");
                     }
-                    standingTicketRepository.save(new StandingTicket(ticket.getPerformance(), cart.getId(), ticket.getItem()));
+                    ticket = standingTicketRepository.save(new StandingTicket(ticketDto.getPerformance(), cart.getId(), ticketDto.getItem()));
                 }
                 case SEAT -> {
-                    if (seatTicketRepository.existsByPerformanceIdAndSeatId(ticket.getPerformance(), ticket.getItem())) {
+                    if (seatTicketRepository.existsByPerformanceIdAndSeatId(ticketDto.getPerformance(), ticketDto.getItem())) {
                         throw new ValidationException("Seat ticket is not available anymore.");
                     }
-                    seatTicketRepository.save(new SeatTicket(ticket.getPerformance(), cart.getId(), ticket.getItem()));
+                    ticket = seatTicketRepository.save(new SeatTicket(ticketDto.getPerformance(), cart.getId(), ticketDto.getItem()));
                 }
                 default -> throw new NotImplementedException("Unexpected sector type.");
             }
+
+            cart.getTickets().add(ticket);
         }
+
+        orderRepository.save(cart);
     }
 
     @Override
-    public TicketOrder getCart() {
-        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        LOGGER.trace("getCart() for user with email '{}'", email);
-        User user = userRepository.findUserByEmail(email);
-        Optional<TicketOrder> databaseCart = orderRepository.findByTypeAndUserId(OrderType.CART, user.getId());
+    public TicketOrder getCart(Long userId) {
+        LOGGER.info("Long userId for userId {}", userId);
+        Optional<TicketOrder> databaseCart = orderRepository.findByTypeAndUserId(OrderType.CART, userId);
 
         if (databaseCart.isPresent()) {
             return databaseCart.get();
         }
 
-        TicketOrder cart = new TicketOrder(LocalDateTime.now(), user.getId(), new ArrayList<>(), OrderType.CART);
+        TicketOrder cart = new TicketOrder(LocalDateTime.now(), userId, new ArrayList<>(), OrderType.CART);
         return orderRepository.save(cart);
     }
 }
