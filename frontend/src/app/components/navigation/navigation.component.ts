@@ -41,7 +41,7 @@ export class NavigationComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
 
 
@@ -52,7 +52,7 @@ export class NavigationComponent implements OnInit {
    */
   openMobileMenu() {
     // disables scrollbar when mobile menu is expanded
-    if(this.showMobileMenu){
+    if (this.showMobileMenu) {
       document.body.style.overflow = 'auto';
     } else {
       document.body.style.overflow = 'hidden';
