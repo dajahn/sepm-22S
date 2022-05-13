@@ -62,6 +62,7 @@ public class LocationDataGenerator {
                      j < 2 + (i % 3);
                      j++) {
                     StandingSector sector = new StandingSector();
+                    sector.setName("" + (char) ('A' + j));
                     sector.setPrice(20d);
                     sector.setCapacity(10 * (j + 1));
                     Point point = new Point();
@@ -90,6 +91,7 @@ public class LocationDataGenerator {
                         point.setX(k);
                         point.setY(5 + j);
                         Seat seat = new Seat();
+                        seat.setSector(sector);
                         seat.setRow(j + 1);
                         seat.setColumn(k + 1);
                         seat.setPoint(point);

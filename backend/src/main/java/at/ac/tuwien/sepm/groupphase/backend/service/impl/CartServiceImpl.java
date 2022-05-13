@@ -1,24 +1,23 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateTicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Seat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.StandingSector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.StandingTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
-import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.OrderType;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatTicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StandingSectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StandingTicketRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
 import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,15 +32,21 @@ public class CartServiceImpl implements CartService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
     private final StandingSectorRepository standingSectorRepository;
+    private final SeatRepository seatRepository;
     private final StandingTicketRepository standingTicketRepository;
     private final SeatTicketRepository seatTicketRepository;
 
-    public CartServiceImpl(OrderRepository orderRepository, UserRepository userRepository, StandingSectorRepository standingSectorRepository, StandingTicketRepository standingTicketRepository, SeatTicketRepository seatTicketRepository) {
+    public CartServiceImpl(
+        OrderRepository orderRepository,
+        StandingSectorRepository standingSectorRepository,
+        SeatRepository seatRepository,
+        StandingTicketRepository standingTicketRepository,
+        SeatTicketRepository seatTicketRepository
+    ) {
         this.orderRepository = orderRepository;
-        this.userRepository = userRepository;
         this.standingSectorRepository = standingSectorRepository;
+        this.seatRepository = seatRepository;
         this.standingTicketRepository = standingTicketRepository;
         this.seatTicketRepository = seatTicketRepository;
     }
@@ -51,13 +56,14 @@ public class CartServiceImpl implements CartService {
     public void addTicketsToCart(Long userId, List<CreateTicketDto> tickets) {
         LOGGER.trace("addTicketsToCart(Long userId, List<CreateTicketDto> tickets) with userId {} and {} tickets", userId, tickets.size());
         TicketOrder cart = getCart(userId);
+        cart.setValidUntil(LocalDateTime.now().plusMinutes(30));
         Ticket ticket;
 
         for (CreateTicketDto ticketDto : tickets) {
             switch (ticketDto.getType()) {
                 case STANDING -> {
                     Optional<StandingSector> sector = standingSectorRepository.findById(ticketDto.getItem());
-                    if (!sector.isPresent()) {
+                    if (!sector.isPresent() || sector.get().getName() == null) {
                         throw new ValidationException("Sector of standing ticket does not exist.");
                     }
                     if (standingTicketRepository.countByPerformanceIdAndStandingSectorId(ticketDto.getPerformance(), ticketDto.getItem()) >= sector.get().getCapacity()) {
@@ -66,10 +72,14 @@ public class CartServiceImpl implements CartService {
                     ticket = standingTicketRepository.save(new StandingTicket(ticketDto.getPerformance(), cart.getId(), ticketDto.getItem()));
                 }
                 case SEAT -> {
+                    Optional<Seat> seat = seatRepository.findById(ticketDto.getItem());
+                    if (!seat.isPresent()) {
+                        throw new ValidationException("Seat of ticket does not exist.");
+                    }
                     if (seatTicketRepository.existsByPerformanceIdAndSeatId(ticketDto.getPerformance(), ticketDto.getItem())) {
                         throw new ValidationException("Seat ticket is not available anymore.");
                     }
-                    ticket = seatTicketRepository.save(new SeatTicket(ticketDto.getPerformance(), cart.getId(), ticketDto.getItem()));
+                    ticket = seatTicketRepository.save(new SeatTicket(ticketDto.getPerformance(), cart.getId(), seat.get().getSector().getId(), ticketDto.getItem()));
                 }
                 default -> throw new NotImplementedException("Unexpected sector type.");
             }
@@ -82,14 +92,21 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public TicketOrder getCart(Long userId) {
-        LOGGER.info("Long userId for userId {}", userId);
+        LOGGER.info("getCart(Long userId) for userId {}", userId);
         Optional<TicketOrder> databaseCart = orderRepository.findByTypeAndUserId(OrderType.CART, userId);
+        TicketOrder cart;
 
         if (databaseCart.isPresent()) {
-            return databaseCart.get();
+            cart = databaseCart.get();
+
+            if (LocalDateTime.now().isBefore(cart.getValidUntil())) {
+                return cart;
+            }
+
+            orderRepository.delete(cart);
         }
 
-        TicketOrder cart = new TicketOrder(LocalDateTime.now(), userId, new ArrayList<>(), OrderType.CART);
+        cart = new TicketOrder(LocalDateTime.now(), userId, new ArrayList<>(), OrderType.CART, LocalDateTime.now().plusMinutes(30));
         return orderRepository.save(cart);
     }
 }
