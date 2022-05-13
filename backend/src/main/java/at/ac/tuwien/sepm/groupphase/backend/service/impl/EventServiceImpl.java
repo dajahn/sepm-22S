@@ -25,7 +25,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event findOne(Long id) {
-        LOGGER.debug("Find event with id {}", id);
+        LOGGER.debug("findOne(Long id) with id {}", id);
         Optional<Event> event = eventRepository.findById(id);
         if (event.isPresent()) {
             return event.get();

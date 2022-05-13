@@ -48,7 +48,7 @@ public class CartServiceImpl implements CartService {
     @Transactional
     @Override
     public void addTicketsToCart(List<CreateTicketDto> tickets) {
-        LOGGER.debug("Add {} items to cart", tickets.size());
+        LOGGER.trace("addTicketsToCart(List<CreateTicketDto> tickets) with {} tickets", tickets.size());
         TicketOrder cart = getCart();
         for (CreateTicketDto ticket : tickets) {
             switch (ticket.getType()) {
@@ -82,7 +82,7 @@ public class CartServiceImpl implements CartService {
     public TicketOrder getCart() {
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        LOGGER.trace("Get cart of user with email '{}'", email);
+        LOGGER.trace("getCart() for user with email '{}'", email);
         User user = userRepository.findUserByEmail(email);
         Optional<TicketOrder> databaseCart = orderRepository.findByTypeAndUserId(OrderType.CART, user.getId());
 
