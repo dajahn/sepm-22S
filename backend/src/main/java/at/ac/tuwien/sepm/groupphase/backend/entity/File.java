@@ -1,14 +1,22 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.converter.MediaTypeConverter;
+import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.http.MediaType;
+
+
+import lombok.NoArgsConstructor;
+import lombok.Data;
+import lombok.AllArgsConstructor;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -28,10 +36,11 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@Builder
 @NoArgsConstructor
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class File {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)

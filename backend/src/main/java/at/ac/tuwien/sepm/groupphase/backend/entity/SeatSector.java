@@ -3,6 +3,9 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
 import at.ac.tuwien.sepm.groupphase.backend.enums.SeatType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -41,8 +44,8 @@ public class SeatSector extends Sector {
     private List<Seat> seats = new ArrayList<>();
 
     @Override
-    public SectorDto mapToDto() {
-        return SectorMapper.INSTANCE.seatSectorToStandingSectorDto(this);
+    public SectorDto mapToDto(SectorMapper mapper) {
+        return mapper.seatSectorToStandingSectorDto(this);
     }
 
     @Override
