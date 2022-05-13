@@ -36,8 +36,8 @@ public class Invoice {
 
     @ManyToOne
     @JoinColumn
-    @NonNull
-    private Order order;
+    // TODO add @NotNull after merge
+    private TicketOrder order;
 
     @Column(nullable = false)
     @NonNull
@@ -58,5 +58,10 @@ public class Invoice {
     @Column(nullable = false)
     @NonNull
     private LocalDate date = LocalDate.now();
+
+    public Invoice(TicketOrder order, InvoiceType type) {
+        this.order = order;
+        this.type = type;
+    }
 
 }

@@ -17,7 +17,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -28,8 +27,7 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @RequiredArgsConstructor
-@Table(name = "Orders")
-public class Order {
+public class TicketOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,21 +38,23 @@ public class Order {
     @NonNull
     private LocalDateTime dateTime;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
+    @Column(name = "user_id")
     @NonNull
+    private Long userId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
 
-    @OneToMany
+    @OneToMany(fetch = javax.persistence.FetchType.EAGER, cascade = javax.persistence.CascadeType.ALL)
     @NonNull
-    @ToString.Exclude
     private List<Ticket> tickets;
 
     @Column
     @NonNull
     private OrderType type;
 
-    @Column(nullable = false)
+    @Column
     private LocalDateTime validUntil;
 
     @Override
@@ -65,7 +65,7 @@ public class Order {
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
         }
-        Order order = (Order) o;
+        TicketOrder order = (TicketOrder) o;
         return id != null && Objects.equals(id, order.id);
     }
 

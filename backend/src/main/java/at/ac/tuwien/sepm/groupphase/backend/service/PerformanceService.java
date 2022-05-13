@@ -5,10 +5,11 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 public interface PerformanceService {
 
     /**
-     * Find a single performance by id.
+     * Find a single performance from an event.
      *
-     * @param id the id of the performance
+     * @param eventId the id of the event in which to search for the performance
+     * @param performanceId the id of the performance
      * @return the performance
      */
-    Performance findById(Long id);
+    Performance findOne(Long eventId, Long performanceId);
 }

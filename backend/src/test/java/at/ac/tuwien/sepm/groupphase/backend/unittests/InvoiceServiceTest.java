@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.InvoiceRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +23,9 @@ public class InvoiceServiceTest implements TestData {
 
     @Autowired
     private InvoiceRepository invoiceRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Test
     public void whenNewInvoiceIsCreated_thenNewInvoiceIsStoredInTheDatabase() {
