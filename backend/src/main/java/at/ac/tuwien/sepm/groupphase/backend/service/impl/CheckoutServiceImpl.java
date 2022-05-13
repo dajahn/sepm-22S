@@ -31,7 +31,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         TicketOrder cart = cartService.getCart(userId);
         LOGGER.trace("checkout() for user " + userId + " with cart '{}'", cart);
 
-        if (cart.getTickets().isEmpty()) {
+        if (!cart.getTickets().isEmpty()) {
             cart.setType(OrderType.PURCHASE);
             orderRepository.save(cart);
         } else {

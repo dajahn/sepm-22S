@@ -30,6 +30,7 @@ public class CheckoutEndpoint {
         this.userService = userService;
     }
 
+
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping

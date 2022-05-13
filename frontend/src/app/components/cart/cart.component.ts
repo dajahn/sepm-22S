@@ -70,6 +70,7 @@ export class CartComponent implements OnInit {
     this.checkoutService.checkout().subscribe({
       next: () => {
         console.log('Successfully checked out cart!');
+        this.cart.tickets = [];
       },
       error: err => {
         console.error('Error checking out cart', err);
