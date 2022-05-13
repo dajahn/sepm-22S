@@ -54,6 +54,7 @@ public class EventServiceImpl implements at.ac.tuwien.sepm.groupphase.backend.se
     }
 
     private Event mapFromCreateEventToEvent(CreateEventDto createEventDto, File file) {
+        LOGGER.trace("mapFromCreateEventToEvent with createEventDto: {} and file: {}", createEventDto, file);
         Event evt = new Event();
         evt.setName(createEventDto.getName());
         evt.setDescription(createEventDto.getDescription());

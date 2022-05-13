@@ -89,7 +89,6 @@ export class CreateEventComponent implements OnInit {
       performances: createPerformances
     };
 
-    console.log(event);
     this.eventService.save(event).subscribe({
       next: value => {
         this.showSuccess(`Event created with tile '${event.name}'! YAY`);
@@ -97,11 +96,11 @@ export class CreateEventComponent implements OnInit {
       },
       error: err => {
         this.showDanger('An error occurred: \n' + err.error.message);
-        console.error(err);
       }
     });
-  }
 
+
+  }
   public getBase64(file: File) {
     return new Promise<string>((resolve, reject) => {
       const reader = new FileReader();

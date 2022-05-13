@@ -15,6 +15,13 @@ public interface ArtistService {
      */
     List<Artist> find(ArtistSearchDto artistSearchDto);
 
+    /**
+     * Returns an artist with given id.
+     *
+     * @param id id to look for
+     * @return Artist with given id
+     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException if no Artist is found
+     */
     Artist findById(Long id);
 
 }

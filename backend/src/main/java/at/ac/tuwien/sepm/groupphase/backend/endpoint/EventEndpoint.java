@@ -44,13 +44,10 @@ public class EventEndpoint {
     @Operation(summary = "Creates a new Event Entry", security = @SecurityRequirement(name = "apiKey"))
     public EventDto createEvent(@RequestBody CreateEventDto eventDto) throws IOException {
         LOGGER.info("POST /api/v1/events body: {}", eventDto);
-        File file;
-        Event event;
-
         try {
             return eventMapper.eventToEventDto(eventService.createEvent(eventDto));
         } catch (ValidationException e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
     }
