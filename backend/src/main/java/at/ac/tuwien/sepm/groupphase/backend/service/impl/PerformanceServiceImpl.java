@@ -23,7 +23,7 @@ public class PerformanceServiceImpl implements PerformanceService {
 
     @Override
     public Performance findOne(Long eventId, Long performanceId) {
-        LOGGER.debug("findOne(Long eventId, Long performanceId) with eventId {} and performanceId {}", eventId, performanceId);
+        LOGGER.trace("findOne(Long eventId, Long performanceId) with eventId {} and performanceId {}", eventId, performanceId);
         Optional<Performance> performance = performanceRepository.findByEventIdAndId(eventId, performanceId);
         if (performance.isPresent()) {
             return performance.get();

@@ -52,28 +52,23 @@ public class CartServiceImpl implements CartService {
         TicketOrder cart = getCart();
         for (CreateTicketDto ticket : tickets) {
             switch (ticket.getType()) {
-                case STANDING:
+                case STANDING -> {
                     Optional<StandingSector> sector = standingSectorRepository.findById(ticket.getItem());
-
                     if (!sector.isPresent()) {
                         throw new ValidationException("Sector of standing ticket does not exist.");
                     }
-
                     if (standingTicketRepository.countByPerformanceIdAndStandingSectorId(ticket.getPerformance(), ticket.getItem()) >= sector.get().getCapacity()) {
                         throw new ValidationException("Not enough tickets left in standing sector.");
                     }
-
                     standingTicketRepository.save(new StandingTicket(ticket.getPerformance(), cart.getId(), ticket.getItem()));
-                    break;
-                case SEAT:
+                }
+                case SEAT -> {
                     if (seatTicketRepository.existsByPerformanceIdAndSeatId(ticket.getPerformance(), ticket.getItem())) {
                         throw new ValidationException("Seat ticket is not available anymore.");
                     }
-
                     seatTicketRepository.save(new SeatTicket(ticket.getPerformance(), cart.getId(), ticket.getItem()));
-                    break;
-                default:
-                    throw new NotImplementedException("Unexpected sector type.");
+                }
+                default -> throw new NotImplementedException("Unexpected sector type.");
             }
         }
     }
