@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 @RestController
@@ -37,19 +38,16 @@ public class EventEndpoint {
         this.eventService = eventService;
     }
 
-    @Secured("ROLE_USER") //TODO change to admin
+    @Secured("ROLE_ADMIN")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Creates a new Event Entry", security = @SecurityRequirement(name = "apiKey"))
-    public EventDto createEvent(@RequestBody CreateEventDto eventDto) {
+    public EventDto createEvent(@RequestBody CreateEventDto eventDto) throws IOException {
         LOGGER.info("POST /api/v1/events body: {}", eventDto);
         File file;
         Event event;
 
         try {
-            //            FileDto fileDto = new FileDto(null, MediaType.parseMediaType(eventDto.getThumbnail().getContentType()), eventDto.getThumbnail());
-            //            file = this.fileService.create(fileDto);
-            //TODO
             return eventMapper.eventToEventDto(eventService.createEvent(eventDto));
         } catch (ValidationException e) {
             LOGGER.error(e.getMessage());

@@ -7,6 +7,7 @@ import {CreateEvent, Event} from '../../dtos/event';
 import {EventService} from '../../services/event.service';
 import {DurationUtil} from '../../utils/duration-util';
 import {ToastService} from '../../services/toast-service.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-create-event',
@@ -51,7 +52,7 @@ export class CreateEventComponent implements OnInit {
   performanceButtonClicked = false;
   imageButtonClicked = false;
 
-  constructor(private formBuilder: FormBuilder, private eventService: EventService, private toastService: ToastService) {
+  constructor(private formBuilder: FormBuilder, private eventService: EventService, private toastService: ToastService, private router: Router) {
     this.eventForm = this.formBuilder.group({
       title: ['', [Validators.compose([Validators.required, Validators.minLength(4)])]],
       duration: ['', [Validators.required]],
@@ -66,17 +67,22 @@ export class CreateEventComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  addEvent() {
+  async addEvent() {
     const createPerformances = this.filterPerformances();
     for (const item of createPerformances) {
       const hoursDiff = item.dateTime.getHours() - item.dateTime.getTimezoneOffset() / 60;
       item.dateTime.setHours(hoursDiff);
     }
+    let base64img = await this.getBase64(this.image);
+    base64img = base64img.split(',')[1];
     const event: CreateEvent = {
       id: null,
       name: this.eventForm.controls.title.value,
       artists: this.filterArtists(),
-      thumbnail: this.image,
+      thumbnail: {
+        imageBase64: base64img,
+        type: this.image.type
+      },
       description: this.eventForm.controls.description.value,
       duration: DurationUtil.stringRepresentation(this.eventForm.controls.duration.value),
       category: this.eventForm.controls.category.value,
@@ -86,15 +92,23 @@ export class CreateEventComponent implements OnInit {
     console.log(event);
     this.eventService.save(event).subscribe({
       next: value => {
-        this.showSuccess('Event created! YAY');
-        console.log(value);
+        this.showSuccess(`Event created with tile '${event.name}'! YAY`);
+        this.router.navigate(['/']);
       },
       error: err => {
         this.showDanger('An error occurred: \n' + err.error.message);
         console.error(err);
       }
     });
+  }
 
+  public getBase64(file: File) {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(<string>reader.result);
+      reader.onerror = (error) => reject(error);
+    });
   }
 
   addPerformance() {
