@@ -1,16 +1,23 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatTicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.enums.SeatType;
+import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.Hibernate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.util.Objects;
 
@@ -19,20 +26,29 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class SeatTicket extends Ticket {
 
-    @Column(nullable = false)
+    @Column(name = "seat_id")
     @NonNull
-    private SeatType seatType;
+    private Long seatId;
 
     @ManyToOne
-    @NonNull
+    @JoinColumn(name = "seat_id", insertable = false, updatable = false)
     private Seat seat;
+
+    public SeatTicket(@NonNull Long performanceId, @NonNull Long orderId, @NonNull Long seatId) {
+        super(performanceId, orderId);
+        this.seatId = seatId;
+    }
 
     @Override
     public SeatSector getSector() {
         return seat.getSector();
+    }
+
+    @Override
+    public SeatTicketDto mapToDto(TicketMapper mapper) {
+        return mapper.seatTicketToStandingTicketDto(this);
     }
 
     @Override

@@ -16,6 +16,6 @@ public class SeatSectorDto extends SectorDto {
     private SeatDto[] seats;
 
     public SeatSectorDto() {
-        super(SectorType.SEAT_SECTOR);
+        super(SectorType.SEAT);
     }
 }
