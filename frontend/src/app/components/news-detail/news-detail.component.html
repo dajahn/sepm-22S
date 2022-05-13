@@ -1,1 +1,20 @@
-<div>{{news.title}}</div>
+<div class="imageWrapper">
+    <img [src]="news.fileDto.url">
+    <h4 class="premiere">Premiering on: 04/05/2022 18:30</h4>
+</div>
+
+
+
+<div class="newsDescription">
+    <div class="newsHeader">
+        <div class="imageIcon">
+            <img [src]="news.fileDto.url">
+        </div>
+        <h3 class="newsTitle mb-0">{{news.title}}</h3>
+        <input type="button" class="orange attending" value="I'M IN">
+    </div>
+    <div>{{news.description}}</div>
+    <div class="eventType">
+        Concert
+    </div>
+</div>

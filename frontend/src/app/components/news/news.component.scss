@@ -1,14 +1,6 @@
-.header-font-weight{
-    font-weight: var(--font-w-light);
+.newsTimeline{
+    float: left;
 }
-label{
-    font-weight: var(--font-w-light);
-}
-.header-label{
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
 .eventPreview{
     position: relative;
     margin-left: 1rem;
@@ -97,4 +89,9 @@ margin-left: -3px;
 
 .rainbowBackground{
     background-image: var(--gradient-rainbow-bg-secondary);
+}
+
+.detailView{
+    position: absolute;
+    right: 0px;
 }
