@@ -3,9 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.StandingSectorDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Point;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -31,6 +28,10 @@ import java.util.Objects;
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class StandingSector extends Sector {
+
+    @Column(nullable = false, length = 127)
+    @NonNull
+    private String name;
 
     @Column(nullable = false)
     @NonNull

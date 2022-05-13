@@ -2,23 +2,20 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatTicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
-import at.ac.tuwien.sepm.groupphase.backend.enums.SeatType;
-import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.Hibernate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.lang.invoke.MethodHandles;
 import java.util.Objects;
 
 @Entity
@@ -28,6 +25,14 @@ import java.util.Objects;
 @NoArgsConstructor
 public class SeatTicket extends Ticket {
 
+    @Column(name = "sector_id")
+    @NonNull
+    private Long sectorId;
+
+    @ManyToOne
+    @JoinColumn(name = "sector_id", insertable = false, updatable = false)
+    private SeatSector sector;
+
     @Column(name = "seat_id")
     @NonNull
     private Long seatId;
@@ -36,18 +41,17 @@ public class SeatTicket extends Ticket {
     @JoinColumn(name = "seat_id", insertable = false, updatable = false)
     private Seat seat;
 
-    public SeatTicket(@NonNull Long performanceId, @NonNull Long orderId, @NonNull Long seatId) {
+    public SeatTicket(@NonNull Long performanceId, @NonNull Long orderId, @NonNull Long sectorId, @NonNull Long seatId) {
         super(performanceId, orderId);
+        this.sectorId = sectorId;
         this.seatId = seatId;
     }
 
-    @Override
-    public SeatSector getSector() {
-        return seat.getSector();
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Override
     public SeatTicketDto mapToDto(TicketMapper mapper) {
+        LOGGER.info("SeatTicket {}", getSector());
         return mapper.seatTicketToStandingTicketDto(this);
     }
 

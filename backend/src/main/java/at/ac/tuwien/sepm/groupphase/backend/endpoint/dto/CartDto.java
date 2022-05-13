@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import lombok.Data;
 
 import java.time.LocalDateTime;

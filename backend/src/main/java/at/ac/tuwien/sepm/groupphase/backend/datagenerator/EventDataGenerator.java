@@ -37,23 +37,17 @@ public class EventDataGenerator {
     private final EventRepository eventRepository;
     private final LocationRepository locationRepository;
     private final ArtistRepository artistRepository;
-    private final LocationDataGenerator locationDataGenerator;
-    private final ArtistDataGenerator artistDataGenerator;
 
-    public EventDataGenerator(EventRepository eventRepository, LocationRepository locationRepository, ArtistRepository artistRepository, LocationDataGenerator locationDataGenerator, ArtistDataGenerator artistDataGenerator) {
+    public EventDataGenerator(EventRepository eventRepository, LocationRepository locationRepository, ArtistRepository artistRepository) {
         this.eventRepository = eventRepository;
         this.locationRepository = locationRepository;
         this.artistRepository = artistRepository;
-        this.locationDataGenerator = locationDataGenerator;
-        this.artistDataGenerator = artistDataGenerator;
     }
 
     @PostConstruct
     private void generateEvents() {
         if (eventRepository.count() > 0) {
-            LOGGER.debug("Event already generated");
-        } else if (locationRepository.count() == 0) {
-            LOGGER.debug("Cannot create event without locations");
+            LOGGER.debug("Events already generated");
         } else {
             List<Location> locations = locationRepository.findAll();
             List<Artist> artists = artistRepository.findAll();
@@ -61,7 +55,6 @@ public class EventDataGenerator {
             for (int i = 0;
                  i < NUMBER_OF_EVENTS_TO_GENERATE;
                  i++) {
-                LOGGER.debug("Generating {} location entries", locationRepository.count());
                 Faker faker = new Faker();
 
                 Event event = new Event();
