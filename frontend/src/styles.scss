@@ -164,46 +164,24 @@ input[type=text], input[type=email], input[type=password] {
     border:3px solid var(--accent-orange);
   }
 }
- textarea { // added extra selection cause everywhere has to be "!important" for textarea
-   font-size: 0.9375em !important;
-   color: var(--text-c-highlight) !important;
-   font-weight: var(--font-w-medium) !important;
-   background-color: transparent !important;
-   border: 3px solid var(--text-c-highlight) !important;
-   border-radius: 10px !important;
-   padding: 16px 12px !important;
-
-   &::placeholder {
-     font-size: 0.9375em !important;
-     color: var(--text-c-highlight) !important;
-     font-weight: var(--font-w-regular) !important;
-   }
-
-   &:focus {
-     outline: none !important;
-     border:3px solid var(--accent-orange) !important;
-   }
- }
-
-/* ## Textarea */
-textarea {
-  font-size: 0.9375em;
-  color: var(--text-c-highlight);
-  font-weight: var(--font-w-medium);
-  background-color: transparent;
-  border: 3px solid var(--text-c-highlight);
-  border-radius: 10px;
-  padding: 16px 12px;
+textarea { // added extra selection cause everywhere has to be "!important" for textarea
+  font-size: 0.9375em !important;
+  color: var(--text-c-highlight) !important;
+  font-weight: var(--font-w-medium) !important;
+  background-color: transparent !important;
+  border: 3px solid var(--text-c-highlight) !important;
+  border-radius: 10px !important;
+  padding: 16px 12px !important;
 
   &::placeholder {
-    font-size: 0.9375em;
-    color: var(--text-c-highlight);
-    font-weight: var(--font-w-regular);
+    font-size: 0.9375em !important;
+    color: var(--text-c-highlight) !important;
+    font-weight: var(--font-w-regular) !important;
   }
 
   &:focus {
     outline: none !important;
-    border:3px solid var(--accent-orange);
+    border:3px solid var(--accent-orange) !important;
   }
 }
 
