@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -11,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class FileDto {
     private Long id;
+
+    @JsonSerialize(using = ToStringSerializer.class)
     private MediaType type;
     private String imageBase64;
     private String url;

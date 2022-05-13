@@ -42,7 +42,7 @@ public class News {
     private String title;
 
     @NonNull
-    @Column(nullable = false, name = "description", length = 1023)
+    @Column(nullable = false, name = "description", length = 65535)
     private String description;
 
     @NonNull
@@ -53,6 +53,7 @@ public class News {
     @JoinColumn
     private Event event;
 
+    @NonNull
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn
     private File file;

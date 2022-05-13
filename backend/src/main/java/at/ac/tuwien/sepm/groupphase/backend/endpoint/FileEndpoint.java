@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
 import java.util.Base64;
 
@@ -33,6 +34,7 @@ public class FileEndpoint {
         this.fileService = fileService;
     }
 
+    @PermitAll
     @GetMapping(value = "/{id}")
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(@PathVariable Long id) {
