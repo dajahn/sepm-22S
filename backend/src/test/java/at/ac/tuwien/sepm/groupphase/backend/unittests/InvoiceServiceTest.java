@@ -3,8 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
+import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.InvoiceRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,20 +25,20 @@ public class InvoiceServiceTest implements TestData {
     private InvoiceRepository invoiceRepository;
 
     @Autowired
-    private OrderRepository orderRepository;
+    private FileRepository fileRepository;
 
     @Test
     public void whenNewInvoiceIsCreated_thenNewInvoiceIsStoredInTheDatabase() {
-        for (int i = 0; i < 10; i++) {
-            Invoice invoice = new Invoice(InvoiceType.NORMAL);
-            invoiceService.create(invoice);
-            System.out.println(invoice);
-        }
+        Invoice invoice = new Invoice(InvoiceType.NORMAL);
+        invoiceService.create(invoice);
+        System.out.println(invoice);
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         System.out.println(invoiceRepository.findAllByOrderByIdDesc());
+        System.out.println(fileRepository.findById(invoice.getPdf().getId()));
+        System.out.println(invoice.getPdf());
     }
 }
