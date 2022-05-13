@@ -60,13 +60,14 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
         List<Object> tickets = new ArrayList<>();
 
         float totalPrice = 0;
+        int sign = invoice.getType() == InvoiceType.CANCELLATION ? -1 : 1;
 
         TicketOrder order = invoice.getOrder();
 
         if (order != null) {
 
             for (Ticket ticket : order.getTickets()) { // todo add grouping for seats with same price and sector
-                float price = (float) ((double) ticket.getSector().getPrice());
+                float price = sign * ((float) ((double) ticket.getSector().getPrice()));
                 int ticketAmount = 1;
 
                 totalPrice += price * ticketAmount;
