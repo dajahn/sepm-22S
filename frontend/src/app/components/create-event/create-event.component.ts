@@ -98,9 +98,8 @@ export class CreateEventComponent implements OnInit {
         this.showDanger('An error occurred: \n' + err.error.message);
       }
     });
-
-
   }
+
   public getBase64(file: File) {
     return new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
