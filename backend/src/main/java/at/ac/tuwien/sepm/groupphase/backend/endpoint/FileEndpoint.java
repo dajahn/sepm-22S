@@ -34,6 +34,7 @@ public class FileEndpoint {
     }
 
     @GetMapping(value = "/{id}")
+    @Secured("ROLE_USER")
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(@PathVariable Long id) {
         LOGGER.info("GET /api/v1/files/{}", id);
