@@ -81,11 +81,29 @@
 }
 
 /* ## Icons */
-.active {
-  color: var(--text-c-highlight);
+.nav-button {
+  background-color: transparent;
+  height: 64px;
+  width: 64px;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
 
-  i {
+  &:hover {
+    color: var(--text-c-primary);
+
+    i {
+      color: var(--text-c-primary);
+    }
+  }
+
+  &:active {
     color: var(--text-c-highlight);
+    outline: none;
+
+    i {
+      color: var(--text-c-highlight);
+    }
   }
 }
 
@@ -189,5 +207,12 @@ hr {
 
   .navbar-custom {
     padding-right: 1rem;
+  }
+
+  .nav-button {
+    height: 100%;
+    width: 100%;
+    text-align: left;
+    font-weight: var(--font-w-regular);
   }
 }
