@@ -5,6 +5,11 @@
   border-radius: 8px;
   margin-top: 0.75rem;
   cursor: pointer;
+  transition: all .2s ease-in-out;
+
+  &:hover{
+    transform: scale(1.01);
+  }
 }
 
 .thumbnail {
