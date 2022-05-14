@@ -94,4 +94,8 @@ margin-left: -3px;
 .detailView{
     position: absolute;
     right: 0px;
+
+    @media (max-width:1300px){
+        display: none;
+    }
 }

@@ -9,6 +9,8 @@ import { News } from 'src/app/dtos/news';
   styleUrls: ['./news-create.component.scss']
 })
 export class NewsCreateComponent implements OnInit {
+  @ViewChild('imgUpload') imgUpload;
+
   public newsForm: FormGroup;
   public image: File;
   public submitted: boolean = false;
@@ -69,6 +71,14 @@ export class NewsCreateComponent implements OnInit {
 
   public handleFileInput(files: any) {
     //TODO: Possibility to upload multiple files?
+    if (files == null)
+      this.image = null;
+
     this.image = files[0];
+  }
+
+  public removeImageCandidate() {
+    this.imgUpload.nativeElement.value = null;
+    this.handleFileInput(null);
   }
 }

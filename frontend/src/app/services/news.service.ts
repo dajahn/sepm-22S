@@ -19,4 +19,8 @@ export class NewsService {
   public getAllNews() {
     return this.httpClient.get(this.newsBaseURI);
   }
+
+  public getById(id: number) {
+    return this.httpClient.get(this.newsBaseURI + "/" + id);
+  }
 }

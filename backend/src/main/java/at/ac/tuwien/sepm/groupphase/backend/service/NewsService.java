@@ -25,4 +25,12 @@ public interface NewsService {
      *  @return all news entries
      */
     List<NewsDto> getAll();
+
+    /**
+     * Gets a news entry by id.
+     *
+     * @param id of the related news element
+     * @return corresponding news element
+     */
+    NewsDto getById(Long id);
 }

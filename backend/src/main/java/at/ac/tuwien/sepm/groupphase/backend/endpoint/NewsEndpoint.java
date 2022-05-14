@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,5 +81,15 @@ public class NewsEndpoint {
         List<NewsDto> newsDtos = this.newsService.getAll();
 
         return newsDtos;
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(path = "/{id}")
+    @Operation(summary = "Gets news entry by id", security = @SecurityRequirement(name = "apiKey"))
+    public NewsDto getNewsById(@PathVariable Long id) {
+        LOGGER.info("Get /api/v1/news/{}", id);
+
+        //TODO: handle not found
+        return this.newsService.getById(id);
     }
 }

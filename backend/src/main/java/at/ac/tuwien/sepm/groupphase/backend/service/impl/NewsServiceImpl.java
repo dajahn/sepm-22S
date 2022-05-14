@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NewsServiceImpl implements NewsService {
@@ -68,5 +69,29 @@ public class NewsServiceImpl implements NewsService {
         }
 
         return newsDtos;
+    }
+
+    @Override
+    public NewsDto getById(Long id) {
+        LOGGER.trace("getById({})", id);
+
+        Optional<News> n = this.newsRepository.findById(id);
+        if (!n.isPresent()) {
+            //TODO throw not found error
+            return null;
+        }
+
+        News news = n.get();
+        NewsDto newsDto = this.newsMapper.entityToNewsDto(news);
+
+        FileDto fileDto = new FileDto();
+        File f = news.getFile();
+
+        fileDto.setType(f.getType());
+        fileDto.setUrl("/files/" + f.getId().toString());
+
+        newsDto.setFileDto(fileDto);
+
+        return newsDto;
     }
 }

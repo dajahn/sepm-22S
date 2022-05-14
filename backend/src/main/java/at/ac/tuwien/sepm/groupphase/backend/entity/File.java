@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;

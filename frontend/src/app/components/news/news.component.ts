@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Globals } from './../../global/globals';
 import { NewsService } from './../../services/news.service';
 import { Component, OnInit } from '@angular/core';
@@ -17,7 +18,7 @@ export class NewsComponent implements OnInit {
   public currentSelectedIdAllNews: number = -1;
 
 
-  constructor(private newsService: NewsService, private globals: Globals) { }
+  constructor(private newsService: NewsService, private globals: Globals, private router: Router) { }
 
   ngOnInit(): void {
     this.loadNews();
@@ -46,11 +47,19 @@ export class NewsComponent implements OnInit {
   }
 
   public handelOnClickUnreadNews(index: number) {
+    if (window.innerWidth <= 1300) {
+      this.router.navigate(['/news', this.news[index].id]);
+    }
+
     this.currentSelectedIdUnreadNews = index;
     this.currentSelectedIdAllNews = -1;
   }
 
   public handelOnClickAllNews(index: number) {
+    if (window.innerWidth <= 1300) {
+      this.router.navigate(['/news', this.allNews[index].id]);
+    }
+
     this.currentSelectedIdAllNews = index;
     this.currentSelectedIdUnreadNews = -1;
   }

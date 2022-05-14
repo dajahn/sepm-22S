@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div class="row mb-5">
+        <div class="row">
             <div class="col-md-1">
                 <label class="form-label" for="event">Event</label>
                 <div id="event" class="inputStyling d-flex justify-content-center align-items-center" name="eventId"
@@ -40,15 +40,24 @@
                 <label class="form-label">Thumbnail</label>
 
                 <label for="file-upload" id="file-upload-label"
-                    class="custom-file-upload white d-flex justify-content-center align-items-center">
+                    class="white d-flex justify-content-center align-items-center">
                     <i class="bi bi-image"></i>
                 </label>
 
                 <input id="file-upload" required (change)="handleFileInput($event.target.files)" name="thumbnail"
-                    class="form-control" type="file" accept="image/png, image/jpeg" />
-                <div>{{image.name}}</div>
-            </div>
+                    class="form-control" type="file" accept="image/png, image/jpeg" #imgUpload />
 
+            </div>
+        </div>
+
+        <div *ngIf="image && image.name" class="col-md-11 float-end">
+
+            <small>
+                <span class="me-1" (click)="removeImageCandidate()" role="button">
+                    <i class="bi bi-trash"></i>
+                </span>
+                {{image.name}}
+            </small>
         </div>
 
         <div class="form-group col-md-12">
