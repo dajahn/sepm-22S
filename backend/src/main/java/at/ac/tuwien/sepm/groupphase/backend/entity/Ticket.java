@@ -22,6 +22,7 @@ import javax.persistence.ManyToOne;
 import java.util.Objects;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
 @ToString

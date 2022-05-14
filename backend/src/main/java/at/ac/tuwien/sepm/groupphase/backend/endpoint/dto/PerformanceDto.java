@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
  */
 @Data
 public class PerformanceDto {
-
     private long id;
     private LocalDateTime dateTime;
     private LocationDto location;

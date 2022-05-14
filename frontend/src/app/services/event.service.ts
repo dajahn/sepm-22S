@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import {Globals} from '../global/globals';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Event} from '../dtos/event';
+import {CreateEvent, Event} from '../dtos/event';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +22,15 @@ export class EventService {
   getOne(id: number): Observable<Event> {
     console.log(`Load performance details for event ${id}`);
     return this.httpClient.get<Event>(`${this.eventBaseUri}/${id}`);
+  }
+
+  /**
+   * Saves a new event in the backend
+   *
+   * @param event Event to create
+   */
+  save(event: CreateEvent): Observable<Event> {
+    return this.httpClient.post<Event>(this.eventBaseUri, event);
   }
 
 }
