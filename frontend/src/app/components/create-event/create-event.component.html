@@ -114,7 +114,7 @@
             <div class="col">
               <label for="btnArtist">Artist(s)</label>
               <div class="form-group d-grid">
-                <input type="button" id="btnArtist" name="btnArtist" value="&#10133;" class="btn white"
+                <input type="button" title="Add Artist" id="btnArtist" name="btnArtist" value="&#10133;" class="btn white"
                        (click)="addArtist()">
 
               </div>
@@ -141,7 +141,8 @@
 <!--            Thumbnail input field-->
             <div class="col-3">
               <label>Thumbnail</label>
-              <label for="file-upload" id="file-upload-label" class="custom-file-upload white d-flex justify-content-center align-items-center">
+              <label title="Add Artist"  for="file-upload" id="file-upload-label" class="custom-file-upload white d-flex justify-content-center align-items-center"
+                     [ngStyle]="backGroundImg !== null && backGroundImg !== undefined && {'background-image':  backGroundImg.webkitRelativePath}">
                 <i class="bi bi-image"></i>
               </label>
               <input id="file-upload" required formControlName="thumbnail" name="thumbnail" class="form-control" (change)="handleFileInput($event.target.files)" (click)="imageButtonClicked=true"
@@ -165,7 +166,7 @@
                   <ng-container>
                     <div class="error"
                          *ngIf="imageButtonClicked && (image !== null && image !== undefined)">
-                      <small class="form-text text-success"> Uploaded "{{ image.name }}"</small>
+                      <small class="form-text text-success"> Uploaded "{{ backGroundImg.name }}"</small>
                     </div>
                   </ng-container>
                 </div>
@@ -177,7 +178,7 @@
               <!--            Add performances button-->
               <label for="btnPerformance">Performance(s)</label>
               <div class="form-group d-grid">
-                <input type="button" id="btnPerformance" name="btnPerformance" value="&#10133;" class="btn white"
+                <input title="Add Artist" type="button" id="btnPerformance" name="btnPerformance" value="&#10133;" class="btn white"
                        (click)="addPerformance()">
 
               </div>
@@ -194,7 +195,7 @@
               </div>
             </div>
           </div>
-          <!--          Containers for artists-->
+          <!--          Containers for performances-->
           <div class="row" *ngFor="let item of [].constructor(performances.length); let i = index">
             <app-create-performance (deletePerformanceWithNumber)="deletePerformance($event)" (updatePerformanceEmitter)="updatePerformance($event)" [number]="i"></app-create-performance>
           </div>

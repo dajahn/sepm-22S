@@ -31,7 +31,7 @@ select {
 }
 
 #file-upload-label {
-
+  cursor: pointer;
   transition: all .2s ease-in-out;
   font-size: 1em;
   font-weight: var(--font-w-bold);
@@ -56,3 +56,4 @@ select {
     padding: 12.25px 12px;
   }
 }
+#description:focus { background-color: var(--text-c-highlight) !important; }

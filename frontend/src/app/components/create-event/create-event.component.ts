@@ -1,13 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EventCategory} from '../../enums/event-category';
-import {CreatePerformance, Performance} from '../../dtos/performance';
+import {CreatePerformance} from '../../dtos/performance';
 import {Artist} from '../../dtos/artist';
-import {CreateEvent, Event} from '../../dtos/event';
+import {CreateEvent} from '../../dtos/event';
 import {EventService} from '../../services/event.service';
 import {DurationUtil} from '../../utils/duration-util';
 import {ToastService} from '../../services/toast-service.service';
 import {Router} from '@angular/router';
+import {FileDto} from '../../dtos/file';
 
 @Component({
   selector: 'app-create-event',
@@ -20,7 +21,8 @@ export class CreateEventComponent implements OnInit {
   time: any;
   performances: CreatePerformance[];
   artists: Artist[];
-  image: File; //TODO change to file dto or whatever
+  image: FileDto;
+  backGroundImg: File;
 
   eventFormMessages = {
     title: [
@@ -52,7 +54,8 @@ export class CreateEventComponent implements OnInit {
   performanceButtonClicked = false;
   imageButtonClicked = false;
 
-  constructor(private formBuilder: FormBuilder, private eventService: EventService, private toastService: ToastService, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private eventService: EventService,
+              private toastService: ToastService, private router: Router) {
     this.eventForm = this.formBuilder.group({
       title: ['', [Validators.compose([Validators.required, Validators.minLength(4)])]],
       duration: ['', [Validators.required]],
@@ -73,16 +76,12 @@ export class CreateEventComponent implements OnInit {
       const hoursDiff = item.dateTime.getHours() - item.dateTime.getTimezoneOffset() / 60;
       item.dateTime.setHours(hoursDiff);
     }
-    let base64img = await this.getBase64(this.image);
-    base64img = base64img.split(',')[1];
+
     const event: CreateEvent = {
       id: null,
       name: this.eventForm.controls.title.value,
       artists: this.filterArtists(),
-      thumbnail: {
-        imageBase64: base64img,
-        type: this.image.type
-      },
+      thumbnail:this.image,
       description: this.eventForm.controls.description.value,
       duration: DurationUtil.stringRepresentation(this.eventForm.controls.duration.value),
       category: this.eventForm.controls.category.value,
@@ -143,9 +142,16 @@ export class CreateEventComponent implements OnInit {
     this.artists[$event.number] = $event.artist;
   }
 
-  public handleFileInput(files: any) {
+  public async handleFileInput(files: any) {
+    this.backGroundImg = files[0];
     this.imageButtonClicked = true;
-    this.image = files[0];
+    let base64img = await this.getBase64(files[0]);
+    base64img = base64img.split(',')[1];
+
+    this.image =  {
+      imageBase64: base64img,
+      type: files[0].type
+    };
   }
 
   private showSuccess(msg: string) {
