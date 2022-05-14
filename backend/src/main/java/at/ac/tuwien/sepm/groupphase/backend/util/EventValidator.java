@@ -45,6 +45,9 @@ public class EventValidator {
         if (createEventDto == null) {
             throw new ValidationException("Event must not be null!");
         }
+        if (createEventDto.getName() == null) {
+            throw new ValidationException("Event Name must not be null!");
+        }
         if (createEventDto.getName().trim().isEmpty()) {
             throw new ValidationException("Event Name must not be empty!");
         }

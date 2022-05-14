@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SearchLocationDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Location;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LocationServiceImpl implements at.ac.tuwien.sepm.groupphase.backend.service.LocationService {
@@ -41,6 +43,12 @@ public class LocationServiceImpl implements at.ac.tuwien.sepm.groupphase.backend
     @Override
     public Location findById(Long id) {
         LOGGER.trace("FindById with {}", id);
-        return locationRepository.getById(id);
+        Optional<Location> location = locationRepository.findById(id);
+        if (location.isPresent()) {
+            return location.get();
+        } else {
+            throw new NotFoundException("Location with id " + id + " not found!");
+        }
+
     }
 }

@@ -152,6 +152,8 @@ export class CreateEventComponent implements OnInit {
       imageBase64: base64img,
       type: files[0].type
     };
+    console.log(this.image);
+
   }
 
   private showSuccess(msg: string) {

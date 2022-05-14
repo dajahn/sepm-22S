@@ -12,7 +12,7 @@ import { MessageComponent } from './components/message/message.component';
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
-  {path: 'create-event', canActivate: [AdminGuard], component: CreateEventComponent},
+  {path: 'event/create', canActivate: [AdminGuard], component: CreateEventComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   { path: '', component: HomeComponent },
   { path: 'news',/*canActivate:[AuthGuard]*/ component: NewsComponent },
