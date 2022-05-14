@@ -15,6 +15,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,5 +63,15 @@ public class CartEndpoint {
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findApplicationUserByEmail(email);
         return orderMapper.orderToCartDto(cartService.getCart(user.getId()));
+    }
+
+    @Secured("ROLE_USER")
+    @PatchMapping(value = "/remove/{ticketId}")
+    @Operation(summary = "Removes a ticket from the currently logged in user's cart", security = @SecurityRequirement(name = "apiKey"))
+    public void removeFromCart(@PathVariable Long ticketId) {
+        LOGGER.info("PATCH /api/v1/remove/{}", ticketId);
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findApplicationUserByEmail(email);
+        cartService.removeTicket(user.getId(), ticketId);
     }
 }

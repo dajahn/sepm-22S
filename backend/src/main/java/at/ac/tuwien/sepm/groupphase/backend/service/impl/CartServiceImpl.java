@@ -14,6 +14,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatTicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StandingSectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StandingTicketRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
 import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
@@ -36,19 +37,21 @@ public class CartServiceImpl implements CartService {
     private final SeatRepository seatRepository;
     private final StandingTicketRepository standingTicketRepository;
     private final SeatTicketRepository seatTicketRepository;
+    private final TicketRepository ticketRepository;
 
     public CartServiceImpl(
         OrderRepository orderRepository,
         StandingSectorRepository standingSectorRepository,
         SeatRepository seatRepository,
         StandingTicketRepository standingTicketRepository,
-        SeatTicketRepository seatTicketRepository
-    ) {
+        SeatTicketRepository seatTicketRepository,
+        TicketRepository ticketRepository) {
         this.orderRepository = orderRepository;
         this.standingSectorRepository = standingSectorRepository;
         this.seatRepository = seatRepository;
         this.standingTicketRepository = standingTicketRepository;
         this.seatTicketRepository = seatTicketRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     @Transactional
@@ -108,5 +111,22 @@ public class CartServiceImpl implements CartService {
 
         cart = new TicketOrder(LocalDateTime.now(), userId, new ArrayList<>(), OrderType.CART, LocalDateTime.now().plusMinutes(30));
         return orderRepository.save(cart);
+    }
+
+    @Transactional
+    @Override
+    public void removeTicket(Long userId, Long ticketId) {
+        LOGGER.info("removeTicket(Long userId, Long ticketId) for userId {} and ticketId {}", userId, ticketId);
+
+        TicketOrder cart = getCart(userId);
+        List<Ticket> tickets = cart.getTickets();
+        tickets.removeIf(t -> t.getId().equals(ticketId));
+
+        orderRepository.save(cart);
+        ticketRepository.deleteById(ticketId);
+        if (tickets.size() == 0) {
+            LOGGER.debug("Removed order {}", cart);
+            orderRepository.delete(cart);
+        }
     }
 }

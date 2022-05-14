@@ -55,10 +55,13 @@ export class CartComponent implements OnInit {
    * Removes ticket from cart
    */
   onRemove(id: number) {
-    this.cart.tickets.forEach((ticket,index)=>{
-      if(ticket.id === id) {
-        delete this.cart.tickets[index];
-        console.log('Removed '+id);
+    this.cartService.removeTicketFromCart(id).subscribe({
+      next: () => {
+        console.log(`Successfully removed ticket ${id} from cart.`);
+        this.cart.tickets = this.cart.tickets.filter((ticket) => ticket.id !== id);
+      },
+      error: err => {
+        console.error(`Error, could not remove ticket ${id} from cart.`, err);
       }
     });
   }

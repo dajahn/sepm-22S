@@ -121,7 +121,7 @@ public class TicketOrderGenerator {
                 orderRepository.save(order);
 
                 List<Ticket> orderTickets = new ArrayList<>();
-                int numberOfTickets = faker.random().nextInt(1, 3);
+                int numberOfTickets = faker.random().nextInt(2, 3);
                 for (int j = 0; j < numberOfTickets; j++) {
                     Ticket ticket = tickets.remove((int) faker.random().nextInt(0, tickets.size() - 1));
                     ticket.setOrderId(order.getId());
