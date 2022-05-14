@@ -2,9 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.AddressTestData;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.LocationTestData;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SearchLocationDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Location;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Seat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatSector;
@@ -14,9 +12,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Point;
 import at.ac.tuwien.sepm.groupphase.backend.enums.SeatType;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
-import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
 import at.ac.tuwien.sepm.groupphase.backend.service.LocationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +20,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static at.ac.tuwien.sepm.groupphase.backend.basetest.AddressTestData.STREET;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @ActiveProfiles("test")
-public class LocationTest implements LocationTestData, AddressTestData {
+public class LocationServiceTest implements LocationTestData, AddressTestData {
     @Autowired
     private LocationRepository locationRepository;
     @Autowired
@@ -53,9 +50,10 @@ public class LocationTest implements LocationTestData, AddressTestData {
         address.setCountry(COUNTRY);
         location.setAddress(address);
 
-        List<Sector> sectors = new ArrayList<>();
+        Set<Sector> sectors = new HashSet<>();
         for (int j = 0; j < STANDING_SEC_ROWS; j++) {
             StandingSector sector = new StandingSector();
+            sector.setName(STANDING_SEC_NAME+j);
             sector.setPrice(STANDING_SEC_PRICE);
             sector.setCapacity(STANDING_SEC_CAPACITY);
             Point point = new Point();
@@ -116,9 +114,10 @@ public class LocationTest implements LocationTestData, AddressTestData {
             address.setCountry(COUNTRY);
             location.setAddress(address);
 
-            List<Sector> sectors = new ArrayList<>();
+            Set<Sector> sectors = new HashSet<>();
             for (int j = 0; j < STANDING_SEC_ROWS; j++) {
                 StandingSector sector = new StandingSector();
+                sector.setName(STANDING_SEC_NAME+j);
                 sector.setPrice(STANDING_SEC_PRICE);
                 sector.setCapacity(STANDING_SEC_CAPACITY);
                 Point point = new Point();

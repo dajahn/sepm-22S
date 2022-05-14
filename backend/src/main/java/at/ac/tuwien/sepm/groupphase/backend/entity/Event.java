@@ -55,7 +55,7 @@ public class Event {
     @NonNull
     private Duration duration;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "thumbnail_id")
     private File thumbnail;
 

@@ -53,7 +53,9 @@ import java.io.FileNotFoundException;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_ROLES;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_USER;
@@ -126,9 +128,10 @@ public class EventEndpointTest implements EventTestData, ArtistTestData, Locatio
         address.setCountry(COUNTRY);
         location.setAddress(address);
 
-        List<Sector> sectors = new ArrayList<>();
+        Set<Sector> sectors = new HashSet<>();
         for (int j = 0; j < STANDING_SEC_ROWS; j++) {
             StandingSector sector = new StandingSector();
+            sector.setName(STANDING_SEC_NAME+j);
             sector.setPrice(STANDING_SEC_PRICE);
             sector.setCapacity(STANDING_SEC_CAPACITY);
             Point point = new Point();

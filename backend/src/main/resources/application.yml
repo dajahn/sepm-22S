@@ -35,6 +35,11 @@ server:
     # So we can send meaningful error responses, not like "Validation error"
   # MULTIPART
 
+jps:
+  track:
+    ap:
+      dependencies: false
+
 security:
   auth:
     header: Authorization

@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
+import com.github.javafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -15,9 +16,8 @@ import java.lang.invoke.MethodHandles;
 public class ArtistDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int NUMBER_OF_Artists_TO_GENERATE = 5;
-    private static final String TEST_ARTISTS_NAME = "Artist #";
-    private static final String TEST_ARTISTS_DESCRIPTION = "Summary of the artists description #";
+    private static final int NUMBER_OF_ARTISTS_TO_GENERATE = 100;
+
     private final ArtistRepository artistRepository;
 
     public ArtistDataGenerator(ArtistRepository artistRepository) {
@@ -25,20 +25,19 @@ public class ArtistDataGenerator {
     }
 
     @PostConstruct
-    private void generateArtists() {
+    private void generateEvents() {
         if (artistRepository.count() > 0) {
-            LOGGER.trace("generateArtists artists already generated");
+            LOGGER.debug("Artists already generated");
         } else {
-            LOGGER.trace("generateArtists generating {} Artists", NUMBER_OF_Artists_TO_GENERATE);
-
-            Artist artist;
-            for (int i = 0; i < NUMBER_OF_Artists_TO_GENERATE; i++) {
-                artist = new Artist();
-                artist.setDescription(TEST_ARTISTS_DESCRIPTION + i);
-                artist.setName(TEST_ARTISTS_NAME + i);
+            for (int i = 0;
+                 i < NUMBER_OF_ARTISTS_TO_GENERATE;
+                 i++) {
+                Faker faker = new Faker();
+                Artist artist = new Artist(faker.artist().name(), faker.lorem().paragraph());
+                LOGGER.debug("Saving artist {}", artist);
                 artistRepository.save(artist);
             }
         }
-
     }
+
 }

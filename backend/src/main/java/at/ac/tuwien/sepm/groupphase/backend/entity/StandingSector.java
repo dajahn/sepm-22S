@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.StandingSectorDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Point;
 import lombok.Getter;
@@ -29,6 +29,10 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class StandingSector extends Sector {
 
+    @Column(nullable = false, length = 127)
+    @NonNull
+    private String name;
+
     @Column(nullable = false)
     @NonNull
     private Integer capacity;
@@ -46,8 +50,8 @@ public class StandingSector extends Sector {
     private Point point2;
 
     @Override
-    public SectorDto mapToDto() {
-        return SectorMapper.INSTANCE.standingSectorToStandingSectorDto(this);
+    public StandingSectorDto mapToDto(SectorMapper mapper) {
+        return mapper.standingSectorToStandingSectorDto(this);
     }
 
     @Override

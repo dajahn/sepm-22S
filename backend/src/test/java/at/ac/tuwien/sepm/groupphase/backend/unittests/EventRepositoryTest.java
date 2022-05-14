@@ -64,9 +64,10 @@ public class EventRepositoryTest implements EventTestData, LocationTestData, Add
         address.setCountry(COUNTRY);
         location.setAddress(address);
 
-        List<Sector> sectors = new ArrayList<>();
+        Set<Sector> sectors = new HashSet<>();
         for (int j = 0; j < STANDING_SEC_ROWS ; j++) {
             StandingSector sector = new StandingSector();
+            sector.setName(STANDING_SEC_NAME+j);
             sector.setPrice(STANDING_SEC_PRICE);
             sector.setCapacity(STANDING_SEC_CAPACITY);
             Point point = new Point();

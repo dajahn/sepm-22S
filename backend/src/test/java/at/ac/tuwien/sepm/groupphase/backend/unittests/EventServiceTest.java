@@ -78,9 +78,10 @@ public class EventServiceTest implements EventTestData, LocationTestData, Addres
         address.setCountry(COUNTRY);
         location.setAddress(address);
 
-        List<Sector> sectors = new ArrayList<>();
-        for (int j = 0; j < STANDING_SEC_ROWS ; j++) {
+        Set<Sector> sectors = new HashSet<>();
+        for (int j = 0; j < STANDING_SEC_ROWS; j++) {
             StandingSector sector = new StandingSector();
+            sector.setName(STANDING_SEC_NAME + j);
             sector.setPrice(STANDING_SEC_PRICE);
             sector.setCapacity(STANDING_SEC_CAPACITY);
             Point point = new Point();
@@ -130,10 +131,10 @@ public class EventServiceTest implements EventTestData, LocationTestData, Addres
         for (int i = 0; i < NUMBER_OF_PERFORMANCES; i++) {
             CreatePerformanceDto perf = new CreatePerformanceDto();
             perf.setLocation(smallLocationDto);
-            perf.setDateTime(LocalDateTime.now().plusDays((i+1)*2));
+            perf.setDateTime(LocalDateTime.now().plusDays((i + 1) * 2));
             performances[i] = perf;
         }
-        event.setPerformances( performances);
+        event.setPerformances(performances);
 
         ArtistDto[] artists = new ArtistDto[NUMBER_OF_ARTISTS];
         for (int i = 0; i < NUMBER_OF_ARTISTS; i++) {
@@ -142,15 +143,15 @@ public class EventServiceTest implements EventTestData, LocationTestData, Addres
         }
         event.setArtists(artists);
 
-        FileInputStream fis = new FileInputStream("src/test/resources/"+IMAGE_FILE_NAME);
+        FileInputStream fis = new FileInputStream("src/test/resources/" + IMAGE_FILE_NAME);
         FileDto fileDto = new FileDto();
         fileDto.setType(FILE_TYPE);
         String fileString = IOUtils.toString(fis, Charset.availableCharsets().get("UTF-8"));
-        fileString = fileString.replace("\n","");
+        fileString = fileString.replace("\n", "");
         fileDto.setImageBase64(fileString);
         event.setThumbnail(fileDto);
 
-        Event finalEvent = eventService.createEvent(event);;
+        Event finalEvent = eventService.createEvent(event);
         assertAll(
             () -> assertEquals(1, eventRepository.findAll().size()),
             () -> assertNotNull(eventRepository.findById(finalEvent.getId()))
@@ -170,9 +171,10 @@ public class EventServiceTest implements EventTestData, LocationTestData, Addres
         address.setCountry(COUNTRY);
         location.setAddress(address);
 
-        List<Sector> sectors = new ArrayList<>();
-        for (int j = 0; j < STANDING_SEC_ROWS ; j++) {
+        Set<Sector> sectors = new HashSet<>();
+        for (int j = 0; j < STANDING_SEC_ROWS; j++) {
             StandingSector sector = new StandingSector();
+            sector.setName(STANDING_SEC_NAME + j);
             sector.setPrice(STANDING_SEC_PRICE);
             sector.setCapacity(STANDING_SEC_CAPACITY);
             Point point = new Point();
@@ -222,10 +224,10 @@ public class EventServiceTest implements EventTestData, LocationTestData, Addres
         for (int i = 0; i < NUMBER_OF_PERFORMANCES; i++) {
             CreatePerformanceDto perf = new CreatePerformanceDto();
             perf.setLocation(smallLocationDto);
-            perf.setDateTime(LocalDateTime.now().plusDays((i+1)*2));
+            perf.setDateTime(LocalDateTime.now().plusDays((i + 1) * 2));
             performances[i] = perf;
         }
-        event.setPerformances( performances);
+        event.setPerformances(performances);
 
         ArtistDto[] artists = new ArtistDto[NUMBER_OF_ARTISTS];
         for (int i = 0; i < NUMBER_OF_ARTISTS; i++) {
@@ -234,72 +236,72 @@ public class EventServiceTest implements EventTestData, LocationTestData, Addres
         }
         event.setArtists(artists);
 
-        FileInputStream fis = new FileInputStream("src/test/resources/"+IMAGE_FILE_NAME);
+        FileInputStream fis = new FileInputStream("src/test/resources/" + IMAGE_FILE_NAME);
         FileDto fileDto = new FileDto();
         fileDto.setType(FILE_TYPE);
         String fileString = IOUtils.toString(fis, Charset.availableCharsets().get("UTF-8"));
-        fileString = fileString.replace("\n","");
+        fileString = fileString.replace("\n", "");
         fileDto.setImageBase64(fileString);
         event.setThumbnail(fileDto);
 
         //test name
-        ValidationException vex = assertThrows(
-            ValidationException.class,() ->  eventService.createEvent(event)
+        assertThrows(
+            ValidationException.class, () -> eventService.createEvent(event)
         );
         event.setName("  ");
-        vex = assertThrows(
-            ValidationException.class,() ->  eventService.createEvent(event)
+        assertThrows(
+            ValidationException.class, () -> eventService.createEvent(event)
         );
         event.setName(EVENT_TEST_TITLE);
 
         //test description
         event.setDescription(null);
-        vex = assertThrows(
-            ValidationException.class,() ->  eventService.createEvent(event)
+        assertThrows(
+            ValidationException.class, () -> eventService.createEvent(event)
         );
         event.setDescription("");
-        vex = assertThrows(
-            ValidationException.class,() ->  eventService.createEvent(event)
+        assertThrows(
+            ValidationException.class, () -> eventService.createEvent(event)
         );
         event.setDescription("    ");
-        vex = assertThrows(
-            ValidationException.class,() ->  eventService.createEvent(event)
+        assertThrows(
+            ValidationException.class, () -> eventService.createEvent(event)
         );
         event.setDescription(EVENT_TEST_DESCRIPTION);
 
         //test category
         event.setCategory(null);
-        vex = assertThrows(
-            ValidationException.class,() ->  eventService.createEvent(event)
+        assertThrows(
+            ValidationException.class, () -> eventService.createEvent(event)
         );
         event.setCategory(EVENT_CATEGORY);
 
         //test duration
         event.setDuration(null);
-        vex = assertThrows(
-            ValidationException.class,() ->  eventService.createEvent(event)
+        assertThrows(
+            ValidationException.class, () -> eventService.createEvent(event)
         );
         event.setDuration(EVENT_TEST_DURATION);
 
         //test performances
         performances[0].setDateTime(LocalDateTime.now().minusDays(2));
         event.setPerformances(performances);
-        vex = assertThrows(
-            ValidationException.class,() ->  eventService.createEvent(event)
+        assertThrows(
+            ValidationException.class, () -> eventService.createEvent(event)
         );
         performances[0].setDateTime(LocalDateTime.now().plusDays(2));
         performances[0].getLocation().setId(-100L);
         event.setPerformances(performances);
-        vex = assertThrows(
-            ValidationException.class,() ->  eventService.createEvent(event)
+        assertThrows(
+            ValidationException.class, () -> eventService.createEvent(event)
         );
         performances[0].getLocation().setId(location.getId());
 
         //test artists
         artists[0].setId(-100L);
         event.setArtists(artists);
-        vex = assertThrows(
-            ValidationException.class,() ->  eventService.createEvent(event)
+        assertThrows(
+            ValidationException.class, () -> eventService.createEvent(event)
         );
     }
 

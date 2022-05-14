@@ -11,11 +11,12 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class StandingSectorDto extends SectorDto {
 
+    private String name;
     private Integer capacity;
     private PointDto point1;
     private PointDto point2;
 
     public StandingSectorDto() {
-        super(SectorType.STANDING_SECTOR);
+        super(SectorType.STANDING);
     }
 }
