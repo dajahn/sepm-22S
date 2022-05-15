@@ -1,15 +1,21 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
+import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
+import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticatedUser;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepm.groupphase.backend.util.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -19,15 +25,19 @@ public class CustomUserDetailService implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        LOGGER.debug("Load all user by email");
+        LOGGER.trace("loadUserByUsername with {}", email);
         try {
             User user = findApplicationUserByEmail(email);
             return new AuthenticatedUser(user);
@@ -38,11 +48,26 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public User findApplicationUserByEmail(String email) {
-        LOGGER.debug("Find application user by email");
+        LOGGER.trace("findApplicationUserByEmail with {}", email);
         User user = userRepository.findUserByEmail(email);
         if (user != null) {
             return user;
         }
         throw new NotFoundException(String.format("Could not find the user with the email address %s", email));
     }
+
+    @Override
+    public User registerUser(CreateUserDto userDto, boolean adminRole) {
+        LOGGER.trace("registerUser with {}", userDto);
+        UserValidator.validateUser(userDto, adminRole);
+        userDto.setStatus(UserStatus.OK);
+        User u = userMapper.createUserDtoToUser(userDto);
+        if (!adminRole) {
+            u.setRole(UserRole.CUSTOMER);
+        }
+        u.setPassword(passwordEncoder.encode(u.getPassword()));
+        //TODO set smth for news read;
+        return userRepository.save(u);
+    }
+
 }
