@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -16,6 +17,7 @@ public class FileDto {
     private Long id;
 
     @JsonSerialize(using = ToStringSerializer.class)
+    @JsonProperty("type")
     private MediaType type;
     private String imageBase64;
     private String url;
