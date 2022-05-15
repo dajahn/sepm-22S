@@ -1,5 +1,7 @@
 <div class="imageWrapper">
-    <img [src]="news.fileDto.url">
+    <div class="imgDiv">
+        <img [src]="news.fileDto.url">
+    </div>
     <h4 class="premiere">Premiering on: 04/05/2022 18:30</h4>
 </div>
 
@@ -8,7 +10,7 @@
         <div class="imageIcon">
             <img [src]="news.fileDto.url">
         </div>
-        <h3 class="newsTitle mb-0">{{news.title}}</h3>
+        <h3 class="newsTitle mb-0" [title]="news.title">{{news.title}}</h3>
         <input type="button" class="orange attending" value="I'M IN">
     </div>
     <div>{{news.description}}</div>
