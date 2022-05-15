@@ -1,7 +1,9 @@
+import { ToastService } from './../../services/toast-service.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NewsService } from './../../services/news.service';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { News } from 'src/app/dtos/news';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-news-create',
@@ -15,10 +17,11 @@ export class NewsCreateComponent implements OnInit {
   public image: File;
   public submitted: boolean = false;
 
-  constructor(private newsService: NewsService, private formBuilder: FormBuilder) {
+  constructor(private newsService: NewsService, private formBuilder: FormBuilder
+    , private toastService: ToastService, private router: Router) {
     this.newsForm = this.formBuilder.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
+      title: ['', [Validators.required, Validators.maxLength(255)]],
+      description: ['', [Validators.required, Validators.maxLength(255)]],
       image: [''],
       eventId: ['']
     });
@@ -54,19 +57,25 @@ export class NewsCreateComponent implements OnInit {
       }
     };
 
-    //TODO: Add validation toast
-    if (news.title.trim() == "" || news.title.length > 255) {
-      console.error("News title not accepted!");
-      return;
-    } else if (news.description.trim() == "" || news.description.length > 255) {
-      console.error("News description not accepted!");
-      return;
-    }
-
-    //TODO: Add toast response
-    this.newsService.createNews(news).subscribe((resp) => {
-      console.log(resp);
+    this.newsService.createNews(news).subscribe({
+      next: value => {
+        this.showSuccess(`News created with title ${news.title}!`);
+        this.router.navigate(['/news']);
+      },
+      error: err => {
+        this.showDanger('An error occurred: \n' + err.error.message)
+      }
     });
+  }
+
+  private showSuccess(msg: string) {
+    this.toastService.show(msg, {
+      classname: 'bg-success text-light', delay: 3000
+    });
+  }
+
+  private showDanger(msg: string) {
+    this.toastService.show(msg, { classname: 'bg-danger text-light', delay: 5000 });
   }
 
   public handleFileInput(files: any) {
