@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileDto {
     private Long id;
 
-    @JsonSerialize(using = ToStringSerializer.class)
     @JsonProperty("type")
     private MediaType type;
     private String imageBase64;

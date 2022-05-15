@@ -34,7 +34,6 @@ public class FileEndpoint {
         this.fileService = fileService;
     }
 
-    @PermitAll
     @GetMapping(value = "/{id}")
     @PermitAll
     @Transactional(readOnly = true)
