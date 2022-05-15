@@ -1,15 +1,15 @@
 import {Artist} from './artist';
-import {CreatePerformance} from './performance';
 import {FileDto} from './file';
+import {CreatePerformance} from './performance';
 
 export interface Event {
   id: number;
   name: string;
   description: string;
   duration: string; // must be string cause of parsing. Duration datatype in backend is a string when parsed into/from JSON
-  thumbnail: File;
   artists: Artist[];
   category: EventCategory;
+  thumbnail: FileDto;
 }
 
 export enum EventCategory {

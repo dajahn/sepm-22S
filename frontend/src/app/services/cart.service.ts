@@ -32,4 +32,14 @@ export class CartService {
     console.log(`Get cart of logged-in user.`);
     return this.httpClient.get<Cart>(this.cartBaseUri);
   }
+
+  /**
+   * Remove ticket from the cart of the currently logged-in user.
+   *
+   * @param ticketId ID of the ticket which should be removed
+   */
+  removeTicketFromCart(ticketId: number): Observable<void> {
+    console.log(`Remove ticket ${ticketId} from cart.`);
+    return this.httpClient.delete<void>(`${this.cartBaseUri}/tickets/${ticketId}`);
+  }
 }

@@ -22,12 +22,12 @@ import javax.persistence.ManyToOne;
 import java.util.Objects;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Ticket {
 
     @Id
