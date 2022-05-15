@@ -66,7 +66,6 @@ public class CustomUserDetailService implements UserService {
             u.setRole(UserRole.CUSTOMER);
         }
         u.setPassword(passwordEncoder.encode(u.getPassword()));
-        //TODO set smth for news read;
         return userRepository.save(u);
     }
 
