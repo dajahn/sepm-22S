@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleMessageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
@@ -10,12 +12,19 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.converter.MediaTypeConverter;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepm.groupphase.backend.util.FileDtoDeserializer;
+import at.ac.tuwien.sepm.groupphase.backend.util.FileDtoSerializer;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.jni.Local;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.internal.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +37,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_ROLES;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_USER;
@@ -38,7 +49,9 @@ import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.TEST_NEWS_D
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.TEST_NEWS_IMG_TYPE;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.TEST_NEWS_TITLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 
@@ -65,7 +78,10 @@ public class NewsEndpointTest {
     @Autowired
     private NewsMapper newsMapper;
 
-    ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+    @Autowired
+    private static ObjectMapper MAPPER;
+
+
     private News news;
     private File file;
 
@@ -78,13 +94,33 @@ public class NewsEndpointTest {
             .data(Base64.getDecoder().decode(TEST_NEWS_BASE64_IMG))
             .build();
 
-        this.fileRepository.save(file);
+        fileRepository.save(file);
+
         news = News.builder().title(TEST_NEWS_TITLE).description(TEST_NEWS_DESCRIPTION).file(file).date(LocalDate.now()).build();
+    }
+
+    @BeforeAll
+    public static void  initMapper() {
+        MAPPER = new ObjectMapper();
+        MAPPER.findAndRegisterModules();
+        SimpleModule serializer =
+            new SimpleModule("FileDtoSerializer", new Version(1, 0, 0, null, null, null));
+        serializer.addSerializer(FileDto.class, new FileDtoSerializer());
+
+        SimpleModule deserializer =
+            new SimpleModule("FileDtoDeserializer", new Version(1, 0, 0, null, null, null));
+        deserializer.addDeserializer(FileDto.class, new FileDtoDeserializer());
+
+        MAPPER.registerModule(deserializer);
+        MAPPER.registerModule(serializer);
     }
 
     @Test
     public void givenNothing_whenNewsEmpty_then422() throws Exception {
-        String body = "";
+        NewsDto newsDto = new NewsDto();
+        newsDto.setTitle("");
+        String body = MAPPER.writeValueAsString(newsDto);
+
         MvcResult mvcResult = this.mockMvc
             .perform(post(NEWS_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -95,8 +131,7 @@ public class NewsEndpointTest {
 
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        //TODO: should be unprocessable entity
-        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(),response.getStatus());
     }
 
     @Test
@@ -108,31 +143,73 @@ public class NewsEndpointTest {
         NewsDto newsDto = newsMapper.entityToNewsDto(news);
         newsDto.setFileDto(fileDto);
 
+        String body = MAPPER.writeValueAsString(newsDto);
+
         MvcResult mvcResult = this.mockMvc.perform(post(NEWS_BASE_URI)
-        .contentType(MediaType.APPLICATION_JSON).content(ow.writeValueAsString(newsDto))
+        .contentType(MediaType.APPLICATION_JSON).content(body)
         .header(securityProperties.getAuthHeader(),jwtTokenizer.getAuthToken(ADMIN_USER,ADMIN_ROLES)))
         .andDo(print())
         .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
+        NewsDto newsDto1 = MAPPER.readValue(response.getContentAsString(),
+            NewsDto.class);
 
-        //TODO: should be 201 but type json conversion makes problems
-        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+        assertNotNull(newsDto1.getId());
+        assertEquals(HttpStatus.CREATED.value(),response.getStatus());
     }
 
     @Test
-    public void givenNothing_whenDescriptionTooLong_then422(){
+    public void givenNothing_whenDescriptionTooLong_then422() throws Exception {
+        NewsDto newsDto = new NewsDto();
+        newsDto.setDescription(StringUtils.repeat("a",65536));
+        String body = MAPPER.writeValueAsString(newsDto);
 
+        MvcResult mvcResult = this.mockMvc
+            .perform(post(NEWS_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(),jwtTokenizer.getAuthToken(ADMIN_USER,ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(),response.getStatus());
     }
 
     @Test
-    public void givenNothing_whenTitleTooLooLong_then422(){
+    public void givenNothing_whenTitleTooLooLong_then422() throws Exception{
+        NewsDto newsDto = new NewsDto();
+        newsDto.setTitle(StringUtils.repeat("t",256));
+        String body = MAPPER.writeValueAsString(newsDto);
 
+        MvcResult mvcResult = this.mockMvc
+            .perform(post(NEWS_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(),jwtTokenizer.getAuthToken(ADMIN_USER,ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(),response.getStatus());
     }
 
     @Test
-    public void givenNothing_whenGetAll_then200(){
+    public void givenNothing_whenGetAll_then200() throws Exception {
 
+        newsRepository.save(news);
+
+        MvcResult mvcResult = this.mockMvc
+            .perform(get(NEWS_BASE_URI).header(securityProperties.getAuthHeader(),jwtTokenizer.getAuthToken(ADMIN_USER,ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        List<NewsDto> newsDto1 = Arrays.asList(MAPPER.readValue(response.getContentAsString(),NewsDto[].class));
+        assertEquals(1,newsDto1.size());
     }
 
 }

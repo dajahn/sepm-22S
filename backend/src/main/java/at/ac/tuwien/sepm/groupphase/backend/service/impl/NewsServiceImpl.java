@@ -5,7 +5,9 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
 import at.ac.tuwien.sepm.groupphase.backend.util.ImageUtility;
 import at.ac.tuwien.sepm.groupphase.backend.util.NewsValidator;
@@ -13,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
@@ -25,20 +28,25 @@ public class NewsServiceImpl implements NewsService {
 
     private final NewsRepository newsRepository;
     private final NewsValidator newsValidator;
+
+    private final FileService fileService;
+
     private NewsMapper newsMapper;
 
-    public NewsServiceImpl(NewsRepository newsRepository, NewsValidator newsValidator, NewsMapper newsMapper) {
+    public NewsServiceImpl(NewsRepository newsRepository, NewsValidator newsValidator, NewsMapper newsMapper, FileService fileService) {
         this.newsRepository = newsRepository;
         this.newsValidator = newsValidator;
         this.newsMapper = newsMapper;
+        this.fileService = fileService;
     }
 
     @Override
-    public News createNews(NewsDto newsDto, File file) throws IOException {
+    public News createNews(NewsDto newsDto) throws IOException {
         LOGGER.trace("createNews {}", newsDto);
 
         this.newsValidator.validateNews(newsDto);
 
+        File file = this.fileService.create(newsDto.getFileDto());
         //TODO: create reference with event
         News news = News.builder()
             .title(newsDto.getTitle())
@@ -77,8 +85,7 @@ public class NewsServiceImpl implements NewsService {
 
         Optional<News> n = this.newsRepository.findById(id);
         if (!n.isPresent()) {
-            //TODO throw not found error
-            return null;
+            throw new NotFoundException();
         }
 
         News news = n.get();

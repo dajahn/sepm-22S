@@ -62,8 +62,7 @@ public class NewsEndpoint {
         News news;
 
         try {
-            File file = this.fileService.create(newsDto.getFileDto());
-            news = this.newsService.createNews(newsDto, file);
+            news = this.newsService.createNews(newsDto);
         } catch (ValidationException e) {
             LOGGER.error("{}", e);
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);

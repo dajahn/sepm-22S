@@ -13,10 +13,9 @@ public interface NewsService {
      *  Creates a new News Entry.
      *
      * @param news to create
-     * @param file related file
      * @return created news entry
      */
-    News createNews(NewsDto news, File file) throws IOException;
+    News createNews(NewsDto news) throws IOException;
 
 
     /**
