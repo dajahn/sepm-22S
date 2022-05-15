@@ -32,6 +32,7 @@ export class CartComponent implements OnInit {
       },
       error: err => {
         console.error('Error fetching cart', err);
+        this.showDanger('Sorry, something went wrong. Could not load the cart 😔');
       }
     });
   }
