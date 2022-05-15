@@ -40,6 +40,6 @@ export class CartService {
    */
   removeTicketFromCart(ticketId: number): Observable<void> {
     console.log(`Remove ticket ${ticketId} from cart.`);
-    return this.httpClient.patch<void>(`${this.cartBaseUri}/remove/${ticketId}`,null);
+    return this.httpClient.delete<void>(`${this.cartBaseUri}/tickets/${ticketId}`);
   }
 }

@@ -165,6 +165,7 @@ input[type=text], input[type=email], input[type=password] {
     border:3px solid var(--accent-orange);
   }
 }
+
 textarea { // added extra selection cause everywhere has to be "!important" for textarea
   font-size: 0.9375em !important;
   color: var(--text-c-highlight) !important;
@@ -242,11 +243,20 @@ input[type=file] {
   }
 }
 
-
 /* ## Icons */
 i {
   font-size: 2em;
   color: var(--text-c-lowlight);
+}
+
+/* ## Toast */
+.toast {
+  margin-top: 4rem;
+
+  * {
+    color: white;
+    font-weight: var(--font-w-medium);
+  }
 }
 
 

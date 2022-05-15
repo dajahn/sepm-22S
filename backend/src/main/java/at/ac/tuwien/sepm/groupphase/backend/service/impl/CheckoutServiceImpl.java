@@ -35,7 +35,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             cart.setType(OrderType.PURCHASE);
             orderRepository.save(cart);
         } else {
-            LOGGER.debug("checkout() for user " + userId + ": Cart is empty!");
+            LOGGER.trace("checkout() for user " + userId + ": Cart is empty!");
         }
     }
 }

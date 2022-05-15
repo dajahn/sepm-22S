@@ -4,6 +4,7 @@ import {Cart} from '../../dtos/cart';
 import {Ticket} from '../../dtos/ticket';
 import {SeatTicket} from '../../dtos/seat-ticket';
 import {CheckoutService} from '../../services/checkout.service';
+import {ToastService} from '../../services/toast-service.service';
 
 @Component({
   selector: 'app-cart',
@@ -14,7 +15,7 @@ export class CartComponent implements OnInit {
 
   cart: Cart;
 
-  constructor(private cartService: CartService, private checkoutService: CheckoutService) {}
+  constructor(private cartService: CartService, private checkoutService: CheckoutService, private toastService: ToastService) {}
 
   ngOnInit(): void {
     this.loadCart();
@@ -62,6 +63,7 @@ export class CartComponent implements OnInit {
       },
       error: err => {
         console.error(`Error, could not remove ticket ${id} from cart.`, err);
+        this.showDanger(`Sorry, ticket could not be removed from the cart 😔`);
       }
     });
   }
@@ -74,10 +76,26 @@ export class CartComponent implements OnInit {
       next: () => {
         console.log('Successfully checked out cart!');
         this.cart.tickets = [];
+        this.showSuccess('Successfully checked out cart 🎉');
       },
       error: err => {
         console.error('Error checking out cart', err);
+        this.showDanger('Sorry, something went wrong during checkout 😔');
       }
     });
+  }
+
+  /**
+   * Displays message on a success.
+   */
+  showSuccess(msg: string) {
+    this.toastService.show(msg, {classname: 'bg-success', delay: 3000});
+  }
+
+  /**
+   * Displays message on a failure.
+   */
+  showDanger(msg: string) {
+    this.toastService.show(msg, {classname: 'bg-danger', delay: 5000});
   }
 }

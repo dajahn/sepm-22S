@@ -95,7 +95,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public TicketOrder getCart(Long userId) {
-        LOGGER.info("getCart(Long userId) for userId {}", userId);
+        LOGGER.trace("getCart(Long userId) for userId {}", userId);
         Optional<TicketOrder> databaseCart = orderRepository.findByTypeAndUserId(OrderType.CART, userId);
         TicketOrder cart;
 
@@ -116,7 +116,7 @@ public class CartServiceImpl implements CartService {
     @Transactional
     @Override
     public void removeTicket(Long userId, Long ticketId) {
-        LOGGER.info("removeTicket(Long userId, Long ticketId) for userId {} and ticketId {}", userId, ticketId);
+        LOGGER.trace("removeTicket(Long userId, Long ticketId) for userId {} and ticketId {}", userId, ticketId);
 
         TicketOrder cart = getCart(userId);
         List<Ticket> tickets = cart.getTickets();
@@ -125,7 +125,7 @@ public class CartServiceImpl implements CartService {
         orderRepository.save(cart);
         ticketRepository.deleteById(ticketId);
         if (tickets.size() == 0) {
-            LOGGER.debug("Removed order {}", cart);
+            LOGGER.trace("removeTicket(Long userId, Long ticketId): Removed order {}", cart);
             orderRepository.delete(cart);
         }
     }
