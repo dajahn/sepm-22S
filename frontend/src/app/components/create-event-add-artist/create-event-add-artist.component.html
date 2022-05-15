@@ -1,0 +1,33 @@
+<div class="row mt-2" *ngIf="!deleted">
+  <div class="col-1 mt-4">
+    <button type="button" class="white" id="delButton" (click)="delete()">X</button>
+  </div>
+  <div class="col-11">
+    <div class="row">
+      <div class="col">
+        <label for="artistName_{{number}}">Artist Name</label>
+        <input  [(ngModel)]="artist" (ngModelChange)="updateArtist()"
+               placeholder="Search Artist by Name" class="form-control"
+               name="artistName_{{number}}" type="text" id="artistName_{{number}}" required
+               [class.is-invalid]="searchArtistFailed" [ngbTypeahead]="searchArtist"
+               [resultFormatter]="resultFormatArtistListValue"
+               [inputFormatter]="inputFormatArtistListValue">
+
+<!--        -->
+
+        <div class="row mt-1">
+          <div class="col">
+            <ng-container>
+              <div class="error"
+                   *ngIf="artistError">
+                <small class="form-text text-warning">Artist is required </small>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>

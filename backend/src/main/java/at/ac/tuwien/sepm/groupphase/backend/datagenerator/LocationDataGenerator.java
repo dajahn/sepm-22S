@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Point;
 import at.ac.tuwien.sepm.groupphase.backend.enums.Country;
 import at.ac.tuwien.sepm.groupphase.backend.enums.SeatType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
+import com.github.javafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -18,14 +19,16 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Profile("generateData")
 @Component
 public class LocationDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int NUMBER_OF_LOCATIONS_TO_GENERATE = 3;
+    private static final int NUMBER_OF_LOCATIONS_TO_GENERATE = 25;
     private final LocationRepository locationRepository;
 
     public LocationDataGenerator(LocationRepository locationRepository) {
@@ -33,26 +36,33 @@ public class LocationDataGenerator {
     }
 
     @PostConstruct
-    private void generateMessage() {
+    private void generateLocations() {
         if (locationRepository.count() > 0) {
             LOGGER.debug("Locations already generated");
         } else {
             LOGGER.debug("Generating {} location entries", NUMBER_OF_LOCATIONS_TO_GENERATE);
-            for (int i = 0; i < NUMBER_OF_LOCATIONS_TO_GENERATE; i++) {
+            Faker faker = new Faker();
+
+            for (int i = 0;
+                 i < NUMBER_OF_LOCATIONS_TO_GENERATE;
+                 i++) {
 
                 Location location = new Location();
-                location.setName("Location " + (i + 1));
+                location.setName(faker.lordOfTheRings().location());
 
                 Address address = new Address();
-                address.setStreet("Location street " + (i + 1));
-                address.setZipCode("100" + (i + 1));
-                address.setCity("Vienna");
+                address.setStreet(faker.address().streetName() + " " + faker.address().streetAddressNumber());
+                address.setZipCode(faker.address().zipCode());
+                address.setCity(faker.address().city());
                 address.setCountry(Country.AT);
                 location.setAddress(address);
 
-                List<Sector> sectors = new ArrayList<>();
-                for (int j = 0; j < 2 + i; j++) {
+                Set<Sector> sectors = new HashSet<>();
+                for (int j = 0;
+                     j < 2 + (i % 3);
+                     j++) {
                     StandingSector sector = new StandingSector();
+                    sector.setName("" + (char) ('A' + j));
                     sector.setPrice(20d);
                     sector.setCapacity(10 * (j + 1));
                     Point point = new Point();
@@ -66,17 +76,22 @@ public class LocationDataGenerator {
                     sector.setLocation(location);
                     sectors.add(sector);
                 }
-                for (int j = 0; j < 3; j++) {
+                for (int j = 0;
+                     j < 3;
+                     j++) {
                     SeatSector sector = new SeatSector();
-                    sector.setPrice(30d * j);
-                    sector.setSeatType(SeatType.values()[j]);
+                    sector.setPrice(30d + 10d * (j % SeatType.values().length));
+                    sector.setSeatType(SeatType.values()[j % SeatType.values().length]);
                     List<Seat> seats = new ArrayList<>();
 
-                    for (int k = 0; k < (2 + i) * 8; k++) {
+                    for (int k = 0;
+                         k < (2 + i) * 8;
+                         k++) {
                         Point point = new Point();
                         point.setX(k);
                         point.setY(5 + j);
                         Seat seat = new Seat();
+                        seat.setSector(sector);
                         seat.setRow(j + 1);
                         seat.setColumn(k + 1);
                         seat.setPoint(point);

@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -13,10 +15,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.util.Objects;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
 @ToString
@@ -29,9 +35,22 @@ public abstract class Ticket {
     @Column(nullable = false, updatable = false)
     private Long id;
 
-    @ManyToOne
+    @Column(name = "performance_id")
     @NonNull
+    private Long performanceId;
+
+    @ManyToOne
+    @JoinColumn(name = "performance_id", insertable = false, updatable = false)
     private Performance performance;
+
+    @Column(name = "order_id")
+    @NonNull
+    private Long orderId;
+
+    @ManyToOne(fetch = javax.persistence.FetchType.LAZY)
+    @JoinColumn(name = "order_id", insertable = false, updatable = false)
+    @ToString.Exclude
+    private TicketOrder order;
 
     /**
      * Gets either a StandingSector or a SeatSector corresponding to the StandingTicket or SeatTicket.
@@ -39,6 +58,14 @@ public abstract class Ticket {
      * @return the sector
      */
     public abstract Sector getSector();
+
+    /**
+     * Maps a StandingTicket or SeatTicket to its corresponding StandingTicketDto or SeatTicketDto.
+     *
+     * @param mapper the mapper used to map Ticket sub-classes to TicketDto sub-classes
+     * @return the ticket DTO
+     */
+    public abstract TicketDto mapToDto(TicketMapper mapper);
 
     @Override
     public boolean equals(Object o) {

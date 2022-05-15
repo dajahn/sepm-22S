@@ -1,0 +1,66 @@
+<div *ngIf="!deleted">
+  <div class="row">
+    <div class="col">
+      <hr/>
+    </div>
+  </div>
+
+  <div class="row">
+<!--    Delete button-->
+    <div class="col-1 delButtonCol">
+      <button type="button" class="white" id="delButton" (click)="delete()">X</button>
+    </div>
+    <div class="col-11">
+      <div class="row">
+<!--        Location search field-->
+        <div class="col">
+          <label for="locationName_{{number}}">Location</label>
+          <input [(ngModel)]="location" (ngModelChange)="updatePerformance()"
+                 placeholder="Search Location by Name" class="form-control"
+                 name="locationName_{{number}}" type="text" id="locationName_{{number}}" required
+                 [class.is-invalid]="searchLocationFailed" [ngbTypeahead]="searchLocation"
+                 [resultFormatter]="resultFormatArtistListValue"
+                 [inputFormatter]="inputFormatArtistListValue">
+
+        </div>
+      </div>
+      <div class="row mt-2">
+<!--        Date input-->
+        <div class="col-8">
+          <label for="date">Date</label>
+          <div class="input-group">
+            <input required id="date" placeholder="yyyy-mm-dd" type="text"
+                   name="date" [(ngModel)]="dateModel" ngbDatepicker #d="ngbDatepicker" [minDate]="today"
+                   (ngModelChange)="updatePerformance()">
+            <button class="btn white" (click)="d.toggle()" type="button"> 📅</button>
+            <!--          icon does not work again as HTML encoded value-->
+          </div>
+
+        </div>
+<!--        Time input-->
+        <div class="col-4">
+          <label for="time">Time</label>
+          <ngb-timepicker required id="time" name="time" [spinners]="false"
+                          aria-describedby="durationHelp" [(ngModel)]="time"
+                          (ngModelChange)="updatePerformance()"></ngb-timepicker>
+          <div class="row mt-1">
+            <div class="col">
+              <ng-container>
+                <div class="error"
+                     *ngIf="time === null">
+                  <small class="form-text text-warning">Time is required. </small>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+<!--      Used for spacing-->
+      <div class="row mt-2">
+      </div>
+
+    </div>
+
+  </div>
+</div>
+

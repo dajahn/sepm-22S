@@ -1,6 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Address;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -17,8 +20,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * This entity represents a location, at which events can be performed.
@@ -44,9 +49,10 @@ public class Location {
     @NonNull
     private Address address;
 
-    @OneToMany(fetch = javax.persistence.FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @NonNull
-    private List<Sector> sectors = new java.util.ArrayList<>();
+    @ToString.Exclude
+    private Set<Sector> sectors;
 
     @OneToMany
     @ToString.Exclude

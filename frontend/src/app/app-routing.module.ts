@@ -1,3 +1,5 @@
+import {CreateEventComponent} from './components/create-event/create-event.component';
+import {AdminGuard} from './guards/admin.guard';
 import { NewsComponent } from './components/news/news.component';
 import { NewsCreateComponent } from './components/news-create/news-create.component';
 import { NgModule } from '@angular/core';
@@ -9,16 +11,18 @@ import { MessageComponent } from './components/message/message.component';
 import { NewsDetailComponent } from './components/news-detail/news-detail.component';
 
 const routes: Routes = [
+  {path: '', component: HomeComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'event/create', canActivate: [AdminGuard], component: CreateEventComponent},
+  {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   { path: '', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'message', canActivate: [AuthGuard], component: MessageComponent },
   { path: 'news',/*canActivate:[AuthGuard]*/ component: NewsComponent },
   { path: 'news/create', /*canActivate: [AuthGuard],*/ component: NewsCreateComponent },
   { path: 'news/:id', component: NewsDetailComponent }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes, {useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

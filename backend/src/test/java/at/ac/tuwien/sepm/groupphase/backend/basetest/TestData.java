@@ -31,7 +31,7 @@ public interface TestData {
             add("ROLE_USER");
         }
     };
-    String DEFAULT_USER = "user1@example.com";
+    String DEFAULT_USER = "admin1@example.com";
     List<String> USER_ROLES = new ArrayList<>() {
         {
             add("ROLE_USER");
