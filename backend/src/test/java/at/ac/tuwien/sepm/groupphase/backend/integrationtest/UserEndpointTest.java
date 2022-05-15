@@ -63,7 +63,7 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     }
 
     @Test
-    public void givenNothing_whenCreate_thenCreatedEventWithAllSetPropertiesPlusId()
+    public void givenNothing_whenCreate_thenCreatedUserWithAllSetPropertiesPlusId()
         throws Exception {
         String body = MAPPER.writeValueAsString(createUserDto);
 
