@@ -22,7 +22,6 @@ spring:
     # is disabled since it breaks the principle of least astonishment and leads to bad performance. The learn more,
     # follow this link: https://bit.ly/2LaX9ku
     open-in-view: false
-  # MULTIPART
   servlet:
     multipart:
       enabled: true
@@ -30,6 +29,11 @@ spring:
       max-file-size: 200MB
       max-request-size: 215MB
 
+server:
+  error:
+    include-message: always
+    # So we can send meaningful error responses, not like "Validation error"
+  # MULTIPART
 
 jps:
   track:

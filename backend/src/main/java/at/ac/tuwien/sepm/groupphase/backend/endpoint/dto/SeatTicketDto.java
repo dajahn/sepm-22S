@@ -7,6 +7,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class SeatTicketDto extends TicketDto {
 
-    private SeatSectorDto sector;
+    private SmallSeatSectorDto sector;
     private SeatDto seat;
 }

@@ -7,5 +7,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface EventMapper {
 
-    EventDto eventToEventDto(Event performance);
+    EventDto eventToEventDto(Event event);
+
+    Event eventDtoToEvent(EventDto eventDto);
 }

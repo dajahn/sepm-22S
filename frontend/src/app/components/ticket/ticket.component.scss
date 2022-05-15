@@ -1,0 +1,132 @@
+/* DEFAULT TICKET */
+.ticket-wrapper {
+  width: 100%;
+  min-height: 60px;
+  border-radius: 8px;
+  margin-top: 0.75rem;
+  cursor: pointer;
+  transition: all .2s ease-in-out;
+
+  &:hover{
+    transform: scale(1.01);
+  }
+}
+
+.thumbnail {
+  position: relative;
+  border-radius: 8px;
+  height: 60px;
+  width: 60px;
+  object-fit: contain;
+}
+
+.ticket-class-emoji {
+  font-size: 2em;
+  position: absolute;
+  margin-left: 0.34rem;
+  margin-bottom: 0.3rem;
+}
+
+.ticket-class {
+  font-size: 2em;
+  margin-left: 1.03rem;
+  position: absolute;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-black);
+}
+
+.content {
+  margin-left: 1.5rem;
+}
+
+.title {
+  font-size: 1em;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-semi-bold);
+}
+
+.datetime {
+  font-size: 0.875em;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-medium);
+}
+
+.performance-wrapper {
+  span {
+    font-size: 0.875em;
+    color: var(--text-c-highlight);
+    font-weight: var(--font-w-light);
+  }
+
+  .title {
+    text-transform: uppercase;
+  }
+
+  .value {
+    font-weight: var(--font-w-medium);
+  }
+}
+
+.price {
+  font-size: 0.875em;
+  margin-right: 1rem;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-light);
+}
+
+/* REMOVE BUTTON*/
+.remove {
+  padding: 0;
+  line-height: 0;
+
+  i {
+    font-size: 1.5em;
+    padding: 0;
+    display: inline-block;
+    color: var(--text-c-lowlight);
+  }
+}
+
+
+
+/* MOBILE TICKET */
+/* (i) hide mobile ticket */
+#mobile-ticket {
+  display: none;
+}
+
+.mobile-stats-wrapper {
+  margin-left: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+
+
+/* MEDIA QUERIES */
+@media (max-width: 600px) {
+
+  /* # Default Ticket: */
+  /* (i) hide default ticket */
+  #default-ticket {
+    display: none;
+  }
+
+  /* # Mobile Ticket: */
+  /* (i) show mobile ticket */
+  #mobile-ticket {
+    display: block;
+  }
+
+  .thumbnail {
+    border-radius: 8px 0 8px 0;
+  }
+
+  hr {
+    background-color: var(--text-c-highlight);
+    opacity: 0.5;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+}
