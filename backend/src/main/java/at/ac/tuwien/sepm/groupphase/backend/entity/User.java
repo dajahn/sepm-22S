@@ -11,14 +11,21 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * This entity represents a user of this application.
@@ -66,6 +73,13 @@ public class User {
 
     @Column(name = "last_news_read")
     private LocalDateTime lastNewsRead;
+
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_news",
+        joinColumns =  @JoinColumn(name = "user_id"),
+        inverseJoinColumns =  @JoinColumn(name = "news_id"))
+    Set<News> readNews;
 
     @Override
     public boolean equals(Object o) {

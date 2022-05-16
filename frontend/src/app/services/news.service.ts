@@ -23,4 +23,8 @@ export class NewsService {
   public getById(id: number) {
     return this.httpClient.get(this.newsBaseURI + "/" + id);
   }
+
+  public getUnread() {
+    return this.httpClient.get(this.newsBaseURI + "/unread");
+  }
 }

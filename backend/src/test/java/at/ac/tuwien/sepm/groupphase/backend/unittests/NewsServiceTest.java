@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_USER;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
@@ -19,7 +20,7 @@ public class NewsServiceTest {
     @Test
     public void givenNothing_whenFindByInvalidId_thenNotFoundException(){
         assertThrows(
-            NotFoundException.class, () -> newsService.getById(100L)
+            NotFoundException.class, () -> newsService.getById(100L,ADMIN_USER)
         );
     }
 }

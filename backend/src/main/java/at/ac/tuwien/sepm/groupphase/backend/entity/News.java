@@ -17,12 +17,14 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -58,6 +60,9 @@ public class News {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn
     private File file;
+
+    @ManyToMany(mappedBy = "readNews", fetch = FetchType.EAGER)
+    Set<User> readBy;
 
     @Override
     public boolean equals(Object o) {

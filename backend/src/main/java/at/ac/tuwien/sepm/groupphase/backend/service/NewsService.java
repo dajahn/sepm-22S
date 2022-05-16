@@ -26,10 +26,20 @@ public interface NewsService {
     List<NewsDto> getAll();
 
     /**
+     * Gets all the unread news entries for a user.
+     *
+     * @param mail the mail of the user for which we fetch the unread mails
+     *
+     * @return all unread news entries
+     */
+    List<NewsDto> getUnread(String mail);
+
+    /**
      * Gets a news entry by id.
      *
      * @param id of the related news element
+     * @param mail mail of the user which fetches the mail
      * @return corresponding news element
      */
-    NewsDto getById(Long id);
+    NewsDto getById(Long id, String mail);
 }

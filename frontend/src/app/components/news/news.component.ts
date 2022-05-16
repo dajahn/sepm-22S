@@ -21,12 +21,12 @@ export class NewsComponent implements OnInit {
   constructor(private newsService: NewsService, private globals: Globals, private router: Router) { }
 
   ngOnInit(): void {
-    this.loadNews();
+    this.loadUnreadNews();
   }
 
   //TODO: Only load UNREAD news
-  private loadNews() {
-    this.newsService.getAllNews().subscribe((news: News[]) => {
+  private loadUnreadNews() {
+    this.newsService.getUnread().subscribe((news: News[]) => {
       this.news = news;
 
       for (let n of this.news) {
@@ -46,20 +46,27 @@ export class NewsComponent implements OnInit {
     });
   }
 
-  public handelOnClickUnreadNews(index: number) {
+  private redirectOnSmallScreens(id) {
     if (window.innerWidth <= 1300) {
-      this.router.navigate(['/news', this.news[index].id]);
+      this.router.navigate(['/news', id]);
     }
+  }
+
+  public handelOnClickUnreadNews(index: number) {
+    let id: number = this.news[index].id;
+    this.redirectOnSmallScreens(id);
+
+    //The News gets set as read on getById
+    this.newsService.getById(id).subscribe(n => {
+      console.log(n);
+    });
 
     this.currentSelectedIdUnreadNews = index;
     this.currentSelectedIdAllNews = -1;
   }
 
   public handelOnClickAllNews(index: number) {
-    if (window.innerWidth <= 1300) {
-      this.router.navigate(['/news', this.allNews[index].id]);
-    }
-
+    this.redirectOnSmallScreens(this.allNews[index].id);
     this.currentSelectedIdAllNews = index;
     this.currentSelectedIdUnreadNews = -1;
   }
