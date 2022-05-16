@@ -15,7 +15,7 @@ const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'event/create', canActivate: [AdminGuard], component: CreateEventComponent},
+  {path: 'events/create', canActivate: [AdminGuard], component: CreateEventComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   { path: '', component: HomeComponent },
   { path: 'news',/*canActivate:[AuthGuard]*/ component: NewsComponent },
