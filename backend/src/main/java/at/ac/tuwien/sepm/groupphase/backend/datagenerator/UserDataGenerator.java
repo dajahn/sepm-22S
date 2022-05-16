@@ -68,7 +68,6 @@ public class UserDataGenerator {
                 user.setAddress(address);
                 user.setRole(UserRole.CUSTOMER);
                 user.setStatus(UserStatus.OK);
-                user.setLastNewsRead(LocalDateTime.now());
                 userRepository.save(user);
             }
             for (int i = 0; i < NUMBER_OF_ADMINS_TO_GENERATE; i++) {
@@ -86,7 +85,6 @@ public class UserDataGenerator {
                 user.setAddress(address);
                 user.setRole(UserRole.ADMIN);
                 user.setStatus(UserStatus.OK);
-                user.setLastNewsRead(LocalDateTime.now());
                 userRepository.save(user);
             }
         }
