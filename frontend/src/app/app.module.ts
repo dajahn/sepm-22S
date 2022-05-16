@@ -21,6 +21,7 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { CartComponent } from './components/cart/cart.component';
 import { TicketComponent } from './components/ticket/ticket.component';
 import { ToastComponentComponent } from './components/toast-component/toast-component.component';
+import {TopTenEventsComponent} from './components/top-ten-events/top-ten-events.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ToastComponentComponent } from './components/toast-component/toast-comp
     CreatePerformanceComponent,
     CreateEventAddArtistComponent,
     ToastComponentComponent,
+    TopTenEventsComponent
   ],
   imports: [
     BrowserModule,

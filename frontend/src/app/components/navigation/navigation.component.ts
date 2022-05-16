@@ -22,7 +22,7 @@ export class NavigationComponent implements OnInit {
     editProfile: '/edit',
     search: '/search',
     news: '/news',
-    topTen: '/topten',
+    topTen: '/events/top-ten-events',
     cart: '/cart',
     reservations: '/reservations',
     adminTools: '/admintools'

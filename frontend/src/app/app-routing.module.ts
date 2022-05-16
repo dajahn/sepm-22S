@@ -9,11 +9,13 @@ import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { MessageComponent } from './components/message/message.component';
 import {CartComponent} from './components/cart/cart.component';
+import {TopTenEventsComponent} from './components/top-ten-events/top-ten-events.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'event/create', canActivate: [AdminGuard], component: CreateEventComponent},
+  {path: 'events/top-ten-events', component: TopTenEventsComponent},
   {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
   { path: '', component: HomeComponent },
   { path: 'news',/*canActivate:[AuthGuard]*/ component: NewsComponent },
