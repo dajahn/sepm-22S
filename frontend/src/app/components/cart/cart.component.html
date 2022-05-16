@@ -1,0 +1,65 @@
+<!-- HEADLINE -->
+<h2>🛒 Cart</h2>
+<h5>Buy tickets or view the ones you have already bought</h5>
+
+
+
+<!-- CART -->
+<h4 class="headline">in you cart ({{cart?.tickets.length}})</h4>
+
+<!-- # Cart Grid: -->
+<!-- ## Empty Cart -->
+<div *ngIf="cart?.tickets.length <= 0; else cartNotEmpty">
+  <h5 class="empty">Nothing in here ... chirp chirp 🦗</h5>
+</div>
+<!-- ## Filled Cart -->
+<ng-template #cartNotEmpty>
+  <div class="ticket-grid" *ngFor="let ticket of cart?.tickets">
+    <!-- ### Seat -->
+    <app-ticket *ngIf="ticket?.sector.type === 'SEAT'"
+                [imageSrc]="ticket.performance.event.thumbnail?.url"
+                [title]="ticket.performance.event.name"
+                [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
+                [performance]="ticket.performance.location.name"
+                [price]="ticket?.sector.price"
+                rowTitle="ROW"
+                [rowValue]="toSeatTicket(ticket).seat.row+''"
+                columnTitle="SEAT"
+                [columnValue]="toSeatTicket(ticket).seat.column+''"
+                [ticketClass]="toSeatTicket(ticket).sector.seatType"
+                (remove)="onRemove(ticket.id)">
+    </app-ticket>
+
+    <!-- ### Standing -->
+    <app-ticket *ngIf="ticket?.sector.type === 'STANDING'"
+                [imageSrc]="ticket.performance.event.thumbnail?.url"
+                [title]="ticket.performance.event.name"
+                [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
+                [performance]="ticket.performance.location.name"
+                [price]="ticket.sector.price"
+                rowTitle="SECTOR"
+                [rowValue]="ticket.sector.name"
+                (remove)="onRemove(ticket.id)">
+    </app-ticket>
+  </div>
+
+  <!-- # Purchase Button: -->
+  <div class="d-flex flex-row align-items-center" style="margin-top: 1rem; margin-bottom: 4rem">
+    <!-- TODO Add purchase functionality -->
+    <input type="button" class="blue" value="BUY TICKETS" (click)="checkout()">
+    <!-- TODO Add purchase dynamic price -->
+    <span class="price">for a total of € {{calculateTotalSum().toFixed(2)}}</span>
+  </div>
+</ng-template>
+
+
+
+<!-- PURCHASED UPCOMING EVENTS -->
+<!-- TODO Implement purchased upcoming events -->
+<h4 class="headline">purchased upcoming events</h4>
+
+
+
+<!-- PAST EVENTS -->
+<!-- TODO Implement past events -->
+<h4 class="headline">past events</h4>

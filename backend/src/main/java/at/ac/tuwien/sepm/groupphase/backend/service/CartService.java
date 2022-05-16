@@ -22,4 +22,12 @@ public interface CartService {
      * @return the cart TicketOrder of the currently logged-in user
      */
     TicketOrder getCart(Long userId);
+
+    /**
+     * Removes a ticket (by its ID) from the cart of the logged-in user.
+     *
+     * @param userId the ID of the logged-in user
+     * @param ticketId the ID of the ticked which should be removed
+     */
+    void removeTicket(Long userId, Long ticketId);
 }

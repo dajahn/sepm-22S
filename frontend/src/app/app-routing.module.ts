@@ -9,6 +9,7 @@ import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { MessageComponent } from './components/message/message.component';
 import { NewsDetailComponent } from './components/news-detail/news-detail.component';
+import {CartComponent} from './components/cart/cart.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -18,7 +19,8 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'news',/*canActivate:[AuthGuard]*/ component: NewsComponent },
   { path: 'news/create', /*canActivate: [AuthGuard],*/ component: NewsCreateComponent },
-  { path: 'news/:id', component: NewsDetailComponent }
+  { path: 'news/:id', component: NewsDetailComponent },
+  { path: 'cart', component: CartComponent }
 ];
 
 @NgModule({

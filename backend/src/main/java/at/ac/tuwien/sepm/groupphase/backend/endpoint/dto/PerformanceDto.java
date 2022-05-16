@@ -12,4 +12,5 @@ public class PerformanceDto {
     private long id;
     private LocalDateTime dateTime;
     private LocationDto location;
+    private EventDto event;
 }
