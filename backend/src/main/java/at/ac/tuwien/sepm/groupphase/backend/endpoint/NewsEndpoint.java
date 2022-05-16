@@ -55,8 +55,7 @@ public class NewsEndpoint {
         this.newsMapper = newsMapper;
     }
 
-    //TODO: ROLE_ADMIN but admin user was not working
-    @Secured("ROLE_USER")
+    @Secured("ROLE_ADMIN")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Creates a new News Entry", security = @SecurityRequirement(name = "apiKey"))

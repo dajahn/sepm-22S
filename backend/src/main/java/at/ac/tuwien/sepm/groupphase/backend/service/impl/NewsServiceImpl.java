@@ -59,6 +59,7 @@ public class NewsServiceImpl implements NewsService {
         News news = News.builder()
             .title(newsDto.getTitle())
             .description(newsDto.getDescription())
+            .imageDescription(newsDto.getImageDescription())
             .date(LocalDate.now())
             .file(file).build();
 

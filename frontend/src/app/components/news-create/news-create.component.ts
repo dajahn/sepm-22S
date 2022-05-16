@@ -22,6 +22,7 @@ export class NewsCreateComponent implements OnInit {
     this.newsForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.maxLength(255)]],
       description: ['', [Validators.required, Validators.maxLength(255)]],
+      imageDescription: ['', [Validators.required, Validators.maxLength(255)]],
       image: [''],
       eventId: ['']
     });
@@ -47,10 +48,11 @@ export class NewsCreateComponent implements OnInit {
     let base64img = await this.getBase64(this.image);
     base64img = base64img.split(',')[1];
 
+    //TODO: add Event
     let news: News = {
       title: this.newsForm.controls.title.value,
       description: this.newsForm.controls.description.value,
-      eventId: this.newsForm.controls.eventId.value,
+      imageDescription: this.newsForm.controls.imageDescription.value,
       fileDto: {
         imageBase64: base64img,
         type: this.image.type

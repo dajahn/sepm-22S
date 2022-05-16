@@ -46,6 +46,7 @@ import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_USER;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.NEWS_BASE_URI;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.TEST_NEWS_BASE64_IMG;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.TEST_NEWS_DESCRIPTION;
+import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.TEST_NEWS_IMAGE_DESCRIPTION;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.TEST_NEWS_IMG_TYPE;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.TEST_NEWS_TITLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -96,7 +97,13 @@ public class NewsEndpointTest {
 
         fileRepository.save(file);
 
-        news = News.builder().title(TEST_NEWS_TITLE).description(TEST_NEWS_DESCRIPTION).file(file).date(LocalDate.now()).build();
+        news = News.builder()
+            .title(TEST_NEWS_TITLE)
+            .description(TEST_NEWS_DESCRIPTION)
+            .file(file)
+            .imageDescription(TEST_NEWS_IMAGE_DESCRIPTION)
+            .date(LocalDate.now())
+            .build();
     }
 
     @BeforeAll

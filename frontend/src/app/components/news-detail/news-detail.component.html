@@ -2,7 +2,7 @@
     <div class="imgDiv">
         <img [src]="news.fileDto.url">
     </div>
-    <h4 class="premiere">Premiering on: 04/05/2022 18:30</h4>
+    <h4 class="premiere">{{news.imageDescription}}</h4>
 </div>
 
 <div class="newsDescription">
@@ -11,10 +11,10 @@
             <img [src]="news.fileDto.url">
         </div>
         <h3 class="newsTitle mb-0" [title]="news.title">{{news.title}}</h3>
-        <input type="button" class="orange attending" value="I'M IN">
+        <input *ngIf="news.eventDto !== null" type="button" class="orange attending" value="I'M IN 🔥">
     </div>
     <div>{{news.description}}</div>
-    <div class="eventType">
+    <div *ngIf="news.eventDto !== null" class="eventType">
         Concert
     </div>
 </div>

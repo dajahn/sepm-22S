@@ -57,6 +57,10 @@ public class News {
     private Event event;
 
     @NonNull
+    @Column()
+    private String imageDescription;
+
+    @NonNull
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn
     private File file;

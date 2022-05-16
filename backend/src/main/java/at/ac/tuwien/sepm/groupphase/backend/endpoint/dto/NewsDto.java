@@ -21,7 +21,7 @@ public class NewsDto {
     private String title;
     private Long eventId;
     private String description;
-    private MultipartFile image;
+    private String imageDescription;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
@@ -29,4 +29,5 @@ public class NewsDto {
     private LocalDate date;
 
     private FileDto fileDto;
+    private EventDto eventDto;
 }

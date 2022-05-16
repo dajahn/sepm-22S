@@ -1,3 +1,4 @@
+import { AuthService } from './../../services/auth.service';
 import { Router } from '@angular/router';
 import { Globals } from './../../global/globals';
 import { NewsService } from './../../services/news.service';
@@ -18,7 +19,7 @@ export class NewsComponent implements OnInit {
   public currentSelectedIdAllNews: number = -1;
 
 
-  constructor(private newsService: NewsService, private globals: Globals, private router: Router) { }
+  constructor(private newsService: NewsService, private globals: Globals, private router: Router, public authService: AuthService) { }
 
   ngOnInit(): void {
     this.loadUnreadNews();

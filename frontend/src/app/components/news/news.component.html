@@ -1,8 +1,13 @@
 <div class="newsTimeline">
-    <h2>
-        <i class="bi bi-newspaper"></i>
-        News
-    </h2>
+    <div class="d-flex align-items-center mb-5">
+        <h2>
+            📰 News
+        </h2>
+        <div class="ms-5" *ngIf="authService.getUserRole() === 'ADMIN'">
+            <input type="button" class="blue" value="Create News" [routerLink]="['/news/create']">
+        </div>
+    </div>
+
     <h5>Get informed about the latest events.</h5>
 
     <h4 class="headline">Unread News</h4>
@@ -23,9 +28,9 @@
         </div>
     </div>
 
-    <div class="d-flex align-items-center" (click)="toggleExpandAllNews()" role="button">
+    <div class="d-inline-flex align-items-center" (click)="toggleExpandAllNews()" role="button">
         <i class="bi bi-plus"></i>
-        <label class="header-label">Read all news</label>
+        <label class="header-label" role="button">Read all news</label>
     </div>
     <div *ngIf="expandAllNews" class="timeline">
         <div *ngFor="let n of allNews;let i = index" class="eventPreview d-flex align-items-center mb-5">
