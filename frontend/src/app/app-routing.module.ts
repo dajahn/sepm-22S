@@ -10,13 +10,14 @@ import { AuthGuard } from './guards/auth.guard';
 import { MessageComponent } from './components/message/message.component';
 import { NewsDetailComponent } from './components/news-detail/news-detail.component';
 import { CartComponent } from './components/cart/cart.component';
+import {RegisterComponent} from './components/register/register.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'event/create', canActivate: [AdminGuard], component: CreateEventComponent },
+  { path: 'register', component: RegisterComponent},
+  {path: 'event/create', canActivate: [AdminGuard], component: CreateEventComponent },
   { path: 'message', canActivate: [AuthGuard], component: MessageComponent },
-  { path: '', component: HomeComponent },
   { path: 'news', canActivate: [AuthGuard], component: NewsComponent },
   { path: 'news/create', canActivate: [AdminGuard], component: NewsCreateComponent },
   { path: 'news/:id', component: NewsDetailComponent },

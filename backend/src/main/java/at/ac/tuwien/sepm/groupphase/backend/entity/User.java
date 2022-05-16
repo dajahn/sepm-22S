@@ -3,6 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Address;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -33,7 +35,9 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Builder
 @ToString
+@AllArgsConstructor
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class User {
