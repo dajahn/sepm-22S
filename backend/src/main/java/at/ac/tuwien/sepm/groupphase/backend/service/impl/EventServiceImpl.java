@@ -8,23 +8,28 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Location;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.enums.EventCategory;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepm.groupphase.backend.service.LocationService;
 import at.ac.tuwien.sepm.groupphase.backend.util.EventValidator;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
+import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -91,4 +96,42 @@ public class EventServiceImpl implements EventService {
         evt.setPerformances(performances);
         return evt;
     }
+
+    @Override
+    public List<Event> topTenEventsByCategory(EventCategory category) {
+        LOGGER.debug("Find all Events");
+        List<Event> result;
+        LocalDateTime from = LocalDateTime.now().with(firstDayOfMonth());
+        LocalDateTime to = LocalDateTime.now().with(lastDayOfMonth());
+        if (category == EventCategory.CONCERT) {
+            result = eventRepository.findAllByCategory(from, to, 0);
+        } else {
+            result = eventRepository.findAllByCategory(from, to, 1);
+        }
+        if (!result.isEmpty()) {
+            return result;
+        } else {
+            throw new NotFoundException("Could not find events in this category");
+        }
+    }
+
+    @Override
+    public List<Integer> topTenEventsTicketCount(EventCategory category) {
+        LOGGER.debug("Find all Events");
+        List<Integer> result;
+        LocalDateTime from = LocalDateTime.now().with(firstDayOfMonth());
+        LocalDateTime to = LocalDateTime.now().with(lastDayOfMonth());
+        if (category == EventCategory.CONCERT) {
+            result = eventRepository.topTenEventsTicketCount(from, to, 0);
+        } else {
+            result = eventRepository.topTenEventsTicketCount(from, to, 1);
+        }
+        if (!result.isEmpty()) {
+            return result;
+        } else {
+            throw new NotFoundException("Could not count tickets for events in this category");
+        }
+    }
+
 }
+
