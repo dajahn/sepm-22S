@@ -75,9 +75,6 @@ public class User {
     @NonNull
     private UserStatus status;
 
-    @Column(name = "last_news_read")
-    private LocalDateTime lastNewsRead;
-
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_news",
