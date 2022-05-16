@@ -57,6 +57,7 @@ public class UserServiceTest implements UserTestData, AddressTestData {
 
     @Test
     public void givenIncorrectInput_whenCreateUser_thenThrowValidationException() {
+        userRepository.deleteAll();
         AddressDto a = new AddressDto();
         a.setCity(CITY);
         a.setCountry(String.valueOf(COUNTRY));
