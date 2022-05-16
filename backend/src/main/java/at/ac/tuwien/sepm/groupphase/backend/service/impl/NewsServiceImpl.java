@@ -14,9 +14,11 @@ import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
 import at.ac.tuwien.sepm.groupphase.backend.util.NewsValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -68,7 +70,7 @@ public class NewsServiceImpl implements NewsService {
     public List<NewsDto> getAll() {
         LOGGER.trace("getAll()");
 
-        List<News> news = this.newsRepository.findAll();
+        List<News> news = this.newsRepository.findAll(Sort.by(Sort.Direction.DESC, "date", "id"));
         List<NewsDto> newsDtos = news.stream().map(n -> this.newsMapper.entityToNewsDto(n)).toList();
 
         //Adds the corresponding filedto to the newsdto

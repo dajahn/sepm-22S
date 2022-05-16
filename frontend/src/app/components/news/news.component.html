@@ -50,7 +50,7 @@
     <div *ngIf="currentSelectedIdUnreadNews !== -1">
         <app-news-detail [news]="news[currentSelectedIdUnreadNews]"></app-news-detail>
     </div>
-    <div *ngIf="currentSelectedIdAllNews!== -1">
-        <app-news-detail [news]="news[currentSelectedIdAllNews]"></app-news-detail>
+    <div *ngIf="currentSelectedIdAllNews !== -1">
+        <app-news-detail [news]="allNews[currentSelectedIdAllNews]"></app-news-detail>
     </div>
 </div>

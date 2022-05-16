@@ -12,7 +12,8 @@ import { News } from 'src/app/dtos/news';
 export class NewsDetailComponent implements OnInit {
   @Input() public news: News;
 
-  constructor(private route: ActivatedRoute, private newsService: NewsService, private globals: Globals) { }
+  constructor(private route: ActivatedRoute, private newsService: NewsService, private globals: Globals) {
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -27,7 +28,4 @@ export class NewsDetailComponent implements OnInit {
       this.news.fileDto.url = this.globals.backendUri + this.news.fileDto.url;
     });
   }
-
-
-
 }
