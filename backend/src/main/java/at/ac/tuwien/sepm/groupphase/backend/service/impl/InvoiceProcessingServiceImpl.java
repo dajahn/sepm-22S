@@ -54,45 +54,64 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
         data.put("invoice.number", invoice.getIdentification().toString());
         data.put("invoice.date", Formatter.formatDate(invoice.getDate()));
 
-        // todo make values dynamic
-
-        List<Object> tickets = new ArrayList<>();
+        List<Object> events = new ArrayList<>();
 
         float totalPrice = 0;
 
         TicketOrder order = invoice.getOrder();
 
-        if (order != null) {
+        HashMap<Long, PerformanceItem> performances = new HashMap<>();
 
-            for (Ticket ticket : order.getTickets()) { // todo add grouping for seats with same price and sector
-                float price = (float) ((double) ticket.getSector().getPrice());
-                int ticketAmount = 1;
+        for (Ticket ticket : order.getTickets()) {
 
-                totalPrice += price * ticketAmount;
-
-                tickets.add(new Object() {
-                    final String sector = ticket instanceof SeatTicket ? Formatter.formatSeatType(((SeatTicket) ticket).getSector().getSeatType()) : "Standing";
-                    final int amount = ticketAmount;
-                    final String singlePrice = Formatter.formatPrice(price);
-                    final String totalPrice = Formatter.formatPrice(price * ticketAmount);
-                });
+            Performance performance = ticket.getPerformance();
+            Long id = performance.getId();
+            PerformanceItem item = performances.get(id);
+            if (item == null) {
+                item = new PerformanceItem(
+                    performance.getEvent().getName(),
+                    Formatter.formatDateTime(performance.getDateTime()),
+                    performance.getLocation().getName()
+                );
+                performances.put(id, item);
             }
 
-            data.put("tickets", tickets);
-
-            Performance performance = order.getTickets().get(0).getPerformance(); // todo change if we want to support multiple performances
-
-            data.put("event.title", performance.getEvent().getName());
-            data.put("event.date", Formatter.formatDateTime(performance.getDateTime())); // todo add duration when it is added to the data structure
-            data.put("event.location", performance.getLocation().getName());
-
-        } else {
-            data.put("ticket", tickets);
-            data.put("event.title", "-");
-            data.put("event.date", "-"); // todo add duration when it is added to the data structure
-            data.put("event.location", "-");
+            String hash = ticket.getClass() + ":" + ticket.getSector().getId();
+            if (item.tickets.get(hash) != null) {
+                item.tickets.get(hash).increment();
+            } else {
+                item.tickets.put(hash, new TicketItem(ticket));
+            }
         }
 
+        for (Long id : performances.keySet()) {
+            PerformanceItem performance = performances.get(id);
+            List<Object> ticketsItems = new ArrayList<>();
+
+            for (String hash : performance.tickets.keySet()) {
+                TicketItem ticket = performance.tickets.get(hash);
+
+                float linePrice = ticket.price * ticket.amount;
+                totalPrice += linePrice;
+
+                ticketsItems.add(new Object() {
+                    final String sector = ticket.sector;
+                    final int amount = ticket.amount;
+                    final String singlePrice = Formatter.formatPrice(ticket.price);
+                    final String totalPrice = Formatter.formatPrice(linePrice);
+                });
+
+            }
+
+            events.add(new Object() {
+                final String title = performance.name;
+                final String date = performance.date;
+                final String location = performance.location;
+                final List<Object> tickets = ticketsItems;
+            });
+        }
+
+        data.put("events", events);
         data.put("totalPrice", Formatter.formatPrice(totalPrice));
         data.put("totalTaxes", Formatter.formatPrice(totalPrice * 0.2f));
 
@@ -112,3 +131,34 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
         invoiceRepository.save(invoice);
     }
 }
+
+@SuppressWarnings("checkstyle:OneTopLevelClass")
+class TicketItem {
+    String sector;
+    int amount = 1;
+    float price = 0;
+
+    public TicketItem(Ticket ticket) {
+        this.sector = ticket instanceof SeatTicket ? Formatter.formatSeatType(((SeatTicket) ticket).getSector().getSeatType()) : "Standing";
+        this.price = (float) ((double) ticket.getSector().getPrice());
+    }
+
+    public void increment() {
+        this.amount++;
+    }
+}
+
+@SuppressWarnings("checkstyle:OneTopLevelClass")
+class PerformanceItem {
+    String name;
+    String date;
+    String location;
+    HashMap<String, TicketItem> tickets = new HashMap<>();
+
+    public PerformanceItem(String name, String date, String location) {
+        this.name = name;
+        this.date = date;
+        this.location = location;
+    }
+}
+
