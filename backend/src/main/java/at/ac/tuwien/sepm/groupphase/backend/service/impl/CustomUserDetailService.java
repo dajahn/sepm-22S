@@ -27,12 +27,14 @@ public class CustomUserDetailService implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final UserValidator userValidator;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, UserValidator userValidator) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.userValidator = userValidator;
     }
 
     @Override
@@ -59,7 +61,7 @@ public class CustomUserDetailService implements UserService {
     @Override
     public User registerUser(CreateUserDto userDto, boolean adminRole) {
         LOGGER.trace("registerUser with {}", userDto);
-        UserValidator.validateUser(userDto, adminRole);
+        userValidator.validateUser(userDto, adminRole);
         userDto.setStatus(UserStatus.OK);
         User u = userMapper.createUserDtoToUser(userDto);
         if (!adminRole) {
