@@ -4,6 +4,7 @@ import {Globals} from '../global/globals';
 import {CreateTicket} from '../dtos/create-ticket';
 import {Observable} from 'rxjs';
 import {Cart} from '../dtos/cart';
+import {Ticket} from '../dtos/ticket';
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +42,13 @@ export class CartService {
   removeTicketFromCart(ticketId: number): Observable<void> {
     console.log(`Remove ticket ${ticketId} from cart.`);
     return this.httpClient.delete<void>(`${this.cartBaseUri}/tickets/${ticketId}`);
+  }
+
+  /**
+   * Get purchased Tickets of the currently logged-in user.
+   */
+  getPurchasedTickets(): Observable<Ticket[]> {
+    console.log(`Get purchased Tickets of logged-in user.`);
+    return this.httpClient.get<Ticket[]>(this.cartBaseUri+ '/purchased');
   }
 }
