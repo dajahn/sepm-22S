@@ -22,6 +22,7 @@ import { CartComponent } from './components/cart/cart.component';
 import { TicketComponent } from './components/ticket/ticket.component';
 import { ToastComponentComponent } from './components/toast-component/toast-component.component';
 import { RegisterComponent } from './components/register/register.component';
+import { EditAccountComponent } from './components/edit-account/edit-account.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { RegisterComponent } from './components/register/register.component';
     CreateEventAddArtistComponent,
     ToastComponentComponent,
     RegisterComponent,
+    EditAccountComponent,
   ],
   imports: [
     BrowserModule,

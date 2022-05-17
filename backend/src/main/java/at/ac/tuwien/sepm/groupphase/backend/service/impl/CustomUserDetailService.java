@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUpdateUserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Optional;
 
 @Service
 public class CustomUserDetailService implements UserService {
@@ -59,16 +60,36 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public User registerUser(CreateUserDto userDto, boolean adminRole) {
+    public User registerUser(CreateUpdateUserDto userDto, boolean adminRole) {
         LOGGER.trace("registerUser with {}", userDto);
         userValidator.validateUser(userDto, adminRole);
         userDto.setStatus(UserStatus.OK);
-        User u = userMapper.createUserDtoToUser(userDto);
+        User u = userMapper.createUpdateUserDtoToUser(userDto);
         if (!adminRole) {
             u.setRole(UserRole.CUSTOMER);
         }
         u.setPassword(passwordEncoder.encode(u.getPassword()));
         return userRepository.save(u);
+    }
+
+    @Override
+    public User updateUser(CreateUpdateUserDto userDto, Long id, boolean adminRole) {
+        LOGGER.trace("updateUser with {}", userDto);
+        userValidator.validateUser(userDto, id, adminRole);
+        Optional<User> tmp = userRepository.findById(id);
+        if (tmp.isEmpty()) {
+            throw new NotFoundException("User with ID " + id + " not found!");
+        }
+        User curr = tmp.get();
+        User updated = userMapper.createUpdateUserDtoToUser(userDto);
+        updated.setId(curr.getId());
+        updated.setReadNews(curr.getReadNews());
+        if (!adminRole) {
+            updated.setRole(UserRole.CUSTOMER);
+            updated.setStatus(UserStatus.OK);
+        }
+        updated.setPassword(passwordEncoder.encode(updated.getPassword()));
+        return userRepository.save(updated);
     }
 
 }

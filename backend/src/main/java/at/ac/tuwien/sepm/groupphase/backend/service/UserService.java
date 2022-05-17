@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUpdateUserDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,5 +36,14 @@ public interface UserService extends UserDetailsService {
      * @param adminRole whether the person wo wants to create a new user, is an admin or not
      * @return created user
      */
-    User registerUser(CreateUserDto userDto, boolean adminRole);
+    User registerUser(CreateUpdateUserDto userDto, boolean adminRole);
+
+    /**
+     * Updates an existing User.
+     *
+     * @param userDto   user to update
+     * @param adminRole whether the person wo wants to update the user, is an admin or not
+     * @return updated user
+     */
+    User updateUser(CreateUpdateUserDto userDto, Long id, boolean adminRole);
 }
