@@ -1,7 +1,7 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -14,7 +14,13 @@ import {httpInterceptorProviders} from './interceptors';
 import { NewsCreateComponent } from './components/news-create/news-create.component';
 import { NewsComponent } from './components/news/news.component';
 import { NewsDetailComponent } from './components/news-detail/news-detail.component';
+import { CreateEventComponent } from './components/create-event/create-event.component';
+import { CreatePerformanceComponent } from './components/create-performance/create-performance.component';
+import { CreateEventAddArtistComponent } from './components/create-event-add-artist/create-event-add-artist.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
+import { CartComponent } from './components/cart/cart.component';
+import { TicketComponent } from './components/ticket/ticket.component';
+import { ToastComponentComponent } from './components/toast-component/toast-component.component';
 
 @NgModule({
   declarations: [
@@ -24,9 +30,15 @@ import { NavigationComponent } from './components/navigation/navigation.componen
     HomeComponent,
     LoginComponent,
     MessageComponent,
+    CartComponent,
+    TicketComponent,
     NewsCreateComponent,
     NewsComponent,
     NewsDetailComponent,
+    CreateEventComponent,
+    CreatePerformanceComponent,
+    CreateEventAddArtistComponent,
+    ToastComponentComponent,
   ],
   imports: [
     BrowserModule,

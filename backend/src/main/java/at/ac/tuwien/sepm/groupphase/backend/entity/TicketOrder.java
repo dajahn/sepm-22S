@@ -55,6 +55,7 @@ public class TicketOrder {
     private OrderType type;
 
     @Column
+    @NonNull
     private LocalDateTime validUntil;
 
     @Override

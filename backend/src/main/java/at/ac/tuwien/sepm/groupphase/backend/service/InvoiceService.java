@@ -10,7 +10,7 @@ public interface InvoiceService {
      *
      * @param order the order from which an invoice should be created
      */
-    void create(TicketOrder order);
+    Invoice create(TicketOrder order);
 
     /**
      * Creates a new invoice as well as setting a unique id.

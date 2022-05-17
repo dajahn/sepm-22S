@@ -33,11 +33,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void create(TicketOrder order) {
+    public Invoice create(TicketOrder order) {
         LOGGER.trace("create(Order order) with order={}", order);
 
         Invoice invoice = new Invoice(order, InvoiceType.NORMAL);
         this.create(invoice);
+        return invoice;
     }
 
     @Override

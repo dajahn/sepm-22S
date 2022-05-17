@@ -103,12 +103,13 @@
     <span>Invoice date: {{ invoice.date }}</span>
 </div>
 
+{{#events}}
 <div class="section event-section">
-    <h3>{{ event.title }}</h3>
+    <h3>{{ title }}</h3>
 
     <div class="details">
-        Date: {{ event.date }}<br/>
-        Location: {{ event.location}}
+        Date: {{ date }}<br/>
+        Location: {{ location}}
     </div>
 
     <table>
@@ -127,9 +128,13 @@
             <td class="price">{{ totalPrice }}</td>
         </tr>
         {{/tickets}}
-
+    </table>
+</div>
+{{/events}}
+<div class="section event-section">
+    <table>
         <tr class="summary">
-            <td></td>
+            <td>Summary</td>
             <td></td>
             <td></td>
             <td class="price">
@@ -146,6 +151,7 @@
         </tr>
     </table>
 </div>
+
 <div class="section">
     <div class="payment-notice">
         The full price has already been paid during the purchasing process by using the provided credit card.<br/>
