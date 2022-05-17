@@ -11,6 +11,7 @@ import { MessageComponent } from './components/message/message.component';
 import { NewsDetailComponent } from './components/news-detail/news-detail.component';
 import { CartComponent } from './components/cart/cart.component';
 import { RegisterComponent } from './components/register/register.component';
+import { EventComponent } from './components/event/event.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -21,11 +22,18 @@ const routes: Routes = [
   { path: 'news', canActivate: [AuthGuard], component: NewsComponent },
   { path: 'news/create', canActivate: [AdminGuard], component: NewsCreateComponent },
   { path: 'news/:id', component: NewsDetailComponent },
-  { path: 'cart', component: CartComponent }
+  { path: 'cart', component: CartComponent },
+  {
+    path: 'events/:eventId',
+    children: [
+      { path: '', component: EventComponent },
+      { path: 'performances/:performanceId', component: EventComponent }
+    ]
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes, {useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

@@ -1,0 +1,78 @@
+<!-- HEADLINE -->
+<div class="d-flex flex-row align-items-center gap-3 mb-3">
+  <img class="thumbnail" height="64px" src="https://i1.sndcdn.com/artworks-000593823888-6lxnz1-t500x500.jpg"
+       alt="thumbnail">
+  <h2 class="m-0">
+    {{(event$ | async)?.name}}
+  </h2>
+  <div class="info">{{(event$ | async)?.category}}</div>
+</div>
+
+<h5>
+  {{(performance$ | async)?.location?.name}} - {{(performance$ | async)?.dateTime | date:'dd/MM/YYYY hh:mm'}}
+</h5>
+
+<div class="d-flex flex-row h-100 gap-5">
+  <div>
+    <div class="flex-fill description info px-4 py-3 d-flex flex-column gap-2 w-100">
+      <div class="d-flex gap-2">
+        <span *ngFor="let artist of (event$ | async)?.artists" class="info"
+              style="font-size: 0.75em">{{artist.name}}</span>
+      </div>
+      <div class="description-text">
+        {{(event$ | async)?.description}}
+      </div>
+    </div>
+    <div class="d-flex flex-fill flex-column">
+      <ng-container *ngFor="let ticket of selectedTickets">
+        <!-- ### Seat -->
+        <app-ticket *ngIf="ticket?.sector.type === 'SEAT'"
+                    class="pe-2"
+                    [price]="ticket?.sector.price"
+                    rowTitle="ROW"
+                    [rowValue]="toSeatTicket(ticket).seat.row+''"
+                    columnTitle="SEAT"
+                    [columnValue]="toSeatTicket(ticket).seat.column+''"
+                    [ticketClass]="toSeatTicket(ticket).sector.seatType"
+                    (remove)="onSeatRemove({sector: ticket.sector, seat: toSeatTicket(ticket).seat})">
+        </app-ticket>
+
+        <!-- ### Standing -->
+        <app-ticket *ngIf="ticket?.sector.type === 'STANDING'"
+                    class="pe-2"
+                    [price]="ticket.sector.price"
+                    rowTitle="SECTOR"
+                    [rowValue]="ticket.sector.name"
+                    (remove)="onStandingSectorRemove(toStandingTicket(ticket).sector)">
+        </app-ticket>
+      </ng-container>
+    </div>
+
+    <div class="d-flex flex-row justify-content-between" style="margin-top: 1rem; margin-bottom: 4rem">
+      <span class="price">Total: € {{sum.toFixed(2)}}</span>
+      <input type="button" class="blue" value="ADD TO 🛒" (click)="addToCart()"
+             [disabled]="selectedTickets.length === 0">
+    </div>
+  </div>
+  <div class="d-flex flex-column align-items-center flex-fill w-100 gap-4">
+    <select
+      style="max-width: 500px"
+      (ngModelChange)="onPerformanceChange($event)"
+      [ngModel]="performanceId$ | async"
+      #performanceSelect>
+      <option
+        *ngFor="let performance of getFuturePerformances((event$ | async)?.performances)"
+        [value]="performance.id">
+        {{performance.location.name}}: {{performance.dateTime | date:'dd/MM/YYYY hh:mm'}}
+      </option>
+    </select>
+    <app-location
+      class="flex-grow-1 w-100"
+      [location]="(performance$ | async)?.location"
+      [selectedTickets]="selectedTickets"
+      [occupiedTickets]="occupiedTickets | async"
+      (seatAdd)="onSeatAdd($event)"
+      (seatRemove)="onSeatRemove($event)"
+      (standingSectorAdd)="onStandingSectorAdd($event)"></app-location>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+.thumbnail {
+  border-radius: 8px;
+  height: 64px;
+}
+
+.info {
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: var(--bg-tertiary);
+  color: var(--text-c-highlight);
+}
+
+.description {
+  background: var(--bg-secondary);
+}
+
+.description-text {
+  color: var(--text-c-highlight);
+}

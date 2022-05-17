@@ -11,10 +11,19 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<TicketOrder, Long> {
 
     /**
-     * Find one order of a user by their ID.
+     * Find one order of a user by their ID and the order type.
      *
+     * @param type   the type of the order
      * @param userId the ID of the user
      * @return the order uf the user
      */
-    Optional<TicketOrder> findByTypeAndUserId(OrderType type, long userId);
+    Optional<TicketOrder> findFirstByTypeAndUserIdOrderByValidUntil(OrderType type, long userId);
+
+    /**
+     * Delete all orders of a certain type made by a user.
+     *
+     * @param type   the type of the order
+     * @param userId the ID of the user
+     */
+    void deleteAllByTypeAndUserId(OrderType type, long userId);
 }

@@ -72,9 +72,10 @@ public class Event {
     private Set<Artist> artists;
 
     @OneToMany(cascade = {CascadeType.ALL})
+    @OrderBy("dateTime ASC")
     @ToString.Exclude
     @NonNull
-    private List<Performance> performances;
+    private List<Performance> performances = new java.util.ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

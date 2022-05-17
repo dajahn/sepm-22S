@@ -55,6 +55,11 @@ public class StandingSector extends Sector {
     }
 
     @Override
+    public StandingSectorDto mapToSmallDto(SectorMapper mapper) {
+        return mapToDto(mapper);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

@@ -22,6 +22,9 @@ import { CartComponent } from './components/cart/cart.component';
 import { TicketComponent } from './components/ticket/ticket.component';
 import { ToastComponentComponent } from './components/toast-component/toast-component.component';
 import { RegisterComponent } from './components/register/register.component';
+import { LocationComponent } from './components/event/location/location.component';
+import { EventComponent } from './components/event/event.component';
+import {Location} from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -41,6 +44,8 @@ import { RegisterComponent } from './components/register/register.component';
     CreateEventAddArtistComponent,
     ToastComponentComponent,
     RegisterComponent,
+    LocationComponent,
+    EventComponent,
   ],
   imports: [
     BrowserModule,
