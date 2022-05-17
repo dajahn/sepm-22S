@@ -136,11 +136,11 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
 class TicketItem {
     String sector;
     int amount = 1;
-    float price = 0;
+    float price;
 
     public TicketItem(Ticket ticket) {
         this.sector = ticket instanceof SeatTicket ? Formatter.formatSeatType(((SeatTicket) ticket).getSector().getSeatType()) : "Standing";
-        this.price = (float) ((double) ticket.getSector().getPrice());
+        this.price = Float.parseFloat(ticket.getSector().getPrice().toString());
     }
 
     public void increment() {
