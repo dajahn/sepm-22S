@@ -1,57 +1,88 @@
-<div class="newsContainer ">
-    <h1>Create News</h1>
+<div class="container pt-5">
+    <h1 class="text-center">Create News</h1>
 
     <form [formGroup]="newsForm">
+        <div class="row pt-3">
+            <!-- Placeholder-->
+            <div class="col-3"></div>
+            <div class="col-6">
+                <div class="form-group col-md-12 mb-2">
+                    <label for="title" class="control-label">Title</label>
+                    <input type="text" formControlName="title" class="form-control" id="title" placeholder="Title"
+                        name="title">
+                    <div *ngIf="submitted && newsForm.controls.title.errors" class="error">
+                        <small class="form-text text-warning" *ngIf="newsForm.controls.title.errors.required">News title
+                            is
+                            required!
+                        </small>
+                    </div>
+                </div>
 
-        <div class="form-group col-md-12 mb-2">
-            <label for="title" class="control-label">Title</label>
-            <input type="text" formControlName="title" class="form-control" id="title" placeholder="Title" name="title">
-            <div *ngIf="submitted && newsForm.controls.title.errors" class="error">
-                <small class="form-text text-warning" *ngIf="newsForm.controls.title.errors.required">News title
-                    is
-                    required!
-                </small>
-            </div>
-        </div>
+                <div class="col-md-12 mb-2">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control inputStyling" id="description" rows="3" name="description"
+                        formControlName="description" placeholder="Description"></textarea>
+                    <div *ngIf="submitted && newsForm.controls.description.errors" class="error">
+                        <small class="form-text text-warning" *ngIf="newsForm.controls.description.errors.required">News
+                            description
+                            is
+                            required!
+                        </small>
+                    </div>
+                </div>
 
-        <div class="col-md-12 mb-2">
-            <label for="description" class="form-label">Description</label>
-            <textarea class="form-control inputStyling" id="description" rows="3" name="description"
-                formControlName="description" placeholder="Description"></textarea>
-            <div *ngIf="submitted && newsForm.controls.description.errors" class="error">
-                <small class="form-text text-warning" *ngIf="newsForm.controls.description.errors.required">News
-                    description
-                    is
-                    required!
-                </small>
-            </div>
-        </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label class="form-label" for="event">Event</label>
+                        <div id="event" class="inputStyling d-flex justify-content-center align-items-center"
+                            name="eventId" role="button">
+                            <i class="bi bi-plus-lg"></i>
+                        </div>
+                    </div>
 
-        <div class="row mb-5">
-            <div class="col-md-1">
-                <label class="form-label" for="event">Event</label>
-                <div id="event" class="inputStyling d-flex justify-content-center align-items-center" name="eventId"
-                    role="button">
-                    <i class="bi bi-plus-lg"></i>
+                    <div class="col-md-10">
+                        <label class="form-label">Thumbnail</label>
+
+                        <label for="file-upload" id="file-upload-label"
+                            class="white d-flex justify-content-center align-items-center">
+                            <i class="bi bi-image"></i>
+                        </label>
+
+                        <input id="file-upload" required (change)="handleFileInput($event.target.files)"
+                            name="thumbnail" class="form-control" type="file" accept="image/png, image/jpeg"
+                            #imgUpload />
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div *ngIf="image && image.name" class="col-md-10 float-end">
+                        <small>
+                            <span class="me-1" (click)="removeImageCandidate()" role="button">
+                                <i class="bi bi-trash"></i>
+                            </span>
+                            {{image.name}}
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12 mb-5">
+                    <label for="imageDescription" class="control-label">Image Description</label>
+                    <input type="text" formControlName="imageDescription" class="form-control" id="imageDescription"
+                        placeholder="Image Description" name="imageDescription">
+                    <div *ngIf="submitted && newsForm.controls.imageDescription.errors" class="error">
+                        <small class="form-text text-warning"
+                            *ngIf="newsForm.controls.imageDescription.errors.required">Image
+                            Description
+                            is
+                            required!
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <input type="button" value="Add" class="form-control white" (click)="onSubmit($event)" />
                 </div>
             </div>
 
-            <div class="col-md-11">
-                <label class="form-label">Thumbnail</label>
-
-                <label for="file-upload" id="file-upload-label"
-                    class="custom-file-upload white d-flex justify-content-center align-items-center">
-                    <i class="bi bi-image"></i>
-                </label>
-
-                <input id="file-upload" required (change)="handleFileInput($event.target.files)" name="thumbnail"
-                    class="form-control" type="file" accept="image/png, image/jpeg" />
-            </div>
-
-        </div>
-
-        <div class="form-group col-md-12">
-            <input type="button" value="Add" class="form-control white" (click)="onSubmit($event)" />
         </div>
 
     </form>
