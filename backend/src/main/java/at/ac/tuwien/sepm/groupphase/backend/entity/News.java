@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,12 +17,14 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -42,7 +45,7 @@ public class News {
     private String title;
 
     @NonNull
-    @Column(nullable = false, name = "description", length = 1023)
+    @Column(nullable = false, name = "description", length = 65535)
     private String description;
 
     @NonNull
@@ -53,9 +56,17 @@ public class News {
     @JoinColumn
     private Event event;
 
+    @NonNull
+    @Column()
+    private String imageDescription;
+
+    @NonNull
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn
     private File file;
+
+    @ManyToMany(mappedBy = "readNews", fetch = FetchType.EAGER)
+    Set<User> readBy;
 
     @Override
     public boolean equals(Object o) {

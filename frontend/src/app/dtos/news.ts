@@ -1,11 +1,13 @@
 import { FileDto } from './file';
+import { Event } from './event';
 
 export class News {
     id?: number;
     title: string;
     description: string;
-    eventId: number;
+    imageDescription: string;
     date?: string;
+
     fileDto?: FileDto;
-    image?: File;
+    eventDto?: Event;
 }

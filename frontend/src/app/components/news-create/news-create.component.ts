@@ -1,7 +1,9 @@
+import { ToastService } from './../../services/toast-service.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NewsService } from './../../services/news.service';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { News } from 'src/app/dtos/news';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-news-create',
@@ -9,14 +11,18 @@ import { News } from 'src/app/dtos/news';
   styleUrls: ['./news-create.component.scss']
 })
 export class NewsCreateComponent implements OnInit {
+  @ViewChild('imgUpload') imgUpload;
+
   public newsForm: FormGroup;
   public image: File;
   public submitted: boolean = false;
 
-  constructor(private newsService: NewsService, private formBuilder: FormBuilder) {
+  constructor(private newsService: NewsService, private formBuilder: FormBuilder
+    , private toastService: ToastService, private router: Router) {
     this.newsForm = this.formBuilder.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
+      title: ['', [Validators.required, Validators.maxLength(255)]],
+      description: ['', [Validators.required, Validators.maxLength(255)]],
+      imageDescription: ['', [Validators.required, Validators.maxLength(255)]],
       image: [''],
       eventId: ['']
     });
@@ -42,33 +48,48 @@ export class NewsCreateComponent implements OnInit {
     let base64img = await this.getBase64(this.image);
     base64img = base64img.split(',')[1];
 
+    //TODO: add Event
     let news: News = {
       title: this.newsForm.controls.title.value,
       description: this.newsForm.controls.description.value,
-      eventId: this.newsForm.controls.eventId.value,
+      imageDescription: this.newsForm.controls.imageDescription.value,
       fileDto: {
         imageBase64: base64img,
         type: this.image.type
       }
     };
 
-    //TODO: Add validation toast
-    if (news.title.trim() == "" || news.title.length > 255) {
-      console.error("News title not accepted!");
-      return;
-    } else if (news.description.trim() == "" || news.description.length > 255) {
-      console.error("News description not accepted!");
-      return;
-    }
-
-    //TOD: Add toast response
-    this.newsService.createNews(news).subscribe((resp) => {
-      console.log(resp);
+    this.newsService.createNews(news).subscribe({
+      next: value => {
+        this.showSuccess(`News created with title ${news.title}!`);
+        this.router.navigate(['/news']);
+      },
+      error: err => {
+        this.showDanger('An error occurred: \n' + err.error.message)
+      }
     });
+  }
+
+  private showSuccess(msg: string) {
+    this.toastService.show(msg, {
+      classname: 'bg-success text-light', delay: 3000
+    });
+  }
+
+  private showDanger(msg: string) {
+    this.toastService.show(msg, { classname: 'bg-danger text-light', delay: 5000 });
   }
 
   public handleFileInput(files: any) {
     //TODO: Possibility to upload multiple files?
+    if (files == null)
+      this.image = null;
+
     this.image = files[0];
+  }
+
+  public removeImageCandidate() {
+    this.imgUpload.nativeElement.value = null;
+    this.handleFileInput(null);
   }
 }

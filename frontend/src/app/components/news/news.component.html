@@ -1,49 +1,61 @@
-<h1 class="header-font-weight ms-5">News</h1>
-<div class="header-font-weight mb-5">Get informed about the latest events.</div>
-
-<label class="header-label mb-5">Unread News</label>
-<div class="timeline">
-    <div *ngFor="let n of news;let i = index" class="eventPreview d-flex align-items-center mb-5">
-        <label class="date me-3">{{n.date}}</label>
-        <div class="content d-flex align-items-center"
-            [ngClass]="{'rainbowBackground': i === currentSelectedIdUnreadNews}" (click)="handelOnClickUnreadNews(i)">
-            <div class="previewIcon">
-                <img [src]="n.fileDto.url">
-            </div>
-            <div class="previewNews">
-                <div class="title">{{n.title}}</div>
-                <label class="description">{{n.description}}</label>
-            </div>
-
+<div class="newsTimeline">
+    <div class="d-flex align-items-center mb-5">
+        <h2>
+            📰 News
+        </h2>
+        <div class="ms-5" *ngIf="authService.getUserRole() === 'ADMIN'">
+            <input type="button" class="blue" value="Create News" [routerLink]="['/news/create']">
         </div>
     </div>
-</div>
 
-<div class="d-flex align-items-center" (click)="toggleExpandAllNews()" role="button">
-    <i class="bi bi-plus"></i>
-    <label class="header-label">Read all news</label>
-</div>
-<div *ngIf="expandAllNews" class="timeline">
-    <div *ngFor="let n of allNews;let i = index" class="eventPreview d-flex align-items-center mb-5">
-        <label class="date me-3">{{n.date}}</label>
-        <div class="content d-flex align-items-center" [ngClass]="{'rainbowBackground': i === currentSelectedIdAllNews}"
-            (click)="handelOnClickAllNews(i)">
-            <div class="previewIcon">
-                <img [src]="n.fileDto.url">
-            </div>
-            <div class="previewNews">
-                <div class="title">{{n.title}}</div>
-                <label class="description">{{n.description}}</label>
-            </div>
+    <h5>Get informed about the latest events.</h5>
 
+    <h4 class="headline">Unread News</h4>
+    <div class="timeline">
+        <div *ngFor="let n of news;let i = index" class="eventPreview d-flex align-items-center mb-5">
+            <label class="date me-3">{{n.date}}</label>
+            <div class="content d-flex align-items-center"
+                [ngClass]="{'rainbowBackground': i === currentSelectedIdUnreadNews}"
+                (click)="handelOnClickUnreadNews(i)">
+                <div class="previewIcon">
+                    <img [src]="n.fileDto.url">
+                </div>
+                <div class="previewNews">
+                    <div class="title">{{n.title}}</div>
+                    <label class="description">{{n.description}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-inline-flex align-items-center" (click)="toggleExpandAllNews()" role="button">
+        <i class="bi bi-plus"></i>
+        <label class="header-label" role="button">Read all news</label>
+    </div>
+    <div *ngIf="expandAllNews" class="timeline">
+        <div *ngFor="let n of allNews;let i = index" class="eventPreview d-flex align-items-center mb-5">
+            <label class="date me-3">{{n.date}}</label>
+            <div class="content d-flex align-items-center"
+                [ngClass]="{'rainbowBackground': i === currentSelectedIdAllNews}" (click)="handelOnClickAllNews(i)">
+                <div class="previewIcon">
+                    <img [src]="n.fileDto.url">
+                </div>
+                <div class="previewNews">
+                    <div class="title">{{n.title}}</div>
+                    <label class="description">{{n.description}}</label>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>
 
 <!-- TODO: display detail view -->
-<div *ngIf="currentSelectedIdUnreadNews !== -1" class="float-end">
-    <app-news-detail [news]="news[currentSelectedIdUnreadNews]"></app-news-detail>
-</div>
-<div *ngIf="currentSelectedIdAllNews!== -1" class="float-end">
-    <app-news-detail [news]="news[currentSelectedIdAllNews]"></app-news-detail>
+<div class="detailView">
+    <div *ngIf="currentSelectedIdUnreadNews !== -1">
+        <app-news-detail [news]="news[currentSelectedIdUnreadNews]"></app-news-detail>
+    </div>
+    <div *ngIf="currentSelectedIdAllNews !== -1">
+        <app-news-detail [news]="allNews[currentSelectedIdAllNews]"></app-news-detail>
+    </div>
 </div>
