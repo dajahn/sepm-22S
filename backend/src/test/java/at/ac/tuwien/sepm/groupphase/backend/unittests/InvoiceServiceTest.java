@@ -3,7 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
-import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.InvoiceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
@@ -35,19 +34,16 @@ public class InvoiceServiceTest implements TestData {
     private FileRepository fileRepository;
 
     @Test
-    public void givenOrderExists_whenNewInvoiceIsCreated_thenNewInvoiceIsStoredInTheDatabase() {
-        System.out.println();
+    public void givenOrderExists_whenNewInvoiceIsCreated_thenNewInvoiceIsStoredInTheDatabase() throws InterruptedException {
         Optional<TicketOrder> order = orderRepository.findById(1L);
         if (order.isEmpty()) {
             throw new RuntimeException("order does not exist");
         }
         Invoice invoice = invoiceService.create(order.get());
         System.out.println(invoice);
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+        Thread.sleep(10000);
+
         System.out.println(invoiceRepository.findAllByOrderByIdDesc());
         System.out.println(fileRepository.findById(invoice.getPdf().getId()));
         System.out.println(invoice.getPdf());
@@ -55,14 +51,14 @@ public class InvoiceServiceTest implements TestData {
 
     @Test
     public void whenInvoiceIsCanceled_thenCancellationInvoiceIsCreated() throws InterruptedException {
-        Invoice invoice = new Invoice(InvoiceType.NORMAL);
-        invoiceService.create(invoice);
-
+        Optional<TicketOrder> order = orderRepository.findById(1L);
+        if (order.isEmpty()) {
+            throw new RuntimeException("order does not exist");
+        }
+        Invoice invoice = invoiceService.create(order.get());
         System.out.println(invoice);
 
         Invoice cancellation = invoiceService.cancel(invoice);
-        System.out.println(invoice);
-        System.out.println(cancellation);
 
         Thread.sleep(10000); // wait for pdfs to be generated
 

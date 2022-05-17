@@ -98,6 +98,7 @@
     {{ global.company.address }}<br/>
     {{ global.company.uid }}<br/>
 </div>
+
 <div class="section">
     <h1>Cancellation Invoice</h1> <span>#{{ invoice.number }}</span><br/>
     <span>Invoice date: {{ invoice.date }}</span>
@@ -107,20 +108,21 @@
     Due to your request we canceled the requested tickets.
 </div>
 
+{{#events}}
 <div class="section event-section">
-    <h3>{{ event.title }}</h3>
+    <h3>{{ title }}</h3>
 
     <div class="details">
-        Date: {{ event.date }}<br/>
-        Location: {{ event.location}}
+        Date: {{ date }}<br/>
+        Location: {{ location}}
     </div>
 
     <table>
         <tr class="heading">
             <th>Sector</th>
             <th>Number of tickets</th>
-            <th>Refund per ticket</th>
-            <th>Total refund</th>
+            <th>Price per ticket</th>
+            <th>Total price</th>
         </tr>
 
         {{#tickets}}
@@ -131,9 +133,13 @@
             <td class="price">{{ totalPrice }}</td>
         </tr>
         {{/tickets}}
-
+    </table>
+</div>
+{{/events}}
+<div class="section event-section">
+    <table>
         <tr class="summary">
-            <td></td>
+            <td>Summary</td>
             <td></td>
             <td></td>
             <td class="price">
@@ -150,6 +156,7 @@
         </tr>
     </table>
 </div>
+
 <div class="section">
     <div class="payment-notice">
         The full price will be refunded to your credit card.<br/>
