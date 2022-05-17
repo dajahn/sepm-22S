@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../../services/auth.service';
-import {NavigationEnd, Router} from '@angular/router';
-import {filter} from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-navigation',
@@ -31,13 +31,13 @@ export class NavigationComponent implements OnInit {
     createEvent: '/events/create',
     createLocation: '/locations/create',
     addAdmin: '/admins/add',
-    unlockUser: '/user/unlock',
+    unlockUser: '/users',
   };
 
 
 
   constructor(public authService: AuthService,
-              private router: Router) {
+    private router: Router) {
 
     // Checks if the route is changing. If the route equals a navigation item, highlight it
     router.events.pipe(

@@ -1,0 +1,25 @@
+<div class="container pt-5">
+    <h2 class="text-center">
+        User Management
+    </h2>
+    <div class="row pt-3">
+        <!-- Placeholder -->
+        <div class="col-2"></div>
+        <div class="col-8">
+            <!-- Todo implement filter after locking state 
+                implement search after mail-->
+            <div *ngFor="let number of [0,1,2,3,4,5]" class="userEntry mb-3">
+                <div>
+                    lucas.rosenberger@example.com
+                </div>
+                <div role="button">
+                    <i class="bi bi-lock"></i>
+                </div>
+                <!-- 
+                    unlock icon
+                    <i class="bi bi-unlock"></i>
+                -->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,3 +1,4 @@
+import { UserManagementComponent } from './components/user-management/user-management.component';
 import { CreateEventComponent } from './components/create-event/create-event.component';
 import { AdminGuard } from './guards/admin.guard';
 import { NewsComponent } from './components/news/news.component';
@@ -15,13 +16,14 @@ import { RegisterComponent } from './components/register/register.component';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent},
-  {path: 'events/create', canActivate: [AdminGuard], component: CreateEventComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'events/create', canActivate: [AdminGuard], component: CreateEventComponent },
   { path: 'message', canActivate: [AuthGuard], component: MessageComponent },
   { path: 'news', canActivate: [AuthGuard], component: NewsComponent },
   { path: 'news/create', canActivate: [AdminGuard], component: NewsCreateComponent },
   { path: 'news/:id', component: NewsDetailComponent },
-  { path: 'cart', component: CartComponent }
+  { path: 'cart', component: CartComponent },
+  { path: 'users', canActivate: [AdminGuard], component: UserManagementComponent, pathMatch: 'full' }
 ];
 
 @NgModule({

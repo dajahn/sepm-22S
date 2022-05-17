@@ -1,5 +1,5 @@
-import {Address} from './address';
-import {UserStatus} from '../enums/user-status';
+import { Address } from './address';
+import { UserStatus } from '../enums/user-status';
 
 export interface CreateUser {
   firstName: string;
@@ -7,7 +7,7 @@ export interface CreateUser {
   email: string;
   password: string;
   address: Address;
-  role: 'CUSTOMER'|'ADMIN';
+  role: 'CUSTOMER' | 'ADMIN';
   status: UserStatus.OK;
 }
 
@@ -18,7 +18,7 @@ export interface User {
   email: string;
   password: string;
   address: Address;
-  role: 'CUSTOMER'|'ADMIN';
+  role: 'CUSTOMER' | 'ADMIN';
   status: UserStatus;
   lastNewsRead: Date;
 }
