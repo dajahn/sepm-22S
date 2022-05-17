@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Address;
 import at.ac.tuwien.sepm.groupphase.backend.enums.Country;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 
 @Profile("generateData")
@@ -54,7 +52,7 @@ public class UserDataGenerator {
                 address.setCountry(Country.valueOf(faker.address().countryCode()));
                 // save their Pokémon as password
                 user = User.builder().firstName(faker.name().firstName()).lastName(faker.name().lastName())
-                    .address(address).password(passwordEncoder.encode(faker.pokemon().name())).email(faker.name().firstName() + "." + faker.name().lastName() + TEST_EMAIL_POSTFIX)
+                    .address(address).password(passwordEncoder.encode(faker.pokemon().name())).email(faker.name().firstName() + "." + faker.name().lastName() + i + TEST_EMAIL_POSTFIX)
                     .role(UserRole.CUSTOMER).status(UserStatus.OK).readNews(new HashSet<>()).build();
                 userRepository.save(user);
             }
@@ -67,7 +65,7 @@ public class UserDataGenerator {
                 address.setCountry(Country.valueOf(faker.address().countryCode()));
                 // save their Pokémon as password
                 user = User.builder().firstName(faker.name().firstName()).lastName(faker.name().lastName())
-                    .address(address).password(passwordEncoder.encode(faker.pokemon().name())).email(faker.name().firstName() + "." + faker.name().lastName() + TEST_EMAIL_POSTFIX)
+                    .address(address).password(passwordEncoder.encode(faker.pokemon().name())).email(faker.name().firstName() + "." + faker.name().lastName() + i + TEST_EMAIL_POSTFIX)
                     .role(UserRole.ADMIN).status(UserStatus.OK).readNews(new HashSet<>()).build();
                 userRepository.save(user);
             }
