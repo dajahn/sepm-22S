@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.StandingTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 import at.ac.tuwien.sepm.groupphase.backend.enums.OrderType;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRepository;
@@ -129,4 +130,31 @@ public class CartServiceImpl implements CartService {
             orderRepository.delete(cart);
         }
     }
+
+    @Override
+    public List<Ticket> getPurchasedTickets(Long userId) {
+        LOGGER.trace("getPurchasedTickets(Long userId) for user with id: {}", userId);
+        List<TicketOrder> ticketOrders = orderRepository.findTicketOrdersByTypeAndUserId(OrderType.PURCHASE, userId);
+        List<Ticket> purchasedTickets = new ArrayList<>();
+        List<Ticket> upcomingPurchasedTickets = new ArrayList<>();
+
+        if (!ticketOrders.isEmpty()) {
+            for (int i = 0; i < ticketOrders.size(); i++) {
+                if (!ticketOrders.get(i).getTickets().isEmpty()) {
+                    purchasedTickets.addAll(ticketOrders.get(i).getTickets());
+                }
+            }
+
+            for (int i = 0; i < purchasedTickets.size(); i++) {
+                if (purchasedTickets.get(i).getPerformance().getDateTime().isAfter(LocalDateTime.now())) {
+                    upcomingPurchasedTickets.add(purchasedTickets.get(i));
+                }
+            }
+
+            return upcomingPurchasedTickets;
+        } else {
+            throw new NotFoundException(String.format("Could not find purchased Tickets form User with id %d", userId));
+        }
+    }
+
 }

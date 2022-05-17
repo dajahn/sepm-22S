@@ -106,6 +106,7 @@ public class TicketOrderGenerator {
                 Faker faker = new Faker();
 
                 TicketOrder order = new TicketOrder();
+                TicketOrder order2 = new TicketOrder();
 
                 if (i < users.size() / 3) {
                     order.setType(OrderType.CART);
@@ -114,6 +115,15 @@ public class TicketOrderGenerator {
                 } else {
                     order.setType(OrderType.PURCHASE);
                 }
+                //
+                order2.setType(OrderType.CART);
+                order2.setDateTime(LocalDateTime.of(LocalDate.ofInstant(faker.date().future(365, TimeUnit.DAYS).toInstant(), TimeZone.getDefault().toZoneId()), LocalTime.of(faker.random().nextInt(0, 23), 0)));
+                order2.setValidUntil(order2.getDateTime().plusHours(1)); // VALID FOR 1 HOUR
+                order2.setUser(users.get(i));
+                order2.setUserId(users.get(i).getId());
+                orderRepository.save(order2);
+                //
+
                 order.setDateTime(LocalDateTime.of(LocalDate.ofInstant(faker.date().future(365, TimeUnit.DAYS).toInstant(), TimeZone.getDefault().toZoneId()), LocalTime.of(faker.random().nextInt(0, 23), 0)));
                 order.setValidUntil(order.getDateTime().plusHours(1)); // VALID FOR 1 HOUR
                 order.setUser(users.get(i));
@@ -127,13 +137,22 @@ public class TicketOrderGenerator {
                     ticket.setOrderId(order.getId());
                     orderTickets.add(ticket);
                 }
-
                 order.setTickets(orderTickets);
+
+                //
+                List<Ticket> orderTickets2 = new ArrayList<>();
+                for (int j = 0; j < numberOfTickets; j++) {
+                    Ticket ticket = tickets.remove((int) faker.random().nextInt(0, tickets.size() - 1));
+                    ticket.setOrderId(order2.getId());
+                    orderTickets2.add(ticket);
+                }
+                order2.setTickets(orderTickets2);
+                //
 
                 LOGGER.debug("Saving order {}", order);
                 orderRepository.save(order);
+                orderRepository.save(order2);
             }
-
         }
     }
 

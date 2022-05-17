@@ -8,6 +8,9 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.StandingTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import org.mapstruct.Mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mapper(uses = SectorMapper.class)
 public interface TicketMapper {
 
@@ -20,6 +23,14 @@ public interface TicketMapper {
      */
     default TicketDto ticketToTicketDto(Ticket ticket) {
         return ticket.mapToDto(this);
+    }
+
+    default List<TicketDto> ticketToTicketDto(List<Ticket> tickets) {
+        List<TicketDto> ticketDtos = new ArrayList<>();
+        for (Ticket ticket : tickets) {
+            ticketDtos.add(ticket.mapToDto(this));
+        }
+        return ticketDtos;
     }
 
     StandingTicketDto standingTicketToStandingTicketDto(StandingTicket ticket);

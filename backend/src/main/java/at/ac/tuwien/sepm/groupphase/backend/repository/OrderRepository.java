@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.enums.OrderType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,4 +18,7 @@ public interface OrderRepository extends JpaRepository<TicketOrder, Long> {
      * @return the order uf the user
      */
     Optional<TicketOrder> findByTypeAndUserId(OrderType type, long userId);
+
+    List<TicketOrder> findTicketOrdersByTypeAndUserId(OrderType type, long userId);
+
 }
