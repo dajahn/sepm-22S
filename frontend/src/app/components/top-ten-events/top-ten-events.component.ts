@@ -3,6 +3,7 @@ import {Event} from '../../dtos/event';
 import {EventSearchCategory} from '../../dtos/event-search-category';
 import {EventService} from '../../services/event.service';
 import {Globals} from '../../global/globals';
+import {ToastService} from '../../services/toast-service.service';
 
 @Component({
   selector: 'app-top-ten-events',
@@ -15,11 +16,12 @@ export class TopTenEventsComponent implements OnInit {
   concertTicketCount: number[];
   conferenceTicketCount: number[];
   categories: EventSearchCategory[];
+  ticketLinks: string[];
 
   months = ['January', 'February', 'March', 'April', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   currentMonth: string;
 
-  constructor(private eventService: EventService, private globals: Globals) {
+  constructor(private eventService: EventService, private globals: Globals, private toastService: ToastService) {
   }
 
   ngOnInit(): void {
@@ -43,8 +45,7 @@ export class TopTenEventsComponent implements OnInit {
           }
         },
         error => {
-          console.error('Error searching events', error.message);
-          alert('Could not load Events');
+          this.showDanger('Sorry, something went wrong. Could not load the top ten concerts 😔');
         }
       );
     } else if (eventSearchCategory.category === 'CONFERENCE') {
@@ -57,8 +58,7 @@ export class TopTenEventsComponent implements OnInit {
           console.log('events: ', this.conferenceEvents);
         },
         error => {
-          console.error('Error searching events', error.message);
-          alert('Could not load Events');
+           this.showDanger('Sorry, something went wrong. Could not load the top ten conferences 😔');
         }
       );
     }
@@ -72,7 +72,7 @@ export class TopTenEventsComponent implements OnInit {
           console.log(this.concertTicketCount);
         },
         error => {
-          console.error('Error getting event ticket count', error.message);
+          console.log('Error getting event ticket count', error.message);
         }
       );
     } else if (eventSearchCategory.category === 'CONFERENCE') {
@@ -82,15 +82,29 @@ export class TopTenEventsComponent implements OnInit {
           console.log(this.conferenceTicketCount);
         },
         error => {
-          console.error('Error getting event ticket count', error.message);
+          console.log('Error getting event ticket count', error.message);
         }
       );
     }
   }
 
-  getPercent(place: number) {
-    return 100 - (place * 5);
+  /**
+   * Displays message on a failure.
+   */
+  showDanger(msg: string) {
+    this.toastService.show(msg, {classname: 'bg-danger', delay: 5000});
   }
 
-  //TODO image,ticketbarwidth
+  /**
+   * Calculates Percent for Bar width
+   */
+  getPercent(place: number, ticketCounts: number[]) {
+    const mostTickets = ticketCounts[0];
+    const onePercent = 100 / mostTickets;
+    let percent = ticketCounts[place] * onePercent;
+    if (percent < 30) {
+      percent = 30;
+    }
+    return percent;
+  }
 }

@@ -1,19 +1,22 @@
+<!--header-->
 <h2>🔥 Top 10 - {{currentMonth}} </h2>
 <h5>Support you favorite events and place them at the podium.</h5>
 
+<!--headline-->
 <h4 class="headline"> CONCERTS </h4>
 
 <br>
 
+<!--Display top ten events of category concerts-->
 <div *ngFor="let event of concertEvents; let i = index">
 
+  <!--FIRST PLACE-->
     <span *ngIf="i === 0">
-
       <div class="d-flex flex-row">
         <div class="p-2">{{i+1}}.</div>
-        <div><input type="button" value="🎟️"></div>
-        <div class="p-2" style="background: var(--gradient-orange)" [style.width.%]= getPercent(i)>
-          <img [src]="event.thumbnail?.url">
+        <div><input type="button" style="margin-left: 22px" value="🎟️"></div>
+        <div class="p-2" style="background: var(--gradient-orange)" [style.width.%]= getPercent(i,concertTicketCount)>
+          <div><img [src]="event.thumbnail?.url"></div>
           <div>{{event.name}}</div>
           <div> 🔥 </div>
         </div>
@@ -21,12 +24,13 @@
       </div>
     </span>
 
+  <!--SECOND PLACE-->
   <span *ngIf="i === 1">
     <div class="d-flex flex-row">
         <div class="p-2">{{i+1}}.</div>
         <div><input type="button" value="🎟️"></div>
-        <div class="p-2" style="background: var(--gradient-purple)" [style.width.%]= getPercent(i)>
-          <img [src]="event.thumbnail?.url">
+        <div class="p-2" style="background: var(--gradient-purple)" [style.width.%]= getPercent(i,concertTicketCount)>
+          <div><img [src]="event.thumbnail?.url"></div>
           <div>{{event.name}}</div>
           <div> 😎 </div>
         </div>
@@ -34,11 +38,12 @@
     </div>
   </span>
 
+  <!--THIRD PLACE-->
   <span *ngIf="i === 2">
     <div class="d-flex flex-row">
         <div class="p-2">{{i+1}}.</div>
         <div><input type="button" value="🎟️"></div>
-        <div class="p-2" style="background: var(--gradient-blue)" [style.width.%]= getPercent(i)>
+        <div class="p-2" style="background: var(--gradient-blue)" [style.width.%]= getPercent(i,concertTicketCount)>
           <div><img [src]="event.thumbnail?.url"></div>
           <div>{{event.name}}</div>
           <div> 🥶 </div>
@@ -47,11 +52,12 @@
     </div>
   </span>
 
+  <!--REST PLACES-->
   <span *ngIf="i !== 0 && i !== 1 && i !==2 ">
     <div class="d-flex flex-row">
       <div class="p-2">{{i+1}}.</div>
       <div><input type="button" value="🎟️"></div>
-      <div class="p-2" style="background: var(--bg-tertiary)" [style.width.%]= getPercent(i)>
+      <div class="p-2" style="background: var(--bg-tertiary)" [style.width.%]= getPercent(i,concertTicketCount)>
         <div><img [src]="event.thumbnail?.url"></div>
         <div style = "float: left">{{event.name}}</div>
       </div>
@@ -60,18 +66,21 @@
   </span>
 </div>
 
+<!--Headline 2-->
 <br>
 <h4 class="headline"> CONFERENCES </h4>
 <br>
 
+<!--Display top ten events of category conference-->
 <div *ngFor="let event of conferenceEvents; let i = index">
 
+  <!--FIRST PLACE-->
     <span *ngIf="i === 0">
 
       <div class="d-flex flex-row">
         <div class="p-2">{{i+1}}.</div>
         <div><input type="button" value="🎟️"></div>
-        <div class="p-2" style="background: var(--gradient-orange)" [style.width.%]= getPercent(i)>
+        <div class="p-2" style="background: var(--gradient-orange)" [style.width.%]= getPercent(i,conferenceTicketCount)>
           <div><img [src]="event.thumbnail?.url"></div>
           <div>{{event.name}}</div>
           <div> 🔥 </div>
@@ -81,11 +90,12 @@
 
     </span>
 
+  <!--SECOND PLACE-->
   <span *ngIf="i === 1">
     <div class="d-flex flex-row">
         <div class="p-2">{{i+1}}.</div>
         <div><input type="button" value="🎟️"></div>
-        <div class="p-2" style="background: var(--gradient-purple)" [style.width.%]= getPercent(i)>
+        <div class="p-2" style="background: var(--gradient-purple)" [style.width.%]= getPercent(i,conferenceTicketCount)>
           <div><img [src]="event.thumbnail?.url"></div>
           <div>{{event.name}}</div>
           <div> 😎 </div>
@@ -94,11 +104,12 @@
     </div>
   </span>
 
+  <!--THIRD PLACE-->
   <span *ngIf="i === 2">
     <div class="d-flex flex-row">
         <div class="p-2">{{i+1}}.</div>
         <div><input type="button" value="🎟️"></div>
-        <div class="p-2" style="background: var(--gradient-blue)" [style.width.%]= getPercent(i)>
+        <div class="p-2" style="background: var(--gradient-blue)" [style.width.%]= getPercent(i,conferenceTicketCount)>
           <div><img [src]="event.thumbnail?.url"></div>
           <div>{{event.name}}</div>
           <div> 🥶 </div>
@@ -107,11 +118,12 @@
     </div>
   </span>
 
+  <!--REST PLACES-->
   <span *ngIf="i !== 0 && i !== 1 && i !==2 ">
     <div class="d-flex flex-row">
       <div class="p-2">{{i+1}}.</div>
       <div><input type="button" value="🎟️"></div>
-      <div class="p-2" style="background: var(--bg-tertiary)" [style.width.%]= getPercent(i)>
+      <div class="p-2" style="background: var(--bg-tertiary)" [style.width.%]= getPercent(i,conferenceTicketCount)>
         <div><img [src]="event.thumbnail?.url"></div>
         <div style = "float: left">{{event.name}}</div>
       </div>
