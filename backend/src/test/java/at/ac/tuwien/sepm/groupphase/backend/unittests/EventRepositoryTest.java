@@ -6,8 +6,8 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.EventTestData;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.LocationTestData;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Location;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Message;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Seat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatSector;
@@ -15,11 +15,13 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.StandingSector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Point;
-import at.ac.tuwien.sepm.groupphase.backend.enums.Country;
+import at.ac.tuwien.sepm.groupphase.backend.enums.EventCategory;
 import at.ac.tuwien.sepm.groupphase.backend.enums.SeatType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
+import com.github.javafaker.Faker;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +29,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,6 +54,8 @@ public class EventRepositoryTest implements EventTestData, LocationTestData, Add
     private LocationRepository locationRepository;
     @Autowired
     private ArtistRepository artistRepository;
+    @Autowired
+    private FileRepository fileRepository;
 
     @Test
     public void givenNothing_whenSaveEvent_thenFindListWithOneElementAndFindEventById() {
@@ -65,9 +71,9 @@ public class EventRepositoryTest implements EventTestData, LocationTestData, Add
         location.setAddress(address);
 
         Set<Sector> sectors = new HashSet<>();
-        for (int j = 0; j < STANDING_SEC_ROWS ; j++) {
+        for (int j = 0; j < STANDING_SEC_ROWS; j++) {
             StandingSector sector = new StandingSector();
-            sector.setName(STANDING_SEC_NAME+j);
+            sector.setName(STANDING_SEC_NAME + j);
             sector.setPrice(STANDING_SEC_PRICE);
             sector.setCapacity(STANDING_SEC_CAPACITY);
             Point point = new Point();
@@ -112,7 +118,7 @@ public class EventRepositoryTest implements EventTestData, LocationTestData, Add
         event.setCategory(EVENT_CATEGORY);
         List<Performance> performances = new ArrayList<>();
         for (int i = 0; i < NUMBER_OF_PERFORMANCES; i++) {
-            Performance perf = new Performance(LocalDateTime.now().plusDays((i+1)*2), location, event);
+            Performance perf = new Performance(LocalDateTime.now().plusDays((i + 1) * 2), location, event);
             performances.add(perf);
         }
         event.setPerformances(performances);
@@ -132,6 +138,105 @@ public class EventRepositoryTest implements EventTestData, LocationTestData, Add
             () -> assertEquals(1, eventRepository.findAll().size()),
             () -> assertNotNull(eventRepository.findById(finalEvent.getId()))
         );
+    }
 
+    @Test
+    public void givenNothing_whenSaveEvent_thenFindTopTenEventsByCategory() {
+        //generate location for event
+        Location location = new Location();
+        location.setName(LOCATION_NAME);
+
+        Address address = new Address();
+        address.setStreet(STREET);
+        address.setZipCode(ZIP);
+        address.setCity(CITY);
+        address.setCountry(COUNTRY);
+        location.setAddress(address);
+
+        Set<Sector> sectors = new HashSet<>();
+        for (int j = 0; j < STANDING_SEC_ROWS; j++) {
+            StandingSector sector = new StandingSector();
+            sector.setName(STANDING_SEC_NAME + j);
+            sector.setPrice(STANDING_SEC_PRICE);
+            sector.setCapacity(STANDING_SEC_CAPACITY);
+            Point point = new Point();
+            point.setX(j * 8);
+            point.setY(0);
+            sector.setPoint1(point);
+            point = new Point();
+            point.setX(8 + j * 8);
+            point.setY(4);
+            sector.setPoint2(point);
+            sector.setLocation(location);
+            sectors.add(sector);
+        }
+        for (int j = 0; j < SEAT_SEC_ROWS; j++) {
+            SeatSector sector = new SeatSector();
+            sector.setPrice(SEAT_SEC_PRICE);
+            sector.setSeatType(SeatType.values()[j]);
+            List<Seat> seats = new ArrayList<>();
+
+            for (int k = 0; k < SEAT_SEC_ROWS * SEA_SEC_COLS; k++) {
+                Point point = new Point();
+                point.setX(k);
+                point.setY(5 + j);
+                Seat seat = new Seat();
+                seat.setRow(j + 1);
+                seat.setColumn(k + 1);
+                seat.setPoint(point);
+                seats.add(seat);
+            }
+            sector.setSeats(seats);
+            sector.setLocation(location);
+            sectors.add(sector);
+        }
+        location.setSectors(sectors);
+        location = locationRepository.save(location);
+
+        List<Event> events = new ArrayList<>();
+        //Generate events
+        for (int e = 0; e < 20; e++) {
+            Faker faker1 = new Faker();
+            Event event = new Event();
+            event.setName(faker1.rockBand().name());
+            event.setDescription(faker1.lorem().paragraph());
+            event.setCategory(EventCategory.values()[e%2]);
+            event.setDuration(Duration.ofMinutes(faker1.random().nextInt(60, 180)));
+
+            //set performances
+            List<Performance> performances = new ArrayList<>();
+            for (int p = 0; p < NUMBER_OF_PERFORMANCES; p++) {
+                Performance perf = new Performance(LocalDateTime.now().plusDays((p + 1) * 2), location, event);
+                performances.add(perf);
+            }
+            event.setPerformances(performances);
+
+            //set artists
+            Set<Artist> artists = new HashSet<>();
+            for (int i = 0; i < NUMBER_OF_ARTISTS; i++) {
+                Artist a = artistRepository.save(new Artist(ARTIST_NAME, ARTIST_DESCRIPTION));
+                artists.add(a);
+            }
+            event.setArtists(artists);
+
+            File file = File.builder()
+                .type(TEST_EVENT_IMG_TYPE)
+                .data(Base64.getDecoder().decode(EVENT_BASE64_IMG))
+                .build();
+
+            fileRepository.save(file);
+            event.setThumbnail(file);
+
+            event = eventRepository.save(event);
+            events.add(event);
+        }
+
+        LocalDateTime from = LocalDateTime.now().withDayOfMonth(LocalDateTime.now().getMonthValue());
+
+        assertAll(
+            () -> assertEquals(20, eventRepository.findAll().size()),
+            () -> assertNotNull(eventRepository.topTenEventsTicketCount(from, LocalDateTime.now(),0)),
+            () -> assertNotNull(eventRepository.topTenEventsTicketCount(from, LocalDateTime.now(),1))
+        );
     }
 }

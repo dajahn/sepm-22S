@@ -2,7 +2,10 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreatePerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ArtistMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
@@ -40,15 +43,15 @@ public class EventServiceImpl implements EventService {
     private final ArtistMapper artistMapper;
     private final FileService fileService;
     private final EventValidator eventValidator;
+    private final EventMapper eventMapper;
 
-    public EventServiceImpl(EventRepository eventRepository,
-                            LocationService locationService, ArtistMapper artistMapper,
-                            FileService fileService, EventValidator eventValidator) {
+    public EventServiceImpl(EventRepository eventRepository, LocationService locationService, ArtistMapper artistMapper, FileService fileService, EventValidator eventValidator, EventMapper eventMapper) {
         this.eventRepository = eventRepository;
         this.locationService = locationService;
         this.artistMapper = artistMapper;
         this.fileService = fileService;
         this.eventValidator = eventValidator;
+        this.eventMapper = eventMapper;
     }
 
     @Override
@@ -98,18 +101,34 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> topTenEventsByCategory(EventCategory category) {
+    public List<EventDto> topTenEventsByCategory(EventCategory category) {
         LOGGER.debug("Find all Events");
-        List<Event> result;
+        List<Event> events;
+        List<EventDto> eventDtos;
         LocalDateTime from = LocalDateTime.now().with(firstDayOfMonth());
         LocalDateTime to = LocalDateTime.now().with(lastDayOfMonth());
+
         if (category == EventCategory.CONCERT) {
-            result = eventRepository.findAllByCategory(from, to, 0);
+            events = eventRepository.findAllByCategory(from, to, 0);
+            eventDtos = eventMapper.eventToEventDto(events);
         } else {
-            result = eventRepository.findAllByCategory(from, to, 1);
+            events = eventRepository.findAllByCategory(from, to, 1);
+            eventDtos = eventMapper.eventToEventDto(events);
         }
-        if (!result.isEmpty()) {
-            return result;
+        if (!events.isEmpty()) {
+            //Add the corresponding filedto to the event
+            for (int i = 0; i < eventDtos.size(); i++) {
+                FileDto fileDto = new FileDto();
+                File f = events.get(i).getThumbnail();
+                if (f != null) {
+                    fileDto.setType(f.getType());
+                    fileDto.setUrl("/files/" + f.getId().toString());
+                    eventDtos.get(i).setThumbnail(fileDto);
+                } else {
+                    eventDtos.get(i).setThumbnail(null);
+                }
+            }
+            return eventDtos;
         } else {
             throw new NotFoundException("Could not find events in this category");
         }

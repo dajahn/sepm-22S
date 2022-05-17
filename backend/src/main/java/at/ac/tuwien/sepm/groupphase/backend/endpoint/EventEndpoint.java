@@ -81,7 +81,7 @@ public class EventEndpoint {
     @Operation(summary = "Gets top ten events by category", security = @SecurityRequirement(name = "apiKey"))
     public List<EventDto> topTenEventsByCategory(EventSearchCategoryDto searchCategoryDto) {
         LOGGER.info("GET /api/v1/events/top-ten-events with {}", searchCategoryDto);
-        return eventMapper.eventToEventDto(eventService.topTenEventsByCategory(EventCategory.valueOf(searchCategoryDto.getCategory())));
+        return eventService.topTenEventsByCategory(EventCategory.valueOf(searchCategoryDto.getCategory()));
     }
 
     @GetMapping(value = "/count")

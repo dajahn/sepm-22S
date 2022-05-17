@@ -10,18 +10,22 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreatePerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchCategoryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SmallLocationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ArtistMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Location;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Seat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatSector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.StandingSector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Point;
+import at.ac.tuwien.sepm.groupphase.backend.enums.EventCategory;
 import at.ac.tuwien.sepm.groupphase.backend.enums.SeatType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
@@ -53,6 +57,7 @@ import java.io.FileNotFoundException;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -62,6 +67,7 @@ import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_USER;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -78,9 +84,6 @@ public class EventEndpointTest implements EventTestData, ArtistTestData, Locatio
 
     @Autowired
     private static ObjectMapper MAPPER;
-
-    @Autowired
-    private EventMapper eventMapper;
 
     @Autowired
     private JwtTokenizer jwtTokenizer;
@@ -264,5 +267,93 @@ public class EventEndpointTest implements EventTestData, ArtistTestData, Locatio
             () -> assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus())
         );
     }
+    @Test
+    public void givenNothing_whenGetTopTen_then200() throws Exception {
+        //generate location for event
+        Location location = new Location();
+        location.setName(LOCATION_NAME);
+
+        Address address = new Address();
+        address.setStreet(STREET);
+        address.setZipCode(ZIP);
+        address.setCity(CITY);
+        address.setCountry(COUNTRY);
+        location.setAddress(address);
+
+        Set<Sector> sectors = new HashSet<>();
+        for (int j = 0; j < STANDING_SEC_ROWS; j++) {
+            StandingSector sector = new StandingSector();
+            sector.setName(STANDING_SEC_NAME + j);
+            sector.setPrice(STANDING_SEC_PRICE);
+            sector.setCapacity(STANDING_SEC_CAPACITY);
+            Point point = new Point();
+            point.setX(j * 8);
+            point.setY(0);
+            sector.setPoint1(point);
+            point = new Point();
+            point.setX(8 + j * 8);
+            point.setY(4);
+            sector.setPoint2(point);
+            sector.setLocation(location);
+            sectors.add(sector);
+        }
+        for (int j = 0; j < SEAT_SEC_ROWS; j++) {
+            SeatSector sector = new SeatSector();
+            sector.setPrice(SEAT_SEC_PRICE);
+            sector.setSeatType(SeatType.values()[j]);
+            List<Seat> seats = new ArrayList<>();
+
+            for (int k = 0; k < SEAT_SEC_ROWS * SEA_SEC_COLS; k++) {
+                Point point = new Point();
+                point.setX(k);
+                point.setY(5 + j);
+                Seat seat = new Seat();
+                seat.setRow(j + 1);
+                seat.setColumn(k + 1);
+                seat.setPoint(point);
+                seats.add(seat);
+            }
+            sector.setSeats(seats);
+            sector.setLocation(location);
+            sectors.add(sector);
+        }
+        location.setSectors(sectors);
+        location = locationRepository.save(location);
+
+        //Generate event
+        Event event = new Event();
+        event.setName(EVENT_TEST_TITLE);
+        event.setDescription(EVENT_TEST_DESCRIPTION);
+        event.setDuration(EVENT_TEST_DURATION);
+        event.setCategory(EventCategory.CONCERT);
+        List<Performance> performances = new ArrayList<>();
+        for (int i = 0; i < NUMBER_OF_PERFORMANCES; i++) {
+            Performance perf = new Performance(LocalDateTime.now().plusDays(i), location, event);
+            performances.add(perf);
+        }
+        event.setPerformances(performances);
+
+        Set<Artist> artists = new HashSet<>();
+        for (int i = 0; i < NUMBER_OF_ARTISTS; i++) {
+            Artist a = artistRepository.save(new Artist(ARTIST_NAME, ARTIST_DESCRIPTION));
+            artists.add(a);
+        }
+        event.setArtists(artists);
+        event.setThumbnail(null);
+
+        event = eventRepository.save(event);
+
+        EventSearchCategoryDto searchCategoryDto = new EventSearchCategoryDto();
+        searchCategoryDto.setCategory("CONCERT");
+
+        MvcResult result = this.mockMvc.perform(get(EVENT_BASE_URI + "/top-ten-events").header(securityProperties.getAuthHeader(),jwtTokenizer.getAuthToken(ADMIN_USER,ADMIN_ROLES)).param("category", "CONCERT"))
+            .andDo(print())
+            .andReturn();
+
+        //MockHttpServletResponse response = result.getResponse();
+        //List<EventDto> eventDtos = Arrays.asList(MAPPER.readValue(response.getContentAsString(),EventDto[].class));
+        //assertEquals(1,eventDtos.size());
+    }
+
 
 }

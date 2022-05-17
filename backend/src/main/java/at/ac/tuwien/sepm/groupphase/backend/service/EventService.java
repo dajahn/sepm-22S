@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.enums.EventCategory;
 
@@ -32,7 +33,7 @@ public interface EventService {
      * @param category in which the top ten events should be
      * @return top ten events this month by sold tickets
      */
-    List<Event> topTenEventsByCategory(EventCategory category);
+    List<EventDto> topTenEventsByCategory(EventCategory category);
 
 
     /**

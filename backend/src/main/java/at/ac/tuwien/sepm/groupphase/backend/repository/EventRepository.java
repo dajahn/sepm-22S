@@ -16,7 +16,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * Find all top ten events by category.
      *
      * @param fromDate start of month in which the top ten events should be found
-     * @param toDate end of month in which the top ten events should be found
+     * @param toDate   end of month in which the top ten events should be found
      * @param category category in which the events should be
      * @return Events
      */
@@ -37,7 +37,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * Find how many tickets were sold from each top ten event.
      *
      * @param fromDate start of month in which the top ten events are
-     * @param toDate end of month in which the top ten events are
+     * @param toDate   end of month in which the top ten events are
      * @param category category in which the events are
      * @return Count of sold tickets
      */
