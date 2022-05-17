@@ -40,11 +40,11 @@
                         </div>
                     </div>
 
-                    <div class="col-md-10">
+                    <div class="col-md-10 pe-none">
                         <label class="form-label">Thumbnail</label>
 
                         <label for="file-upload" id="file-upload-label"
-                            class="white d-flex justify-content-center align-items-center">
+                            class="white pe-auto d-flex justify-content-center align-items-center user-select-all">
                             <i class="bi bi-image"></i>
                         </label>
 
@@ -54,10 +54,11 @@
                     </div>
                 </div>
                 <div class="clearfix imgHint">
-                    <div *ngIf="image && image.name" class="col-md-10 float-end">
+                    <div *ngIf="image && image.name" class="col-md-10 float-end" (click)="removeImageCandidate()"
+                        role="button">
                         <small>
-                            <span class="me-1" (click)="removeImageCandidate()" role="button">
-                                <i class="bi bi-trash"></i>
+                            <span class="me-1">
+                                <i class="bi bi-trash" (click)="removeImageCandidate()" role="button"></i>
                             </span>
                             {{image.name}}
                         </small>
