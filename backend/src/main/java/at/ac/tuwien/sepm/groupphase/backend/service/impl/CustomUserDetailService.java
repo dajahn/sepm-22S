@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
@@ -69,6 +70,45 @@ public class CustomUserDetailService implements UserService {
         }
         u.setPassword(passwordEncoder.encode(u.getPassword()));
         return userRepository.save(u);
+    }
+
+    @Override
+    public void addFailedLoginAttemptToUser(UserLoginDto userDto) {
+        LOGGER.trace("addFailedLoginAttemptToUser() with {}", userDto);
+
+        User u = userRepository.findUserByEmail(userDto.getEmail());
+        if (u == null) {
+            LOGGER.debug("user with mail: {} does not exist!", userDto.getEmail());
+            return;
+        }
+
+        u.setFailedLoginAttempts(u.getFailedLoginAttempts() + 1);
+        if (u.getFailedLoginAttempts() >= 5) {
+            LOGGER.debug("user with mail: {} is now LOCKED!", userDto.getEmail());
+            u.setStatus(UserStatus.LOCKED);
+        }
+
+        userRepository.save(u);
+    }
+
+    @Override
+    public void resetFailedLoginAttemptsForUser(UserLoginDto userLoginDto) {
+        LOGGER.trace("resetFailedLoginAttemptsForUser() with {}", userLoginDto);
+        //User exists for sure
+        User u = userRepository.findUserByEmail(userLoginDto.getEmail());
+        u.setFailedLoginAttempts(0);
+        userRepository.save(u);
+    }
+
+    @Override
+    public UserStatus getUserStatus(UserLoginDto userDto) {
+        LOGGER.trace("userIsBlocked() with {}", userDto);
+        User u = userRepository.findUserByEmail(userDto.getEmail());
+        if (u == null) {
+            LOGGER.debug("user with mail: {} does not exist!", userDto.getEmail());
+            return null;
+        }
+        return u.getStatus();
     }
 
 }
