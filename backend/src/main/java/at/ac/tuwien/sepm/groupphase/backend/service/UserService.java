@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.List;
+
 public interface UserService extends UserDetailsService {
 
     /**
@@ -62,4 +64,35 @@ public interface UserService extends UserDetailsService {
      * @return userStatus
      */
     UserStatus getUserStatus(UserLoginDto userDto);
+
+    /**
+     * Gets all locked users in the system.
+     *
+     * @return List of locked users
+     */
+    List<User> getLockedUser();
+
+    /**
+     * Unlocks a user by id.
+     *
+     * @param id id of the user
+     * @return User object wich was unlocked
+     */
+    User unlockUserById(Long id);
+
+    /**
+     * Locks a user by id.
+     *
+     * @param id of the user
+     * @param mail of the admin which executes the request
+     * @return the user object
+     */
+    User lockUserById(Long id, String mail);
+
+    /**
+     * Gets all users with locked ones first.
+     *
+     * @return list of user
+     */
+    List<User> getUserOrderByLocked();
 }

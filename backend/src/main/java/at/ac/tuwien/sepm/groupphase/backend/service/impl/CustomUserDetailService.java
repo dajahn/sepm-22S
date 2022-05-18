@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
+import at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotLockUserException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticatedUser;
@@ -14,6 +15,7 @@ import at.ac.tuwien.sepm.groupphase.backend.util.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomUserDetailService implements UserService {
@@ -113,4 +117,52 @@ public class CustomUserDetailService implements UserService {
         return u.getStatus();
     }
 
+    @Override
+    public List<User> getLockedUser() {
+        LOGGER.trace("getLockedUser()");
+        return this.userRepository.loadLockedUser();
+    }
+
+    @Transactional
+    @Override
+    public User unlockUserById(Long id) {
+        LOGGER.trace("unlockUserById({})", id);
+        Optional<User> user = this.userRepository.findById(id);
+
+        if (user.isEmpty()) {
+            LOGGER.debug("User was empty so cannot be unlocked!");
+            return null;
+        }
+
+        user.get().setStatus(UserStatus.OK);
+        user.get().setFailedLoginAttempts(0);
+        userRepository.save(user.get());
+        return user.get();
+    }
+
+    @Transactional
+    @Override
+    public User lockUserById(Long id, String mail) {
+        LOGGER.trace("unlockUserById({})", id);
+        Optional<User> user = this.userRepository.findById(id);
+
+        if (user.isEmpty()) {
+            LOGGER.debug("User was empty so cannot be unlocked!");
+            return null;
+        }
+        if (user.get().getEmail().equals(mail)) {
+            LOGGER.debug("User cannot lock himself, Email: {}", mail);
+            throw new CouldNotLockUserException("User cannot lock himself!");
+        }
+
+        user.get().setStatus(UserStatus.LOCKED);
+        user.get().setFailedLoginAttempts(0);
+        userRepository.save(user.get());
+        return user.get();
+    }
+
+    @Override
+    public List<User> getUserOrderByLocked() {
+        return this.userRepository.findAll(Sort.by(Sort.Direction.DESC, "status"));
+    }
 }
