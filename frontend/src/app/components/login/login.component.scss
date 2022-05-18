@@ -12,8 +12,14 @@
   margin-top:9em;
 }
 
-a {
+a, .forgot-password {
   color: var(--accent-orange);
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.05em;
+  }
 }
 
 p {
