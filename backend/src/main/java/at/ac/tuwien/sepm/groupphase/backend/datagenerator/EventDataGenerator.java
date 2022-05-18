@@ -27,7 +27,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-@Profile("generateData")
+@Profile({"generateData", "test"})
 @Component
 public class EventDataGenerator {
 
