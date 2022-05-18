@@ -16,7 +16,8 @@ public interface ResetPasswordService {
      *
      * @param hash     the hash referencing the reset request
      * @param password the new password
-     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException if there is no matching / valid entry stored
+     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException   if there is no matching / valid entry stored
+     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException if the password does not meet the required criteria
      */
     void resetPasswordFromHash(UUID hash, String password);
 }

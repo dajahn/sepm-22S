@@ -23,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api/v1/users")
@@ -55,7 +56,7 @@ public class UserEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "forgot-password")
     @PermitAll
-    @Operation(summary = "Lets a user reset their password")
+    @Operation(summary = "Lets a user create a password reset request", security = @SecurityRequirement(name = "apiKey"))
     public void forgotPassword(@Valid @RequestBody UserForgotPasswordDto data) {
         LOGGER.info("POST /api/v1/users/forgot-password body: {}", data);
         resetPasswordService.forgotPassword(data.email);
@@ -65,10 +66,10 @@ public class UserEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "reset-password")
     @PermitAll
-    @Operation(summary = "Lets a user reset their password")
-    public void forgotPassword(@Valid @RequestBody UserResetPasswordDto data) {
+    @Operation(summary = "Lets a user reset their password", security = @SecurityRequirement(name = "apiKey"))
+    public void resetPassword(@Valid @RequestBody UserResetPasswordDto data) {
         LOGGER.info("POST /api/v1/users/reset-password body: {}", data);
-        resetPasswordService.resetPasswordFromHash(data.hash, data.password);
+        resetPasswordService.resetPasswordFromHash(UUID.fromString(data.hash), data.password);
         // todo handle exceptions / edge cases
     }
 }

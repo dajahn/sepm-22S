@@ -1,9 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.util;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUserDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import org.slf4j.Logger;
@@ -77,19 +75,8 @@ public class UserValidator {
             throw new ValidationException("Email already in use!");
         }
 
-        //validate password
-        if (userDto.getPassword() == null) {
-            throw new ValidationException("Users Password must not be null!");
-        }
-        if (userDto.getPassword().trim().isEmpty()) {
-            throw new ValidationException("Users Password must not be empty!");
-        }
-        if (userDto.getPassword().length() > 255) {
-            throw new ValidationException("Users Password is too long!");
-        }
-        if (userDto.getPassword().length() < 8) {
-            throw new ValidationException("Users Password must not be shorter than 8 characters!");
-        }
+        this.validatePassword(userDto.getEmail());
+
         //validate address
         AddressValidator.validateAddress(userDto.getAddress());
         //validate user role
@@ -101,6 +88,28 @@ public class UserValidator {
         }
         if (!(userDto.getRole().equals(UserRole.CUSTOMER) && !(userDto.getRole().equals(UserRole.ADMIN)))) {
             throw new ValidationException("Users Role must either be Admin or Customer!");
+        }
+    }
+
+    /**
+     * Validates a Password.
+     *
+     * @param password the password being validated
+     * @throws ValidationException if the password is not valid
+     */
+    public void validatePassword(String password) {
+        //validate password
+        if (password == null) {
+            throw new ValidationException("Users Password must not be null!");
+        }
+        if (password.trim().isEmpty()) {
+            throw new ValidationException("Users Password must not be empty!");
+        }
+        if (password.length() > 255) {
+            throw new ValidationException("Users Password is too long!");
+        }
+        if (password.length() < 8) {
+            throw new ValidationException("Users Password must not be shorter than 8 characters!");
         }
     }
 }
