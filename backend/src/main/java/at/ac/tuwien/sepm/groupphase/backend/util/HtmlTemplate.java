@@ -52,7 +52,7 @@ public class HtmlTemplate {
         {"global.company.title", "Ticketline"},
         {"global.company.address", "Some Street 10, 1010 Vienna - Austria"},
         {"global.company.uid", "ATU12345678"},
-        {"global.company.homepage", "https://localhost:4200"},
+        {"global.company.homepage", "http://localhost:4200/#"},
     }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
 

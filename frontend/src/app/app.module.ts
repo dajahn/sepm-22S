@@ -23,6 +23,7 @@ import { TicketComponent } from './components/ticket/ticket.component';
 import { ToastComponentComponent } from './components/toast-component/toast-component.component';
 import { RegisterComponent } from './components/register/register.component';
 import { NewsCreateAddEventComponent } from './components/news-create-add-event/news-create-add-event.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { NewsCreateAddEventComponent } from './components/news-create-add-event/
     ToastComponentComponent,
     RegisterComponent,
     NewsCreateAddEventComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,

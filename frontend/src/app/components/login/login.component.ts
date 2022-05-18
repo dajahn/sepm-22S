@@ -67,13 +67,13 @@ export class LoginComponent implements OnInit {
 
     this.userService.forgotPassword(email).subscribe({
       next: () => {
-        this.toastService.show(`Successfully sent password reset confirmation to '${ email }'`, {classname: 'bg-success', delay: 5000});
+        this.toastService.show(`Successfully sent password reset confirmation to '${ email }' 🥳`, {classname: 'bg-success', delay: 5000});
       },
       error: error => {
-        this.toastService.show(`Could not reset the password for '${ email }'`, {classname: 'bg-danger', delay: 5000});
+        console.error(error);
+        this.toastService.show(`Could not reset the password for '${ email }' 😢`, {classname: 'bg-danger', delay: 5000});
       },
     });
-    await new Promise(resolve => setTimeout(resolve, 1000));
 
     this.forgotPasswordLoading = false;
 

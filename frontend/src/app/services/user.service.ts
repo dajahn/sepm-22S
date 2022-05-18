@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
-import {AuthService} from './auth.service';
 import {CreateUser, User} from '../dtos/user';
 import {Observable} from 'rxjs';
 
@@ -20,5 +19,9 @@ export class UserService {
 
   forgotPassword(email: string): Observable<void> {
     return this.httpClient.post<void>(this.authBaseUri + '/forgot-password', { email });
+  }
+
+  resetPassword(hash: string, password: string): Observable<void> {
+    return this.httpClient.post<void>(this.authBaseUri + '/reset-password', { hash, password });
   }
 }
