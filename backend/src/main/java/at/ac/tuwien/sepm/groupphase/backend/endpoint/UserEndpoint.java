@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -48,9 +49,8 @@ public class UserEndpoint {
     @Secured("ROLE_ADMIN")
     @Operation(summary = "Gets all users by UserSearchFilter", security = @SecurityRequirement(name = "apiKey"))
     public List<UserDto> getUserOrderByLockedState(UserSearchDto userSearchDto) {
-        LOGGER.info("getUserOrderByLockedState()");
-
-        return userMapper.entitiesToUserDto(userService.getUserOrderByLocked());
+        LOGGER.info("getUserOrderByLockedState() with: {}", userSearchDto);
+        return userMapper.entitiesToUserDto(userService.getUser(userSearchDto));
     }
 
     @GetMapping("/unlock/{id}")

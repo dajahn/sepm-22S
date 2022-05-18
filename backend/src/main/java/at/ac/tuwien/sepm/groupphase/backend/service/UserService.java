@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -89,10 +90,12 @@ public interface UserService extends UserDetailsService {
      */
     User lockUserById(Long id, String mail);
 
+
     /**
-     * Gets all users with locked ones first.
+     * Gets all users by a userSearchDto(Filter).
      *
+     * @param userSearchDto the filter
      * @return list of user
      */
-    List<User> getUserOrderByLocked();
+    List<User> getUser(UserSearchDto userSearchDto);
 }

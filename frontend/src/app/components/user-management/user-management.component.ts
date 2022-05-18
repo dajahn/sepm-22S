@@ -1,8 +1,10 @@
+import { UserSearchDto } from './../../dtos/user';
 import { ToastService } from './../../services/toast-service.service';
 import { UserStatus } from './../../enums/user-status';
 import { UserService } from './../../services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/dtos/user';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 
 @Component({
@@ -14,10 +16,25 @@ export class UserManagementComponent implements OnInit {
 
   public user: User[];
 
-  constructor(private userService: UserService, private toastService: ToastService) { }
+  public userForm: FormGroup;
+
+  constructor(private formBuilder: FormBuilder, private userService: UserService,
+    private toastService: ToastService) {
+    this.userForm = this.formBuilder.group({
+      userRole: [''],
+      userStatus: ['LOCKED'],
+      userMail: ['']
+    })
+  }
 
   ngOnInit(): void {
-    this.loadAllUser();
+    let userSearch: UserSearchDto = {
+      status: this.userForm.controls.userStatus.value,
+      role: this.userForm.controls.userRole.value,
+      nameSearch: this.userForm.controls.userMail.value
+    }
+
+    this.loadUser(userSearch);
   }
 
   private showSuccess(msg: string) {
@@ -30,11 +47,22 @@ export class UserManagementComponent implements OnInit {
     this.toastService.show(msg, { classname: 'bg-danger text-light', delay: 5000 });
   }
 
-  private loadAllUser() {
-    //TODO set self gray or non clickable
-    this.userService.loadAllUser().subscribe((data: User[]) => {
+  private loadUser(userSearch: UserSearchDto) {
+    this.userService.loadUser(userSearch).subscribe((data: User[]) => {
+      if (data.length == 0)
+        this.showDanger("No Users with matching criteria found!");
       this.user = data;
     })
+  }
+
+  public handleSearch() {
+    let userSearch: UserSearchDto = {
+      status: this.userForm.controls.userStatus.value,
+      role: this.userForm.controls.userRole.value,
+      nameSearch: this.userForm.controls.userMail.value
+    }
+
+    this.loadUser(userSearch);
   }
 
   public unlockUser(user: User) {

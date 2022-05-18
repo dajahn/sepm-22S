@@ -1,3 +1,4 @@
+import { UserSearchDto } from './../dtos/user';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Globals } from '../global/globals';
@@ -20,8 +21,9 @@ export class UserService {
     return this.httpClient.post<User>(this.authBaseUri, user);
   }
 
-  loadAllUser(): Observable<User[]> {
-    return this.httpClient.get<User[]>(this.authBaseUri);
+  loadUser(userSearch: UserSearchDto): Observable<User[]> {
+    let queryParams: string = Object.keys(userSearch).map(key => key + '=' + userSearch[key]).join('&');
+    return this.httpClient.get<User[]>(this.authBaseUri + "?" + queryParams);
   }
 
   unlockUser(id: number): Observable<User> {

@@ -3,12 +3,13 @@
         User Management
     </h2>
     <!-- User filter -->
-    <form>
+    <form class="form" [formGroup]="userForm" (submit)="handleSearch()">
         <div class="row d-flex align-items-center mt-3">
             <div class="col-1"></div>
             <div class="col-2">
                 <label for="userRole">User Role</label>
                 <select class="form-control" required name="userRole" formControlName="userRole" id="userRole">
+                    <option value="">All</option>
                     <option value="CUSTOMER">Customer</option>
                     <option value="ADMIN">Admin</option>
                 </select>
@@ -16,17 +17,19 @@
             <div class="col-2">
                 <label for="userStatus">User Status</label>
                 <select class="form-control" required name="userStatus" formControlName="userStatus" id="userStatus">
-                    <option value=0>Ok</option>
-                    <option value=1>Locked</option>
+                    <option value="">All</option>
+                    <option value="OK">Ok</option>
+                    <option value="LOCKED">Locked</option>
                 </select>
             </div>
-            <div class="col-5">
+            <div class="col-4">
                 <label for="userMail">User Mail</label>
-                <input type="text" title="User Email" id="userMail" name="userMail" class="form-control">
+                <input type="text" title="User Email" id="userMail" name="userMail" formControlName="userMail"
+                    class="form-control">
             </div>
-            <div class="col-1">
+            <div class="col-2">
                 <label for="submitSearch"></label>
-                <input type="button" value="Search" class="form-control white" id="submitSearch" />
+                <input type="submit" value="Search" class="form-control white" id="submitSearch" />
             </div>
         </div>
     </form>
@@ -40,7 +43,7 @@
 
             <div *ngFor="let u of user;let i = index" class="userEntry mb-3 mt-3">
                 <div>
-                    {{u.role}} {{u.email}}
+                    {{u.role}} | {{u.email}}
                 </div>
                 <div role="button">
                     <i title="unlock user" *ngIf="u.status == 'LOCKED';else elseBlock" class="bi bi-lock lockIcon"

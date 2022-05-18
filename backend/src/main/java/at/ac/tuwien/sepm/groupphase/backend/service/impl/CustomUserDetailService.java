@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
@@ -162,7 +163,19 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public List<User> getUserOrderByLocked() {
-        return this.userRepository.findAll(Sort.by(Sort.Direction.DESC, "status"));
+    public List<User> getUser(UserSearchDto userSearchDto) {
+        LOGGER.info("{},{},{}", userSearchDto.getNameSearch(), userSearchDto.getRole(), userSearchDto.getStatus());
+        int role = -1;
+        int status = -1;
+
+        if (userSearchDto.getRole() != null) {
+            role = userSearchDto.getRole().ordinal();
+        }
+
+        if (userSearchDto.getStatus() != null) {
+            status = userSearchDto.getStatus().ordinal();
+        }
+
+        return this.userRepository.loadUsers(userSearchDto.getNameSearch(), role, status);
     }
 }
