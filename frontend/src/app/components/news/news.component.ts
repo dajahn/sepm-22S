@@ -1,3 +1,5 @@
+import { AuthService } from './../../services/auth.service';
+import { Router } from '@angular/router';
 import { Globals } from './../../global/globals';
 import { NewsService } from './../../services/news.service';
 import { Component, OnInit } from '@angular/core';
@@ -17,21 +19,20 @@ export class NewsComponent implements OnInit {
   public currentSelectedIdAllNews: number = -1;
 
 
-  constructor(private newsService: NewsService, private globals: Globals) { }
+  constructor(private newsService: NewsService, private globals: Globals, private router: Router, public authService: AuthService) { }
 
   ngOnInit(): void {
-    this.loadNews();
+    this.loadUnreadNews();
   }
 
   //TODO: Only load UNREAD news
-  private loadNews() {
-    this.newsService.getAllNews().subscribe((news: News[]) => {
+  private loadUnreadNews() {
+    this.newsService.getUnread().subscribe((news: News[]) => {
       this.news = news;
 
       for (let n of this.news) {
         n.fileDto.url = this.globals.backendUri + n.fileDto.url;
       }
-      console.dir(this.news);
     });
   }
 
@@ -45,12 +46,28 @@ export class NewsComponent implements OnInit {
     });
   }
 
+  private redirectOnSmallScreens(id) {
+    if (window.innerWidth <= 1300) {
+      this.router.navigate(['/news', id]);
+    }
+  }
+
   public handelOnClickUnreadNews(index: number) {
+    let id: number = this.news[index].id;
+    this.redirectOnSmallScreens(id);
+
+    //The News gets set as read on getById
+    this.newsService.getById(id).subscribe(n => {
+      console.log(n);
+    });
+
     this.currentSelectedIdUnreadNews = index;
     this.currentSelectedIdAllNews = -1;
   }
 
   public handelOnClickAllNews(index: number) {
+    let id = this.allNews[index].id;
+    this.redirectOnSmallScreens(id);
     this.currentSelectedIdAllNews = index;
     this.currentSelectedIdUnreadNews = -1;
   }

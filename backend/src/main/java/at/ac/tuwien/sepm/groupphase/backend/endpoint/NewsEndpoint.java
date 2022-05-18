@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.entity.converter.MediaTypeConverter;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
@@ -19,7 +20,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,8 +55,7 @@ public class NewsEndpoint {
         this.newsMapper = newsMapper;
     }
 
-    //TODO: ROLE_ADMIN but admin user was not working
-    @Secured("ROLE_USER")
+    @Secured("ROLE_ADMIN")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Creates a new News Entry", security = @SecurityRequirement(name = "apiKey"))
@@ -61,8 +64,7 @@ public class NewsEndpoint {
         News news;
 
         try {
-            File file = this.fileService.create(newsDto.getFileDto());
-            news = this.newsService.createNews(newsDto, file);
+            news = this.newsService.createNews(newsDto);
         } catch (ValidationException e) {
             LOGGER.error("{}", e);
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -80,5 +82,32 @@ public class NewsEndpoint {
         List<NewsDto> newsDtos = this.newsService.getAll();
 
         return newsDtos;
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(path = "/{id}")
+    @Operation(summary = "Gets news entry by id", security = @SecurityRequirement(name = "apiKey"))
+    public NewsDto getNewsById(@PathVariable Long id) {
+        LOGGER.info("Get /api/v1/news/{}", id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String mail = authentication.getName();
+
+        try {
+            return this.newsService.getById(id, mail);
+        } catch (NotFoundException e) {
+            LOGGER.error("{}", e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(path = "/unread")
+    @Operation(summary = "Gets all unread news for user", security = @SecurityRequirement(name = "apiKey"))
+    public List<NewsDto> getUnreadNews() {
+        LOGGER.info("Get /api/v1/news/unread");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String mail = authentication.getName();
+
+        return this.newsService.getUnread(mail);
     }
 }

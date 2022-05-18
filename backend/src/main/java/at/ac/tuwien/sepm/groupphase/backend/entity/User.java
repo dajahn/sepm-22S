@@ -3,6 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Address;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -11,14 +13,21 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * This entity represents a user of this application.
@@ -26,7 +35,9 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
+@Builder
 @ToString
+@AllArgsConstructor
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class User {
@@ -64,8 +75,12 @@ public class User {
     @NonNull
     private UserStatus status;
 
-    @Column(name = "last_news_read")
-    private LocalDateTime lastNewsRead;
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_news",
+        joinColumns =  @JoinColumn(name = "user_id"),
+        inverseJoinColumns =  @JoinColumn(name = "news_id"))
+    Set<News> readNews;
 
     @Override
     public boolean equals(Object o) {

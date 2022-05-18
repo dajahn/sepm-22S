@@ -34,59 +34,105 @@
   </div>
 
   <!-- # Side Navigation: -->
-  <div id="side-menu">
-    <ul class="nav flex-column">
-      <!-- ## Homepage -->
+  <div *ngIf="authService.isLoggedIn()" id="side-menu">
+
+    <!-- ## Default Navigation: -->
+    <ul *ngIf="!showAdminMenu" class="nav flex-column">
+      <!-- ### Homepage -->
       <li class="nav-item">
-        <button class="nav-button" (click)="clickHome()">
+        <button class="nav-button" (click)="clickHome()" title="Home">
           <i [ngStyle]="currentRoute === routerLinks.home && {'color': 'var(--text-c-highlight)'}" class="bi bi-house"></i>
         </button>
       </li>
 
-      <!-- ## News -->
+      <!-- ### News -->
       <li class="nav-item">
-        <button class="nav-button" (click)="clickNews()">
+        <button class="nav-button" (click)="clickNews()" title="News">
           <i [ngStyle]="currentRoute === routerLinks.news && {'color': 'var(--text-c-highlight)'}" class="bi bi-newspaper"></i>
         </button>
       </li>
 
-      <!-- ## Top 10 -->
+      <!-- ### Top 10 -->
       <li class="nav-item">
-        <button class="nav-button" (click)="clickTopTen()">
+        <button class="nav-button" (click)="clickTopTen()" title="Top 10">
           <i [ngStyle]="currentRoute === routerLinks.topTen && {'color': 'var(--text-c-highlight)'}" class="bi bi-trophy"></i>
         </button>
       </li>
 
-      <!-- ## Search -->
+      <!-- ### Search -->
       <li class="nav-item">
-        <button class="nav-button" (click)="clickSearch()">
+        <button class="nav-button" (click)="clickSearch()" title="Search">
           <i [ngStyle]="currentRoute === routerLinks.search && {'color': 'var(--text-c-highlight)'}" class="bi bi-search"></i>
         </button>
       </li>
 
-      <!-- ## Cart -->
+      <!-- ### Cart -->
       <li class="nav-item">
-        <button class="nav-button" (click)="clickCart()">
+        <button class="nav-button" (click)="clickCart()" title="Cart">
           <i [ngStyle]="currentRoute === routerLinks.cart && {'color': 'var(--text-c-highlight)'}" class="bi bi-cart"></i>
         </button>
       </li>
 
-      <!-- ## Reservations -->
+      <!-- ### Reservations -->
       <li class="nav-item">
-        <button class="nav-button" (click)="clickReservations()">
+        <button class="nav-button" (click)="clickReservations()" title="Reservations">
           <i [ngStyle]="currentRoute === routerLinks.reservations && {'color': 'var(--text-c-highlight)'}" class="bi bi-clipboard"></i>
         </button>
       </li>
 
-      <!-- ## Admin -->
-      <li class="nav-item" *ngIf="authService.getUserRole() === 'ADMIN'">
+      <!-- ### Admin -->
+      <li class="nav-item" *ngIf="authService.getUserRole() === 'ADMIN'" title="Admin Tools">
         <button class="nav-button" (click)="clickAdmin()">
-          <i [ngStyle]="currentRoute === routerLinks.adminTools && {'color': 'var(--text-c-highlight)'}" class="bi bi-tools"></i>
+          <i class="bi bi-tools"></i>
+        </button>
+      </li>
+    </ul>
+
+    <!-- ## Admin Navigation: -->
+    <ul *ngIf="showAdminMenu" class="nav flex-column">
+      <!-- ### Create News -->
+      <li class="nav-item">
+        <button class="nav-button" (click)="clickCreateNews()" title="Create News">
+          <i [ngStyle]="currentRoute === routerLinks.createNews && {'color': 'var(--text-c-highlight)'}" class="bi bi-newspaper"></i>
+        </button>
+      </li>
+
+      <!-- ### Create Event -->
+      <li class="nav-item">
+        <button class="nav-button" (click)="clickCreateEvent()" title="Create Event">
+          <i [ngStyle]="currentRoute === routerLinks.createEvent && {'color': 'var(--text-c-highlight)'}" class="bi bi-ticket-detailed"></i>
+        </button>
+      </li>
+
+      <!-- ### Create Location -->
+      <li class="nav-item">
+        <button class="nav-button" (click)="clickCreateLocation()" title="Create Location">
+          <i [ngStyle]="currentRoute === routerLinks.createLocation && {'color': 'var(--text-c-highlight)'}" class="bi bi-geo-fill"></i>
+        </button>
+      </li>
+
+      <!-- ### Add Admin -->
+      <li class="nav-item">
+        <button class="nav-button" (click)="clickAddAdmin()" title="Add Admin">
+          <i [ngStyle]="currentRoute === routerLinks.addAdmin && {'color': 'var(--text-c-highlight)'}" class="bi bi-person-plus"></i>
+        </button>
+      </li>
+
+      <!-- ### Unlock User -->
+      <li class="nav-item">
+        <button class="nav-button" (click)="clickUnlockUser()" title="Unlock User">
+          <i [ngStyle]="currentRoute === routerLinks.unlockUser && {'color': 'var(--text-c-highlight)'}" class="bi bi-unlock"></i>
+        </button>
+      </li>
+
+      <!-- ### Close -->
+      <li class="nav-item" *ngIf="authService.getUserRole() === 'ADMIN'" title="Close Admin Tools">
+        <button class="nav-button" (click)="clickAdmin()">
+          <i class="bi bi-x-lg"></i>
         </button>
       </li>
     </ul>
   </div>
-
 </div>
 
 
@@ -118,8 +164,8 @@
     <hr/>
 
     <div id="expanded-menu-item-container">
-      <!-- ## Navigation Items -->
-      <ul class="nav flex-column">
+      <!-- ## Default Navigation -->
+      <ul *ngIf="!showAdminMenu && authService.isLoggedIn()" class="nav flex-column">
         <!-- ### Homepage -->
         <li class="nav-item">
           <button class="nav-button" (click)="clickHome()">
@@ -165,7 +211,52 @@
         <!-- ### Admin -->
         <li class="nav-item" *ngIf="authService.getUserRole() === 'ADMIN'">
           <button class="nav-button" (click)="clickAdmin()">
-            <i [ngStyle]="currentRoute === routerLinks.adminTools && {'color': 'var(--text-c-highlight)'}" class="bi bi-tools"> Admin Tools</i>
+            <i class="bi bi-tools"> Admin Tools</i>
+          </button>
+        </li>
+      </ul>
+
+      <!-- ## Admin Navigation: -->
+      <ul *ngIf="showAdminMenu" class="nav flex-column">
+        <!-- ### Create News -->
+        <li class="nav-item">
+          <button class="nav-button" (click)="clickCreateNews()" title="Create News">
+            <i [ngStyle]="currentRoute === routerLinks.createNews && {'color': 'var(--text-c-highlight)'}" class="bi bi-newspaper"> Create News</i>
+          </button>
+        </li>
+
+        <!-- ### Create Event -->
+        <li class="nav-item">
+          <button class="nav-button" (click)="clickCreateEvent()" title="Create Event">
+            <i [ngStyle]="currentRoute === routerLinks.createEvent && {'color': 'var(--text-c-highlight)'}" class="bi bi-ticket-detailed"> Create Event</i>
+          </button>
+        </li>
+
+        <!-- ### Create Location -->
+        <li class="nav-item">
+          <button class="nav-button" (click)="clickCreateLocation()" title="Create Location">
+            <i [ngStyle]="currentRoute === routerLinks.createLocation && {'color': 'var(--text-c-highlight)'}" class="bi bi-geo-fill"> Create Location</i>
+          </button>
+        </li>
+
+        <!-- ### Add Admin -->
+        <li class="nav-item">
+          <button class="nav-button" (click)="clickAddAdmin()" title="Add Admin">
+            <i [ngStyle]="currentRoute === routerLinks.addAdmin && {'color': 'var(--text-c-highlight)'}" class="bi bi-person-plus"> Add Admin</i>
+          </button>
+        </li>
+
+        <!-- ### Unlock User -->
+        <li class="nav-item">
+          <button class="nav-button" (click)="clickUnlockUser()" title="Unlock User">
+            <i [ngStyle]="currentRoute === routerLinks.unlockUser && {'color': 'var(--text-c-highlight)'}" class="bi bi-unlock"> Unlock User</i>
+          </button>
+        </li>
+
+        <!-- ### Close -->
+        <li class="nav-item" *ngIf="authService.getUserRole() === 'ADMIN'" title="Close Admin Tools">
+          <button class="nav-button" (click)="clickAdmin()">
+            <i class="bi bi-x-lg"> Close Admin Tools</i>
           </button>
         </li>
       </ul>
