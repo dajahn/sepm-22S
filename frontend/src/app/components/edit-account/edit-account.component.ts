@@ -19,7 +19,6 @@ export class EditAccountComponent implements OnInit {
 
   countriesCodeToName = CountriesCodeToName;
   countriesCodeToNameKeys = [];
-
   updateAccountForm: FormGroup;
   updateAccountFormMessages = {
     firstName: [
@@ -115,7 +114,7 @@ export class EditAccountComponent implements OnInit {
         this.authService.loginUser(new AuthRequest(updateUser.email, updateUser.password)).subscribe({
           next: __ => {
             this.showSuccess('Successfully updated Account!');
-            this.router.navigate(['/message']);
+            this.router.navigate(['/']);
           }
         });
       },
@@ -127,8 +126,8 @@ export class EditAccountComponent implements OnInit {
   }
 
   deleteAccount() {
-    console.log('delete account');
-    //TODO when Grantner has finished delete account in backend
+    console.log('TODO: delete account');
+    //TODO when Grantner has finished delete account in backend, then reroute to /register
   }
 
   private showSuccess(msg: string) {

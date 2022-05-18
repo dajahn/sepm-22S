@@ -165,9 +165,9 @@
               <!--First Password input-->
               <div class="col-lg-6">
                 <div class="form-group">
-                  <label for="password">Password</label>
+                  <label for="password">New Password</label>
                   <input type="password" name="password" formControlName="password" class="form-control" id="password"
-                         aria-describedby="passwordHelp" placeholder="Enter your password">
+                         aria-describedby="passwordHelp" placeholder="Enter your new password">
                 </div>
                 <div class="row mt-1">
                   <div class="col">
@@ -183,10 +183,10 @@
               <!--Password confirm input-->
               <div class="col-lg-6">
                 <div class="form-group">
-                  <label for="passwordConfirm">Confirm Password</label>
+                  <label for="passwordConfirm">Confirm new Password</label>
                   <input type="password" name="passwordConfirm" formControlName="passwordConfirm" class="form-control"
                          id="passwordConfirm"
-                         aria-describedby="passwordConfirmHelp" placeholder="Please confirm your password">
+                         aria-describedby="passwordConfirmHelp" placeholder="Please confirm your new password">
                 </div>
                 <div class="row mt-1">
                   <div class="col">
@@ -201,6 +201,7 @@
               </div>
               <div class="row mt-1">
                 <div class="col-12">
+<!--                  password must match - error message-->
                   <ng-container>
                     <div class="error text-center"
                          *ngIf="(updateAccountForm.controls.password.dirty || updateAccountForm.controls.password.touched) &&
@@ -217,6 +218,7 @@
             <div class="row mt-5">
               <div class="col-12">
                 <div class="form-group d-grid">
+<!--                  Submit button-->
                   <input [disabled]="!this.updateAccountForm.valid || ((updateAccountForm.controls.password.dirty || updateAccountForm.controls.password.touched) &&
                        (updateAccountForm.controls.passwordConfirm.dirty || updateAccountForm.controls.passwordConfirm.touched) &&
                        updateAccountForm.controls.passwordConfirm.value !== updateAccountForm.controls.password.value)"
