@@ -139,7 +139,7 @@ public class UserValidator {
         if (userDto.getRole().equals(UserRole.ADMIN) && !adminRole) {
             throw new ValidationException("Users Role must be Customer if not created by an admin!");
         }
-        if (!(userDto.getRole().equals(UserRole.CUSTOMER) && !(userDto.getRole().equals(UserRole.ADMIN)))) {
+        if ((!userDto.getRole().equals(UserRole.CUSTOMER) && (!userDto.getRole().equals(UserRole.ADMIN)))) {
             throw new ValidationException("Users Role must either be Admin or Customer!");
         }
     }

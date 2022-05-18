@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
+import java.util.Collection;
 
 @RestController
 @RequestMapping(value = "/api/v1/users")
@@ -54,12 +57,15 @@ public class UserEndpoint {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping(value = "/{userId}")
-    @PermitAll
+    @Secured("ROLE_USER")
     @Operation(summary = "Updated an existing", security = @SecurityRequirement(name = "apiKey"))
     public void updateUser(@RequestBody CreateUpdateUserDto userDto, @PathVariable Long userId) {
         LOGGER.info("PUT /api/v1/users/{} body: {}", userId, userDto);
         try {
-            this.userService.updateUser(userDto, userId, false);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            boolean hasAdminRole = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN")); // so admins can update themselves
+            this.userService.updateUser(userDto, userId, hasAdminRole);
         } catch (ValidationException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
