@@ -1,8 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
@@ -38,14 +41,16 @@ public class NewsServiceImpl implements NewsService {
     private final FileService fileService;
 
     private NewsMapper newsMapper;
+    private EventMapper eventMapper;
 
     public NewsServiceImpl(UserRepository userRepository, NewsRepository newsRepository,
-                           NewsValidator newsValidator, NewsMapper newsMapper, FileService fileService) {
+                           NewsValidator newsValidator, NewsMapper newsMapper, FileService fileService, EventMapper eventMapper) {
         this.userRepository = userRepository;
         this.newsRepository = newsRepository;
         this.newsValidator = newsValidator;
         this.newsMapper = newsMapper;
         this.fileService = fileService;
+        this.eventMapper = eventMapper;
     }
 
     @Override
@@ -55,13 +60,17 @@ public class NewsServiceImpl implements NewsService {
         this.newsValidator.validateNews(newsDto);
 
         File file = this.fileService.create(newsDto.getFileDto());
-        //TODO: create reference with event
+
         News news = News.builder()
-            .title(newsDto.getTitle())
-            .description(newsDto.getDescription())
-            .imageDescription(newsDto.getImageDescription())
-            .date(LocalDate.now())
-            .file(file).build();
+                        .title(newsDto.getTitle())
+                        .description(newsDto.getDescription())
+                        .imageDescription(newsDto.getImageDescription())
+                        .date(LocalDate.now())
+                        .file(file).build();
+
+        if (newsDto.getEventDto() != null) {
+            news.setEvent(this.eventMapper.eventDtoToEvent(newsDto.getEventDto()));
+        }
 
         this.newsRepository.save(news);
         return news;
@@ -70,44 +79,16 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsDto> getAll() {
         LOGGER.trace("getAll()");
-
         List<News> news = this.newsRepository.findAll(Sort.by(Sort.Direction.DESC, "date", "id"));
-        List<NewsDto> newsDtos = news.stream().map(n -> this.newsMapper.entityToNewsDto(n)).toList();
-
-        //Adds the corresponding filedto to the newsdto
-        for (int i = 0; i < newsDtos.size(); i++) {
-            FileDto fileDto = new FileDto();
-            File f = news.get(i).getFile();
-
-            fileDto.setType(f.getType());
-            fileDto.setUrl("/files/" + f.getId().toString());
-
-            newsDtos.get(i).setFileDto(fileDto);
-        }
-
-        return newsDtos;
+        return mapOtherDtos(news);
     }
 
     @Override
     public List<NewsDto> getUnread(String mail) {
         LOGGER.trace("getUnread()");
-
         User user = userRepository.findUserByEmail(mail);
-
         List<News> news = newsRepository.loadUnreadNews(user.getId());
-        List<NewsDto> newsDtos = news.stream().map(n -> this.newsMapper.entityToNewsDto(n)).toList();
-
-        //Adds the corresponding filedto to the newsdto
-        for (int i = 0; i < newsDtos.size(); i++) {
-            FileDto fileDto = new FileDto();
-            File f = news.get(i).getFile();
-
-            fileDto.setType(f.getType());
-            fileDto.setUrl("/files/" + f.getId().toString());
-
-            newsDtos.get(i).setFileDto(fileDto);
-        }
-        return newsDtos;
+        return mapOtherDtos(news);
     }
 
     @Override
@@ -130,12 +111,42 @@ public class NewsServiceImpl implements NewsService {
 
         FileDto fileDto = new FileDto();
         File f = news.getFile();
+        Event e = news.getEvent();
 
         fileDto.setType(f.getType());
         fileDto.setUrl("/files/" + f.getId().toString());
+        if (e != null) {
+            newsDto.setEventDto(eventMapper.eventToEventDto(e));
+        }
+
 
         newsDto.setFileDto(fileDto);
 
         return newsDto;
+    }
+
+    public List<NewsDto> mapOtherDtos(List<News> news) {
+        List<NewsDto> newsDtos = news.stream().map(n -> this.newsMapper.entityToNewsDto(n)).toList();
+
+        //Adds the corresponding fileDto and eventDto to the newsDto
+        for (int i = 0; i < newsDtos.size(); i++) {
+            FileDto fileDto = new FileDto();
+            EventDto eventDto = new EventDto();
+
+            File f = news.get(i).getFile();
+            Event e = news.get(i).getEvent();
+
+            if (e != null) {
+                eventDto = eventMapper.eventToEventDto(e);
+                newsDtos.get(i).setEventDto(eventDto);
+            }
+
+            fileDto.setType(f.getType());
+            fileDto.setUrl("/files/" + f.getId().toString());
+
+            newsDtos.get(i).setFileDto(fileDto);
+        }
+
+        return newsDtos;
     }
 }

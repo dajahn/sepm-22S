@@ -1,0 +1,32 @@
+<div class="row mb-2">
+    <div class="col-2">
+        <label class="form-label" for="event">Delete</label>
+        <div type="button" class="white" id="delButton" (click)="delete()"
+            class="inputStyling d-flex justify-content-center align-items-center">
+            <i class="bi bi-trash"></i>
+        </div>
+    </div>
+    <div class="col-10">
+        <div class="row">
+            <div class="col">
+                <label class="form-label" for="evString">Event Name</label>
+                <input id="evString" name="evString" type="text" required [(ngModel)]="event"
+                    placeholder="Type Event Name" class="form-control" (ngModelChange)="updateEvent($event)"
+                    class=form-control [ngbTypeahead]="searchEvent" [class.is-invalid]="searchEventFailed"
+                    [resultFormatter]="resultFormatEventListValue" [inputFormatter]="inputFormatEventListValue">
+
+                <!--Event Error message-->
+                <div class="row mt-1">
+                    <div class="col">
+                        <ng-container>
+                            <div class="error" *ngIf="eventError">
+                                <small class="form-text text-warning">Event is required </small>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
