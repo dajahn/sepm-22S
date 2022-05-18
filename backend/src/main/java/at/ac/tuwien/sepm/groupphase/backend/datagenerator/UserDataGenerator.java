@@ -17,7 +17,7 @@ import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.util.HashSet;
 
-@Profile("generateData")
+@Profile({"generateData", "test"})
 @Component
 public class UserDataGenerator {
 
