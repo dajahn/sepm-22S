@@ -4,9 +4,6 @@ import at.ac.tuwien.sepm.groupphase.backend.enums.EventCategory;
 import org.springframework.http.MediaType;
 
 import java.time.Duration;
-
-import static at.ac.tuwien.sepm.groupphase.backend.basetest.ArtistTestData.ARTIST_DESCRIPTION;
-import static at.ac.tuwien.sepm.groupphase.backend.basetest.ArtistTestData.ARTIST_NAME;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.BASE_URI;
 
 public interface EventTestData {

@@ -306,7 +306,7 @@ public class EventServiceTest implements EventTestData, LocationTestData, Addres
     }
 
     @Test
-    public void givenNothing_whenSaveEvent_thenFindTopTenEvents() throws Exception {
+    public void givenNothing_whenSaveEvent_thenFindGetTopTenTicketCo() throws Exception {
         //generate location for event
         Location location = new Location();
         location.setName(LOCATION_NAME);

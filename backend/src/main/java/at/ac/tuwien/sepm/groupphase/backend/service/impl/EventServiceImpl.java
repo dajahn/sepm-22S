@@ -2,8 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreatePerformanceDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ArtistMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
@@ -101,55 +100,22 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventDto> topTenEventsByCategory(EventCategory category) {
-        LOGGER.debug("Find all Events");
-        List<Event> events;
-        List<EventDto> eventDtos;
+    public List<TopTenEventDto> topTenEventsByCategory(EventCategory category) {
+        LOGGER.trace("FindTopTenEvents in category: {}", category);
         LocalDateTime from = LocalDateTime.now().with(firstDayOfMonth());
         LocalDateTime to = LocalDateTime.now().with(lastDayOfMonth());
 
-        if (category == EventCategory.CONCERT) {
-            events = eventRepository.findAllByCategory(from, to, 0);
-            eventDtos = eventMapper.eventToEventDto(events);
-        } else {
-            events = eventRepository.findAllByCategory(from, to, 1);
-            eventDtos = eventMapper.eventToEventDto(events);
-        }
+        List<Event> events = eventRepository.findTopTenByCategory(from, to, category.ordinal());
+        List<Integer> ticketCount = eventRepository.topTenEventsTicketCount(from, to, category.ordinal());
+        List<TopTenEventDto> topTenEventDtos = new ArrayList<>();
         if (!events.isEmpty()) {
-            //Add the corresponding filedto to the event
-            for (int i = 0; i < eventDtos.size(); i++) {
-                FileDto fileDto = new FileDto();
-                File f = events.get(i).getThumbnail();
-                if (f != null) {
-                    fileDto.setType(f.getType());
-                    fileDto.setUrl("/files/" + f.getId().toString());
-                    eventDtos.get(i).setThumbnail(fileDto);
-                } else {
-                    eventDtos.get(i).setThumbnail(null);
-                }
+            for (int i = 0; i < events.size(); i++) {
+                topTenEventDtos.add(eventMapper.eventToTopTenEventDto(events.get(i), ticketCount.get(i)));
             }
-            return eventDtos;
         } else {
             throw new NotFoundException("Could not find events in this category");
         }
-    }
-
-    @Override
-    public List<Integer> topTenEventsTicketCount(EventCategory category) {
-        LOGGER.debug("Find all Events");
-        List<Integer> result;
-        LocalDateTime from = LocalDateTime.now().with(firstDayOfMonth());
-        LocalDateTime to = LocalDateTime.now().with(lastDayOfMonth());
-        if (category == EventCategory.CONCERT) {
-            result = eventRepository.topTenEventsTicketCount(from, to, 0);
-        } else {
-            result = eventRepository.topTenEventsTicketCount(from, to, 1);
-        }
-        if (!result.isEmpty()) {
-            return result;
-        } else {
-            throw new NotFoundException("Could not count tickets for events in this category");
-        }
+        return topTenEventDtos;
     }
 
 }
