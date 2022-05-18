@@ -63,6 +63,10 @@ public class User {
     @NonNull
     private String password;
 
+    @Column(nullable = false)
+    @NonNull
+    private int failedLoginAttempts = 0;
+
     @Embedded
     @NonNull
     private Address address;

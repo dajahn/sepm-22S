@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
+import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,4 +39,27 @@ public interface UserService extends UserDetailsService {
      * @return created user
      */
     User registerUser(CreateUserDto userDto, boolean adminRole);
+
+    /**
+     * Increases the failedLoginAttempts property by 1.
+     *
+     * @param userDto which failed the login attempt
+     *
+     */
+    void addFailedLoginAttemptToUser(UserLoginDto userDto);
+
+    /**
+     * Resets the failedLoginAttempts property of a user.
+     *
+     * @param userLoginDto user where the count is reseted
+     */
+    void resetFailedLoginAttemptsForUser(UserLoginDto userLoginDto);
+
+    /**
+     * Checks if a user with a given mail is blocked ATM.
+     *
+     * @param userDto of user which is beeing checked
+     * @return userStatus
+     */
+    UserStatus getUserStatus(UserLoginDto userDto);
 }

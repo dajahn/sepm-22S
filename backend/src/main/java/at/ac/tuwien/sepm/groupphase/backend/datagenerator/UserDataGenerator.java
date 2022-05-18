@@ -83,7 +83,7 @@ public class UserDataGenerator {
             userRepository.save(user);
             user = User.builder().firstName(faker.name().firstName()).lastName(faker.name().lastName())
                 .address(address).password(passwordEncoder.encode(TEST_PASSWORD)).email("user1" + TEST_EMAIL_POSTFIX)
-                .role(UserRole.ADMIN).status(UserStatus.OK).readNews(new HashSet<>()).build();
+                .role(UserRole.ADMIN).status(UserStatus.OK).readNews(new HashSet<>()).failedLoginAttempts(0).build();
             userRepository.save(user);
         }
     }
