@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 
-@Profile("generateData")
+@Profile({"generateData", "test"})
 @Component
 public class ArtistDataGenerator {
 

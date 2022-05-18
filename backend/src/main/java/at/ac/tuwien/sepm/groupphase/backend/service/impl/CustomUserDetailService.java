@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
 
@@ -72,6 +73,7 @@ public class CustomUserDetailService implements UserService {
         return userRepository.save(u);
     }
 
+    @Transactional
     @Override
     public void addFailedLoginAttemptToUser(UserLoginDto userDto) {
         LOGGER.trace("addFailedLoginAttemptToUser() with {}", userDto);

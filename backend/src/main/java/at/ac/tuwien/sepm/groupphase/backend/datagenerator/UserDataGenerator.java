@@ -19,7 +19,7 @@ import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 
-@Profile("generateData")
+@Profile({"generateData", "test"})
 @Component
 public class UserDataGenerator {
 

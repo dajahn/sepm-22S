@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Profile("generateData")
+@Profile({"generateData", "test"})
 @Component
 public class LocationDataGenerator {
 

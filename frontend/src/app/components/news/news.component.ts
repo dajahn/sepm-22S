@@ -25,7 +25,6 @@ export class NewsComponent implements OnInit {
     this.loadUnreadNews();
   }
 
-  //TODO: Only load UNREAD news
   private loadUnreadNews() {
     this.newsService.getUnread().subscribe((news: News[]) => {
       this.news = news;
@@ -33,6 +32,7 @@ export class NewsComponent implements OnInit {
       for (let n of this.news) {
         n.fileDto.url = this.globals.backendUri + n.fileDto.url;
       }
+      console.dir(news);
     });
   }
 
