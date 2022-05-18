@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Event} from '../../dtos/event';
-import {EventSearchCategory} from '../../dtos/event-search-category';
+import {EventCategory} from '../../dtos/event';
 import {EventService} from '../../services/event.service';
 import {Globals} from '../../global/globals';
 import {ToastService} from '../../services/toast-service.service';
@@ -11,81 +10,44 @@ import {ToastService} from '../../services/toast-service.service';
   styleUrls: ['./top-ten-events.component.scss']
 })
 export class TopTenEventsComponent implements OnInit {
-  concertEvents: Event[];
-  conferenceEvents: Event[];
-  concertTicketCount: number[];
-  conferenceTicketCount: number[];
-  categories: EventSearchCategory[];
-  ticketLinks: string[];
+
+  categories = EventCategory;
+  categoriesValues = [];
+  topTenEvents = [];
 
   months = ['January', 'February', 'March', 'April', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   currentMonth: string;
 
   constructor(private eventService: EventService, private globals: Globals, private toastService: ToastService) {
+    this.categoriesValues = Object.values(this.categories);
   }
 
   ngOnInit(): void {
-    this.categories = [new EventSearchCategory(), new EventSearchCategory()];
-    this.categories[0].category = 'CONCERT';
-    this.categories[1].category = 'CONFERENCE';
-    for (const item of this.categories) {
-      this.getTopTenEvents(item);
-      this.getTopTenEventsTicketCount(item);
-    }
     this.currentMonth = this.months[new Date().getMonth() - 1];
-  }
-
-  getTopTenEvents(eventSearchCategory: EventSearchCategory) {
-    if (eventSearchCategory.category === 'CONCERT') {
-      this.eventService.getTopTenByCategory(eventSearchCategory).subscribe(
-        (data) => {
-          this.concertEvents = data;
-          for (const n of this.concertEvents) {
-            n.thumbnail.url = this.globals.backendUri + n.thumbnail.url;
-          }
-        },
-        error => {
-          this.showDanger('Sorry, something went wrong. Could not load the top ten concerts 😔');
-        }
-      );
-    } else if (eventSearchCategory.category === 'CONFERENCE') {
-      this.eventService.getTopTenByCategory(eventSearchCategory).subscribe(
-        (data) => {
-          this.conferenceEvents = data;
-          for (const n of this.conferenceEvents) {
-            n.thumbnail.url = this.globals.backendUri + n.thumbnail.url;
-          }
-          console.log('events: ', this.conferenceEvents);
-        },
-        error => {
-           this.showDanger('Sorry, something went wrong. Could not load the top ten conferences 😔');
-        }
-      );
+    for (const category in this.categoriesValues) {
+      this.getTopTenEvents(this.categoriesValues[category]);
     }
   }
 
-  getTopTenEventsTicketCount(eventSearchCategory: EventSearchCategory) {
-    if (eventSearchCategory.category === 'CONCERT') {
-      this.eventService.getTopTenEventsTicketCount(eventSearchCategory).subscribe(
-        (count) => {
-          this.concertTicketCount = count;
-          console.log(this.concertTicketCount);
-        },
-        error => {
-          console.log('Error getting event ticket count', error.message);
+  /**
+   * Gets the Top Ten Events in one category
+   */
+  getTopTenEvents(eventCategory: EventCategory) {
+    this.eventService.getTopTenByCategory(eventCategory).subscribe(
+      (data) => {
+        this.topTenEvents[eventCategory] = data;
+        console.log(data);
+        for (const n of this.topTenEvents[eventCategory]) {
+          if(n.thumbnail !== null) {
+            n.thumbnail.url = this.globals.backendUri + n.thumbnail.url;
+          }
         }
-      );
-    } else if (eventSearchCategory.category === 'CONFERENCE') {
-      this.eventService.getTopTenEventsTicketCount(eventSearchCategory).subscribe(
-        (count) => {
-          this.conferenceTicketCount = count;
-          console.log(this.conferenceTicketCount);
-        },
-        error => {
-          console.log('Error getting event ticket count', error.message);
-        }
-      );
-    }
+      },
+      error => {
+        console.log('Error getting top ten events', error.message);
+        this.showDanger('Sorry, something went wrong. Could not load the top ten concerts 😔');
+      }
+    );
   }
 
   /**
@@ -98,12 +60,12 @@ export class TopTenEventsComponent implements OnInit {
   /**
    * Calculates Percent for Bar width
    */
-  getPercent(place: number, ticketCounts: number[]) {
-    const mostTickets = ticketCounts[0];
+  getPercent(place: number, cat: EventCategory) {
+    const mostTickets = this.topTenEvents[cat][0].ticketCount;
     const onePercent = 100 / mostTickets;
-    let percent = ticketCounts[place] * onePercent;
-    if (percent < 30) {
-      percent = 30;
+    let percent = this.topTenEvents[cat][place].ticketCount * onePercent;
+    if (percent < 40) {
+      percent = 40;
     }
     return percent;
   }

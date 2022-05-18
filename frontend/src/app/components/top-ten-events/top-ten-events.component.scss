@@ -1,9 +1,9 @@
 input[type=button]{
-  margin-top: -2px;
   margin-right: 20px;
   margin-left: 20px;
-  padding: 10px;
+  padding: 3px;
   background: var(--bg-tertiary);
+  font-size: 24px;
 }
 
 .p-2{
@@ -14,10 +14,6 @@ input[type=button]{
 }
 .p-2 div{
   float: left;
-  color:var(--text-c-highlight);
-}
-.p-2 div:last-child{
-  float: right;
   color:var(--text-c-highlight);
 }
 img {

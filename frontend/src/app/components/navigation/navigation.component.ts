@@ -24,7 +24,7 @@ export class NavigationComponent implements OnInit {
     editProfile: '/edit',
     search: '/search',
     news: '/news',
-    topTen: '/events/top-ten-events',
+    topTen: '/events/topten',
     cart: '/cart',
     reservations: '/reservations',
     createNews: '/news/create',

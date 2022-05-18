@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Globals} from '../global/globals';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {CreateEvent, Event} from '../dtos/event';
-import {EventSearchCategory} from '../dtos/event-search-category';
+import {CreateEvent, Event, EventCategory} from '../dtos/event';
+import {TopTenEvent} from '../dtos/top-ten-event';
 
 @Injectable({
   providedIn: 'root'
@@ -34,18 +34,16 @@ export class EventService {
     return this.httpClient.post<Event>(this.eventBaseUri, event);
   }
 
-  getTopTenByCategory(eventSearchCategory: EventSearchCategory): Observable<Event[]> {
+  /**
+   * Gets the top ten sold events by category
+   *
+   * @param eventCategory in which the events should be
+   */
+  getTopTenByCategory(eventCategory: EventCategory): Observable<TopTenEvent[]> {
     console.log('get top ten events');
     let terms = new HttpParams();
-    terms = terms.set('category', eventSearchCategory.category);
-    return this.httpClient.get<Event[]>(this.eventBaseUri + '/top-ten-events', {params:terms});
-  }
-
-  getTopTenEventsTicketCount(eventSearchCategory: EventSearchCategory): Observable<number[]> {
-    console.log('get top ten event ticket count');
-    let terms = new HttpParams();
-    terms = terms.set('category', eventSearchCategory.category);
-    return this.httpClient.get<number[]>(this.eventBaseUri + '/count', {params: terms});
+    terms = terms.set('category', eventCategory);
+    return this.httpClient.get<TopTenEvent[]>(this.eventBaseUri + '/top-ten', {params: terms});
   }
 
 }
