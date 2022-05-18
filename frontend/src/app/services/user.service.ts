@@ -20,8 +20,15 @@ export class UserService {
     return this.httpClient.post<User>(this.authBaseUri, user);
   }
 
-  getUsersWithAuthState(): Observable<User> {
-    //TODO
-    return null;
+  loadAllUser(): Observable<User[]> {
+    return this.httpClient.get<User[]>(this.authBaseUri);
+  }
+
+  unlockUser(id: number): Observable<User> {
+    return this.httpClient.get<User>(this.authBaseUri + "/unlock/" + id);
+  }
+
+  lockUser(id: number): Observable<User> {
+    return this.httpClient.get<User>(this.authBaseUri + "/lock/ " + id);
   }
 }
