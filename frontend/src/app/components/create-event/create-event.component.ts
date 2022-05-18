@@ -87,6 +87,7 @@ export class CreateEventComponent implements OnInit {
       category: this.eventForm.controls.category.value,
       performances: createPerformances
     };
+    console.log(event);
 
     this.eventService.save(event).subscribe({
       next: value => {

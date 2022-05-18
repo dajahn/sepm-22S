@@ -23,6 +23,7 @@ import { TicketComponent } from './components/ticket/ticket.component';
 import { ToastComponentComponent } from './components/toast-component/toast-component.component';
 import { RegisterComponent } from './components/register/register.component';
 import { NewsCreateAddEventComponent } from './components/news-create-add-event/news-create-add-event.component';
+import { EditAccountComponent } from './components/edit-account/edit-account.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { NewsCreateAddEventComponent } from './components/news-create-add-event/
     CreateEventAddArtistComponent,
     ToastComponentComponent,
     RegisterComponent,
-    NewsCreateAddEventComponent,
+    EditAccountComponent,
+    NewsCreateAddEventComponent
   ],
   imports: [
     BrowserModule,

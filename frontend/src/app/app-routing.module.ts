@@ -11,21 +11,23 @@ import { MessageComponent } from './components/message/message.component';
 import { NewsDetailComponent } from './components/news-detail/news-detail.component';
 import { CartComponent } from './components/cart/cart.component';
 import { RegisterComponent } from './components/register/register.component';
+import {EditAccountComponent} from './components/edit-account/edit-account.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent},
-  {path: 'events/create', canActivate: [AdminGuard], component: CreateEventComponent },
-  { path: 'message', canActivate: [AuthGuard], component: MessageComponent },
-  { path: 'news', canActivate: [AuthGuard], component: NewsComponent },
-  { path: 'news/create', canActivate: [AdminGuard], component: NewsCreateComponent },
-  { path: 'news/:id', component: NewsDetailComponent },
-  { path: 'cart', component: CartComponent }
+  {path: '', component: HomeComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'register', component: RegisterComponent},
+  {path: 'account/edit', canActivate: [AuthGuard], component: EditAccountComponent},
+  {path: 'events/create', canActivate: [AdminGuard], component: CreateEventComponent},
+  {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
+  {path: 'news', canActivate: [AuthGuard], component: NewsComponent},
+  {path: 'news/create', canActivate: [AdminGuard], component: NewsCreateComponent},
+  {path: 'news/:id', component: NewsDetailComponent},
+  {path: 'cart', component: CartComponent}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes, {useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
