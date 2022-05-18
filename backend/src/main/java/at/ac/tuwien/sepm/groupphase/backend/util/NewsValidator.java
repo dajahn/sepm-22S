@@ -19,17 +19,20 @@ public class NewsValidator {
         if (newsDto == null) {
             throw new ValidationException("News must not be null!");
         }
-        if (newsDto.getTitle().trim().isEmpty()) {
+        if (newsDto.getTitle() == null || newsDto.getTitle().trim().isEmpty()) {
             throw new ValidationException("News Title must not be empty!");
         }
-        if (newsDto.getDescription().trim().isEmpty()) {
+        if (newsDto.getDescription() == null || newsDto.getDescription().trim().isEmpty()) {
             throw new ValidationException("News Description most not be empty!");
         }
         if (newsDto.getTitle().length() > 255) {
             throw new ValidationException("New Title ist too long!");
         }
-        if (newsDto.getDescription().length() > 1023) {
+        if (newsDto.getDescription().length() > 65535) {
             throw new ValidationException("News Description ist too long!");
+        }
+        if (newsDto.getFileDto().getImageBase64().trim().isEmpty()) {
+            throw new ValidationException("News image must be set!");
         }
     }
 }

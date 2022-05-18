@@ -13,10 +13,9 @@ public interface NewsService {
      *  Creates a new News Entry.
      *
      * @param news to create
-     * @param file related file
      * @return created news entry
      */
-    News createNews(NewsDto news, File file) throws IOException;
+    News createNews(NewsDto news) throws IOException;
 
 
     /**
@@ -25,4 +24,22 @@ public interface NewsService {
      *  @return all news entries
      */
     List<NewsDto> getAll();
+
+    /**
+     * Gets all the unread news entries for a user.
+     *
+     * @param mail the mail of the user for which we fetch the unread mails
+     *
+     * @return all unread news entries
+     */
+    List<NewsDto> getUnread(String mail);
+
+    /**
+     * Gets a news entry by id.
+     *
+     * @param id of the related news element
+     * @param mail mail of the user which fetches the mail
+     * @return corresponding news element
+     */
+    NewsDto getById(Long id, String mail);
 }

@@ -1,1 +1,20 @@
-<div>{{news.title}}</div>
+<div class="imageWrapper">
+    <div class="imgDiv">
+        <img [src]="news.fileDto.url">
+    </div>
+    <h4 class="premiere">{{news.imageDescription}}</h4>
+</div>
+
+<div class="newsDescription">
+    <div class="newsHeader">
+        <div class="imageIcon">
+            <img [src]="news.fileDto.url">
+        </div>
+        <h3 class="newsTitle mb-0" [title]="news.title">{{news.title}}</h3>
+        <input *ngIf="news.eventDto !== null" type="button" class="orange attending" value="I'M IN 🔥">
+    </div>
+    <div>{{news.description}}</div>
+    <div *ngIf="news.eventDto !== null" class="eventType">
+        Concert
+    </div>
+</div>

@@ -29,12 +29,6 @@ spring:
       max-file-size: 200MB
       max-request-size: 215MB
 
-server:
-  error:
-    include-message: always
-    # So we can send meaningful error responses, not like "Validation error"
-  # MULTIPART
-
 jps:
   track:
     ap:
@@ -90,3 +84,6 @@ spring:
     timeout-per-shutdown-phase: 30s
 server:
   shutdown: graceful
+  error:
+    include-message: always
+    # So we can send meaningful error responses, not like "Validation error"

@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {EventCategory} from '../../enums/event-category';
-import {CreatePerformance} from '../../dtos/performance';
-import {Artist} from '../../dtos/artist';
-import {CreateEvent} from '../../dtos/event';
-import {EventService} from '../../services/event.service';
-import {DurationUtil} from '../../utils/duration-util';
-import {ToastService} from '../../services/toast-service.service';
-import {Router} from '@angular/router';
-import {FileDto} from '../../dtos/file';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EventCategory } from '../../enums/event-category';
+import { CreatePerformance } from '../../dtos/performance';
+import { Artist } from '../../dtos/artist';
+import { CreateEvent } from '../../dtos/event';
+import { EventService } from '../../services/event.service';
+import { DurationUtil } from '../../utils/duration-util';
+import { ToastService } from '../../services/toast-service.service';
+import { Router } from '@angular/router';
+import { FileDto } from '../../dtos/file';
 
 @Component({
   selector: 'app-create-event',
@@ -26,27 +26,27 @@ export class CreateEventComponent implements OnInit {
 
   eventFormMessages = {
     title: [
-      {type: 'required', message: 'Title is required'},
-      {type: 'minLength', message: 'Title must contain at least 4 characters'}
+      { type: 'required', message: 'Title is required' },
+      { type: 'minLength', message: 'Title must contain at least 4 characters' }
     ],
     duration: [
-      {type: 'required', message: 'Duration is required'},
-      {type: 'minValue', message: 'Duration must be grater than 0 minutes'}
+      { type: 'required', message: 'Duration is required' },
+      { type: 'minValue', message: 'Duration must be grater than 0 minutes' }
     ],
     description: [
-      {type: 'required', message: 'Description is required'}
+      { type: 'required', message: 'Description is required' }
     ],
     category: [
-      {type: 'required', message: 'Category is required'}
+      { type: 'required', message: 'Category is required' }
     ],
     thumbnail: [
-      {type: 'required', message: 'Thumbnail is required'}
+      { type: 'required', message: 'Thumbnail is required' }
     ],
     artists: [
-      {type: 'required', message: 'At minimum 1 artist is required'}
+      { type: 'required', message: 'At minimum 1 artist is required' }
     ],
     performances: [
-      {type: 'required', message: 'At minimum 1 performance is required'}
+      { type: 'required', message: 'At minimum 1 performance is required' }
     ]
 
   };
@@ -55,7 +55,7 @@ export class CreateEventComponent implements OnInit {
   imageButtonClicked = false;
 
   constructor(private formBuilder: FormBuilder, private eventService: EventService,
-              private toastService: ToastService, private router: Router) {
+    private toastService: ToastService, private router: Router) {
     this.eventForm = this.formBuilder.group({
       title: ['', [Validators.compose([Validators.required, Validators.minLength(4)])]],
       duration: ['', [Validators.required]],
@@ -81,7 +81,7 @@ export class CreateEventComponent implements OnInit {
       id: null,
       name: this.eventForm.controls.title.value,
       artists: this.filterArtists(),
-      thumbnail:this.image,
+      thumbnail: this.image,
       description: this.eventForm.controls.description.value,
       duration: DurationUtil.stringRepresentation(this.eventForm.controls.duration.value),
       category: this.eventForm.controls.category.value,
@@ -148,7 +148,7 @@ export class CreateEventComponent implements OnInit {
     let base64img = await this.getBase64(files[0]);
     base64img = base64img.split(',')[1];
 
-    this.image =  {
+    this.image = {
       imageBase64: base64img,
       type: files[0].type
     };
@@ -163,7 +163,7 @@ export class CreateEventComponent implements OnInit {
   }
 
   private showDanger(msg: string) {
-    this.toastService.show(msg, {classname: 'bg-danger text-light', delay: 5000});
+    this.toastService.show(msg, { classname: 'bg-danger text-light', delay: 5000 });
   }
 
   filterArtists() {
@@ -187,11 +187,11 @@ export class CreateEventComponent implements OnInit {
   validPerformances() {
     let b = true;
     this.performances.forEach(perf => {
-      if (perf  !== null && (perf.location=== null || perf.location === undefined)) {
+      if (perf !== null && (perf.location === null || perf.location === undefined)) {
         b = false;
-      } else if (perf != null && (perf.location.id === undefined || perf.location.name === undefined)){
+      } else if (perf != null && (perf.location.id === undefined || perf.location.name === undefined)) {
         b = false;
-      } else if(perf != null && perf.dateTime.getHours() === 0 && perf.dateTime.getMinutes() === 0) {
+      } else if (perf != null && perf.dateTime.getHours() === 0 && perf.dateTime.getMinutes() === 0) {
         b = false;
       }
     });
