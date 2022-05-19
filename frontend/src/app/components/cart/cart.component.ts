@@ -44,8 +44,9 @@ export class CartComponent implements OnInit {
    * Loads purchased Tickets
    */
   private loadPurchasedTickets() {
-    this.cartService.getPurchasedTickets().subscribe(
+    this.cartService.getPurchasedTickets(true).subscribe(
       (data) => {
+        console.log(data);
         this.purchasedTickets = data;
       },
       error => {

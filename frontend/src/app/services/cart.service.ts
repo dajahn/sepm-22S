@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {CreateTicket} from '../dtos/create-ticket';
 import {Observable} from 'rxjs';
@@ -47,8 +47,10 @@ export class CartService {
   /**
    * Get purchased Tickets of the currently logged-in user.
    */
-  getPurchasedTickets(): Observable<Ticket[]> {
+  getPurchasedTickets(upcoming: boolean): Observable<Ticket[]> {
     console.log(`Get purchased Tickets of logged-in user.`);
-    return this.httpClient.get<Ticket[]>(this.cartBaseUri+ '/purchased');
+    let terms = new HttpParams();
+    terms = terms.set('upcoming', upcoming);
+    return this.httpClient.get<Ticket[]>(this.cartBaseUri+ '/purchased', {params:terms});
   }
 }
