@@ -1,5 +1,6 @@
 import {Address} from './address';
 import {UserStatus} from '../enums/user-status';
+import {BackendUserRoles} from '../enums/backend-user-roles';
 
 export interface CreateUpdateUser {
   firstName: string;
@@ -7,7 +8,7 @@ export interface CreateUpdateUser {
   email: string;
   password: string;
   address: Address;
-  role: 'CUSTOMER'|'ADMIN';
+  role: BackendUserRoles;
   status: UserStatus;
 }
 
@@ -18,7 +19,7 @@ export interface User {
   email: string;
   password: string;
   address: Address;
-  role: 'CUSTOMER'|'ADMIN';
+  role: BackendUserRoles;
   status: UserStatus;
   lastNewsRead: Date;
 }

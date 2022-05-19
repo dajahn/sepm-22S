@@ -115,6 +115,53 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     }
 
     @Test
+    public void givenNothing_whenCreateAdminUserWithAdminRights_thenCreatedUserWithAllSetPropertiesPlusId()
+        throws Exception {
+        userRepository.deleteAll();
+        createUpdateUserDto.setRole(UserRole.ADMIN);
+        String body = MAPPER.writeValueAsString(createUpdateUserDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        UserDto userDto = MAPPER.readValue(response.getContentAsString(),
+            UserDto.class);
+        assertNotNull(userDto.getId());
+        assertAll(
+            () -> assertEquals(createUpdateUserDto.getFirstName(), userDto.getFirstName()),
+            () -> assertEquals(createUpdateUserDto.getLastName(), userDto.getLastName()),
+            () -> assertEquals(createUpdateUserDto.getEmail(), userDto.getEmail()),
+            () -> assertEquals(createUpdateUserDto.getAddress(), userDto.getAddress()),
+            () -> assertEquals(createUpdateUserDto.getRole(), userDto.getRole())
+        );
+    }
+
+    @Test
+    public void givenNothing_whenCreateAdminUserWithoutAdminRights_then422()
+        throws Exception {
+        userRepository.deleteAll();
+        createUpdateUserDto.setRole(UserRole.ADMIN);
+        String body = MAPPER.writeValueAsString(createUpdateUserDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus());
+    }
+
+    @Test
     public void givenNothing_whenCreateUserValueInvalid_then422()
         throws Exception {
         userRepository.deleteAll();
