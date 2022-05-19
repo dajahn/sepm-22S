@@ -88,10 +88,12 @@ public class CheckoutValidator {
         }
 
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("MM/yy"));
-        if (
-            Integer.parseInt(today.substring(3, 5)) >= Integer.parseInt(checkoutDto.getExp().substring(3, 5)) && Integer.parseInt(today.substring(0, 2)) > Integer.parseInt(checkoutDto.getExp().substring(0, 2))
-        ) {
+        if (Integer.parseInt(today.substring(3, 5)) > Integer.parseInt(checkoutDto.getExp().substring(3, 5))) {
             throw new ValidationException("Credit cart is expired!");
+        } else if (Integer.parseInt(today.substring(3, 5)) == Integer.parseInt(checkoutDto.getExp().substring(3, 5))) {
+            if (Integer.parseInt(today.substring(0, 2)) > Integer.parseInt(checkoutDto.getExp().substring(0, 2))) {
+                throw new ValidationException("Credit cart is expired!");
+            }
         }
     }
 
