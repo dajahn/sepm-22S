@@ -36,7 +36,8 @@ public interface CartService {
      * Gets all purchased tickets for upcoming events of the currently logged-in user.
      *
      * @param userId the ID of the logged-in user
+     * @param upcoming true if Event of purchased Ticket should be in the future, wrong if in the past
      * @return the purchased TicketOrder of the currently logged-in user
      */
-    List<Ticket> getPurchasedTickets(Long userId);
+    List<Ticket> getPurchasedTickets(Long userId, Boolean upcoming);
 }

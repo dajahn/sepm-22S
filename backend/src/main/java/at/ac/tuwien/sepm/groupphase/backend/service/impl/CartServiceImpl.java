@@ -40,13 +40,9 @@ public class CartServiceImpl implements CartService {
     private final SeatTicketRepository seatTicketRepository;
     private final TicketRepository ticketRepository;
 
-    public CartServiceImpl(
-        OrderRepository orderRepository,
-        StandingSectorRepository standingSectorRepository,
-        SeatRepository seatRepository,
-        StandingTicketRepository standingTicketRepository,
-        SeatTicketRepository seatTicketRepository,
-        TicketRepository ticketRepository) {
+    public CartServiceImpl(OrderRepository orderRepository, StandingSectorRepository standingSectorRepository,
+                           SeatRepository seatRepository, StandingTicketRepository standingTicketRepository,
+                           SeatTicketRepository seatTicketRepository, TicketRepository ticketRepository) {
         this.orderRepository = orderRepository;
         this.standingSectorRepository = standingSectorRepository;
         this.seatRepository = seatRepository;
@@ -132,26 +128,32 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public List<Ticket> getPurchasedTickets(Long userId) {
+    public List<Ticket> getPurchasedTickets(Long userId, Boolean upcoming) {
         LOGGER.trace("getPurchasedTickets(Long userId) for user with id: {}", userId);
         List<TicketOrder> ticketOrders = orderRepository.findTicketOrdersByTypeAndUserId(OrderType.PURCHASE, userId);
         List<Ticket> purchasedTickets = new ArrayList<>();
-        List<Ticket> upcomingPurchasedTickets = new ArrayList<>();
+        List<Ticket> result = new ArrayList<>();
 
         if (!ticketOrders.isEmpty()) {
-            for (int i = 0; i < ticketOrders.size(); i++) {
-                if (!ticketOrders.get(i).getTickets().isEmpty()) {
-                    purchasedTickets.addAll(ticketOrders.get(i).getTickets());
+            for (TicketOrder ticketOrder : ticketOrders) {
+                if (!ticketOrder.getTickets().isEmpty()) {
+                    purchasedTickets.addAll(ticketOrder.getTickets());
                 }
             }
 
-            for (int i = 0; i < purchasedTickets.size(); i++) {
-                if (purchasedTickets.get(i).getPerformance().getDateTime().isAfter(LocalDateTime.now())) {
-                    upcomingPurchasedTickets.add(purchasedTickets.get(i));
+            for (Ticket purchasedTicket : purchasedTickets) {
+                if (upcoming) {
+                    if (purchasedTicket.getPerformance().getDateTime().isAfter(LocalDateTime.now())) {
+                        result.add(purchasedTicket);
+                    }
+                } else {
+                    if (purchasedTicket.getPerformance().getDateTime().isBefore(LocalDateTime.now())) {
+                        result.add(purchasedTicket);
+                    }
                 }
             }
 
-            return upcomingPurchasedTickets;
+            return result;
         } else {
             throw new NotFoundException(String.format("Could not find purchased Tickets form User with id %d", userId));
         }

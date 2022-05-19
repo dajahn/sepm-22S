@@ -12,9 +12,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -84,11 +86,12 @@ public class CartEndpoint {
     @Secured("ROLE_USER")
     @GetMapping(value = "/purchased")
     @Operation(summary = "Get summary of all upcoming purchased events", security = @SecurityRequirement(name = "apiKey"))
-    public List<TicketDto> findUpcomingPurchasedEvents() {
-        LOGGER.info("GET /api/v1/cart/purchased");
+    public List<TicketDto> findUpcomingPurchasedEvents(Boolean upcoming) {
+        LOGGER.info("GET /api/v1/cart/purchased, upcoming? : {}", upcoming);
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findApplicationUserByEmail(email);
         LOGGER.info("userId: {}", user.getId());
-        return ticketMapper.ticketToTicketDto(cartService.getPurchasedTickets(user.getId()));
+        return ticketMapper.ticketToTicketDto(cartService.getPurchasedTickets(user.getId(), upcoming));
     }
+
 }
