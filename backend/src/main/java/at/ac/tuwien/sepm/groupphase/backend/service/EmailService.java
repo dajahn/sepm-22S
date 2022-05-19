@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
+import at.ac.tuwien.sepm.groupphase.backend.entity.PasswordReset;
 import at.ac.tuwien.sepm.groupphase.backend.util.HtmlTemplate;
 
 import java.util.Map;
@@ -45,7 +46,7 @@ public interface EmailService {
      * @throws at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotDistributeException if there is an error while sending the email
      */
     void sendInvoiceNotification(Invoice invoice);
-
+    
     /**
      * Send a notification about a canceled invoice to the user including the cancellation invoice as an attachment.
      *
@@ -53,4 +54,12 @@ public interface EmailService {
      * @throws at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotDistributeException if there is an error while sending the email
      */
     void sendCancellationInvoiceNotification(Invoice invoice);
+
+    /**
+     * Send a notification about a new password reset request including the hash for resetting the password.
+     *
+     * @param reset the password reset request item
+     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotDistributeException if there is an error while sending the email
+     */
+    void sendPasswordResetNotification(PasswordReset reset);
 }

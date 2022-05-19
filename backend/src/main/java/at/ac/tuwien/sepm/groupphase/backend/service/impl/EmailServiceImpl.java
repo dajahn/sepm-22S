@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
+import at.ac.tuwien.sepm.groupphase.backend.entity.PasswordReset;
 import at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotDistributeException;
 import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepm.groupphase.backend.util.HtmlTemplate;
@@ -110,6 +111,21 @@ public class EmailServiceImpl implements EmailService {
             invoice.getOrder() != null ? invoice.getOrder().getUser().getEmail() : "nomailsupplied@example.com",
             invoice.getPdf(),
             "invoice-" + invoice.getIdentification().toString() + ".pdf"
+        );
+    }
+
+    @Override
+    public void sendPasswordResetNotification(PasswordReset reset) {
+        LOGGER.trace("sendPasswordResetNotification(PasswordReset reset) with reset={}", reset);
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("hash", reset.getHash());
+
+        this.send(
+            HtmlTemplate.EMAIL_PASSWORD_RESET_NOTIFICATION,
+            data,
+            "Reset Your Password",
+            reset.getUser().getEmail()
         );
     }
 }
