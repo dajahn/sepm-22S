@@ -21,7 +21,7 @@ export class NavigationComponent implements OnInit {
     home: '/',
     logIn: '/login',
     signUp: '/register',
-    editProfile: '/edit',
+    editProfile: '/account/edit',
     search: '/search',
     news: '/news',
     topTen: '/topten',

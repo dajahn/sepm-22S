@@ -7,7 +7,7 @@ export interface UserSearchDto {
   nameSearch: string;
 }
 
-export interface CreateUser {
+export interface CreateUpdateUser {
   firstName: string;
   lastName: string;
   email: string;
