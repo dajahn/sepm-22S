@@ -27,7 +27,6 @@ public class CheckoutServiceImpl implements CheckoutService {
         this.orderRepository = orderRepository;
     }
 
-
     @Transactional
     @Override
     public void checkout(Long userId) {

@@ -1,9 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
-
-import java.util.List;
 
 public interface TicketPrintingService {
 
@@ -20,13 +19,12 @@ public interface TicketPrintingService {
      * @param ticket the ticket which pdf should be generated
      * @return byte[] representing the ticket pdf
      */
-    byte[] generateTicket(Ticket ticket);
+    File generateTicket(Ticket ticket);
 
     /**
      * Send the client an email including all ticket pdfs.
      *
-     * @param order   the order which the client should be notified about
-     * @param tickets a list of ticket pds, which get attached to the email
+     * @param order the order which the client should be notified about
      */
-    void sendNotification(TicketOrder order, List<byte[]> tickets);
+    void sendNotification(TicketOrder order);
 }
