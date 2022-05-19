@@ -4,6 +4,9 @@ import {CartService} from '../../services/cart.service';
 import {ToastService} from '../../services/toast-service.service';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {CheckoutService} from '../../services/checkout.service';
+import {User} from '../../dtos/user';
+import {UserService} from '../../services/user.service';
 
 @Component({
   selector: 'app-checkout',
@@ -11,6 +14,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
   styleUrls: ['./checkout.component.scss']
 })
 export class CheckoutComponent implements OnInit {
+
+  currUserData: User;
+  cart: Cart;
 
   checkoutForm: FormGroup;
   checkoutFormMessages = {
@@ -36,10 +42,13 @@ export class CheckoutComponent implements OnInit {
   error: string;
 
 
+
   constructor(private formBuilder: FormBuilder,
               private cartService: CartService,
               private toastService: ToastService,
-              private router: Router) {
+              private router: Router,
+              private userService: UserService,
+              private checkoutService: CheckoutService) {
     this.checkoutForm = this.formBuilder.group({
       cardholder: ['', [Validators.required, Validators.minLength(2)]],
       cardnumber: ['', [Validators.required, Validators.minLength(16), Validators.pattern('^[0-9]*$')]],
@@ -50,7 +59,10 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCart();
+    this.loadUser();
   }
+
+
 
   /**
    * Loads cart order
@@ -62,6 +74,8 @@ export class CheckoutComponent implements OnInit {
           console.log('Cart is empty!');
           this.showDanger('Your cart is empty, nothing to checkout!');
           this.router.navigate(['/cart']).then();
+        } else {
+          this.cart = cart;
         }
       },
       error: err => {
@@ -70,6 +84,45 @@ export class CheckoutComponent implements OnInit {
         this.router.navigate(['/cart']).then();
       }
     });
+  }
+
+  /**
+   * Loads the currently logged-in user
+   */
+  private loadUser(){
+    this.userService.getOwnData().subscribe({
+      next: userData => {
+        this.currUserData = userData;
+      }, error: err => {
+        console.error('Error fetching user', err);
+        this.showDanger('Sorry, something went wrong. Could not load the user data 😔 Please try again later!');
+        this.router.navigate(['/cart']).then();
+      }
+    });
+  }
+
+  /**
+   * Checks out the cart of the currently logged-in user.
+   */
+  confirm() {
+    this.checkoutService.checkout().subscribe({
+      next: () => {
+        console.log('Successfully checked out cart!');
+        this.showSuccess('Successfully checked out cart 🎉');
+        this.router.navigate(['/cart']).then();
+      },
+      error: err => {
+        console.error('Error checking out cart', err);
+        this.showDanger('Sorry, something went wrong during checkout 😔 Please try again later!');
+      }
+    });
+  }
+
+  /**
+   * Calculates the total price of all tickets combined
+   */
+  calculateTotalSum(): number{
+    return this.cart?.tickets.reduce((accumulator, current) => accumulator + current?.sector.price, 0);
   }
 
   /**
@@ -85,7 +138,6 @@ export class CheckoutComponent implements OnInit {
   showDanger(msg: string) {
     this.toastService.show(msg, {classname: 'bg-danger', delay: 5000});
   }
-
 
   /**
    * Error flag will be deactivated, which clears the error message

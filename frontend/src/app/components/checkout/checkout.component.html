@@ -24,7 +24,6 @@
 
       <!-- # Placeholder: -->
       <div class="col-3"></div>
-
       <div class="col-6">
         <div class="pt-5 content">
 
@@ -41,7 +40,7 @@
           </div>
 
           <!-- # Form: -->
-          <form class="form" [formGroup]="checkoutForm" (ngSubmit)="registerUser()">
+          <form class="form" [formGroup]="checkoutForm" (ngSubmit)="confirm()">
 
             <!-- ## Cardholder's Name -->
             <div class="row mt-3">
@@ -90,7 +89,7 @@
                          autocomplete="cc-number"
                          maxlength="16"
                          aria-describedby="cardnumberHelp"
-                         placeholder="xxxx xxxx xxxx xxxx">
+                         placeholder="xxxxxxxxxxxxxxxx">
                 </div>
 
                 <!-- ### Error --->
@@ -191,8 +190,40 @@
               </div>
             </div>
 
+            <!-- ## spacing -->
+            <div *ngIf="!this.checkoutForm.valid" class="row mt-2" style="color: transparent">-</div>
+
+            <!-- ## order overview -->
+            <div *ngIf="this.checkoutForm.valid">
+              <hr>
+              <div class="order-wrapper" style="margin: 0 1rem">
+
+                <!-- ### price -->
+                <div>
+                  <h4 class="order-headline">Total</h4>
+                  <p style="margin-bottom: 0.1rem">
+                    {{cart?.tickets.length}} x Ticket{{cart?.tickets.length > 1 ? 's' : ''}}<br>
+                    € {{((calculateTotalSum()/120)*20).toFixed(2)}} incl. 20% Tax
+                  </p>
+                  <hr style="height: 1px; margin-top: 0; opacity: 0.9; margin-bottom: 0.1rem">
+                  <span>€ {{calculateTotalSum()?.toFixed(2)}} Total</span>
+                </div>
+
+                <!-- ### shipping -->
+                <div>
+                  <h4 class="order-headline shipping">Shipping Address</h4>
+                  <p>
+                    {{currUserData?.address.street}}<br>
+                    {{currUserData?.address.zipCode}} {{currUserData?.address.city}}<br>
+                    {{currUserData?.address.country}}
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
             <!-- ## button -->
-            <div class="row mt-5">
+            <div class="row mt-3">
               <div class="col-12">
                 <div class="form-group d-grid">
                   <input [disabled]="!this.checkoutForm.valid" type="submit" name="button" value="Confirm" class="btn white">

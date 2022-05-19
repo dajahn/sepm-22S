@@ -5,6 +5,7 @@ import {Ticket} from '../../dtos/ticket';
 import {SeatTicket} from '../../dtos/seat-ticket';
 import {CheckoutService} from '../../services/checkout.service';
 import {ToastService} from '../../services/toast-service.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -15,7 +16,10 @@ export class CartComponent implements OnInit {
 
   cart: Cart;
 
-  constructor(private cartService: CartService, private checkoutService: CheckoutService, private toastService: ToastService) {}
+  constructor(private cartService: CartService,
+              private checkoutService: CheckoutService,
+              private toastService: ToastService,
+              private router: Router) {}
 
   ngOnInit(): void {
     this.loadCart();
@@ -73,17 +77,7 @@ export class CartComponent implements OnInit {
    * Checks out the cart of the currently logged-in user.
    */
   checkout() {
-    this.checkoutService.checkout().subscribe({
-      next: () => {
-        console.log('Successfully checked out cart!');
-        this.cart.tickets = [];
-        this.showSuccess('Successfully checked out cart 🎉');
-      },
-      error: err => {
-        console.error('Error checking out cart', err);
-        this.showDanger('Sorry, something went wrong during checkout 😔 Please try again later!');
-      }
-    });
+    this.router.navigate(['/checkout']).then();
   }
 
   /**
