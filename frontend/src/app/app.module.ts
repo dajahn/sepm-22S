@@ -24,6 +24,7 @@ import { ToastComponentComponent } from './components/toast-component/toast-comp
 import { RegisterComponent } from './components/register/register.component';
 import { NewsCreateAddEventComponent } from './components/news-create-add-event/news-create-add-event.component';
 import { EditAccountComponent } from './components/edit-account/edit-account.component';
+import { CreateUserComponent } from './components/create-user/create-user.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { EditAccountComponent } from './components/edit-account/edit-account.com
     ToastComponentComponent,
     RegisterComponent,
     EditAccountComponent,
-    NewsCreateAddEventComponent
+    NewsCreateAddEventComponent,
+    CreateUserComponent
   ],
   imports: [
     BrowserModule,
