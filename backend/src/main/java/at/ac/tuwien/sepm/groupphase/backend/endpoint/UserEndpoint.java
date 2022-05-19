@@ -54,15 +54,20 @@ public class UserEndpoint {
         return userMapper.entitiesToUserDto(userService.getUser(userSearchDto));
     }
 
-    @GetMapping("/unlock/{id}")
+    @PutMapping("/unlock/{id}")
     @Secured("ROLE_ADMIN")
     @Operation(summary = "Unlocks User by id", security = @SecurityRequirement(name = "apiKey"))
     public UserDto unlockUserById(@PathVariable Long id) {
         LOGGER.info("unlockUserById({})", id);
-        return userMapper.userToUserDto(userService.unlockUserById(id));
+        try {
+            return userMapper.userToUserDto(userService.unlockUserById(id));
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
-    @GetMapping("/lock/{id}")
+    @PutMapping("/lock/{id}")
     @Secured("ROLE_ADMIN")
     @Operation(summary = "Locks User by id", security = @SecurityRequirement(name = "apiKey"))
     public UserDto lockUserById(@PathVariable Long id) {
@@ -74,6 +79,9 @@ public class UserEndpoint {
         } catch (CouldNotLockUserException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 

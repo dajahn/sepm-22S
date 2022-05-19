@@ -37,10 +37,10 @@ export class UserService {
   }
 
   unlockUser(id: number): Observable<User> {
-    return this.httpClient.get<User>(this.baseUri + "/unlock/" + id);
+    return this.httpClient.put<User>(this.baseUri + "/unlock/" + id, {});
   }
 
   lockUser(id: number): Observable<User> {
-    return this.httpClient.get<User>(this.baseUri + "/lock/ " + id);
+    return this.httpClient.put<User>(this.baseUri + "/lock/ " + id, {});
   }
 }

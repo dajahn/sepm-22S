@@ -52,6 +52,9 @@ export class UserManagementComponent implements OnInit {
       if (data.length == 0)
         this.showDanger("No Users with matching criteria found!");
       this.user = data;
+    }, (error) => {
+      console.error(error);
+      this.showDanger("Something went wrong!");
     })
   }
 
@@ -73,6 +76,9 @@ export class UserManagementComponent implements OnInit {
         this.showSuccess(resp.email + " unlocked!");
 
       this.changeUserState(resp);
+    }, (error) => {
+      console.error(error);
+      this.showDanger("Something went wrong!");
     })
   }
 

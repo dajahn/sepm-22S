@@ -153,7 +153,7 @@ public class CustomUserDetailService implements UserService {
 
         if (user.isEmpty()) {
             LOGGER.debug("User was empty so cannot be unlocked!");
-            return null;
+            throw new NotFoundException("User does not exist!");
         }
 
         user.get().setStatus(UserStatus.OK);
@@ -170,7 +170,7 @@ public class CustomUserDetailService implements UserService {
 
         if (user.isEmpty()) {
             LOGGER.debug("User was empty so cannot be unlocked!");
-            return null;
+            throw new NotFoundException("User not found!");
         }
         if (user.get().getEmail().equals(mail)) {
             LOGGER.debug("User cannot lock himself, Email: {}", mail);
