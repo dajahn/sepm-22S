@@ -14,7 +14,7 @@ export interface CreateUpdateUser {
   password: string;
   address: Address;
   role: 'CUSTOMER' | 'ADMIN';
-  status: UserStatus.OK;
+  status: UserStatus;
 }
 
 export interface User {
