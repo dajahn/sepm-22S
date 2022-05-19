@@ -7,6 +7,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {CheckoutService} from '../../services/checkout.service';
 import {User} from '../../dtos/user';
 import {UserService} from '../../services/user.service';
+import {Checkout} from '../../dtos/checkout';
 
 @Component({
   selector: 'app-checkout',
@@ -105,7 +106,14 @@ export class CheckoutComponent implements OnInit {
    * Checks out the cart of the currently logged-in user.
    */
   confirm() {
-    this.checkoutService.checkout().subscribe({
+    const checkout: Checkout = {
+      cardholder: this.checkoutForm.controls.cardholder.value,
+      cardnumber: this.checkoutForm.controls.cardnumber.value,
+      exp: this.checkoutForm.controls.exp.value,
+      csc: this.checkoutForm.controls.csc.value
+    };
+
+    this.checkoutService.checkout(checkout).subscribe({
       next: () => {
         console.log('Successfully checked out cart!');
         this.showSuccess('Successfully checked out cart 🎉');
@@ -113,7 +121,8 @@ export class CheckoutComponent implements OnInit {
       },
       error: err => {
         console.error('Error checking out cart', err);
-        this.showDanger('Sorry, something went wrong during checkout 😔 Please try again later!');
+        this.showDanger(err.error.split('"')[1]);
+        this.error = err.error.message;
       }
     });
   }
