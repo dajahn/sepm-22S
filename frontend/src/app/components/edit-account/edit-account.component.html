@@ -1,40 +1,23 @@
 <div id="wrapper">
   <div class="page-container container">
 
-
-    <div id="header" class="pt-4">
-      <nav class="navbar navbar-expand-lg navbar-dark ">
-        <a class="navbar-brand ml-lg-5" href="">
-          <h3 class="logo" style="display: inline"><span>🎟️</span> TICKETLINE</h3>
-        </a>
-        <div class=" navbar-right ms-auto justify-content-end float-right" id="navbarSupportedContent">
-          <div class="d-none d-md-inline d-lg-block">
-            <h4>Already have an account? <input type="button" id="loginButtonLg" class="white" routerLink="/login"
-                                                value="Log in"
-                                                style="margin-left: 1rem;" routerLinkActive="active"></h4>
-          </div>
-          <div class="d-md-none">
-            <input type="button" id="loginButtonSm" class="white" routerLink="/login" value="Log in"
-                   style="margin-left: 1rem;" routerLinkActive="active">
-          </div>
-        </div>
-      </nav>
-    </div>
     <div class="row">
       <div class="col-3">
         <!--      Placeholder-->
       </div>
       <div class="col-6">
         <div class="pt-5 content">
+          <!--          Header-->
           <div class="col-12">
-            <h1 class="text-center">Create an Account</h1>
+            <h1 class="text-center">Edit Account</h1>
           </div>
           <div class="row">
             <div class="col-12">
-              <h4 class="text-center logo">Already haven an account? <a routerLink="/login">Log in</a></h4>
+              <h4 class="text-center logo">Want to <a id="deleteLink" (click)="deleteAccount()">delete</a> your Account?
+              </h4>
             </div>
           </div>
-          <form class="form" [formGroup]="registerForm" (ngSubmit)="registerUser()">
+          <form class="form" [formGroup]="updateAccountForm" (ngSubmit)="updateUser()">
             <div class="row mt-2">
               <!--Fist name input-->
               <div class="col-lg-6">
@@ -45,9 +28,9 @@
                 </div>
                 <div class="row mt-1">
                   <div class="col">
-                    <ng-container *ngFor="let validation of registerFormMessages.firstName">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.firstName">
                       <div class="error"
-                           *ngIf="registerForm.controls.firstName.hasError(validation.type) && (registerForm.controls.firstName.dirty || registerForm.controls.firstName.touched)">
+                           *ngIf="updateAccountForm.controls.firstName.hasError(validation.type) && (updateAccountForm.controls.firstName.dirty || updateAccountForm.controls.firstName.touched)">
                         <small class="form-text text-warning">{{ validation.message }} </small>
                       </div>
                     </ng-container>
@@ -63,9 +46,9 @@
                 </div>
                 <div class="row mt-1">
                   <div class="col">
-                    <ng-container *ngFor="let validation of registerFormMessages.lastName">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.lastName">
                       <div class="error"
-                           *ngIf="registerForm.controls.lastName.hasError(validation.type) && (registerForm.controls.lastName.dirty || registerForm.controls.lastName.touched)">
+                           *ngIf="updateAccountForm.controls.lastName.hasError(validation.type) && (updateAccountForm.controls.lastName.dirty || updateAccountForm.controls.lastName.touched)">
                         <small class="form-text text-warning">{{ validation.message }} </small>
                       </div>
                     </ng-container>
@@ -83,9 +66,9 @@
                 </div>
                 <div class="row mt-1">
                   <div class="col">
-                    <ng-container *ngFor="let validation of registerFormMessages.email">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.email">
                       <div class="error"
-                           *ngIf="registerForm.controls.email.hasError(validation.type) && (registerForm.controls.email.dirty || registerForm.controls.email.touched)">
+                           *ngIf="updateAccountForm.controls.email.hasError(validation.type) && (updateAccountForm.controls.email.dirty || updateAccountForm.controls.email.touched)">
                         <small class="form-text text-warning">{{ validation.message }} </small>
                       </div>
                     </ng-container>
@@ -93,7 +76,6 @@
                 </div>
               </div>
             </div>
-
 
             <!--Address - Street input-->
             <div class="row mt-3">
@@ -105,9 +87,9 @@
                 </div>
                 <div class="row mt-1">
                   <div class="col">
-                    <ng-container *ngFor="let validation of registerFormMessages.street">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.street">
                       <div class="error"
-                           *ngIf="registerForm.controls.street.hasError(validation.type) && (registerForm.controls.street.dirty || registerForm.controls.street.touched)">
+                           *ngIf="updateAccountForm.controls.street.hasError(validation.type) && (updateAccountForm.controls.street.dirty || updateAccountForm.controls.street.touched)">
                         <small class="form-text text-warning">{{ validation.message }} </small>
                       </div>
                     </ng-container>
@@ -127,9 +109,9 @@
                 </div>
                 <div class="row mt-1">
                   <div class="col">
-                    <ng-container *ngFor="let validation of registerFormMessages.zip">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.zip">
                       <div class="error"
-                           *ngIf="registerForm.controls.zip.hasError(validation.type) && (registerForm.controls.zip.dirty || registerForm.controls.zip.touched)">
+                           *ngIf="updateAccountForm.controls.zip.hasError(validation.type) && (updateAccountForm.controls.zip.dirty || updateAccountForm.controls.zip.touched)">
                         <small class="form-text text-warning">{{ validation.message }} </small>
                       </div>
                     </ng-container>
@@ -146,9 +128,9 @@
                 </div>
                 <div class="row mt-1">
                   <div class="col">
-                    <ng-container *ngFor="let validation of registerFormMessages.city">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.city">
                       <div class="error"
-                           *ngIf="registerForm.controls.city.hasError(validation.type) && (registerForm.controls.city.dirty || registerForm.controls.city.touched)">
+                           *ngIf="updateAccountForm.controls.city.hasError(validation.type) && (updateAccountForm.controls.city.dirty || updateAccountForm.controls.city.touched)">
                         <small class="form-text text-warning">{{ validation.message }} </small>
                       </div>
                     </ng-container>
@@ -159,16 +141,17 @@
 
             <div class="row mt-2">
               <div class="col-12">
-                  <label for="country">Country</label>
-                  <select class="form-control" required name="country" formControlName="country" id="country">
-                    <option value="" disabled selected>Select Country</option>
-                    <option *ngFor="let coun of countriesCodeToNameKeys" value="{{coun}}">{{countriesCodeToName[coun]}}</option>
-                  </select>
+                <label for="country">Country</label>
+                <select class="form-control" required name="country" formControlName="country" id="country">
+                  <option value="" disabled selected>Select Country</option>
+                  <option *ngFor="let coun of countriesCodeToNameKeys"
+                          value="{{coun}}">{{countriesCodeToName[coun]}}</option>
+                </select>
                 <div class="row mt-1">
                   <div class="col">
-                    <ng-container *ngFor="let validation of registerFormMessages.country">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.country">
                       <div class="error"
-                           *ngIf="registerForm.controls.country.hasError(validation.type) && (registerForm.controls.country.dirty || registerForm.controls.country.touched)">
+                           *ngIf="updateAccountForm.controls.country.hasError(validation.type) && (updateAccountForm.controls.country.dirty || updateAccountForm.controls.country.touched)">
                         <small class="form-text text-warning">{{ validation.message }} </small>
                       </div>
                     </ng-container>
@@ -182,15 +165,15 @@
               <!--First Password input-->
               <div class="col-lg-6">
                 <div class="form-group">
-                  <label for="password">Password</label>
+                  <label for="password">New Password</label>
                   <input type="password" name="password" formControlName="password" class="form-control" id="password"
-                         aria-describedby="passwordHelp" placeholder="Enter your password">
+                         aria-describedby="passwordHelp" placeholder="Enter your new password">
                 </div>
                 <div class="row mt-1">
                   <div class="col">
-                    <ng-container *ngFor="let validation of registerFormMessages.password">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.password">
                       <div class="error"
-                           *ngIf="registerForm.controls.password.hasError(validation.type) && (registerForm.controls.password.dirty || registerForm.controls.password.touched)">
+                           *ngIf="updateAccountForm.controls.password.hasError(validation.type) && (updateAccountForm.controls.password.dirty || updateAccountForm.controls.password.touched)">
                         <small class="form-text text-warning">{{ validation.message }} </small>
                       </div>
                     </ng-container>
@@ -200,16 +183,16 @@
               <!--Password confirm input-->
               <div class="col-lg-6">
                 <div class="form-group">
-                  <label for="passwordConfirm">Confirm Password</label>
+                  <label for="passwordConfirm">Confirm new Password</label>
                   <input type="password" name="passwordConfirm" formControlName="passwordConfirm" class="form-control"
                          id="passwordConfirm"
-                         aria-describedby="passwordConfirmHelp" placeholder="Please confirm your password">
+                         aria-describedby="passwordConfirmHelp" placeholder="Please confirm your new password">
                 </div>
                 <div class="row mt-1">
                   <div class="col">
-                    <ng-container *ngFor="let validation of registerFormMessages.passwordConfirm">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.passwordConfirm">
                       <div class="error"
-                           *ngIf="registerForm.controls.passwordConfirm.hasError(validation.type) && (registerForm.controls.passwordConfirm.dirty || registerForm.controls.passwordConfirm.touched)">
+                           *ngIf="updateAccountForm.controls.passwordConfirm.hasError(validation.type) && (updateAccountForm.controls.passwordConfirm.dirty || updateAccountForm.controls.passwordConfirm.touched)">
                         <small class="form-text text-warning">{{ validation.message }} </small>
                       </div>
                     </ng-container>
@@ -218,32 +201,16 @@
               </div>
               <div class="row mt-1">
                 <div class="col-12">
+<!--                  password must match - error message-->
                   <ng-container>
                     <div class="error text-center"
-                         *ngIf="(registerForm.controls.password.dirty || registerForm.controls.password.touched) &&
-                       (registerForm.controls.passwordConfirm.dirty || registerForm.controls.passwordConfirm.touched) &&
-                       registerForm.controls.passwordConfirm.value !== registerForm.controls.password.value">
-                      <small class="form-text text-warning ">{{ registerFormMessages.password[1].message }} </small>
+                         *ngIf="(updateAccountForm.controls.password.dirty || updateAccountForm.controls.password.touched) &&
+                       (updateAccountForm.controls.passwordConfirm.dirty || updateAccountForm.controls.passwordConfirm.touched) &&
+                       updateAccountForm.controls.passwordConfirm.value !== updateAccountForm.controls.password.value">
+                      <small
+                        class="form-text text-warning ">{{ updateAccountFormMessages.password[1].message }} </small>
                     </div>
                   </ng-container>
-                </div>
-              </div>
-            </div>
-
-            <div class="row" *ngIf="error">
-              <div class="col-lg-4">
-              </div>
-              <div class="col-lg-4">
-                <div class="mt-3 alert alert-danger alert-dismissible fade show" role="alert">
-                  <div class="row">
-                    <div class="col-11"><strong>{{error}}</strong></div>
-                    <div class="col-1">
-                      <button type="button" style="padding: 0;" (click)="vanishError()" class="close btn"
-                              data-dismiss="alert" aria-label="Close">
-                        <i class="bi bi-x-circle"></i>
-                      </button>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -251,30 +218,18 @@
             <div class="row mt-5">
               <div class="col-12">
                 <div class="form-group d-grid">
-                  <input [disabled]="!this.registerForm.valid || ((registerForm.controls.password.dirty || registerForm.controls.password.touched) &&
-                       (registerForm.controls.passwordConfirm.dirty || registerForm.controls.passwordConfirm.touched) &&
-                       registerForm.controls.passwordConfirm.value !== registerForm.controls.password.value)" type="submit" name="button" value="Sign Up" class="btn white">
+<!--                  Submit button-->
+                  <input [disabled]="!this.updateAccountForm.valid || ((updateAccountForm.controls.password.dirty || updateAccountForm.controls.password.touched) &&
+                       (updateAccountForm.controls.passwordConfirm.dirty || updateAccountForm.controls.passwordConfirm.touched) &&
+                       updateAccountForm.controls.passwordConfirm.value !== updateAccountForm.controls.password.value)"
+                         type="submit" name="button" value="Confirm" class="btn white">
                 </div>
               </div>
               <div class="col-lg-4"></div>
             </div>
           </form>
-
-          <!--        Terms of use-->
-          <div class="row terms-of-use">
-            <div class="col-12">
-              <p class="text-center small">By clicking, you agree to TICKETLINE's <a routerLink="/terms-of-use">Term of
-                Use</a> &amp; <a
-                routerLink="/privacy-policy">Privacy Policy</a>
-              </p>
-            </div>
-          </div>
         </div>
-
       </div>
     </div>
-
-
   </div>
-
 </div>

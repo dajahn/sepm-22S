@@ -2,11 +2,16 @@ package at.ac.tuwien.sepm.groupphase.backend.security;
 
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.User;
+import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
+import at.ac.tuwien.sepm.groupphase.backend.exception.UserLockedException;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -25,11 +30,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
+    private final UserService userService;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, SecurityProperties securityProperties,
-                                   JwtTokenizer jwtTokenizer) {
+                                   JwtTokenizer jwtTokenizer, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenizer = jwtTokenizer;
+        this.userService = userService;
         setFilterProcessesUrl(securityProperties.getLoginUri());
     }
 
@@ -39,16 +46,32 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         UserLoginDto user = null;
         try {
             user = new ObjectMapper().readValue(request.getInputStream(), UserLoginDto.class);
+
+            //Checks if user who trys to authenticate is currently not locked
+            UserStatus userStatus = userService.getUserStatus(user);
+            if (userStatus == UserStatus.LOCKED) {
+                throw new LockedException("This user is currently locked! Consult an ADMIN!");
+            }
+
             //Compares the user with CustomUserDetailService#loadUserByUsername and check if the credentials are correct
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 user.getEmail(),
                 user.getPassword()));
+
+            //Resets failed login attempts on successful login
+            userService.resetFailedLoginAttemptsForUser(user);
+
+            return authentication;
         } catch (IOException e) {
             throw new BadCredentialsException("Wrong API request or JSON schema", e);
         } catch (BadCredentialsException e) {
             if (user != null && user.getEmail() != null) {
                 LOGGER.error("Unsuccessful authentication attempt for user {}", user.getEmail());
+                userService.addFailedLoginAttemptToUser(user);
             }
+            throw new BadCredentialsException("Wrong Username or Password!");
+        } catch (LockedException e) {
+            LOGGER.error("User {} is currently locked", user.getEmail());
             throw e;
         }
     }
