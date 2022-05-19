@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 public class UserDto {
@@ -15,5 +16,5 @@ public class UserDto {
     private AddressDto address;
     private UserRole role;
     private UserStatus status;
-    private LocalDateTime lastNewsRead;
+    private Set<NewsDto> readNews;
 }

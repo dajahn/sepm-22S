@@ -1,27 +1,26 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from '../../services/auth.service';
-import {Router} from '@angular/router';
-import {CreateUpdateUser} from '../../dtos/user';
-import {UserStatus} from '../../enums/user-status';
 import {UserService} from '../../services/user.service';
-import {AuthRequest} from '../../dtos/auth-request';
+import {Router} from '@angular/router';
+import {AuthService} from '../../services/auth.service';
 import {ToastService} from '../../services/toast-service.service';
+import {CreateUpdateUser, User} from '../../dtos/user';
+import {UserStatus} from '../../enums/user-status';
+import {AuthRequest} from '../../dtos/auth-request';
+import {logger} from 'codelyzer/util/logger';
 import {CountriesCodeToName} from '../../enums/countriesCodeToName';
-import {BackendUserRoles} from '../../enums/backend-user-roles';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  selector: 'app-edit-account',
+  templateUrl: './edit-account.component.html',
+  styleUrls: ['./edit-account.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class EditAccountComponent implements OnInit {
 
   countriesCodeToName = CountriesCodeToName;
   countriesCodeToNameKeys = [];
-
-  registerForm: FormGroup;
-  registerFormMessages = {
+  updateAccountForm: FormGroup;
+  updateAccountFormMessages = {
     firstName: [
       {type: 'required', message: 'Firstname is required'},
       {type: 'minlength', message: 'Firstname must contain at least 2 characters'}
@@ -57,10 +56,11 @@ export class RegisterComponent implements OnInit {
     ],
   };
   error: string;
+  currUserData: User;
 
   constructor(private formBuilder: FormBuilder, private userService: UserService,
-              private router: Router, private authService: AuthService, private toastService: ToastService) {
-    this.registerForm = this.formBuilder.group({
+              private router: Router, private toastService: ToastService, private authService: AuthService) {
+    this.updateAccountForm = this.formBuilder.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.minLength(2), Validators.required]],
       email: ['', [Validators.required]],
@@ -75,32 +75,48 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userService.getOwnData().subscribe({
+      next: userData => {
+        this.updateAccountForm.patchValue({
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          email: userData.email,
+          street: userData.address.street,
+          zip: userData.address.zipCode,
+          city: userData.address.city,
+          country: userData.address.country
+        });
+        this.currUserData = userData;
+      }, error: error => {
+        this.showDanger(error.error.split('"')[1]);
+      }
+    });
   }
 
-  registerUser() {
-    const createU: CreateUpdateUser = {
-      email: this.registerForm.controls.email.value,
-      password: this.registerForm.controls.password.value,
-      firstName: this.registerForm.controls.firstName.value,
-      lastName: this.registerForm.controls.lastName.value,
-      role: BackendUserRoles.CUSTOMER,
+  updateUser() {
+    const updateUser: CreateUpdateUser = {
+      email: this.updateAccountForm.controls.email.value,
+      password: this.updateAccountForm.controls.password.value,
+      firstName: this.updateAccountForm.controls.firstName.value,
+      lastName: this.updateAccountForm.controls.lastName.value,
+      role: this.currUserData.role,
       address: {
-        city: this.registerForm.controls.city.value,
-        street: this.registerForm.controls.street.value,
-        zipCode: this.registerForm.controls.zip.value,
-        country: this.registerForm.controls.country.value
+        city: this.updateAccountForm.controls.city.value,
+        street: this.updateAccountForm.controls.street.value,
+        zipCode: this.updateAccountForm.controls.zip.value,
+        country: this.updateAccountForm.controls.country.value
       },
-      status: UserStatus.OK
+      status: this.currUserData.status
     };
-    this.userService.createUser(createU).subscribe({
-      next: value => {
-        this.showSuccess('Successfully created Account!');
-        this.authService.loginUser(new AuthRequest(createU.email, createU.password)).subscribe({
-          next: _ => {
-            this.router.navigate(['/message']);
+    this.userService.updateUser(updateUser, this.currUserData.id).subscribe({
+      next: _ => {
+        this.authService.logoutUser();
+        this.authService.loginUser(new AuthRequest(updateUser.email, updateUser.password)).subscribe({
+          next: __ => {
+            this.showSuccess('Successfully updated Account!');
+            this.router.navigate(['/']);
           }
         });
-
       },
       error: err => {
         this.showDanger(err.error.split('"')[1]);
@@ -109,6 +125,10 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  deleteAccount() {
+    console.log('TODO: delete account');
+    //TODO when Grantner has finished delete account in backend, then reroute to /register
+  }
 
   private showSuccess(msg: string) {
     this.toastService.show(msg, {
@@ -120,10 +140,5 @@ export class RegisterComponent implements OnInit {
     this.toastService.show(msg, {classname: 'bg-danger text-light', delay: 10000});
   }
 
-  /**
-   * Error flag will be deactivated, which clears the error message
-   */
-  vanishError() {
-    this.error = null;
-  }
+
 }

@@ -1,10 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.util;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUserDto;
 import at.ac.tuwien.sepm.groupphase.backend.enums.Country;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
-import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

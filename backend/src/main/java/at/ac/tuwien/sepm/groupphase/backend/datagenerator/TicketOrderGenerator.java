@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-@Profile({"generateData", "test"})
+@Profile({"generateData"})
 @Component
 public class TicketOrderGenerator {
 

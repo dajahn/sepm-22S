@@ -25,7 +25,9 @@ export class AuthInterceptor implements HttpInterceptor {
     // Do not intercept authentication requests or register requests
 
     const excludedItem = this.excluded_uris.find(item => item.url === req.url);
-    const isRouteExcluded = excludedItem && (excludedItem.method ? excludedItem.method === req.method : true);
+    const isRouteExcluded = excludedItem
+      && (excludedItem.method ? excludedItem.method === req.method : true)
+      && (this.authService.isLoggedIn() === false);
 
     if (isRouteExcluded) {
       return next.handle(req);

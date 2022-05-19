@@ -12,22 +12,26 @@ import { MessageComponent } from './components/message/message.component';
 import { NewsDetailComponent } from './components/news-detail/news-detail.component';
 import { CartComponent } from './components/cart/cart.component';
 import { RegisterComponent } from './components/register/register.component';
+import {EditAccountComponent} from './components/edit-account/edit-account.component';
+import {CreateUserComponent} from './components/create-user/create-user.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent},
-  { path: 'reset-password/:hash', component: ResetPasswordComponent},
-  { path: 'events/create', canActivate: [AdminGuard], component: CreateEventComponent },
-  { path: 'message', canActivate: [AuthGuard], component: MessageComponent },
-  { path: 'news', canActivate: [AuthGuard], component: NewsComponent },
-  { path: 'news/create', canActivate: [AdminGuard], component: NewsCreateComponent },
-  { path: 'news/:id', component: NewsDetailComponent },
-  { path: 'cart', component: CartComponent }
+  {path: '', component: HomeComponent},
+  {path: 'login', component: LoginComponent},
+  {path: 'register', component: RegisterComponent},
+  {path: 'reset-password/:hash', component: ResetPasswordComponent},
+  {path: 'account/edit', canActivate: [AuthGuard], component: EditAccountComponent},
+  {path: 'users/admins/create', canActivate: [AdminGuard], component: CreateUserComponent},
+  {path: 'events/create', canActivate: [AdminGuard], component: CreateEventComponent},
+  {path: 'message', canActivate: [AuthGuard], component: MessageComponent},
+  {path: 'news', canActivate: [AuthGuard], component: NewsComponent},
+  {path: 'news/create', canActivate: [AdminGuard], component: NewsCreateComponent},
+  {path: 'news/:id', component: NewsDetailComponent},
+  {path: 'cart', component: CartComponent}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes, {useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
