@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.SeatTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceStatus;
+import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.InvoiceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceProcessingService;
@@ -57,6 +58,7 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
         List<Object> events = new ArrayList<>();
 
         float totalPrice = 0;
+        int sign = invoice.getType() == InvoiceType.CANCELLATION ? -1 : 1;
 
         TicketOrder order = invoice.getOrder();
 
@@ -80,7 +82,7 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
             if (item.tickets.get(hash) != null) {
                 item.tickets.get(hash).increment();
             } else {
-                item.tickets.put(hash, new TicketItem(ticket));
+                item.tickets.put(hash, new TicketItem(ticket, sign));
             }
         }
 
@@ -115,7 +117,9 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
         data.put("totalPrice", Formatter.formatPrice(totalPrice));
         data.put("totalTaxes", Formatter.formatPrice(totalPrice * 0.2f));
 
-        File pdf = pdfGenerationService.generate(HtmlTemplate.PDF_INVOICE, data);
+        HtmlTemplate template = invoice.getType() == InvoiceType.CANCELLATION ? HtmlTemplate.PDF_CANCELLATION_INVOICE : HtmlTemplate.PDF_INVOICE;
+
+        File pdf = pdfGenerationService.generate(template, data);
 
         invoice.setStatus(InvoiceStatus.GENERATED);
         invoiceRepository.save(invoice);
@@ -126,7 +130,11 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
     @Override
     public void sendNotification(Invoice invoice) {
         LOGGER.trace("sendNotification(Invoice invoice) with invoice={}", invoice);
-        emailService.sendInvoiceNotification(invoice);
+        if (invoice.getType() == InvoiceType.CANCELLATION) {
+            emailService.sendCancellationInvoiceNotification(invoice);
+        } else {
+            emailService.sendInvoiceNotification(invoice);
+        }
         invoice.setStatus(InvoiceStatus.DISTRIBUTED);
         invoiceRepository.save(invoice);
     }
@@ -138,9 +146,9 @@ class TicketItem {
     int amount = 1;
     float price;
 
-    public TicketItem(Ticket ticket) {
+    public TicketItem(Ticket ticket, int sign) {
         this.sector = ticket instanceof SeatTicket ? Formatter.formatSeatType(((SeatTicket) ticket).getSector().getSeatType()) : "Standing";
-        this.price = Float.parseFloat(ticket.getSector().getPrice().toString());
+        this.price = sign * Float.parseFloat(ticket.getSector().getPrice().toString());
     }
 
     public void increment() {
