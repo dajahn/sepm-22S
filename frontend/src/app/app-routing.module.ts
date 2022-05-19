@@ -12,6 +12,7 @@ import { NewsDetailComponent } from './components/news-detail/news-detail.compon
 import { CartComponent } from './components/cart/cart.component';
 import { RegisterComponent } from './components/register/register.component';
 import {EditAccountComponent} from './components/edit-account/edit-account.component';
+import {CheckoutComponent} from './components/checkout/checkout.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -23,7 +24,8 @@ const routes: Routes = [
   {path: 'news', canActivate: [AuthGuard], component: NewsComponent},
   {path: 'news/create', canActivate: [AdminGuard], component: NewsCreateComponent},
   {path: 'news/:id', component: NewsDetailComponent},
-  {path: 'cart', component: CartComponent}
+  {path: 'cart', component: CartComponent},
+  {path: 'checkout', component: CheckoutComponent}
 ];
 
 @NgModule({

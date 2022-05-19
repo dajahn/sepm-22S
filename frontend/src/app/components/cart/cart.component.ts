@@ -32,7 +32,7 @@ export class CartComponent implements OnInit {
       },
       error: err => {
         console.error('Error fetching cart', err);
-        this.showDanger('Sorry, something went wrong. Could not load the cart 😔');
+        this.showDanger('Sorry, something went wrong. Could not load the cart 😔 Please try again later!');
       }
     });
   }
@@ -64,7 +64,7 @@ export class CartComponent implements OnInit {
       },
       error: err => {
         console.error(`Error, could not remove ticket ${id} from cart.`, err);
-        this.showDanger(`Sorry, ticket could not be removed from the cart 😔`);
+        this.showDanger(`Sorry, ticket could not be removed from the cart 😔 Please try again later!`);
       }
     });
   }
@@ -81,7 +81,7 @@ export class CartComponent implements OnInit {
       },
       error: err => {
         console.error('Error checking out cart', err);
-        this.showDanger('Sorry, something went wrong during checkout 😔');
+        this.showDanger('Sorry, something went wrong during checkout 😔 Please try again later!');
       }
     });
   }
