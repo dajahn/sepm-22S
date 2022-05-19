@@ -30,14 +30,14 @@ export class NavigationComponent implements OnInit {
     createNews: '/news/create',
     createEvent: '/events/create',
     createLocation: '/locations/create',
-    addAdmin: '/admins/add',
+    addAdmin: '/users/admins/create',
     unlockUser: '/users',
   };
 
 
 
   constructor(public authService: AuthService,
-    private router: Router) {
+              private router: Router) {
 
     // Checks if the route is changing. If the route equals a navigation item, highlight it
     router.events.pipe(

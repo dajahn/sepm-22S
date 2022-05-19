@@ -84,7 +84,10 @@ public class UserEndpoint {
     public UserDto createUser(@RequestBody CreateUpdateUserDto userDto) {
         LOGGER.info("POST /api/v1/users body: {}", userDto);
         try {
-            return userMapper.userToUserDto(userService.registerUser(userDto, false));
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            boolean hasAdminRole = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN")); // so admins can create other admin users
+            return userMapper.userToUserDto(userService.registerUser(userDto, hasAdminRole));
         } catch (ValidationException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
