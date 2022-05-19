@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>{{ global.company.name }} - Invoice #{{ invoice.number }}</title>
+    <style>
+        @page {
+            margin: 0;
+            padding: 60pt 40pt;
+        }
+
+        html {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            width: 100%;
+            /*width: 21cm !important;*/
+            /*height: calc(1 * 27.5cm) !important;*/
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            font-size: 10pt;
+        }
+
+        .section {
+            margin-bottom: 40pt;
+        }
+
+        .company-section {
+            color: #828282;
+        }
+
+        h1 {
+            font-size: 1.6em;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        h1 + span {
+            display: inline-block;
+            font-size: 0.9em;
+            padding-left: 0.5em;
+            color: #828282;
+            font-weight: bold;
+        }
+
+        .event-section .details {
+            line-height: 150%;
+        }
+
+        .event-section table {
+            width: 100%;
+            margin-top: 3em;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .event-section th, .event-section td {
+            border: 1px solid #e6e6e6;
+            padding: 0.5em;
+        }
+
+        .event-section .price {
+            text-align: right;
+        }
+
+        .event-section .summary td {
+            border: none;
+        }
+
+        .event-section tr.heading {
+            text-align: center;
+            background: #B227F6;
+            /*background: linear-gradient(45deg, #F1936D 0%, #B227F6 50%, #7172F8 100%);*/
+            color: white;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .payment-notice {
+            text-align: center;
+            font-style: italic;
+            color: #a4a4a4;
+            margin-top: 1.5em;
+            font-size: 0.8em;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="section company-section">
+    {{ global.company.name }}<br/>
+    {{ global.company.address }}<br/>
+    {{ global.company.uid }}<br/>
+</div>
+
+<div class="section">
+    <h1>Cancellation Invoice</h1> <span>#{{ invoice.number }}</span><br/>
+    <span>Invoice date: {{ invoice.date }}</span>
+</div>
+
+<div class="section">
+    Due to your request we canceled the requested tickets.
+</div>
+
+{{#events}}
+<div class="section event-section">
+    <h3>{{ title }}</h3>
+
+    <div class="details">
+        Date: {{ date }}<br/>
+        Location: {{ location}}
+    </div>
+
+    <table>
+        <tr class="heading">
+            <th>Sector</th>
+            <th>Number of tickets</th>
+            <th>Price per ticket</th>
+            <th>Total price</th>
+        </tr>
+
+        {{#tickets}}
+        <tr>
+            <td>{{ sector }}</td>
+            <td>{{ amount }}</td>
+            <td class="price">{{ singlePrice }}</td>
+            <td class="price">{{ totalPrice }}</td>
+        </tr>
+        {{/tickets}}
+    </table>
+</div>
+{{/events}}
+<div class="section event-section">
+    <table>
+        <tr class="summary">
+            <td>Summary</td>
+            <td></td>
+            <td></td>
+            <td class="price">
+                <b>Total Refund:</b> {{ totalPrice }}
+            </td>
+        </tr>
+        <tr class="summary">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="price">
+                <b>incl. taxes:</b> {{ totalTaxes }}
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="section">
+    <div class="payment-notice">
+        The full price will be refunded to your credit card.<br/>
+        This invoice has been automatically created. If there are any errors, contact our customer support immediately.
+    </div>
+</div>
+
+</body>
+</html>

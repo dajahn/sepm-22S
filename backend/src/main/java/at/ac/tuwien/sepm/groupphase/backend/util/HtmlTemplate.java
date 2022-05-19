@@ -24,6 +24,12 @@ public class HtmlTemplate {
     public static final HtmlTemplate PDF_INVOICE = new HtmlTemplate("pdf_invoice", new String[]{"test1", "test2"}); // todo update required keys
 
     /**
+     * Template for creating the cancellation invoice pdf. <br>
+     * parameter: tbd // todo define parameters
+     */
+    public static final HtmlTemplate PDF_CANCELLATION_INVOICE = new HtmlTemplate("pdf_cancellation_invoice", new String[]{"test1", "test2"}); // todo update required keys
+
+    /**
      * Template for generic emails, including a title and some content. <br>
      * parameters: title, content
      */
