@@ -6,7 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
-@Mapper(uses = SectorMapper.class)
+@Mapper(uses = {SectorMapper.class, FileMapper.class})
 public interface PerformanceMapper {
 
     PerformanceDto performanceToPerformanceDto(Performance performance);

@@ -6,7 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
-@Mapper(uses = {PerformanceMapper.class})
+@Mapper(uses = {PerformanceMapper.class, FileMapper.class})
 public interface EventMapper {
 
     @Named("detailed")

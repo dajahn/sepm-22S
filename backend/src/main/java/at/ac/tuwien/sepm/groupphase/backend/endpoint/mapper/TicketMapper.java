@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(uses = SectorMapper.class)
+@Mapper(uses = {SectorMapper.class, PerformanceMapper.class})
 public interface TicketMapper {
 
     /**

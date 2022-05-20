@@ -12,6 +12,7 @@ import {TicketService} from '../../services/ticket.service';
 import {CartService} from '../../services/cart.service';
 import {ToastService} from '../../services/toast-service.service';
 import {SectorType} from '../../dtos/sector';
+import {Globals} from '../../global/globals';
 
 @Component({
   selector: 'app-performance',
@@ -32,8 +33,11 @@ export class EventComponent implements OnInit {
       this.showDanger('Unfortunately we were unable to load the requested event.');
       return EMPTY;
     }),
+    tap(event => this.url = event?.thumbnail?.url ? this.globals.backendUri + event?.thumbnail?.url : ''),
     share(),
   );
+
+  url = '';
 
   readonly performanceId$ = this.event$.pipe(
     switchMap(event => this.route.params.pipe(
@@ -89,6 +93,7 @@ export class EventComponent implements OnInit {
     private readonly toastService: ToastService,
     readonly route: ActivatedRoute,
     private readonly router: Router,
+    private readonly globals: Globals,
   ) {
   }
 

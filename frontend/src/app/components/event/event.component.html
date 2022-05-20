@@ -1,7 +1,8 @@
 <!-- HEADLINE -->
 <div class="d-flex flex-row align-items-center gap-3 mb-3">
-  <img *ngIf="(event$ | async)?.thumbnail?.url" class="thumbnail" height="64px" [src]="(event$ | async)?.thumbnail?.url"
-       alt="thumbnail">
+  {{(event$ | async)?.thumbnail?.url}}
+  <img class="thumbnail" height="64px" width="64px" [src]="url"
+       alt="Event thumbnail">
   <h2 class="m-0">
     {{(event$ | async)?.name}}
   </h2>
