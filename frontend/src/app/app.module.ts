@@ -28,6 +28,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { EditAccountComponent } from './components/edit-account/edit-account.component';
 import { CreateUserComponent } from './components/create-user/create-user.component';
 import { SearchComponent } from './components/search/search.component';
+import { DurationPipe } from './pipes/duration.pipe';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { SearchComponent } from './components/search/search.component';
     ResetPasswordComponent,
     CreateUserComponent,
     SearchComponent,
+    DurationPipe,
   ],
   imports: [
     BrowserModule,
