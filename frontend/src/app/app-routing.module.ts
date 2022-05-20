@@ -15,11 +15,12 @@ import { RegisterComponent } from './components/register/register.component';
 import { EditAccountComponent } from './components/edit-account/edit-account.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { CreateUserComponent } from './components/create-user/create-user.component';
+import {AntiAuthGuard} from './guards/anti-auth.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: 'login',  canActivate: [AntiAuthGuard], component: LoginComponent },
+  { path: 'register', canActivate: [AntiAuthGuard], component: RegisterComponent },
   { path: 'events/create', canActivate: [AdminGuard], component: CreateEventComponent },
   { path: 'message', canActivate: [AuthGuard], component: MessageComponent },
   { path: 'news', canActivate: [AuthGuard], component: NewsComponent },
@@ -30,7 +31,7 @@ const routes: Routes = [
   { path: 'users', canActivate: [AdminGuard], component: UserManagementComponent, pathMatch: 'full' },
   { path: 'users/admins/create', canActivate: [AdminGuard], component: CreateUserComponent },
   { path: '', component: HomeComponent },
-  { path: 'reset-password/:hash', component: ResetPasswordComponent }
+  { path: 'reset-password/:hash', canActivate: [AntiAuthGuard], component: ResetPasswordComponent }
 ];
 
 @NgModule({
