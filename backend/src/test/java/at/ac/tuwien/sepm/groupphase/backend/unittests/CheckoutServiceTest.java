@@ -1,13 +1,22 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.CheckoutTestData;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CheckoutDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
-import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
+import at.ac.tuwien.sepm.groupphase.backend.enums.OrderType;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.CheckoutService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -17,11 +26,121 @@ public class CheckoutServiceTest implements CheckoutTestData {
     private CheckoutService checkoutService;
 
     @Autowired
-    private TicketRepository ticketRepository;
+    private OrderRepository orderRepository;
+
+    private CheckoutDto checkoutDto;
+
+    @BeforeEach
+    public void setCheckoutDto() {
+        checkoutDto = new CheckoutDto();
+        checkoutDto.setCardholder(CARDHOLDER);
+        checkoutDto.setCardnumber(CARDNUMBER);
+        checkoutDto.setExp(EXP);
+        checkoutDto.setCsc(CSC);
+    }
 
     @Test
-    public void givenNothing_whenCheckout_thenCartEmpty() {
+    public void givenFilledCart_whenCheckout_thenCartEmpty() {
+        // BEFORE CHECKOUT
+        Optional<TicketOrder> tmp = orderRepository.findById(1L);
+        TicketOrder cart = tmp.get();
+        assertEquals(OrderType.CART, cart.getType());
+        assertEquals(6, cart.getTickets().size());
 
+        // CHECKOUT
+        checkoutService.checkout(cart.getUserId(),checkoutDto);
+
+        // AFTER CHECKOUT
+        tmp = orderRepository.findById(1L);
+        cart = tmp.get();
+        assertEquals(OrderType.PURCHASE, cart.getType());
+    }
+
+    @Test
+    public void givenEmptyCart_whenCheckout_thenThrowValidationException() {
+        // BEFORE CHECKOUT
+        Optional<TicketOrder> tmp = orderRepository.findById(1L);
+        TicketOrder cart = tmp.get();
+        cart.getTickets().clear();
+        cart.setTickets(cart.getTickets());
+        orderRepository.save(cart);
+        tmp = orderRepository.findById(1L);
+        cart = tmp.get();
+        assertEquals(OrderType.CART, cart.getType());
+        assertEquals(0, cart.getTickets().size());
+        long userID = cart.getUserId();
+        ValidationException vex;
+
+        // CHECKOUT
+        vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+        assertEquals("Cart tickets must not be empty!", vex.getMessage());
+    }
+
+    @Test
+    public void givenInvalidCheckout_whenCheckout_thenThrowValidationException() {
+        // BEFORE CHECKOUT
+        Optional<TicketOrder> tmp = orderRepository.findById(1L);
+        TicketOrder cart = tmp.get();
+        assertEquals(OrderType.CART, cart.getType());
+        assertEquals(6, cart.getTickets().size());
+        ValidationException vex;
+        long userID = cart.getUserId();
+        CheckoutDto checkoutDto = this.checkoutDto;
+
+        // CHECKOUT
+        // - invalid name
+        checkoutDto.setCardholder(null);
+        vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+        assertEquals("Cardholder's name must not be null!", vex.getMessage());
+        checkoutDto.setCardholder("");
+        vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+        assertEquals("Cardholder's name must not be empty!", vex.getMessage());
+        checkoutDto.setCardholder("a".repeat(257));
+        vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+        assertEquals("Cardholder's name is too long!", vex.getMessage());
+        checkoutDto.setCardholder(CARDHOLDER);
+
+        // - invalid card number
+        checkoutDto.setCardnumber(null);
+        vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+        assertEquals("Card number must not be null!", vex.getMessage());
+        checkoutDto.setCardnumber("");
+        vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+        assertEquals("Card number must not be empty!", vex.getMessage());
+        checkoutDto.setCardnumber("123456789abc");
+        vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+        assertEquals("Card number must be 16 numbers!", vex.getMessage());
+        checkoutDto.setCardnumber(CARDNUMBER);
+
+        // - invalid expiry date
+        checkoutDto.setExp(null);
+        vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+        assertEquals("Expiry date must not be null!", vex.getMessage());
+        checkoutDto.setExp("");
+        vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+        assertEquals("Expiry date must not be empty!", vex.getMessage());
+        checkoutDto.setExp("18/12");
+        vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+        assertEquals("Expiry date must follow the pattern MM/YY!", vex.getMessage());
+        checkoutDto.setExp("12/12");
+        vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+        assertEquals("Credit cart is expired!", vex.getMessage());
+        checkoutDto.setExp("01/12");
+        vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+        assertEquals("Credit cart is expired!", vex.getMessage());
+        checkoutDto.setExp(EXP);
+
+        // - invalid cvv or cvc
+        checkoutDto.setCsc(null);
+        vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+        assertEquals("CVV or CVC must not be null!", vex.getMessage());
+        checkoutDto.setCsc("");
+        vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+        assertEquals("CVV or CVC must not be empty!", vex.getMessage());
+        checkoutDto.setCsc("12344");
+        vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+        assertEquals("CVV or CVC must be 3-4 numbers!", vex.getMessage());
+        checkoutDto.setCsc(CSC);
     }
 
 }

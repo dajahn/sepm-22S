@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.util;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CheckoutDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
-import at.ac.tuwien.sepm.groupphase.backend.enums.OrderType;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
