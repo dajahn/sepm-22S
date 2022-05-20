@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import {Globals} from '../global/globals';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {CreateEvent, Event} from '../dtos/event';
+import {EventSearchParams} from "../dtos/eventSearchParams";
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,30 @@ export class EventService {
    */
   save(event: CreateEvent): Observable<Event> {
     return this.httpClient.post<Event>(this.eventBaseUri, event);
+  }
+
+  findAllEventsBy(searchParams: EventSearchParams): Observable<Event[]>{
+    console.log(`Find all Events with search params: ${searchParams}`);
+    let terms = new HttpParams();
+    if(searchParams.id) {
+      terms = terms.set('id', searchParams.id);
+    }
+    if(searchParams.category) {
+      terms = terms.set('category', searchParams.category);
+    }
+    if(searchParams.artistId) {
+      terms = terms.set('artistId', searchParams.artistId);
+    }
+    if(searchParams.name) {
+      terms = terms.set('name', searchParams.name);
+    }
+    if(searchParams.description) {
+      terms = terms.set('description', searchParams.description);
+    }
+    if(searchParams.duration) {
+      terms = terms.set('duration', searchParams.duration.toString()); //TODO ??
+    }
+    return this.httpClient.get<Event[]>(this.eventBaseUri + '/search', {params: terms});
   }
 
 }
