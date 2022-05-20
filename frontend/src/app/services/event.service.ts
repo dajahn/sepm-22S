@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {Globals} from '../global/globals';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {CreateEvent, Event, EventCategory} from '../dtos/event';
+import { Injectable } from '@angular/core';
+import { Globals } from '../global/globals';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { CreateEvent, Event } from '../dtos/event';
 import {TopTenEvent} from '../dtos/top-ten-event';
 
 @Injectable({
@@ -34,6 +34,20 @@ export class EventService {
     return this.httpClient.post<Event>(this.eventBaseUri, event);
   }
 
+  /**
+   * Gets an event by substring
+   *
+   * @param eventName
+   */
+  getBySubString(eventName: string, maxRecords: number): Observable<Event[]> {
+    let p = new HttpParams();
+    if (eventName)
+      p = p.set('name', eventName)
+    if (maxRecords)
+      p = p.set('maxRecords', maxRecords);
+
+    return this.httpClient.get<Event[]>(this.eventBaseUri, { params: p });
+  }
   /**
    * Gets the top ten sold events by category
    *

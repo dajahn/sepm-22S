@@ -1,8 +1,6 @@
 /* IMPORTS */
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 
-
-
 /* CUSTOM FONTS */
 @font-face {
   font-family: 'Montserrat';
@@ -17,8 +15,6 @@
   src: url('/assets/fonts/Montserrat-Italic-VariableFont_wght.ttf') format("truetype-variations");
   font-weight: 1 999;
 }
-
-
 
 /* DEFAULT / LIGHT MODE */
 :root {
@@ -240,6 +236,21 @@ input[type=file] {
   &:focus {
     outline: none !important;
     border: 3px solid var(--accent-orange);
+  }
+}
+
+select {
+  font-size: 0.9375em;
+  color: var(--text-c-highlight) !important;
+  font-weight: var(--font-w-medium) !important;
+  background-color: transparent !important;
+  border: 3px solid var(--text-c-highlight) !important;
+  border-radius: 10px !important;
+  padding: 16px 12px !important;
+
+  &:focus {
+    outline: none !important;
+    border: 3px solid var(--accent-orange) !important;
   }
 }
 

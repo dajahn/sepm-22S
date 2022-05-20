@@ -4,9 +4,11 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedPerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventCategoryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -45,6 +48,14 @@ public class EventEndpoint {
         this.performanceService = performanceService;
         this.eventMapper = eventMapper;
         this.performanceMapper = performanceMapper;
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping()
+    @Operation(summary = "Finds matching Events by name Substring")
+    public List<EventDto> findByNameSubstring(EventSearchDto eventSearchDto) {
+        LOGGER.info("GET /api/v1/events/?name={}", eventSearchDto);
+        return this.eventService.getByNameSubstring(eventSearchDto).stream().map(e -> this.eventMapper.eventToEventDto(e)).toList();
     }
 
     @Secured("ROLE_USER")

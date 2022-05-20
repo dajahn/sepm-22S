@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../../services/auth.service';
-import {NavigationEnd, Router} from '@angular/router';
-import {filter} from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-navigation',
@@ -21,7 +21,7 @@ export class NavigationComponent implements OnInit {
     home: '/',
     logIn: '/login',
     signUp: '/register',
-    editProfile: '/edit',
+    editProfile: '/account/edit',
     search: '/search',
     news: '/news',
     topTen: '/events/topten',
@@ -30,8 +30,8 @@ export class NavigationComponent implements OnInit {
     createNews: '/news/create',
     createEvent: '/events/create',
     createLocation: '/locations/create',
-    addAdmin: '/admins/add',
-    unlockUser: '/user/unlock',
+    addAdmin: '/users/admins/create',
+    unlockUser: '/users',
   };
 
 

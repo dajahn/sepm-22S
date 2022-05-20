@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
@@ -27,6 +29,13 @@ public interface EventService {
      */
     Event createEvent(CreateEventDto eventDto) throws IOException;
 
+    /**
+     * Returns the Events witch match the name substring.
+     *
+     * @param eventSearchDto substring name of the event, and amount of maxRecords
+     * @return List of matching Events
+     */
+    List<Event> getByNameSubstring(EventSearchDto eventSearchDto);
     /**
      * Finds the top ten events this month with the count of how many tickets were sold.
      *
