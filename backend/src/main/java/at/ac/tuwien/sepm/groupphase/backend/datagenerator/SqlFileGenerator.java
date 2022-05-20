@@ -26,7 +26,7 @@ public class SqlFileGenerator {
 
     @PreDestroy
     private void generateSql() throws SQLException {
-        LOGGER.trace("generateSql() - dumping the database to an sql file");
+        LOGGER.info("Dumping database to SQL file");
 
         Connection con = dataSource.getConnection();
         Statement stmt = con.createStatement();

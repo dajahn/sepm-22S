@@ -69,8 +69,12 @@ public class UserEndpoint {
     @Operation(summary = "Lets a user create a password reset request", security = @SecurityRequirement(name = "apiKey"))
     public void forgotPassword(@Valid @RequestBody UserForgotPasswordDto data) {
         LOGGER.info("POST /api/v1/users/forgot-password body: {}", data);
-        resetPasswordService.forgotPassword(data.email);
-        // todo handle exceptions / edge cases
+        try {
+            resetPasswordService.forgotPassword(data.email);
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -79,8 +83,15 @@ public class UserEndpoint {
     @Operation(summary = "Lets a user reset their password", security = @SecurityRequirement(name = "apiKey"))
     public void resetPassword(@Valid @RequestBody UserResetPasswordDto data) {
         LOGGER.info("POST /api/v1/users/reset-password body: {}", data);
-        resetPasswordService.resetPasswordFromHash(UUID.fromString(data.hash), data.password);
-        // todo handle exceptions / edge cases
+        try {
+            resetPasswordService.resetPasswordFromHash(UUID.fromString(data.hash), data.password);
+        } catch (ValidationException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

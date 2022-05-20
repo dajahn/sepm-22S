@@ -42,6 +42,7 @@ public class TicketPrintingServiceImpl implements TicketPrintingService {
     @Override
     @Async("ticketProcessingPoolTaskExecutor")
     public void processOrder(TicketOrder order) {
+        LOGGER.trace("processOrder(TicketOrder order) with order={}", order);
         for (Ticket ticket : order.getTickets()) {
             ticket.setPdf(generateTicket(ticket));
             ticketRepository.save(ticket);
@@ -52,6 +53,7 @@ public class TicketPrintingServiceImpl implements TicketPrintingService {
 
     @Override
     public File generateTicket(Ticket ticket) {
+        LOGGER.trace("generateTicket(Ticket ticket) with ticket={}", ticket);
         byte[] qrCodeBytes = qrCodeGenerationService.generate(ticket.getHash().toString());
         String qrCode = Base64.getEncoder().encodeToString(qrCodeBytes);
 
@@ -81,6 +83,7 @@ public class TicketPrintingServiceImpl implements TicketPrintingService {
 
     @Override
     public void sendNotification(TicketOrder order) {
+        LOGGER.trace("sendNotification(TicketOrder order) with order={}", order);
         emailService.sendTicketNotification(order);
     }
 }
