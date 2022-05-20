@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
+import at.ac.tuwien.sepm.groupphase.backend.entity.PasswordReset;
 import at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotDistributeException;
 import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepm.groupphase.backend.util.HtmlTemplate;
@@ -91,7 +92,40 @@ public class EmailServiceImpl implements EmailService {
             "New Ticketline invoice",
             invoice.getOrder() != null ? invoice.getOrder().getUser().getEmail() : "nomailsupplied@example.com",
             invoice.getPdf(),
-            "invoice" + invoice.getIdentification().toString() + ".pdf"
+            "invoice-" + invoice.getIdentification().toString() + ".pdf"
+        );
+    }
+
+    @Override
+    public void sendCancellationInvoiceNotification(Invoice invoice) {
+        LOGGER.trace("sendCancellationInvoiceNotification(Invoice invoice) with invoice={}", invoice);
+        HashMap<String, Object> data = new HashMap<>();
+
+        data.put("title", "New Cancellation Invoice!");
+        data.put("content", "You received a new cancellation invoice for your order at Ticketline. The cancellation invoice can be found in the attachment of this email.");
+
+        this.send(
+            HtmlTemplate.EMAIL_INVOICE_NOTIFICATION,
+            data,
+            "New Ticketline cancellation invoice",
+            invoice.getOrder() != null ? invoice.getOrder().getUser().getEmail() : "nomailsupplied@example.com",
+            invoice.getPdf(),
+            "invoice-" + invoice.getIdentification().toString() + ".pdf"
+        );
+    }
+
+    @Override
+    public void sendPasswordResetNotification(PasswordReset reset) {
+        LOGGER.trace("sendPasswordResetNotification(PasswordReset reset) with reset={}", reset);
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("hash", reset.getHash());
+
+        this.send(
+            HtmlTemplate.EMAIL_PASSWORD_RESET_NOTIFICATION,
+            data,
+            "Reset Your Password",
+            reset.getUser().getEmail()
         );
     }
 }

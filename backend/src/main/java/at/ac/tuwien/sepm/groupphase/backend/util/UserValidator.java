@@ -118,16 +118,27 @@ public class UserValidator {
 
     private void validatePassword(CreateUpdateUserDto userDto) {
         //validate password
-        if (userDto.getPassword() == null) {
+        this.validatePassword(userDto.getPassword());
+    }
+
+    /**
+     * Validates a Password.
+     *
+     * @param password the password being validated
+     * @throws ValidationException if the password is not valid
+     */
+    public void validatePassword(String password) {
+        //validate password
+        if (password == null) {
             throw new ValidationException("Users Password must not be null!");
         }
-        if (userDto.getPassword().trim().isEmpty()) {
+        if (password.trim().isEmpty()) {
             throw new ValidationException("Users Password must not be empty!");
         }
-        if (userDto.getPassword().length() > 255) {
+        if (password.length() > 255) {
             throw new ValidationException("Users Password is too long!");
         }
-        if (userDto.getPassword().length() < 8) {
+        if (password.length() < 8) {
             throw new ValidationException("Users Password must not be shorter than 8 characters!");
         }
     }
@@ -143,5 +154,4 @@ public class UserValidator {
             throw new ValidationException("Users Role must either be Admin or Customer!");
         }
     }
-
 }

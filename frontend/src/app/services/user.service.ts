@@ -14,7 +14,7 @@ import { AuthRequest } from '../dtos/auth-request';
 export class UserService {
   private baseUri: string = this.globals.backendUri + '/users';
 
-  constructor(private httpClient: HttpClient, private globals: Globals, private authService: AuthService) {
+  constructor(private httpClient: HttpClient, private globals: Globals) {
   }
 
   createUser(user: CreateUpdateUser): Observable<User> {
@@ -29,6 +29,14 @@ export class UserService {
   updateUser(updateUser: CreateUpdateUser, userId) {
     const uri = `${this.baseUri}/${userId}`;
     return this.httpClient.put<void>(uri, updateUser);
+  }
+
+  forgotPassword(email: string): Observable<void> {
+    return this.httpClient.post<void>(this.baseUri + '/forgot-password', { email });
+  }
+
+  resetPassword(hash: string, password: string): Observable<void> {
+    return this.httpClient.post<void>(this.baseUri + '/reset-password', { hash, password });
   }
 
   loadUser(userSearch: UserSearchDto): Observable<User[]> {

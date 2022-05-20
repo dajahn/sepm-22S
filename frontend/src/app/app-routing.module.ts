@@ -6,6 +6,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { AuthGuard } from './guards/auth.guard';
 import { MessageComponent } from './components/message/message.component';
 import { NewsDetailComponent } from './components/news-detail/news-detail.component';
@@ -28,10 +29,12 @@ const routes: Routes = [
   { path: 'account/edit', canActivate: [AuthGuard], component: EditAccountComponent },
   { path: 'users', canActivate: [AdminGuard], component: UserManagementComponent, pathMatch: 'full' },
   { path: 'users/admins/create', canActivate: [AdminGuard], component: CreateUserComponent }
+  {path: '', component: HomeComponent},
+  {path: 'reset-password/:hash', component: ResetPasswordComponent}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes, {useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
