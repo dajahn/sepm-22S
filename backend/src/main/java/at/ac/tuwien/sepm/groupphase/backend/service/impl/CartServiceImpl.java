@@ -93,10 +93,11 @@ public class CartServiceImpl implements CartService {
         orderRepository.save(cart);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public TicketOrder getCart(Long userId) {
         LOGGER.trace("getCart(Long userId) for userId {}", userId);
-        Optional<TicketOrder> databaseCart = orderRepository.findByTypeAndUserId(OrderType.CART, userId);
+        Optional<TicketOrder> databaseCart = orderRepository.findFirstByTypeAndUserIdOrderByValidUntil(OrderType.CART, userId);
         TicketOrder cart;
 
         if (databaseCart.isPresent()) {
@@ -106,7 +107,7 @@ public class CartServiceImpl implements CartService {
                 return cart;
             }
 
-            orderRepository.delete(cart);
+            orderRepository.deleteAllByTypeAndUserId(OrderType.CART, userId);
         }
 
         cart = new TicketOrder(LocalDateTime.now(), userId, new ArrayList<>(), OrderType.CART, LocalDateTime.now().plusMinutes(30));
@@ -126,7 +127,7 @@ public class CartServiceImpl implements CartService {
         ticketRepository.deleteById(ticketId);
         if (tickets.size() == 0) {
             LOGGER.trace("removeTicket(Long userId, Long ticketId): Removed order {}", cart);
-            orderRepository.delete(cart);
+            orderRepository.deleteAllByTypeAndUserId(OrderType.CART, userId);
         }
     }
 }

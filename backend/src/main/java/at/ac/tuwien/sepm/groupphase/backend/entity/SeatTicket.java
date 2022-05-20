@@ -8,14 +8,11 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.lang.invoke.MethodHandles;
 import java.util.Objects;
 
 @Entity
@@ -49,7 +46,7 @@ public class SeatTicket extends Ticket {
 
     @Override
     public SeatTicketDto mapToDto(TicketMapper mapper) {
-        return mapper.seatTicketToStandingTicketDto(this);
+        return mapper.seatTicketToSeatTicketDto(this);
     }
 
     @Override

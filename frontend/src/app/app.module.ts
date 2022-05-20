@@ -27,6 +27,9 @@ import { NewsCreateAddEventComponent } from './components/news-create-add-event/
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { EditAccountComponent } from './components/edit-account/edit-account.component';
 import { CreateUserComponent } from './components/create-user/create-user.component';
+import { LocationComponent } from './components/event/location/location.component';
+import { EventComponent } from './components/event/event.component';
+import {Location} from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -50,7 +53,9 @@ import { CreateUserComponent } from './components/create-user/create-user.compon
     UserManagementComponent,
     EditAccountComponent,
     ResetPasswordComponent,
-    CreateUserComponent
+    CreateUserComponent,
+    LocationComponent,
+    EventComponent,
   ],
   imports: [
     BrowserModule,
