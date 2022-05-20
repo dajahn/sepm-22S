@@ -14,6 +14,7 @@ import at.ac.tuwien.sepm.groupphase.backend.util.Formatter;
 import at.ac.tuwien.sepm.groupphase.backend.util.HtmlTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -39,6 +40,7 @@ public class TicketPrintingServiceImpl implements TicketPrintingService {
     }
 
     @Override
+    @Async("ticketProcessingPoolTaskExecutor")
     public void processOrder(TicketOrder order) {
         for (Ticket ticket : order.getTickets()) {
             ticket.setPdf(generateTicket(ticket));
