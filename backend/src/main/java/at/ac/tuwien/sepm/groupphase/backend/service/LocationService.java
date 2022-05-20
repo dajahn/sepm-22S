@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.LocationSearchTermsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SearchLocationDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Location;
 
@@ -22,4 +23,6 @@ public interface LocationService {
      * @throws at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException if no location with this id is found
      */
     Location findById(Long id);
+
+    List<Location> findAllLocationsBy(LocationSearchTermsDto searchTermsDto);
 }

@@ -67,6 +67,12 @@ public class EventDataGenerator {
                 event.setCategory(EventCategory.values()[faker.random().nextInt(0, 1)]);
                 event.setDuration(Duration.ofMinutes(faker.random().nextInt(60, 180)));
 
+                Event event2 = new Event();
+                event2.setName(faker.pokemon().name());
+                event2.setDescription(faker.lorem().paragraph());
+                event2.setCategory(EventCategory.values()[faker.random().nextInt(0, 1)]);
+                event2.setDuration(Duration.ofMinutes(faker.random().nextInt(60, 180)));
+
                 Set<Artist> eventArtists = new HashSet<>();
                 int artistNumber = faker.random().nextInt(1, 4);
                 for (int j = 0;
@@ -74,6 +80,7 @@ public class EventDataGenerator {
                      j++) {
                     eventArtists.add(artists.get(faker.random().nextInt(0, artists.size() - 1)));
                 }
+                event2.setArtists(eventArtists);
                 event.setArtists(eventArtists);
 
                 List<Performance> performances = new ArrayList<>();
@@ -81,12 +88,23 @@ public class EventDataGenerator {
                     if (faker.random().nextBoolean()) {
                         Performance performance = new Performance();
                         performance.setLocation(location);
-                        performance.setDateTime(LocalDateTime.of(LocalDate.ofInstant(faker.date().future(365, TimeUnit.DAYS).toInstant(), TimeZone.getDefault().toZoneId()), LocalTime.of(faker.random().nextInt(0, 23), 0)));
+                        performance.setDateTime(LocalDateTime.of(LocalDate.ofInstant(faker.date().past(365, TimeUnit.DAYS).toInstant(), TimeZone.getDefault().toZoneId()), LocalTime.of(faker.random().nextInt(0, 23), 0)));
                         performance.setEvent(event);
                         performances.add(performance);
                     }
                 }
 
+                List<Performance> performances2 = new ArrayList<>();
+                for (Location location : locations) {
+                    if (faker.random().nextBoolean()) {
+                        Performance performance = new Performance();
+                        performance.setLocation(location);
+                        performance.setDateTime(LocalDateTime.of(LocalDate.ofInstant(faker.date().past(365, TimeUnit.DAYS).toInstant(), TimeZone.getDefault().toZoneId()), LocalTime.of(faker.random().nextInt(0, 23), 0)));
+                        performance.setEvent(event);
+                        performances2.add(performance);
+                    }
+                }
+                event2.setPerformances(performances2);
                 event.setPerformances(performances);
                 LOGGER.debug("Saving event {}", event);
                 eventRepository.save(event);

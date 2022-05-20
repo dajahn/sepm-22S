@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.LocationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.LocationSearchTermsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SearchLocationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SmallLocationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.LocationMapper;
@@ -36,5 +38,13 @@ public class LocationEndpoint {
     public List<SmallLocationDto> findAll(SearchLocationDto searchLocationDto) {
         LOGGER.info("GET /api/v1/locations with {}", searchLocationDto);
         return locationMapper.locationToSmallLocationDto(locationService.find(searchLocationDto));
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/search")
+    @Operation(summary = "Get list of small locations (only id and name). If name is specified, only whose artists with matching name will come as a result.", security = @SecurityRequirement(name = "apiKey"))
+    public List<LocationDto> findAllLocationsBy(LocationSearchTermsDto searchTermsDto) {
+        LOGGER.info("GET /api/v1/locations with {}", searchTermsDto);
+        return locationMapper.locationToLocationDto(locationService.findAllLocationsBy(searchTermsDto));
     }
 }

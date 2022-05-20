@@ -1,6 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceSearchTermsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+
+import java.util.List;
 
 public interface PerformanceService {
 
@@ -12,4 +15,6 @@ public interface PerformanceService {
      * @return the performance
      */
     Performance findOne(Long eventId, Long performanceId);
+
+    List<Performance> findAllPerformancesBy(PerformanceSearchTermsDto searchTerms);
 }

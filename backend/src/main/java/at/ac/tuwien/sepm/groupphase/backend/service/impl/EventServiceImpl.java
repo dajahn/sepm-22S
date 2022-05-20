@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreatePerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchTermsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ArtistMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
@@ -14,12 +15,14 @@ import at.ac.tuwien.sepm.groupphase.backend.service.LocationService;
 import at.ac.tuwien.sepm.groupphase.backend.util.EventValidator;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
+import at.ac.tuwien.sepm.groupphase.backend.util.SqlStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -65,6 +68,21 @@ public class EventServiceImpl implements EventService {
         File file = this.fileService.create(eventDto.getThumbnail());
         Event event = this.mapFromCreateEventToEvent(eventDto, file);
         return eventRepository.save(event);
+    }
+
+    @Override
+    public List<Event> findAllEventsBy(EventSearchTermsDto eventSearchTermsDto) {
+        SqlStringConverter converter = new SqlStringConverter();
+
+        String description = converter.toSqlString(eventSearchTermsDto.getDescription());
+        Duration duration = eventSearchTermsDto.getDuration(); //TODO
+        String name = converter.toSqlString(eventSearchTermsDto.getName());
+        int category = -1;
+        if(eventSearchTermsDto.getCategory() != null ) {
+            category = eventSearchTermsDto.getCategory().ordinal();
+        }
+
+        return eventRepository.findAllBy(category,description,duration,name);
     }
 
     private Event mapFromCreateEventToEvent(CreateEventDto createEventDto, File file) {

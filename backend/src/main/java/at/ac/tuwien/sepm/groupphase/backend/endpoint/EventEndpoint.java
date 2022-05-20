@@ -3,6 +3,9 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedPerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchTermsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceSearchTermsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
@@ -26,6 +29,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/events")
@@ -73,6 +77,24 @@ public class EventEndpoint {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value= "/search")
+    @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
+    public List<EventDto> findAllEventsBy(EventSearchTermsDto eventSearchTermsDto) {
+        LOGGER.info("GET /api/v1/search events with {}", eventSearchTermsDto);
+        List<EventDto> eventDtos = eventMapper.eventToEventDto(eventService.findAllEventsBy(eventSearchTermsDto));
+        return eventDtos;
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value= "/performances/search")
+    @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
+    public List<PerformanceDto> findAllPerformancesBy(PerformanceSearchTermsDto performanceSearchTermsDto) {
+        LOGGER.info("GET /api/v1/search performances with {}", performanceSearchTermsDto);
+        List<PerformanceDto> performanceDtos = performanceMapper.performanceToPerformanceDto(performanceService.findAllPerformancesBy(performanceSearchTermsDto));
+        return performanceDtos;
     }
 
 }

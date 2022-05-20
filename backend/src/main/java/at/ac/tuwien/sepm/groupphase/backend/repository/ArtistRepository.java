@@ -27,5 +27,4 @@ public interface ArtistRepository extends JpaRepository<Artist, Long> {
      * @return a list of all artists with matching name
      */
     List<Artist> findByNameContaining(@Param("name") String name);
-
 }
