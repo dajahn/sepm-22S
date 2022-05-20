@@ -96,10 +96,13 @@ public class EventServiceImpl implements EventService {
         String description = converter.toSqlString(eventSearchTermsDto.getDescription());
 
         String du = eventSearchTermsDto.getDuration();
-        String hours = du.substring(0,2);
-        String minutes = du.substring(3,5);
-        String time = "PT" + hours + "H" + minutes + "M";
-        Duration duration = Duration.parse(time);
+        Duration duration = null;
+        if(du != null) {
+            String hours = du.substring(0, 2);
+            String minutes = du.substring(3, 5);
+            String time = "PT" + hours + "H" + minutes + "M";
+            duration = Duration.parse(time);
+        }
 
         String name = converter.toSqlString(eventSearchTermsDto.getName());
         int category = -1;

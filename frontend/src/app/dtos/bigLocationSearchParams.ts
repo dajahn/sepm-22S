@@ -5,5 +5,5 @@ export class BigLocationSearchParams{
   street: number;
   zipCode: string;
   city: string;
-  country: CountriesCodeToName;
+  country: string;
 }

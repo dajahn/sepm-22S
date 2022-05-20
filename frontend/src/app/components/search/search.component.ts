@@ -56,7 +56,6 @@ export class SearchComponent implements OnInit {
     this.locationSearchParams = new BigLocationSearchParams();
     this.categoriesValues = Object.values(this.categories);
     this.countriesValues = Object.values(this.countries);
-    console.log(this.categoriesValues);
   }
 
   findPerformances(){
