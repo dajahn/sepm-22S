@@ -1,6 +1,6 @@
 <!-- HEADLINE -->
 <div class="d-flex flex-row align-items-center gap-3 mb-3">
-  <img class="thumbnail" height="64px" src="https://i1.sndcdn.com/artworks-000593823888-6lxnz1-t500x500.jpg"
+  <img *ngIf="(event$ | async)?.thumbnail?.url" class="thumbnail" height="64px" [src]="(event$ | async)?.thumbnail?.url"
        alt="thumbnail">
   <h2 class="m-0">
     {{(event$ | async)?.name}}
