@@ -16,6 +16,7 @@
     <g>
       <svg
         (click)="getUnavailableStandingSpots(sector.id) < sector.capacity && onStandingSectorClick(sector)"
+        [class.clickable]="getUnavailableStandingSpots(sector.id) < sector.capacity"
         *ngFor="let sector of standingSectors$ | async"
         [attr.x]="sector.point1.x * 100"
         [attr.y]="sector.point1.y * 100"
@@ -58,11 +59,12 @@
       <g *ngFor="let sector of seatSectors$ | async">
         <svg
           *ngFor="let seat of sector.seats"
+          (click)="isSeatOccupied(seat.id) || onSeatClick(sector, seat)"
+          [class.clickable]="!isSeatOccupied(seat.id)"
           [attr.x]="seat.point.x * 100"
           [attr.y]="seat.point.y * 100">
           <path
             class="seat"
-            (click)="isSeatOccupied(seat.id) || onSeatClick(sector, seat)"
             d="M 10 10
                L 10 50
                A 40 40 0 0 0 90 50

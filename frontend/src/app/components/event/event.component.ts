@@ -33,11 +33,12 @@ export class EventComponent implements OnInit {
       this.showDanger('Unfortunately we were unable to load the requested event.');
       return EMPTY;
     }),
-    tap(event => this.url = event?.thumbnail?.url ? this.globals.backendUri + event?.thumbnail?.url : ''),
     share(),
   );
 
-  url = '';
+  readonly thumbnail$ = this.event$.pipe(
+    map(event => event?.thumbnail?.url ? this.globals.backendUri + event?.thumbnail?.url : ''),
+  );
 
   readonly performanceId$ = this.event$.pipe(
     switchMap(event => this.route.params.pipe(

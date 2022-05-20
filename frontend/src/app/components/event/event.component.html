@@ -1,8 +1,6 @@
 <!-- HEADLINE -->
 <div class="d-flex flex-row align-items-center gap-3 mb-3">
-  {{(event$ | async)?.thumbnail?.url}}
-  <img class="thumbnail" height="64px" width="64px" [src]="url"
-       alt="Event thumbnail">
+  <img class="thumbnail" height="64px" width="64px" [src]="thumbnail$ | async" alt="Event thumbnail">
   <h2 class="m-0">
     {{(event$ | async)?.name}}
   </h2>
@@ -14,8 +12,8 @@
 </h5>
 
 <div class="d-flex flex-row h-100 gap-5">
-  <div>
-    <div class="flex-fill description info px-4 py-3 d-flex flex-column gap-2 w-100">
+  <div class="flex-fill w-100">
+    <div class="description info px-4 py-3 d-flex flex-column gap-2 w-100">
       <div class="d-flex gap-2">
         <span *ngFor="let artist of (event$ | async)?.artists" class="info"
               style="font-size: 0.75em">{{artist.name}}</span>
