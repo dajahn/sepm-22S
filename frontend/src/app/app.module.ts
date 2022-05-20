@@ -49,6 +49,7 @@ import { CreateUserComponent } from './components/create-user/create-user.compon
     NewsCreateAddEventComponent,
     UserManagementComponent,
     EditAccountComponent,
+    ResetPasswordComponent,
     CreateUserComponent
   ],
   imports: [

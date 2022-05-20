@@ -28,13 +28,13 @@ const routes: Routes = [
   { path: 'cart', component: CartComponent },
   { path: 'account/edit', canActivate: [AuthGuard], component: EditAccountComponent },
   { path: 'users', canActivate: [AdminGuard], component: UserManagementComponent, pathMatch: 'full' },
-  { path: 'users/admins/create', canActivate: [AdminGuard], component: CreateUserComponent }
-  {path: '', component: HomeComponent},
-  {path: 'reset-password/:hash', component: ResetPasswordComponent}
+  { path: 'users/admins/create', canActivate: [AdminGuard], component: CreateUserComponent },
+  { path: '', component: HomeComponent },
+  { path: 'reset-password/:hash', component: ResetPasswordComponent }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {useHash: true})],
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
