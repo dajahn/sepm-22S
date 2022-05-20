@@ -96,4 +96,12 @@ export class CartComponent implements OnInit {
   showDanger(msg: string) {
     this.toastService.show(msg, {classname: 'bg-danger', delay: 5000});
   }
+
+  /**
+   *
+   * Navigates to corresponding event and performance.
+   */
+  inspect(eventID: number, performanceID: number) {
+    this.router.navigate([`events/${eventID}/performances/${performanceID}`]).then();
+  }
 }
