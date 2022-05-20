@@ -13,7 +13,7 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     @Query(
         value = "SELECT * FROM NEWS n LEFT JOIN user_news u on n.id = u.news_id"
             + " where not exists (SELECT * from news n2 left join user_news u2 on n2.id = u2.news_id"
-            + " where u2.user_id = :userId and n.id = n2.id) order by date desc", nativeQuery = true
+            + " where u2.user_id = :userId and n.id = n2.id) order by date desc,id desc", nativeQuery = true
     )
     List<News> loadUnreadNews(@Param("userId") Long userId);
 }

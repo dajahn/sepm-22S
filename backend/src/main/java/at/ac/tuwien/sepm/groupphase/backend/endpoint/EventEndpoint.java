@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedPerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
@@ -51,6 +52,14 @@ public class EventEndpoint {
         this.eventMapper = eventMapper;
         this.performanceMapper = performanceMapper;
         this.ticketMapper = ticketMapper;
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping()
+    @Operation(summary = "Finds matching Events by name Substring")
+    public List<EventDto> findByNameSubstring(EventSearchDto eventSearchDto) {
+        LOGGER.info("GET /api/v1/events/?name={}", eventSearchDto);
+        return this.eventService.getByNameSubstring(eventSearchDto).stream().map(e -> this.eventMapper.eventToEventDto(e)).toList();
     }
 
     @Secured("ROLE_USER")

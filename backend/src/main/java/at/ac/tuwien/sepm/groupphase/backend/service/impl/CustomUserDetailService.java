@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUpdateUserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
@@ -17,8 +18,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Optional;
 
 @Service
 public class CustomUserDetailService implements UserService {
@@ -58,17 +61,77 @@ public class CustomUserDetailService implements UserService {
         throw new NotFoundException(String.format("Could not find the user with the email address %s", email));
     }
 
+    @Transactional
     @Override
-    public User registerUser(CreateUserDto userDto, boolean adminRole) {
+    public void addFailedLoginAttemptToUser(UserLoginDto userDto) {
+        LOGGER.trace("addFailedLoginAttemptToUser() with {}", userDto);
+
+        User u = userRepository.findUserByEmail(userDto.getEmail());
+        if (u == null) {
+            LOGGER.debug("user with mail: {} does not exist!", userDto.getEmail());
+            return;
+        }
+
+        u.setFailedLoginAttempts(u.getFailedLoginAttempts() + 1);
+        if (u.getFailedLoginAttempts() >= 5) {
+            LOGGER.debug("user with mail: {} is now LOCKED!", userDto.getEmail());
+            u.setStatus(UserStatus.LOCKED);
+        }
+
+        userRepository.save(u);
+    }
+
+    @Override
+    public void resetFailedLoginAttemptsForUser(UserLoginDto userLoginDto) {
+        LOGGER.trace("resetFailedLoginAttemptsForUser() with {}", userLoginDto);
+        //User exists for sure
+        User u = userRepository.findUserByEmail(userLoginDto.getEmail());
+        u.setFailedLoginAttempts(0);
+        userRepository.save(u);
+    }
+
+    @Override
+    public UserStatus getUserStatus(UserLoginDto userDto) {
+        LOGGER.trace("userIsBlocked() with {}", userDto);
+        User u = userRepository.findUserByEmail(userDto.getEmail());
+        if (u == null) {
+            LOGGER.debug("user with mail: {} does not exist!", userDto.getEmail());
+            return null;
+        }
+        return u.getStatus();
+    }
+
+    @Override
+    public User registerUser(CreateUpdateUserDto userDto, boolean adminRole) {
         LOGGER.trace("registerUser with {}", userDto);
         userValidator.validateUser(userDto, adminRole);
         userDto.setStatus(UserStatus.OK);
-        User u = userMapper.createUserDtoToUser(userDto);
+        User u = userMapper.createUpdateUserDtoToUser(userDto);
         if (!adminRole) {
             u.setRole(UserRole.CUSTOMER);
         }
         u.setPassword(passwordEncoder.encode(u.getPassword()));
         return userRepository.save(u);
+    }
+
+    @Override
+    public User updateUser(CreateUpdateUserDto userDto, Long id, boolean adminRole) {
+        LOGGER.trace("updateUser with {}", userDto);
+        userValidator.validateUser(userDto, id, adminRole);
+        Optional<User> tmp = userRepository.findById(id);
+        if (tmp.isEmpty()) {
+            throw new NotFoundException("User with ID " + id + " not found!");
+        }
+        User curr = tmp.get();
+        User updated = userMapper.createUpdateUserDtoToUser(userDto);
+        updated.setId(curr.getId());
+        updated.setReadNews(curr.getReadNews());
+        if (!adminRole) {
+            updated.setRole(UserRole.CUSTOMER);
+            updated.setStatus(UserStatus.OK);
+        }
+        updated.setPassword(passwordEncoder.encode(updated.getPassword()));
+        return userRepository.save(updated);
     }
 
 }

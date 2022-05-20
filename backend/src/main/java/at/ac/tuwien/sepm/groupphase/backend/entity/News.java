@@ -52,7 +52,7 @@ public class News {
     @Column()
     private LocalDate date;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     private Event event;
 

@@ -21,7 +21,7 @@ export class NavigationComponent implements OnInit {
     home: '/',
     logIn: '/login',
     signUp: '/register',
-    editProfile: '/edit',
+    editProfile: '/account/edit',
     search: '/search',
     news: '/news',
     topTen: '/topten',
@@ -30,7 +30,7 @@ export class NavigationComponent implements OnInit {
     createNews: '/news/create',
     createEvent: '/events/create',
     createLocation: '/locations/create',
-    addAdmin: '/admins/add',
+    addAdmin: '/users/admins/create',
     unlockUser: '/user/unlock',
   };
 

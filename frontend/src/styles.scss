@@ -274,6 +274,21 @@ input[type=file] {
   }
 }
 
+select {
+  font-size: 0.9375em;
+  color: var(--text-c-highlight) !important;
+  font-weight: var(--font-w-medium) !important;
+  background-color: transparent !important;
+  border: 3px solid var(--text-c-highlight) !important;
+  border-radius: 10px !important;
+  padding: 16px 12px !important;
+
+  &:focus {
+    outline: none !important;
+    border: 3px solid var(--accent-orange) !important;
+  }
+}
+
 /* ## Icons */
 i {
   font-size: 2em;

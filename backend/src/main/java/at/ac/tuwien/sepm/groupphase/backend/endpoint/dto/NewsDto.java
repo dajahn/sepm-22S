@@ -19,7 +19,6 @@ import java.time.LocalDate;
 public class NewsDto {
     private Long id;
     private String title;
-    private Long eventId;
     private String description;
     private String imageDescription;
 

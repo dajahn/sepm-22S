@@ -1,37 +1,93 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.converter.InvoiceIdConverter;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceStatus;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
-import org.apache.commons.lang3.NotImplementedException;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.io.File;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import java.time.LocalDate;
 
+@Entity
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Invoice {
 
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, updatable = false)
+    private Long id;
 
-    private InvoiceStatus status;
+    @ManyToOne
+    @JoinColumn
+    // TODO add @NotNull after merge
+    private TicketOrder order;
+
+    @Column(nullable = false)
+    @NonNull
+    private InvoiceStatus status = InvoiceStatus.CREATED;
+
+    @Column(nullable = false)
+    @NonNull
     private InvoiceType type;
+
+    @Convert(converter = InvoiceIdConverter.class)
+    @Column(nullable = false)
     private InvoiceId identification;
 
-    private String path;
+    /**
+     * Reference to an invoice.
+     * Meaning defined by type:
+     * - CANCELLATION ==> referencing the initial invoice
+     * - CANCELED ==> referencing the cancellation invoice
+     * - NORMAL ==> no meaning
+     */
+    @OneToOne
+    @JoinColumn(referencedColumnName = "id")
+    @ToString.Exclude
+    private Invoice reference;
+
+    /**
+     * Used for displaying the reference when executing toString without creating a stackoverflow.
+     *
+     * @return String representation of the reference
+     */
+    @ToString.Include(name = "reference")
+    private String toStringAttachReference() {
+        return this.reference == null ? null : Invoice.class.getSimpleName() + "(id=" + this.reference.getId() + ")";
+    }
+
+    @ManyToOne
+    @JoinColumn
     private File pdf;
 
-    /**
-     * Retrieve the pdf of the invoice if it exists.
-     *
-     * @return the pdf and loads it if it hasn't been loaded yet, if no pdf exists null is returned
-     */
-    public File getPdf() {
-        throw new NotImplementedException();
-    }
+    @Column(nullable = false)
+    @NonNull
+    private LocalDate date = LocalDate.now();
 
-    /**
-     * Loads the pdf from the specified path.
-     *
-     * @param path the path of the file
-     */
-    private void loadFile(String path) {
-        throw new NotImplementedException();
+    public Invoice(TicketOrder order, InvoiceType type) {
+        this.order = order;
+        this.type = type;
     }
+    
 }
