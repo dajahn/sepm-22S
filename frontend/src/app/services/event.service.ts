@@ -67,7 +67,7 @@ export class EventService {
       terms = terms.set('description', searchParams.description);
     }
     if(searchParams.duration) {
-      terms = terms.set('duration', searchParams.duration.toString()); //TODO ??
+      terms = terms.set('duration', searchParams.duration);
     }
     return this.httpClient.get<Event[]>(this.eventBaseUri + '/search', {params: terms});
   }

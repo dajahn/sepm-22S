@@ -1,7 +1,7 @@
 <div *ngIf = "searchedArtists === false && searchedEvents === false && searchedLocations === false" class="search-bar">
 
   <h4> Performances
-    <button style="margin-left: 30px" (click)="findPerformances(); searchedPerformances = true"> search </button>
+    <button style="margin-left: 30px" (click)="findPerformances(); searchedPerformances = true"> <i class="bi bi-search"></i> </button>
     <button (click)="searchedPerformances = false"> reset </button>
   </h4>
 
@@ -91,8 +91,7 @@
 <div *ngIf = "searchedPerformances === false && searchedEvents === false && searchedLocations === false" class="search-bar">
 
   <h4> Artists
-    <button style="margin-left: 30px" (click)="findArtists(); searchedArtists = true"> search
-    </button>
+    <button style="margin-left: 30px" (click)="findArtists(); searchedArtists = true"><i class="bi bi-search"></i></button>
     <button (click)="searchedArtists = false"> reset</button>
   </h4>
 
@@ -134,8 +133,7 @@
 <div *ngIf = "searchedPerformances === false && searchedArtists === false && searchedLocations === false" class="search-bar">
 
   <h4> Events
-    <button style="margin-left: 30px" (click)="findEvents(); searchedEvents = true"> search
-    </button>
+    <button style="margin-left: 30px" (click)="findEvents(); searchedEvents = true"> <i class="bi bi-search"></i> </button>
     <button (click)="searchedEvents = false"> reset</button>
   </h4>
 
@@ -164,7 +162,7 @@
     id="category"
     ngModel name="category"
     #category="ngModel"
-    type="text"
+    type="select"
     class="search-bar"
     placeholder="Event category"
     [(ngModel)]="eventSearchParams.category">
@@ -177,7 +175,7 @@
     id="duration"
     ngModel name="duration"
     #duration="ngModel"
-    type="duration"
+    type="time"
     class="search-bar"
     placeholder="duration"
     [(ngModel)]="eventSearchParams.duration">
@@ -219,8 +217,7 @@
 <div *ngIf = "searchedPerformances === false && searchedEvents === false && searchedArtists === false" class="search-bar">
 
   <h4> Locations
-    <button style="margin-left: 30px" (click)="findLocations(); searchedLocations = true"> search
-    </button>
+    <button style="margin-left: 30px" (click)="findLocations(); searchedLocations = true"> <i class="bi bi-search"></i> </button>
     <button (click)="searchedLocations = false"> reset </button>
   </h4>
 

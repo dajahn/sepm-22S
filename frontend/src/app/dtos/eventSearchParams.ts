@@ -6,6 +6,6 @@ export class EventSearchParams {
   name?: string;
   description?: string;
   category?: EventCategory;
-  duration?: DurationUtil;
+  duration?: string;
   artistId?: number;
 }

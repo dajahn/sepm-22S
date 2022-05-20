@@ -14,7 +14,8 @@ import {Artist} from "../../dtos/artist";
 import {Event, EventCategory} from "../../dtos/event";
 import {BigLocationSearchParams} from "../../dtos/bigLocationSearchParams";
 import {Location} from "../../dtos/location";
-import {Countries} from "../../enums/countries";
+import {CountriesCodeToName} from "../../enums/countriesCodeToName";
+import {DurationUtil} from "../../utils/duration-util";
 
 @Component({
   selector: 'app-search',
@@ -32,7 +33,7 @@ export class SearchComponent implements OnInit {
   locations: Location[];
   categories = EventCategory;
   categoriesValues = [];
-  countries = Countries;
+  countries = CountriesCodeToName;
   countriesValues = [];
 
   searchedPerformances = false;
