@@ -8,6 +8,10 @@ import org.mapstruct.Mapper;
 public interface FileMapper {
 
     default FileDto fileToFileDto(File file) {
+        if (file == null) {
+            return null;
+        }
+
         FileDto dto = new FileDto();
         dto.setUrl("/files/" + file.getId().toString());
         return dto;
