@@ -4,8 +4,11 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUpdateUserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserForgotPasswordDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserResetPasswordDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.entity.User;
+import at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotLockUserException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ResetPasswordService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -23,13 +26,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
+import java.io.IOException;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -44,6 +50,45 @@ public class UserEndpoint {
         this.userService = userService;
         this.resetPasswordService = resetPasswordService;
         this.userMapper = userMapper;
+    }
+
+    @GetMapping
+    @Secured("ROLE_ADMIN")
+    @Operation(summary = "Gets all users by UserSearchFilter", security = @SecurityRequirement(name = "apiKey"))
+    public List<UserDto> getUserOrderByLockedState(UserSearchDto userSearchDto) {
+        LOGGER.info("getUserOrderByLockedState() with: {}", userSearchDto);
+        return userMapper.entitiesToUserDto(userService.getUser(userSearchDto));
+    }
+
+    @PutMapping("/unlock/{id}")
+    @Secured("ROLE_ADMIN")
+    @Operation(summary = "Unlocks User by id", security = @SecurityRequirement(name = "apiKey"))
+    public UserDto unlockUserById(@PathVariable Long id) {
+        LOGGER.info("unlockUserById({})", id);
+        try {
+            return userMapper.userToUserDto(userService.unlockUserById(id));
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @PutMapping("/lock/{id}")
+    @Secured("ROLE_ADMIN")
+    @Operation(summary = "Locks User by id", security = @SecurityRequirement(name = "apiKey"))
+    public UserDto lockUserById(@PathVariable Long id) {
+        LOGGER.info("lockUserById({})", id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String mail = authentication.getName();
+        try {
+            return userMapper.userToUserDto(userService.lockUserById(id, mail));
+        } catch (CouldNotLockUserException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @ResponseStatus(HttpStatus.CREATED)

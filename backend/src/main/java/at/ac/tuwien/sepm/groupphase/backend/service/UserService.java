@@ -1,12 +1,15 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUpdateUserDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
@@ -71,4 +74,37 @@ public interface UserService extends UserDetailsService {
      * @return userStatus
      */
     UserStatus getUserStatus(UserLoginDto userDto);
+
+    /**
+     * Gets all locked users in the system.
+     *
+     * @return List of locked users
+     */
+    List<User> getLockedUser();
+
+    /**
+     * Unlocks a user by id.
+     *
+     * @param id id of the user
+     * @return User object wich was unlocked
+     */
+    User unlockUserById(Long id);
+
+    /**
+     * Locks a user by id.
+     *
+     * @param id of the user
+     * @param mail of the admin which executes the request
+     * @return the user object
+     */
+    User lockUserById(Long id, String mail);
+
+
+    /**
+     * Gets all users by a userSearchDto(Filter).
+     *
+     * @param userSearchDto the filter
+     * @return list of user
+     */
+    List<User> getUser(UserSearchDto userSearchDto);
 }
