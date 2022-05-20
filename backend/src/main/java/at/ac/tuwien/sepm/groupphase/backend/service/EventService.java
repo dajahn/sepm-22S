@@ -28,6 +28,7 @@ public interface EventService {
     Event createEvent(CreateEventDto eventDto) throws IOException;
 
     List<Event> findAllEventsBy(EventSearchTermsDto eventSearchTermsDto);
+
     /**
      * Returns the Events witch match the name substring.
      *

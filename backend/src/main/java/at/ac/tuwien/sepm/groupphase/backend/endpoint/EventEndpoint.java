@@ -91,7 +91,7 @@ public class EventEndpoint {
     }
 
     @Secured("ROLE_USER")
-    @GetMapping(value= "/search")
+    @GetMapping(value = "/search")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
     public List<EventDto> findAllEventsBy(EventSearchTermsDto eventSearchTermsDto) {
         LOGGER.info("GET /api/v1/search events with {}", eventSearchTermsDto);
@@ -100,7 +100,7 @@ public class EventEndpoint {
     }
 
     @Secured("ROLE_USER")
-    @GetMapping(value= "/performances/search")
+    @GetMapping(value = "/performances/search")
     @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
     public List<PerformanceDto> findAllPerformancesBy(PerformanceSearchTermsDto performanceSearchTermsDto) {
         LOGGER.info("GET /api/v1/search performances with {}", performanceSearchTermsDto);

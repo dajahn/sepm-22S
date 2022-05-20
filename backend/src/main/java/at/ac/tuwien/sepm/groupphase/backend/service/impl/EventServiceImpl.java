@@ -94,14 +94,20 @@ public class EventServiceImpl implements EventService {
         SqlStringConverter converter = new SqlStringConverter();
 
         String description = converter.toSqlString(eventSearchTermsDto.getDescription());
-        Duration duration = eventSearchTermsDto.getDuration(); //TODO
+
+        String du = eventSearchTermsDto.getDuration();
+        String hours = du.substring(0,2);
+        String minutes = du.substring(3,5);
+        String time = "PT" + hours + "H" + minutes + "M";
+        Duration duration = Duration.parse(time);
+
         String name = converter.toSqlString(eventSearchTermsDto.getName());
         int category = -1;
-        if(eventSearchTermsDto.getCategory() != null ) {
+        if (eventSearchTermsDto.getCategory() != null) {
             category = eventSearchTermsDto.getCategory().ordinal();
         }
 
-        return eventRepository.findAllBy(category,description,duration,name);
+        return eventRepository.findAllBy(category, description, duration, name);
     }
 
     private Event mapFromCreateEventToEvent(CreateEventDto createEventDto, File file) {

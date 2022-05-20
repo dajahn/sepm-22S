@@ -23,10 +23,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findByNameContaining(@Param("name") String name);
 
     List<Event> findByNameContaining(@Param("name") String name, Pageable pageable);
-    @Query(value = "select * from Event e " +
-        "where (e.category = :category or :category = -1) " +
-        "and (UPPER(e.description) like UPPER(:description) or :description is null) " +
-        "and (e.duration = :duration or :duration is null) " +
-        "and (UPPER(e.name) like UPPER(:name) or :name is null)", nativeQuery = true)
+
+    @Query(value = "select * from Event e "
+            + "where (e.category = :category or :category = -1) "
+            + "and (UPPER(e.description) like UPPER(:description) or :description is null) "
+            + "and (e.duration = :duration or :duration is null) "
+            + "and (UPPER(e.name) like UPPER(:name) or :name is null)", nativeQuery = true)
     List<Event> findAllBy(@Param("category") int category, @Param("description") String description, @Param("duration") Duration duration, @Param("name") String name);
 }

@@ -11,6 +11,6 @@ public class EventSearchTermsDto {
     private String name;
     private String description;
     private EventCategory category;
-    private Duration duration;
+    private String duration;
     private Long artistId;
 }

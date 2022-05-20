@@ -19,19 +19,10 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long> 
     @Query("select p from Performance p join fetch p.location l join fetch l.sectors where p.event.id = ?1 and p.id = ?2")
     Optional<Performance> findByEventIdAndId(long eventId, long id);
 
-
-  /*  @Query(value = "select p.* from Performance p join Location l join Event e join Sector s " +
-        "where (p.date_time >= :fromDate or :fromDate is null) " +
-        "AND (p.date_time <= :toDate or :toDate is null) " +
-        "AND (p.location_id = l.id AND UPPER(l.name) like UPPER(:locationName) or :locationName is null) " +
-        "AND (p.event_id = e.id and UPPER(e.name) like UPPER(:eventName) or :eventName = null) " +
-        "AND (s.location_id = l.id AND s.price >= :fromPrice and s.price <= :toPrice or :fromPrice = 0)", nativeQuery = true)
-    List<Performance> findAllBy(@Param("fromPrice") double fromPrice, @Param("toPrice") double toPrice, @Param("eventName") String eventName, @Param("locationName") String locationName, @Param("fromDate") LocalDateTime fromDate, @Param("toDate")LocalDateTime toDate);*/
-
-    @Query(value = "select distinct p.* from Performance p join Location l join Event e " +
-        "where (p.date_time >= :fromDate or :fromDate is null)" +
-        "AND (p.date_time <= :toDate or :toDate is null) " +
-        "AND (p.location_id = l.id AND UPPER(l.name) like UPPER(:locationName) or :locationName is null) " +
-        "AND (p.event_id = e.id and UPPER(e.name) like UPPER(:eventName) or :eventName = null)", nativeQuery = true)
-    List<Performance> findAllBy (@Param("eventName") String eventName, @Param("locationName") String locationName, @Param("fromDate") LocalDateTime fromDate, @Param("toDate")LocalDateTime toDate);
+    @Query(value = "select distinct p.* from Performance p join Location l join Event e "
+        + "where (p.date_time >= :fromDate or :fromDate is null)"
+        + "AND (p.date_time <= :toDate or :toDate is null) "
+        + "AND (p.location_id = l.id AND UPPER(l.name) like UPPER(:locationName) or :locationName is null) "
+        + "AND (p.event_id = e.id and UPPER(e.name) like UPPER(:eventName) or :eventName = null)", nativeQuery = true)
+    List<Performance> findAllBy(@Param("eventName") String eventName, @Param("locationName") String locationName, @Param("fromDate") LocalDateTime fromDate, @Param("toDate")LocalDateTime toDate);
 }

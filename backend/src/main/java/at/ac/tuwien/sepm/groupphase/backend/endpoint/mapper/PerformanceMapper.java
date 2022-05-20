@@ -12,5 +12,5 @@ public interface PerformanceMapper {
 
     DetailedPerformanceDto performanceToDetailedPerformanceDto(Performance performance);
 
-    List <PerformanceDto> performanceToPerformanceDto(List<Performance> performances);
+    List<PerformanceDto> performanceToPerformanceDto(List<Performance> performances);
 }

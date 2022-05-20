@@ -73,7 +73,7 @@ public class PerformanceServiceImpl implements PerformanceService {
         String eventName = converter.toSqlString(searchTerms.getEventName());
         String locationName = converter.toSqlString(searchTerms.getLocationName());
 
-        return performanceRepository.findAllBy(/*fromPrice, toPrice,*/ eventName , locationName,  fromDate, toDate);
+        return performanceRepository.findAllBy(/*fromPrice, toPrice,*/ eventName, locationName,  fromDate, toDate);
 
     }
 

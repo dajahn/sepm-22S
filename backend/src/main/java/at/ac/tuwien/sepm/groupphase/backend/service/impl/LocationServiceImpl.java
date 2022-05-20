@@ -63,6 +63,6 @@ public class LocationServiceImpl implements at.ac.tuwien.sepm.groupphase.backend
         Country country = searchTermsDto.getCountry();
         String zipCode = searchTermsDto.getZipCode();
         String street = converter.toSqlString(searchTermsDto.getStreet());
-        return locationRepository.findAllBy(name,city,country,zipCode,street);
+        return locationRepository.findAllBy(name, city, country, zipCode, street);
     }
 }
