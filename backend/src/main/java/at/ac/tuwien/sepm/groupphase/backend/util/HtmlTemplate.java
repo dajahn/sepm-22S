@@ -24,6 +24,18 @@ public class HtmlTemplate {
     public static final HtmlTemplate PDF_INVOICE = new HtmlTemplate("pdf_invoice", new String[]{"test1", "test2"}); // todo update required keys
 
     /**
+     * Template for creating the cancellation invoice pdf. <br>
+     * parameter: tbd // todo define parameters
+     */
+    public static final HtmlTemplate PDF_CANCELLATION_INVOICE = new HtmlTemplate("pdf_cancellation_invoice", new String[]{"test1", "test2"}); // todo update required keys
+
+    /**
+     * Template for creating a pdf ticket. <br>
+     * parameter: tbd // todo define parameters
+     */
+    public static final HtmlTemplate PDF_TICKET = new HtmlTemplate("pdf_ticket", new String[]{"test1", "test2"}); // todo update required keys
+
+    /**
      * Template for generic emails, including a title and some content. <br>
      * parameters: title, content
      */
@@ -38,6 +50,21 @@ public class HtmlTemplate {
     public static final HtmlTemplate EMAIL_INVOICE_NOTIFICATION = EMAIL_GENERIC;
 
     /**
+     * Template for notifying the user about their pdf tickets. <br>
+     * parameters: title, content
+     *
+     * @see #EMAIL_GENERIC
+     */
+    public static final HtmlTemplate EMAIL_TICKET_NOTIFICATION = EMAIL_GENERIC;
+
+    /**
+     * Template for generic emails, including a title and some content. <br>
+     * parameters: title, content
+     */
+    public static final HtmlTemplate EMAIL_PASSWORD_RESET_NOTIFICATION = new HtmlTemplate("email_password_reset", new String[]{"title", "content"}); // todo: load images locally (not web)
+
+
+    /**
      * Stores global values for reusability and single point of truth.
      */
     private static final Map<String, String> GLOBALS = Stream.of(new String[][]{
@@ -45,7 +72,7 @@ public class HtmlTemplate {
         {"global.company.title", "Ticketline"},
         {"global.company.address", "Some Street 10, 1010 Vienna - Austria"},
         {"global.company.uid", "ATU12345678"},
-        {"global.company.homepage", "https://this-would-link-to-our-homepage.dev"},
+        {"global.company.homepage", "http://localhost:4200/#"},
     }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
 

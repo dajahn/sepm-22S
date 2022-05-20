@@ -90,6 +90,16 @@
           </div>
         </div>
 
+        <div class="row mt-5" *ngIf="showForgotPassword">
+          <div class="col-lg-4"></div>
+          <div class="col-lg-4 text-center">
+            <div class="forgot-password" (click)="resetPassword()">
+              {{ forgotPasswordLoading ? 'loading' : 'Forgot Password' }}
+            </div>
+          </div>
+          <div class="col-lg-4"></div>
+        </div>
+
         <div class="row mt-5">
           <div class="col-lg-4"></div>
           <div class="col-lg-4">

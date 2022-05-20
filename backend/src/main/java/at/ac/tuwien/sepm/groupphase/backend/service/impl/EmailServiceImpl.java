@@ -1,7 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.File;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Attachment;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
+import at.ac.tuwien.sepm.groupphase.backend.entity.PasswordReset;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 import at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotDistributeException;
 import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepm.groupphase.backend.util.HtmlTemplate;
@@ -19,7 +22,9 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -29,10 +34,10 @@ public class EmailServiceImpl implements EmailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Override
-    public void send(HtmlTemplate template, Map<String, Object> data, String subject, String recipient, File attachment, String attachmentName) {
+    public void send(HtmlTemplate template, Map<String, Object> data, String subject, String recipient, List<Attachment> attachments) {
         LOGGER.trace(
-            "send(HtmlTemplate template, Map<String, Object> data, String subject, String recipient, File attachment, String attachmentName) with template={} data={} subject={} recipient={} attachment={} attachmentName={}",
-            template.getPath(), data, subject, recipient, attachment, attachmentName);
+            "send(HtmlTemplate template, Map<String, Object> data, String subject, String recipient, List<Attachments> attachments) with template={} data={} subject={} recipient={} attachments={}",
+            template.getPath(), data, subject, recipient, attachments);
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setPort(1025);
@@ -57,15 +62,18 @@ public class EmailServiceImpl implements EmailService {
             messageBody.setContent(text, "text/html");
             body.addBodyPart(messageBody);
 
-            if (attachment != null) {
-                MimeBodyPart attachmentBody = new MimeBodyPart();
-                ByteArrayDataSource dataSource = new ByteArrayDataSource(attachment.getData(), attachment.getType().toString());
-                attachmentBody.setDataHandler(new DataHandler(dataSource));
+            if (attachments != null) {
+                for (Attachment att : attachments) {
+                    MimeBodyPart attachmentBody = new MimeBodyPart();
+                    ByteArrayDataSource dataSource = new ByteArrayDataSource(att.getFile().getData(), att.getFile().getType().toString());
+                    attachmentBody.setDataHandler(new DataHandler(dataSource));
 
-                if (attachmentName != null) {
-                    attachmentBody.setFileName(attachmentName);
+                    if (att.getName() != null) {
+                        attachmentBody.setFileName(att.getName());
+                    }
+                    body.addBodyPart(attachmentBody);
                 }
-                body.addBodyPart(attachmentBody);
+
             }
 
             message.setContent(body);
@@ -90,8 +98,63 @@ public class EmailServiceImpl implements EmailService {
             data,
             "New Ticketline invoice",
             invoice.getOrder() != null ? invoice.getOrder().getUser().getEmail() : "nomailsupplied@example.com",
-            invoice.getPdf(),
-            "invoice" + invoice.getIdentification().toString() + ".pdf"
+            new Attachment(invoice.getPdf(), "invoice-" + invoice.getIdentification().toString() + ".pdf")
         );
+    }
+
+    @Override
+    public void sendCancellationInvoiceNotification(Invoice invoice) {
+        LOGGER.trace("sendCancellationInvoiceNotification(Invoice invoice) with invoice={}", invoice);
+        HashMap<String, Object> data = new HashMap<>();
+
+        data.put("title", "New Cancellation Invoice!");
+        data.put("content", "You received a new cancellation invoice for your order at Ticketline. The cancellation invoice can be found in the attachment of this email.");
+
+        this.send(
+            HtmlTemplate.EMAIL_INVOICE_NOTIFICATION,
+            data,
+            "New Ticketline cancellation invoice",
+            invoice.getOrder() != null ? invoice.getOrder().getUser().getEmail() : "nomailsupplied@example.com",
+            new Attachment(invoice.getPdf(), "invoice-" + invoice.getIdentification().toString() + ".pdf")
+        );
+    }
+
+    @Override
+    public void sendPasswordResetNotification(PasswordReset reset) {
+        LOGGER.trace("sendPasswordResetNotification(PasswordReset reset) with reset={}", reset);
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("hash", reset.getHash());
+
+        this.send(
+            HtmlTemplate.EMAIL_PASSWORD_RESET_NOTIFICATION,
+            data,
+            "Reset Your Password",
+            reset.getUser().getEmail()
+        );
+    }
+
+    @Override
+    public void sendTicketNotification(TicketOrder order) {
+        LOGGER.trace("sendTicketNotification(TicketOrder order) with order={}", order);
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("title", "Your Tickets!");
+        data.put("content", "You purchased tickets can be found in the attachments of this email.");
+
+        List<Attachment> attachments = new ArrayList<>();
+
+        for (Ticket ticket : order.getTickets()) {
+            attachments.add(new Attachment(ticket.getPdf(), "Ticket-" + ticket.getOrderId() + "-" + ticket.getSector().getId() + "-" + ticket.getId() + ".pdf"));
+        }
+
+        this.send(
+            HtmlTemplate.EMAIL_TICKET_NOTIFICATION,
+            data,
+            "Your Tickets",
+            order.getUser().getEmail(),
+            attachments
+        );
+
     }
 }

@@ -10,7 +10,7 @@ import java.util.concurrent.Executor;
 
 @Configuration
 @EnableAsync
-public class AsyncConfig implements AsyncConfigurer {
+public class AsyncInvoiceProcessingConfig implements AsyncConfigurer {
 
     /**
      * Executor for processing invoices (e.g. pdf generation, email notifications, ...)

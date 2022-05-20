@@ -19,7 +19,9 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -52,6 +54,14 @@ public abstract class Ticket {
     @ToString.Exclude
     private TicketOrder order;
 
+    @ManyToOne
+    @JoinColumn
+    private File pdf;
+
+    @Column(updatable = false)
+    @GeneratedValue
+    private UUID hash; /* used for creating the qrcode on the pdfs */
+
     /**
      * Gets either a StandingSector or a SeatSector corresponding to the StandingTicket or SeatTicket.
      *
@@ -77,6 +87,12 @@ public abstract class Ticket {
         }
         Ticket ticket = (Ticket) o;
         return id != null && Objects.equals(id, ticket.id);
+    }
+
+    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
+    @PrePersist
+    private void assignUUID() {
+        this.setHash(UUID.randomUUID());
     }
 
     @Override

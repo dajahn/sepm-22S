@@ -2,9 +2,12 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUpdateUserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserForgotPasswordDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserResetPasswordDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.service.ResetPasswordService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -13,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,18 +28,21 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
+import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
-import java.util.Collection;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api/v1/users")
 public class UserEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
+    private final ResetPasswordService resetPasswordService;
     private final UserMapper userMapper;
 
-    public UserEndpoint(UserService userService, UserMapper userMapper) {
+    public UserEndpoint(UserService userService, ResetPasswordService resetPasswordService, UserMapper userMapper) {
         this.userService = userService;
+        this.resetPasswordService = resetPasswordService;
         this.userMapper = userMapper;
     }
 
@@ -48,10 +53,44 @@ public class UserEndpoint {
     public UserDto createUser(@RequestBody CreateUpdateUserDto userDto) {
         LOGGER.info("POST /api/v1/users body: {}", userDto);
         try {
-            return userMapper.userToUserDto(userService.registerUser(userDto, false));
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            boolean hasAdminRole = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN")); // so admins can create other admin users
+            return userMapper.userToUserDto(userService.registerUser(userDto, hasAdminRole));
         } catch (ValidationException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+        }
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping(value = "forgot-password")
+    @PermitAll
+    @Operation(summary = "Lets a user create a password reset request", security = @SecurityRequirement(name = "apiKey"))
+    public void forgotPassword(@Valid @RequestBody UserForgotPasswordDto data) {
+        LOGGER.info("POST /api/v1/users/forgot-password body: {}", data);
+        try {
+            resetPasswordService.forgotPassword(data.email);
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping(value = "reset-password")
+    @PermitAll
+    @Operation(summary = "Lets a user reset their password", security = @SecurityRequirement(name = "apiKey"))
+    public void resetPassword(@Valid @RequestBody UserResetPasswordDto data) {
+        LOGGER.info("POST /api/v1/users/reset-password body: {}", data);
+        try {
+            resetPasswordService.resetPasswordFromHash(UUID.fromString(data.hash), data.password);
+        } catch (ValidationException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
 
