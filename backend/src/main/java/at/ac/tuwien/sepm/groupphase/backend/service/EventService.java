@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchTermsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
@@ -27,4 +28,11 @@ public interface EventService {
     Event createEvent(CreateEventDto eventDto) throws IOException;
 
     List<Event> findAllEventsBy(EventSearchTermsDto eventSearchTermsDto);
+    /**
+     * Returns the Events witch match the name substring.
+     *
+     * @param eventSearchDto substring name of the event, and amount of maxRecords
+     * @return List of matching Events
+     */
+    List<Event> getByNameSubstring(EventSearchDto eventSearchDto);
 }

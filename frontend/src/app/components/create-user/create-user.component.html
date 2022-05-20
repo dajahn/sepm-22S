@@ -1,0 +1,250 @@
+<div id="wrapper">
+  <div class="page-container container">
+
+    <div class="row">
+      <div class="col-3">
+        <!--      Placeholder-->
+      </div>
+      <div class="col-6">
+        <div class="content">
+          <div class="col-12">
+            <h1 class="text-center">Create a new Admin</h1>
+          </div>
+          <form class="form mt-4"  [formGroup]="createUserForm" (ngSubmit)="registerUser()">
+            <div class="row mt-2">
+              <!--Fist name input-->
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="firstName">First Name(s)</label>
+                  <input type="text" name="firstName" formControlName="firstName" class="form-control" id="firstName"
+                         aria-describedby="firstNameHelp" placeholder="Enter the First Name(s)">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of CreateUserFormMessages.firstName">
+                      <div class="error"
+                           *ngIf="createUserForm.controls.firstName.hasError(validation.type) && (createUserForm.controls.firstName.dirty || createUserForm.controls.firstName.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <!--Last name input-->
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="lastName">Last Name</label>
+                  <input type="text" name="lastName" formControlName="lastName" class="form-control" id="lastName"
+                         aria-describedby="lastNameHelp" placeholder="Enter the Last Name">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of CreateUserFormMessages.lastName">
+                      <div class="error"
+                           *ngIf="createUserForm.controls.lastName.hasError(validation.type) && (createUserForm.controls.lastName.dirty || createUserForm.controls.lastName.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--Email input-->
+            <div class="row mt-3">
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="email">Email Address</label>
+                  <input type="email" name="email" formControlName="email" class="form-control" id="email"
+                         aria-describedby="emailHelp" placeholder="Enter the email address">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of CreateUserFormMessages.email">
+                      <div class="error"
+                           *ngIf="createUserForm.controls.email.hasError(validation.type) && (createUserForm.controls.email.dirty || createUserForm.controls.email.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <!--Address - Street input-->
+            <div class="row mt-3">
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="street">Address</label>
+                  <input type="text" name="street" formControlName="street" class="form-control" id="street"
+                         aria-describedby="streetHelp" placeholder="Enter the address and house number">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of CreateUserFormMessages.street">
+                      <div class="error"
+                           *ngIf="createUserForm.controls.street.hasError(validation.type) && (createUserForm.controls.street.dirty || createUserForm.controls.street.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--Address - ZIP and city input-->
+            <div class="row mt-3">
+              <!--Address - ZIP input-->
+              <div class="col-3">
+                <div class="form-group">
+                  <label for="zip">Zip Code</label>
+                  <input type="text" name="zip" formControlName="zip" class="form-control" id="zip"
+                         aria-describedby="zipHelp" placeholder="Zip Code">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of CreateUserFormMessages.zip">
+                      <div class="error"
+                           *ngIf="createUserForm.controls.zip.hasError(validation.type) && (createUserForm.controls.zip.dirty || createUserForm.controls.zip.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+
+              <!--Address - city input-->
+              <div class="col-9">
+                <div class="form-group">
+                  <label for="city">City</label>
+                  <input type="text" name="city" formControlName="city" class="form-control" id="city"
+                         aria-describedby="cityHelp" placeholder="Enter the city">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of CreateUserFormMessages.city">
+                      <div class="error"
+                           *ngIf="createUserForm.controls.city.hasError(validation.type) && (createUserForm.controls.city.dirty || createUserForm.controls.city.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-12">
+                <label for="country">Country</label>
+                <select class="form-control" required name="country" formControlName="country" id="country">
+                  <option value="" disabled selected>Select the Country</option>
+                  <option *ngFor="let coun of countriesCodeToNameKeys" value="{{coun}}">{{countriesCodeToName[coun]}}</option>
+                </select>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of CreateUserFormMessages.country">
+                      <div class="error"
+                           *ngIf="createUserForm.controls.country.hasError(validation.type) && (createUserForm.controls.country.dirty || createUserForm.controls.country.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--          Passwords input-->
+            <div class="row mt-2">
+              <!--First Password input-->
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" name="password" formControlName="password" class="form-control" id="password"
+                         aria-describedby="passwordHelp" placeholder="Enter the password">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of CreateUserFormMessages.password">
+                      <div class="error"
+                           *ngIf="createUserForm.controls.password.hasError(validation.type) && (createUserForm.controls.password.dirty || createUserForm.controls.password.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <!--Password confirm input-->
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="passwordConfirm">Confirm Password</label>
+                  <input type="password" name="passwordConfirm" formControlName="passwordConfirm" class="form-control"
+                         id="passwordConfirm"
+                         aria-describedby="passwordConfirmHelp" placeholder="Please confirm the password">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of CreateUserFormMessages.passwordConfirm">
+                      <div class="error"
+                           *ngIf="createUserForm.controls.passwordConfirm.hasError(validation.type) && (createUserForm.controls.passwordConfirm.dirty || createUserForm.controls.passwordConfirm.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-1">
+                <div class="col-12">
+                  <ng-container>
+                    <div class="error text-center"
+                         *ngIf="(createUserForm.controls.password.dirty || createUserForm.controls.password.touched) &&
+                       (createUserForm.controls.passwordConfirm.dirty || createUserForm.controls.passwordConfirm.touched) &&
+                       createUserForm.controls.passwordConfirm.value !== createUserForm.controls.password.value">
+                      <small class="form-text text-warning ">{{ CreateUserFormMessages.password[1].message }} </small>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+
+<!--            Users Role-->
+            <div class="row mt-2">
+              <div class="col-12">
+                <label for="country">Users Role</label>
+                <select class="form-control" required name="role" formControlName="role" id="role">
+                  <option value="" disabled selected>Select Users Role</option>
+                  <option *ngFor="let role of userRolesKeys" value="{{role}}">{{userRoles[role][0] + (userRoles[role].slice(1) |lowercase) }}</option>
+                </select>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of CreateUserFormMessages.role">
+                      <div class="error"
+                           *ngIf="createUserForm.controls.role.hasError(validation.type) && (createUserForm.controls.role.dirty || createUserForm.controls.role.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+<!--            Submit button-->
+            <div class="row mt-5">
+              <div class="col-12">
+                <div class="form-group d-grid">
+                  <input [disabled]="!this.createUserForm.valid || ((createUserForm.controls.password.dirty || createUserForm.controls.password.touched) &&
+                       (createUserForm.controls.passwordConfirm.dirty || createUserForm.controls.passwordConfirm.touched) &&
+                       createUserForm.controls.passwordConfirm.value !== createUserForm.controls.password.value)" type="submit" name="button" value="Create User" class="btn white">
+                </div>
+              </div>
+              <div class="col-lg-4"></div>
+            </div>
+          </form>
+
+
+      </div>
+    </div>
+
+
+  </div>
+
+</div>

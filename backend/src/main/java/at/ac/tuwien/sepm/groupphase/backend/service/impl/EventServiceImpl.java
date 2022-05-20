@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreatePerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchTermsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ArtistMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
@@ -19,7 +20,8 @@ import at.ac.tuwien.sepm.groupphase.backend.util.SqlStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.time.Duration;
@@ -68,6 +70,23 @@ public class EventServiceImpl implements EventService {
         File file = this.fileService.create(eventDto.getThumbnail());
         Event event = this.mapFromCreateEventToEvent(eventDto, file);
         return eventRepository.save(event);
+    }
+
+    @Override
+    public List<Event> getByNameSubstring(EventSearchDto eventSearchDto) {
+        LOGGER.trace("getByNameSubstring({})", eventSearchDto);
+
+        if (eventSearchDto.getName() == null && eventSearchDto.getMaxRecords() == null) {
+            return this.eventRepository.findAll();
+        } else if (eventSearchDto.getName() != null && eventSearchDto.getMaxRecords() == null) {
+            return this.eventRepository.findByNameContaining(eventSearchDto.getName());
+        } else if (eventSearchDto.getName() == null) {
+            Pageable topResults = PageRequest.of(0, eventSearchDto.getMaxRecords());
+            return this.eventRepository.findAll(topResults).stream().toList();
+        } else {
+            Pageable topResults = PageRequest.of(0, eventSearchDto.getMaxRecords());
+            return eventRepository.findByNameContaining(eventSearchDto.getName(), topResults);
+        }
     }
 
     @Override
