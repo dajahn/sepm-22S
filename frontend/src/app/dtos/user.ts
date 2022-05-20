@@ -1,6 +1,12 @@
-import {Address} from './address';
-import {UserStatus} from '../enums/user-status';
+import { UserStatus } from './../enums/user-status';
+import { Address } from './address';
 import {BackendUserRoles} from '../enums/backend-user-roles';
+
+export interface UserSearchDto {
+  status: UserStatus;
+  role: 'CUSTOMER' | 'ADMIN';
+  nameSearch: string;
+}
 
 export interface CreateUpdateUser {
   firstName: string;

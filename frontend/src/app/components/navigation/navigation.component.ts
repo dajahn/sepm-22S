@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../../services/auth.service';
-import {NavigationEnd, Router} from '@angular/router';
-import {filter} from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-navigation',
@@ -31,7 +31,7 @@ export class NavigationComponent implements OnInit {
     createEvent: '/events/create',
     createLocation: '/locations/create',
     addAdmin: '/users/admins/create',
-    unlockUser: '/user/unlock',
+    unlockUser: '/users',
   };
 
 

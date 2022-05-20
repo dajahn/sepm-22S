@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ToastService } from '../../services/toast-service.service';
 import { UserService } from '../../services/user.service';
@@ -44,12 +44,12 @@ export class ResetPasswordComponent implements OnInit {
 
     this.userService.resetPassword(hash, password).subscribe({
       next: () => {
-        this.toastService.show(`Successfully set new password. 🥳`, {classname: 'bg-success', delay: 5000});
+        this.toastService.show(`Successfully set new password. 🥳`, { classname: 'bg-success', delay: 5000 });
         this.router.navigate(['/login']);
       },
       error: error => {
         console.error(error);
-        this.toastService.show(`Could not set the password 😢`, {classname: 'bg-danger', delay: 5000});
+        this.toastService.show(`Could not set the password 😢`, { classname: 'bg-danger', delay: 5000 });
       },
     });
 

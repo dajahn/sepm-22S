@@ -18,8 +18,8 @@
     <div *ngFor="let ticket of cart?.tickets">
       <!-- ### Seat -->
       <app-ticket *ngIf="ticket?.sector.type === 'SEAT'"
-                  [imageSrc]="ticket.performance?.event?.thumbnail?.url"
-                  [title]="ticket.performance?.event?.name"
+                  [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
+                  [title]="ticket.performance.event?.name"
                   [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
                   [performance]="ticket.performance.location.name"
                   [price]="ticket?.sector.price"
@@ -33,8 +33,8 @@
 
       <!-- ### Standing -->
       <app-ticket *ngIf="ticket?.sector.type === 'STANDING'"
-                  [imageSrc]="ticket.performance?.event?.thumbnail?.url"
-                  [title]="ticket.performance?.event?.name"
+                  [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
+                  [title]="ticket.performance.event?.name"
                   [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
                   [performance]="ticket.performance.location.name"
                   [price]="ticket.sector.price"

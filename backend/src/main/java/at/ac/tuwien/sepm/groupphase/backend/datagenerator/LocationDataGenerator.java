@@ -77,7 +77,7 @@ public class LocationDataGenerator {
                     sectors.add(sector);
                 }
                 for (int j = 0;
-                     j < 3;
+                     j < 3 + i % 6;
                      j++) {
                     SeatSector sector = new SeatSector();
                     sector.setPrice(30d + 10d * (j % SeatType.values().length));
@@ -85,7 +85,7 @@ public class LocationDataGenerator {
                     List<Seat> seats = new ArrayList<>();
 
                     for (int k = 0;
-                         k < (2 + i) * 8;
+                         k < (2 + i % 3) * 8;
                          k++) {
                         Point point = new Point();
                         point.setX(k);
