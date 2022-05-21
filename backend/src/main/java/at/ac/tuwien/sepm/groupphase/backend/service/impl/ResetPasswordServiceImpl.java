@@ -37,6 +37,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
 
     @Override
     public void forgotPassword(String email) {
+        LOGGER.trace("forgotPassword(String email) with email={}", email);
         User user = userRepository.findUserByEmail(email);
 
         if (user == null) {
@@ -45,12 +46,12 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
 
         PasswordReset reset = new PasswordReset(user);
         resetRepository.save(reset);
-        System.out.println(reset.getHash()); // todo remove after development
         emailService.sendPasswordResetNotification(reset);
     }
 
     @Override
     public void resetPasswordFromHash(UUID hash, String password) {
+        LOGGER.trace("resetPasswordFromHash(UUID hash, String password) with hash={} password={}", hash.toString(), password);
         PasswordReset reset = resetRepository.findByHash(hash);
 
         if (reset == null) {
