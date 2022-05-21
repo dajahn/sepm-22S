@@ -21,7 +21,11 @@ public class Formatter {
     }
 
     public static String formatDateTime(LocalDateTime dateTime) {
-        return formatDate(dateTime.toLocalDate()) + " " + dateTime.getHour() + ":" + dateTime.getMinute();
+        return formatDate(dateTime.toLocalDate()) + " " + addLeadingZero(dateTime.getHour()) + ":" + addLeadingZero(dateTime.getMinute());
+    }
+
+    private static String addLeadingZero(int numb) {
+        return (numb <= 9 ? "0" : "") + numb;
     }
 
     public static String formatSeatType(SeatType type) {

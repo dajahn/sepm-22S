@@ -1,25 +1,22 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
-import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
-import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
+import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.InvoiceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class InvoiceServiceTest implements TestData {
+public class InvoiceServiceTest {
 
     @Autowired
     private InvoiceService invoiceService;
@@ -30,39 +27,58 @@ public class InvoiceServiceTest implements TestData {
     @Autowired
     private InvoiceRepository invoiceRepository;
 
-    @Autowired
-    private FileRepository fileRepository;
+    @Test
+    public void givenInvoiceHasRequiredValues_whenCreateInvoice_thenInvoiceIsSaved() {
+        // GIVEN
+        TicketOrder order = orderRepository.findById(1L).orElseThrow();
+        Invoice invoice = new Invoice(order, InvoiceType.NORMAL);
+
+        // WHEN
+        invoiceService.create(invoice);
+
+        // THEN
+        Invoice stored = invoiceRepository.findById(invoice.getId()).orElseThrow();
+
+        assertEquals(
+            stored,
+            invoice
+        );
+    }
+
 
     @Test
-    public void givenOrderExists_whenNewInvoiceIsCreated_thenNewInvoiceIsStoredInTheDatabase() throws InterruptedException {
-        Optional<TicketOrder> order = orderRepository.findById(1L);
-        if (order.isEmpty()) {
-            throw new RuntimeException("order does not exist");
-        }
-        Invoice invoice = invoiceService.create(order.get());
-        System.out.println(invoice);
+    public void givenInvoiceHasRequiredValues_whenCreateInvoice_thenInvoiceGetsIdentification() {
+        // GIVEN
+        TicketOrder order = orderRepository.findById(1L).orElseThrow();
+        Invoice invoice = new Invoice(order, InvoiceType.NORMAL);
 
-        Thread.sleep(10000);
+        // WHEN
+        invoiceService.create(invoice);
 
-        System.out.println(invoiceRepository.findAllByOrderByIdDesc());
-        System.out.println(fileRepository.findById(invoice.getPdf().getId()));
-        System.out.println(invoice.getPdf());
+        // THEN
+        assertNotNull(
+            invoice.getIdentification()
+        );
     }
 
     @Test
-    public void whenInvoiceIsCanceled_thenCancellationInvoiceIsCreated() throws InterruptedException {
-        Optional<TicketOrder> order = orderRepository.findById(1L);
-        if (order.isEmpty()) {
-            throw new RuntimeException("order does not exist");
-        }
-        Invoice invoice = invoiceService.create(order.get());
-        System.out.println(invoice);
+    public void givenOrderExists_whenCreateInvoiceFromOrder_thenInvoiceIsCreated() {
+        // GIVEN
+        TicketOrder order = orderRepository.findById(1L).orElseThrow();
 
-        Invoice cancellation = invoiceService.cancel(invoice);
+        // WHEN
+        Invoice result = invoiceService.create(order);
 
-        Thread.sleep(10000); // wait for pdfs to be generated
+        // THEN
+        // invoice not null
+        assertNotNull(
+            result
+        );
 
-        System.out.println(invoice);
-        System.out.println(cancellation);
+        // order equals input
+        assertEquals(
+            result.getOrder(),
+            order
+        );
     }
 }

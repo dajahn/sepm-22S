@@ -56,7 +56,7 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
         fileEntity.setType(MediaType.APPLICATION_PDF);
         fileEntity.setData(pdfBytes);
 
-        fileRepository.save(fileEntity); // todo remove after merging file management / replace with proper implementation
+        fileRepository.save(fileEntity);
 
         return fileEntity;
     }
