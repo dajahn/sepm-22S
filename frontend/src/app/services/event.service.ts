@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CreateEvent, Event } from '../dtos/event';
 import { EventSearchParams } from "../dtos/eventSearchParams";
+import {TopTenEvent} from '../dtos/top-ten-event';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,18 @@ export class EventService {
 
     return this.httpClient.get<Event[]>(this.eventBaseUri, { params: p });
   }
+  /**
+   * Gets the top ten sold events by category
+   *
+   * @param eventCategory in which the events should be
+   */
+  getTopTenByCategory(eventCategory: EventCategory): Observable<TopTenEvent[]> {
+    console.log('get top ten events');
+    let terms = new HttpParams();
+    terms = terms.set('category', eventCategory);
+    return this.httpClient.get<TopTenEvent[]>(this.eventBaseUri + '/top-ten', {params: terms});
+  }
+
 
   /**
    * Finds all events with given parameters

@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchTermsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventDto;
+import at.ac.tuwien.sepm.groupphase.backend.enums.EventCategory;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,4 +38,13 @@ public interface EventService {
      * @return List of matching Events
      */
     List<Event> getByNameSubstring(EventSearchDto eventSearchDto);
+
+    /**
+     * Finds the top ten events this month with the count of how many tickets were sold.
+     *
+     * @param category in which the top ten events should be
+     * @return TopTenEventDto with event values and ticket count.
+     */
+    List<TopTenEventDto> topTenEventsByCategory(EventCategory category);
+
 }

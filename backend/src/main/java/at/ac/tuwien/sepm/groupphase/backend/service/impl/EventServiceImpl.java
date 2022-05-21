@@ -3,14 +3,19 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreatePerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchTermsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ArtistMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Location;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.enums.EventCategory;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepm.groupphase.backend.service.LocationService;
 import at.ac.tuwien.sepm.groupphase.backend.util.EventValidator;
@@ -24,12 +29,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
+import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -40,15 +49,17 @@ public class EventServiceImpl implements EventService {
     private final ArtistMapper artistMapper;
     private final FileService fileService;
     private final EventValidator eventValidator;
+    private final EventMapper eventMapper;
 
     public EventServiceImpl(EventRepository eventRepository,
                             LocationService locationService, ArtistMapper artistMapper,
-                            FileService fileService, EventValidator eventValidator) {
+                            FileService fileService, EventValidator eventValidator, EventMapper eventMapper) {
         this.eventRepository = eventRepository;
         this.locationService = locationService;
         this.artistMapper = artistMapper;
         this.fileService = fileService;
         this.eventValidator = eventValidator;
+        this.eventMapper = eventMapper;
     }
 
     @Override
@@ -137,4 +148,25 @@ public class EventServiceImpl implements EventService {
         evt.setPerformances(performances);
         return evt;
     }
+
+    @Override
+    public List<TopTenEventDto> topTenEventsByCategory(EventCategory category) {
+        LOGGER.trace("FindTopTenEvents this month in category: {}", category);
+        LocalDateTime from = LocalDateTime.now().with(firstDayOfMonth());
+        LocalDateTime to = LocalDateTime.now().with(lastDayOfMonth());
+
+        List<Event> events = eventRepository.findTopTenByCategory(from, to, category.ordinal());
+        List<Integer> ticketCount = eventRepository.topTenEventsTicketCount(from, to, category.ordinal());
+        List<TopTenEventDto> topTenEventDtos = new ArrayList<>();
+        if (!events.isEmpty()) {
+            for (int i = 0; i < events.size(); i++) {
+                topTenEventDtos.add(eventMapper.eventToTopTenEventDto(events.get(i), ticketCount.get(i)));
+            }
+        } else {
+            throw new NotFoundException("Could not find events in this category");
+        }
+        return topTenEventDtos;
+    }
+
 }
+

@@ -3,12 +3,14 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedPerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventCategoryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchTermsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceSearchTermsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
@@ -101,6 +103,14 @@ public class EventEndpoint {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/top-ten")
+    @Operation(summary = "Gets top ten events by category", security = @SecurityRequirement(name = "apiKey"))
+    public List<TopTenEventDto> topTenEventsByCategory(EventCategoryDto eventCategoryDto) {
+        LOGGER.info("GET /api/v1/events/top-ten with {}", eventCategoryDto);
+        return eventService.topTenEventsByCategory(eventCategoryDto.getCategory());
     }
 
     @Secured("ROLE_USER")

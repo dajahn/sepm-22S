@@ -24,7 +24,7 @@ export class NavigationComponent implements OnInit {
     editProfile: '/account/edit',
     search: '/search',
     news: '/news',
-    topTen: '/topten',
+    topTen: '/events/topten',
     cart: '/cart',
     reservations: '/reservations',
     createNews: '/news/create',
@@ -82,6 +82,7 @@ export class NavigationComponent implements OnInit {
    * Navigates to the home page
    */
   clickHome() {
+    document.body.style.overflow = 'auto';
     this.router.navigate([this.routerLinks.home]).then(r => this.showMobileMenu = false);
   }
 
@@ -89,6 +90,7 @@ export class NavigationComponent implements OnInit {
    * Navigates to the news page
    */
   clickNews() {
+    document.body.style.overflow = 'auto';
     this.router.navigate([this.routerLinks.news]).then(r => this.showMobileMenu = false);
   }
 
@@ -96,6 +98,7 @@ export class NavigationComponent implements OnInit {
    * Navigates to the top 10 page
    */
   clickTopTen() {
+    document.body.style.overflow = 'auto';
     this.router.navigate([this.routerLinks.topTen]).then(r => this.showMobileMenu = false);
   }
 
@@ -103,6 +106,7 @@ export class NavigationComponent implements OnInit {
    * Navigates to the search page
    */
   clickSearch() {
+    document.body.style.overflow = 'auto';
     this.router.navigate([this.routerLinks.search]).then(r => this.showMobileMenu = false);
   }
 
@@ -110,6 +114,7 @@ export class NavigationComponent implements OnInit {
    * Navigates to the cart page
    */
   clickCart() {
+    document.body.style.overflow = 'auto';
     this.router.navigate([this.routerLinks.cart]).then(r => this.showMobileMenu = false);
   }
 
@@ -117,6 +122,7 @@ export class NavigationComponent implements OnInit {
    * Navigates to the reservation page
    */
   clickReservations() {
+    document.body.style.overflow = 'auto';
     this.router.navigate([this.routerLinks.reservations]).then(r => this.showMobileMenu = false);
   }
 
@@ -131,6 +137,7 @@ export class NavigationComponent implements OnInit {
    * Navigates to the create news page
    */
   clickCreateNews() {
+    document.body.style.overflow = 'auto';
     this.router.navigate([this.routerLinks.createNews]).then(r => this.showMobileMenu = false);
   }
 
@@ -138,6 +145,7 @@ export class NavigationComponent implements OnInit {
    * Navigates to the create event page
    */
   clickCreateEvent() {
+    document.body.style.overflow = 'auto';
     this.router.navigate([this.routerLinks.createEvent]).then(r => this.showMobileMenu = false);
   }
 
@@ -145,6 +153,7 @@ export class NavigationComponent implements OnInit {
    * Navigates to the create location page
    */
   clickCreateLocation() {
+    document.body.style.overflow = 'auto';
     this.router.navigate([this.routerLinks.createLocation]).then(r => this.showMobileMenu = false);
   }
 
@@ -152,6 +161,7 @@ export class NavigationComponent implements OnInit {
    * Navigates to the add admin page
    */
   clickAddAdmin() {
+    document.body.style.overflow = 'auto';
     this.router.navigate([this.routerLinks.addAdmin]).then(r => this.showMobileMenu = false);
   }
 
@@ -159,6 +169,23 @@ export class NavigationComponent implements OnInit {
    * Navigates to the unlock user page
    */
   clickUnlockUser() {
+    document.body.style.overflow = 'auto';
     this.router.navigate([this.routerLinks.unlockUser]).then(r => this.showMobileMenu = false);
+  }
+
+  /**
+   * Navigates to sign up page
+   */
+  clickSignUp() {
+    document.body.style.overflow = 'auto';
+    this.router.navigate([this.routerLinks.signUp]).then(r => this.showMobileMenu = false);
+  }
+
+  /**
+   * Navigates to log in page
+   */
+  clickLogIn() {
+    document.body.style.overflow = 'auto';
+    this.router.navigate([this.routerLinks.logIn]).then(r => this.showMobileMenu = false);
   }
 }

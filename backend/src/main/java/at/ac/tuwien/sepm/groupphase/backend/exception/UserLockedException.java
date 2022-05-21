@@ -4,7 +4,12 @@ package at.ac.tuwien.sepm.groupphase.backend.exception;
 /**
  * This is the exception wich is thrown when a User is locked but tries to login.
  */
-public class UserLockedException  extends RuntimeException {
+public class UserLockedException extends RuntimeException {
+    
+    public UserLockedException() {
+        super();
+    }
+
     public UserLockedException(String message) {
         super(message);
     }
