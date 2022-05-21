@@ -11,10 +11,15 @@ An Apache Tomcat is to be used as the server, which will provide the Ticketline 
 ## Getting started
 
 ### Frontend
-To run the frontend, enter the command `ng serve`.
+To run the frontend, navigate to the `frontend` directory and run `ng serve`.
 
 ### Backend
-To run the backend, enter the command `mvn spring-boot:run`.
+To run the backend, navigate to the `backend` directory and run `mvn spring-boot:run`.
+
+#### Data Generation
+In order to generate a set of test data run the command `mvn spring-boot:run -Dspring-boot.run.profiles=generateData`.
+After terminating the run, the sql file used for setting up the automated test environment (`/backend/src/main/resources/sql/test-data.sql`) will be updated.
+Since we use Faker the data and therefore the sql file will change on every run, so make sure to not commit this change if nothing on the data structure changed.
 
 ### MailServer
 For testing purposes we use the smtp mock server 'mailhog'. It emulates a smtp server without sending mails. Instead, the mails can be viewed in a web dashboard which can be accessed under [`http://localhost:8025`](http://localhost:8025).
