@@ -1,318 +1,325 @@
-<div *ngIf = "searchedArtists === false && searchedEvents === false && searchedLocations === false" class="search-bar">
+<div class="container">
 
-  <h4> Performances
-    <button style="margin-left: 30px" (click)="findPerformances(); searchedPerformances = true"> <i class="bi bi-search"></i> </button>
-    <button (click)="searchedPerformances = false"> reset </button>
-  </h4>
-
-  <input
-    id="eventName"
-    ngModel name="eventName"
-    #eventName="ngModel"
-    type="text"
-    class="search-bar"
-    placeholder="event name"
-    [(ngModel)]="performanceSearchParams.eventName">
+  <div class="row" *ngIf="searchedArtists === false && searchedEvents === false && searchedLocations === false">
+    <div class="col">
+      Performances
+      <button (click)="findPerformances(); searchedPerformances = true"><i
+        class="bi bi-search"></i></button>
+      <button (click)="searchedPerformances = false"> reset</button>
+    </div>
+  </div>
 
 
-  <input
-    style="margin-left: 30px"
-    id="locationName"
-    ngModel name="locationName"
-    #locationName="ngModel"
-    type="text"
-    class="search-bar"
-    placeholder="location name"
-    [(ngModel)]="performanceSearchParams.locationName">
+  <div class="row" *ngIf="searchedArtists === false && searchedEvents === false && searchedLocations === false">
 
-  <input
-    style="margin-left: 30px"
-    id="fromDate"
-    ngModel name="fromDate"
-    #fromDate="ngModel"
-    type="date"
-    class="search-bar"
-    placeholder="from Date"
-    [(ngModel)]="performanceSearchParams.fromDate">
+    <input
+      class="col"
+      id="eventName"
+      ngModel name="eventName"
+      #eventName="ngModel"
+      type="text"
+      placeholder="event name"
+      [(ngModel)]="performanceSearchParams.eventName">
 
-  <input
-    style="margin-left: 30px"
-    id="toDate"
-    ngModel name="toDate"
-    #toDate="ngModel"
-    type="date"
-    class="search-bar"
-    placeholder="to Date"
-    [(ngModel)]="performanceSearchParams.toDate">
 
-  <input
-    style="margin-left: 30px; width: 130px"
-    id="price"
-    ngModel name="price"
-    #price="ngModel"
-    type="number"
-    class="search-bar"
-    placeholder="price"
-    [(ngModel)]="performanceSearchParams.price">
+    <input
+      class="col"
+      id="locationName"
+      ngModel name="locationName"
+      #locationName="ngModel"
+      type="text"
+      placeholder="location name"
+      [(ngModel)]="performanceSearchParams.locationName">
 
+    <input
+      class="col"
+      id="fromDate"
+      ngModel name="fromDate"
+      #fromDate="ngModel"
+      type="date"
+      placeholder="from Date"
+      [(ngModel)]="performanceSearchParams.fromDate">
+
+    <input
+      class="col"
+      id="toDate"
+      ngModel name="toDate"
+      #toDate="ngModel"
+      type="date"
+      placeholder="to Date"
+      [(ngModel)]="performanceSearchParams.toDate">
+
+    <input
+      class="col"
+      id="price"
+      ngModel name="price"
+      #price="ngModel"
+      type="number"
+      placeholder="price"
+      [(ngModel)]="performanceSearchParams.price">
+
+  </div>
+
+
+  <div class="col" *ngIf="searchedPerformances">
+    <table class="table table-hover">
+      <thead>
+      <th>Event name</th>
+      <th>Performance id</th>
+      <th>Performance time</th>
+      <th>Performance location</th>
+      </thead>
+
+      <tbody>
+      <br>
+      <tr *ngFor="let performance of performances">
+        <td>
+          {{performance.event.name}}
+        </td>
+        <td>
+          {{performance.id}}
+        </td>
+        <td>
+          {{performance.dateTime}}
+        </td>
+        <td>
+          {{performance.location.name}}
+        </td>
+      </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+  <div class="row" *ngIf="searchedPerformances === false && searchedEvents === false && searchedLocations === false">
+    <div class="col">
+      <h4> Artists
+        <button (click)="findArtists(); searchedArtists = true"><i class="bi bi-search"></i></button>
+        <button (click)="searchedArtists = false"> reset</button>
+      </h4>
+    </div>
+
+    <input
+      class="col"
+      id="artistName"
+      ngModel name="artistName"
+      #artistName="ngModel"
+      type="text"
+      placeholder="Artist/Band name"
+      [(ngModel)]="artistSearchParams.name">
+  </div>
+
+
+  <div class="mt-3" *ngIf="searchedArtists">
+    <table class="table table-hover">
+      <thead>
+      <th>Artist/Band name</th>
+      <th>Artist id</th>
+      </thead>
+
+      <tbody>
+      <br>
+      <tr *ngFor="let artist of artists">
+        <td>
+          {{artist.name}}
+        </td>
+        <td>
+          {{artist.id}}
+        </td>
+      </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+
+  <div *ngIf="searchedPerformances === false && searchedArtists === false && searchedLocations === false"
+       class="search-bar">
+
+    <h4> Events
+      <button style="margin-left: 30px" (click)="findEvents(); searchedEvents = true"><i class="bi bi-search"></i>
+      </button>
+      <button (click)="searchedEvents = false"> reset</button>
+    </h4>
+
+    <input
+      id="name"
+      ngModel name="name"
+      #name="ngModel"
+      type="text"
+      class="search-bar"
+      placeholder="Event name"
+      [(ngModel)]="eventSearchParams.name">
+
+    <input
+      style="margin-left: 30px"
+      id="description"
+      ngModel name="description"
+      #description="ngModel"
+      type="text"
+      class="search-bar"
+      placeholder="Description"
+      [(ngModel)]="eventSearchParams.description">
+
+    <input
+      style="margin-left: 30px"
+      list="categories"
+      id="category"
+      ngModel name="category"
+      #category="ngModel"
+      type="select"
+      class="search-bar"
+      placeholder="Event category"
+      [(ngModel)]="eventSearchParams.category">
+    <datalist id="categories">
+      <option *ngFor="let c of categoriesValues" [value]="c"> {{c}} </option>
+    </datalist>
+
+    <input
+      style="margin-left: 30px; width: 130px"
+      id="duration"
+      ngModel name="duration"
+      #duration="ngModel"
+      type="time"
+      class="search-bar"
+      placeholder="duration"
+      [(ngModel)]="eventSearchParams.duration">
+
+
+  </div>
+
+
+  <div class="mt-3" *ngIf="searchedEvents">
+    <table class="table table-hover">
+      <thead>
+      <th>Event name</th>
+      <th>Category</th>
+      <th>Description</th>
+      <th>Duration</th>
+      </thead>
+
+      <tbody>
+      <br>
+      <tr *ngFor="let event of events">
+        <td>
+          {{event.name}}
+        </td>
+        <td>
+          {{event.category}}
+        </td>
+        <td>
+          {{event.description}}
+        </td>
+        <td>
+          {{event.duration}}
+        </td>
+      </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+  <div *ngIf="searchedPerformances === false && searchedEvents === false && searchedArtists === false"
+       class="search-bar">
+
+    <h4> Locations
+      <button style="margin-left: 30px" (click)="findLocations(); searchedLocations = true"><i class="bi bi-search"></i>
+      </button>
+      <button (click)="searchedLocations = false"> reset</button>
+    </h4>
+
+    <input
+      id="locationsName"
+      ngModel name="locationsName"
+      #locationsName="ngModel"
+      type="text"
+      class="search-bar"
+      placeholder="name of Location"
+      [(ngModel)]="locationSearchParams.name">
+
+
+    <input
+      style="margin-left: 30px"
+      id="street"
+      ngModel name="street"
+      #street="ngModel"
+      type="text"
+      class="search-bar"
+      placeholder="street name"
+      [(ngModel)]="locationSearchParams.street">
+
+    <input
+      style="margin-left: 30px"
+      id="city"
+      ngModel name="city"
+      #city="ngModel"
+      type="text"
+      class="search-bar"
+      placeholder="city"
+      [(ngModel)]="locationSearchParams.city">
+
+    <input
+      style="margin-left: 30px; width: 130px"
+      id="zipCode"
+      ngModel name="zipCode"
+      #zipCode="ngModel"
+      type="number"
+      class="search-bar"
+      placeholder="zip code"
+      [(ngModel)]="locationSearchParams.zipCode">
+
+    <input
+      style="margin-left: 30px; width: 130px"
+      id="country"
+      list="countries"
+      ngModel name="country"
+      #country="ngModel"
+      type="country"
+      class="search-bar"
+      placeholder="country"
+      [(ngModel)]="locationSearchParams.country">
+    <datalist id="countries">
+      <option *ngFor="let c of countriesValues" [value]="c"> {{c}} </option>
+    </datalist>
+
+  </div>
+
+
+  <div class="mt-3" *ngIf="searchedLocations">
+    <table class="table table-hover">
+      <thead>
+      <th>Name</th>
+      <th>Id</th>
+      <th>Street</th>
+      <th>City</th>
+      <th>Zip Code</th>
+      <th>Country</th>
+      </thead>
+
+      <tbody>
+      <br>
+      <tr *ngFor="let location of locations">
+        <td>
+          {{location.name}}
+        </td>
+        <td>
+          {{location.id}}
+        </td>
+        <td>
+          {{location.address.street}}
+        </td>
+        <td>
+          {{location.address.city}}
+        </td>
+        <td>
+          {{location.address.zipCode}}
+        </td>
+        <td>
+          {{location.address.country}}
+        </td>
+      </tr>
+      </tbody>
+
+    </table>
+  </div>
 </div>
-
-
-<div class="mt-3" *ngIf = "searchedPerformances">
-  <table class="table table-hover">
-    <thead>
-    <th>Event name</th>
-    <th>Performance id</th>
-    <th>Performance time</th>
-    <th>Performance location</th>
-    </thead>
-
-    <tbody>
-    <br>
-    <tr *ngFor="let performance of performances">
-      <td>
-        {{performance.event.name}}
-      </td>
-      <td>
-        {{performance.id}}
-      </td>
-      <td>
-        {{performance.dateTime}}
-      </td>
-      <td>
-        {{performance.location.name}}
-      </td>
-    </tr>
-    </tbody>
-
-  </table>
-</div>
-
-<div *ngIf = "searchedPerformances === false && searchedEvents === false && searchedLocations === false" class="search-bar">
-
-  <h4> Artists
-    <button style="margin-left: 30px" (click)="findArtists(); searchedArtists = true"><i class="bi bi-search"></i></button>
-    <button (click)="searchedArtists = false"> reset</button>
-  </h4>
-
-  <input
-    id="artistName"
-    ngModel name="artistName"
-    #artistName="ngModel"
-    type="text"
-    class="search-bar"
-    placeholder="Artist/Band name"
-    [(ngModel)]="artistSearchParams.name">
-</div>
-
-
-<div class="mt-3" *ngIf = "searchedArtists">
-  <table class="table table-hover">
-    <thead>
-    <th>Artist/Band name</th>
-    <th>Artist id</th>
-    </thead>
-
-    <tbody>
-    <br>
-    <tr *ngFor="let artist of artists">
-      <td>
-        {{artist.name}}
-      </td>
-      <td>
-        {{artist.id}}
-      </td>
-    </tr>
-    </tbody>
-
-  </table>
-</div>
-
-
-
-<div *ngIf = "searchedPerformances === false && searchedArtists === false && searchedLocations === false" class="search-bar">
-
-  <h4> Events
-    <button style="margin-left: 30px" (click)="findEvents(); searchedEvents = true"> <i class="bi bi-search"></i> </button>
-    <button (click)="searchedEvents = false"> reset</button>
-  </h4>
-
-  <input
-    id="name"
-    ngModel name="name"
-    #name="ngModel"
-    type="text"
-    class="search-bar"
-    placeholder="Event name"
-    [(ngModel)]="eventSearchParams.name">
-
-  <input
-    style="margin-left: 30px"
-    id="description"
-    ngModel name="description"
-    #description ="ngModel"
-    type="text"
-    class="search-bar"
-    placeholder="Description"
-    [(ngModel)]="eventSearchParams.description">
-
-  <input
-    style="margin-left: 30px"
-    list = "categories"
-    id="category"
-    ngModel name="category"
-    #category="ngModel"
-    type="select"
-    class="search-bar"
-    placeholder="Event category"
-    [(ngModel)]="eventSearchParams.category">
-  <datalist id = "categories">
-    <option *ngFor="let c of categoriesValues" [value] = "c"> {{c}} </option>
-  </datalist>
-
-  <input
-    style="margin-left: 30px; width: 130px"
-    id="duration"
-    ngModel name="duration"
-    #duration="ngModel"
-    type="time"
-    class="search-bar"
-    placeholder="duration"
-    [(ngModel)]="eventSearchParams.duration">
-
-
-</div>
-
-
-<div class="mt-3" *ngIf = "searchedEvents">
-  <table class="table table-hover">
-    <thead>
-    <th>Event name</th>
-    <th>Category</th>
-    <th>Description</th>
-    <th>Duration</th>
-    </thead>
-
-    <tbody>
-    <br>
-    <tr *ngFor="let event of events">
-      <td>
-        {{event.name}}
-      </td>
-      <td>
-        {{event.category}}
-      </td>
-      <td>
-        {{event.description}}
-      </td>
-      <td>
-        {{event.duration}}
-      </td>
-    </tr>
-    </tbody>
-
-  </table>
-</div>
-
-<div *ngIf = "searchedPerformances === false && searchedEvents === false && searchedArtists === false" class="search-bar">
-
-  <h4> Locations
-    <button style="margin-left: 30px" (click)="findLocations(); searchedLocations = true"> <i class="bi bi-search"></i> </button>
-    <button (click)="searchedLocations = false"> reset </button>
-  </h4>
-
-  <input
-    id="locationsName"
-    ngModel name="locationsName"
-    #locationsName="ngModel"
-    type="text"
-    class="search-bar"
-    placeholder="name of Location"
-    [(ngModel)]="locationSearchParams.name">
-
-
-  <input
-    style="margin-left: 30px"
-    id="street"
-    ngModel name="street"
-    #street="ngModel"
-    type="text"
-    class="search-bar"
-    placeholder="street name"
-    [(ngModel)]="locationSearchParams.street">
-
-  <input
-    style="margin-left: 30px"
-    id="city"
-    ngModel name="city"
-    #city="ngModel"
-    type="text"
-    class="search-bar"
-    placeholder="city"
-    [(ngModel)]="locationSearchParams.city">
-
-  <input
-    style="margin-left: 30px; width: 130px"
-    id="zipCode"
-    ngModel name="zipCode"
-    #zipCode="ngModel"
-    type="number"
-    class="search-bar"
-    placeholder="zip code"
-    [(ngModel)]="locationSearchParams.zipCode">
-
-  <input
-    style="margin-left: 30px; width: 130px"
-    id="country"
-    list = "countries"
-    ngModel name="country"
-    #country="ngModel"
-    type="country"
-    class="search-bar"
-    placeholder="country"
-    [(ngModel)]="locationSearchParams.country">
-  <datalist id = "countries">
-    <option *ngFor="let c of countriesValues" [value] = "c"> {{c}} </option>
-  </datalist>
-
-</div>
-
-
-<div class="mt-3" *ngIf = "searchedLocations">
-  <table class="table table-hover">
-    <thead>
-    <th>Name</th>
-    <th>Id</th>
-    <th>Street</th>
-    <th>City</th>
-    <th>Zip Code</th>
-    <th>Country</th>
-    </thead>
-
-    <tbody>
-    <br>
-    <tr *ngFor="let location of locations">
-      <td>
-        {{location.name}}
-      </td>
-      <td>
-        {{location.id}}
-      </td>
-      <td>
-        {{location.address.street}}
-      </td>
-      <td>
-        {{location.address.city}}
-      </td>
-      <td>
-        {{location.address.zipCode}}
-      </td>
-      <td>
-        {{location.address.country}}
-      </td>
-    </tr>
-    </tbody>
-
-  </table>
-</div>
-
