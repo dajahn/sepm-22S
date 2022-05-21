@@ -49,6 +49,7 @@ public class CartEndpoint {
         this.ticketMapper = ticketMapper;
     }
 
+    @Transactional
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping

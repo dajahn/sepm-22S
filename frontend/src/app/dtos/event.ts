@@ -1,6 +1,6 @@
 import {Artist} from './artist';
 import {FileDto} from './file';
-import {CreatePerformance} from './performance';
+import {CreatePerformance, Performance} from './performance';
 
 export interface Event {
   id: number;
@@ -10,6 +10,7 @@ export interface Event {
   artists: Artist[];
   category: EventCategory;
   thumbnail: FileDto;
+  performances: Performance[];
 }
 
 export enum EventCategory {

@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {CartService} from '../../services/cart.service';
 import {Cart} from '../../dtos/cart';
 import {Ticket} from '../../dtos/ticket';
 import {SeatTicket} from '../../dtos/seat-ticket';
 import {CheckoutService} from '../../services/checkout.service';
 import {ToastService} from '../../services/toast-service.service';
+import {Globals} from '../../global/globals';
 
 @Component({
   selector: 'app-cart',
@@ -16,8 +17,12 @@ export class CartComponent implements OnInit {
   cart: Cart;
   purchasedTickets: Ticket[];
 
-  constructor(private cartService: CartService, private checkoutService: CheckoutService, private toastService: ToastService) {
-  }
+  constructor(
+    private cartService: CartService,
+    private checkoutService: CheckoutService,
+    private toastService: ToastService,
+    public globals: Globals
+  ) {}
 
   ngOnInit(): void {
     this.loadCart();
@@ -69,7 +74,7 @@ export class CartComponent implements OnInit {
   /**
    * Calculates the total price of all tickets combined
    */
-  calculateTotalSum(): number {
+  calculateTotalSum(): number{
     return this.cart?.tickets.reduce((accumulator, current) => accumulator + current?.sector.price, 0);
   }
 

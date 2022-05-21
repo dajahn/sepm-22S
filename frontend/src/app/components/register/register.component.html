@@ -162,7 +162,7 @@
                   <label for="country">Country</label>
                   <select class="form-control" required name="country" formControlName="country" id="country">
                     <option value="" disabled selected>Select Country</option>
-                    <option *ngFor="let coun of countriesKey" value="{{coun}}">{{countries[coun]}}</option>
+                    <option *ngFor="let coun of countriesCodeToNameKeys" value="{{coun}}">{{countriesCodeToName[coun]}}</option>
                   </select>
                 <div class="row mt-1">
                   <div class="col">

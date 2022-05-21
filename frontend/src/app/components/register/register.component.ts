@@ -2,12 +2,13 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
-import {CreateUser} from '../../dtos/user';
+import {CreateUpdateUser} from '../../dtos/user';
 import {UserStatus} from '../../enums/user-status';
 import {UserService} from '../../services/user.service';
-import {Countries} from '../../enums/countries';
 import {AuthRequest} from '../../dtos/auth-request';
 import {ToastService} from '../../services/toast-service.service';
+import {CountriesCodeToName} from '../../enums/countriesCodeToName';
+import {BackendUserRoles} from '../../enums/backend-user-roles';
 
 @Component({
   selector: 'app-register',
@@ -15,8 +16,9 @@ import {ToastService} from '../../services/toast-service.service';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  countries = Countries;
-  countriesKey = [];
+
+  countriesCodeToName = CountriesCodeToName;
+  countriesCodeToNameKeys = [];
 
   registerForm: FormGroup;
   registerFormMessages = {
@@ -69,19 +71,19 @@ export class RegisterComponent implements OnInit {
       country: ['', [Validators.required]],
       passwordConfirm: ['', [Validators.required, Validators.minLength(8)]]
     });
-    this.countriesKey = Object.keys(this.countries);
+    this.countriesCodeToNameKeys = Object.keys(this.countriesCodeToName);
   }
 
   ngOnInit(): void {
   }
 
   registerUser() {
-    const createU: CreateUser = {
+    const createU: CreateUpdateUser = {
       email: this.registerForm.controls.email.value,
       password: this.registerForm.controls.password.value,
       firstName: this.registerForm.controls.firstName.value,
       lastName: this.registerForm.controls.lastName.value,
-      role: 'CUSTOMER',
+      role: BackendUserRoles.CUSTOMER,
       address: {
         city: this.registerForm.controls.city.value,
         street: this.registerForm.controls.street.value,

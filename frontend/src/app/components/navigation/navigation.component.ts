@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../../services/auth.service';
-import {NavigationEnd, Router} from '@angular/router';
-import {filter} from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-navigation',
@@ -13,19 +13,25 @@ export class NavigationComponent implements OnInit {
   currentRoute: string;
   // toggle extended mobile menu to hide/show
   showMobileMenu = false;
+  // toggle admin menu to hide/show
+  showAdminMenu = false;
 
   // TODO Add router links to different pages
   readonly routerLinks = {
     home: '/',
     logIn: '/login',
     signUp: '/register',
-    editProfile: '/edit',
+    editProfile: '/account/edit',
     search: '/search',
     news: '/news',
     topTen: '/topten',
     cart: '/cart',
     reservations: '/reservations',
-    adminTools: '/admintools'
+    createNews: '/news/create',
+    createEvent: '/events/create',
+    createLocation: '/locations/create',
+    addAdmin: '/users/admins/create',
+    unlockUser: '/users',
   };
 
 
@@ -41,7 +47,9 @@ export class NavigationComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    document.body.style.overflow = 'auto';
+  }
 
 
 
@@ -66,6 +74,8 @@ export class NavigationComponent implements OnInit {
   signOut() {
     this.authService.logoutUser();
     this.showMobileMenu = false;
+    this.showAdminMenu = false;
+    document.body.style.overflow = 'auto';
   }
 
   /**
@@ -114,6 +124,41 @@ export class NavigationComponent implements OnInit {
    * Navigates to the admin page
    */
   clickAdmin() {
-    this.router.navigate([this.routerLinks.adminTools]).then(r => this.showMobileMenu = false);
+    this.showAdminMenu = !this.showAdminMenu;
+  }
+
+  /**
+   * Navigates to the create news page
+   */
+  clickCreateNews() {
+    this.router.navigate([this.routerLinks.createNews]).then(r => this.showMobileMenu = false);
+  }
+
+  /**
+   * Navigates to the create event page
+   */
+  clickCreateEvent() {
+    this.router.navigate([this.routerLinks.createEvent]).then(r => this.showMobileMenu = false);
+  }
+
+  /**
+   * Navigates to the create location page
+   */
+  clickCreateLocation() {
+    this.router.navigate([this.routerLinks.createLocation]).then(r => this.showMobileMenu = false);
+  }
+
+  /**
+   * Navigates to the add admin page
+   */
+  clickAddAdmin() {
+    this.router.navigate([this.routerLinks.addAdmin]).then(r => this.showMobileMenu = false);
+  }
+
+  /**
+   * Navigates to the unlock user page
+   */
+  clickUnlockUser() {
+    this.router.navigate([this.routerLinks.unlockUser]).then(r => this.showMobileMenu = false);
   }
 }

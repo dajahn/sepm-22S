@@ -11,7 +11,7 @@ import org.mapstruct.Mapper;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mapper(uses = SectorMapper.class)
+@Mapper(uses = {SectorMapper.class, PerformanceMapper.class})
 public interface TicketMapper {
 
     /**
@@ -33,7 +33,9 @@ public interface TicketMapper {
         return ticketDtos;
     }
 
+    List<TicketDto> ticketsToTicketDtos(List<Ticket> tickets);
+
     StandingTicketDto standingTicketToStandingTicketDto(StandingTicket ticket);
 
-    SeatTicketDto seatTicketToStandingTicketDto(SeatTicket ticket);
+    SeatTicketDto seatTicketToSeatTicketDto(SeatTicket ticket);
 }
