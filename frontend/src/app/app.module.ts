@@ -31,6 +31,7 @@ import { SearchComponent } from './components/search/search.component';
 import { LocationComponent } from './components/event/location/location.component';
 import { EventComponent } from './components/event/event.component';
 import {Location} from '@angular/common';
+import { DurationPipe } from './pipes/duration.pipe';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import {Location} from '@angular/common';
     SearchComponent,
     LocationComponent,
     EventComponent,
+    DurationPipe,
   ],
   imports: [
     BrowserModule,
