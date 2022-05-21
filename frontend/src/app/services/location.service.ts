@@ -28,6 +28,11 @@ export class LocationService {
     return this.http.get<SmallLocation[]>(baseUri, {params: p});
   }
 
+  /**
+   * Finds all locations with given parameters
+   *
+   * @param searchParams properties which the location should have.
+   */
   findAllLocationsBy(searchParams: BigLocationSearchParams): Observable<Location[]>{
     console.log(`Find all Locations with search params: ${searchParams}`);
     let terms = new HttpParams();

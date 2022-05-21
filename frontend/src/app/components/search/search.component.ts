@@ -16,6 +16,7 @@ import {BigLocationSearchParams} from "../../dtos/bigLocationSearchParams";
 import {Location} from "../../dtos/location";
 import {CountriesCodeToName} from "../../enums/countriesCodeToName";
 import {DurationUtil} from "../../utils/duration-util";
+import {ToastService} from "../../services/toast-service.service";
 
 @Component({
   selector: 'app-search',
@@ -47,7 +48,8 @@ export class SearchComponent implements OnInit {
               private performanceService: PerformanceService,
               private globals: Globals,
               private router: Router,
-              public authService: AuthService) {}
+              public authService: AuthService,
+              private toastService: ToastService) {}
 
   ngOnInit(): void {
     this.performanceSearchParams = new PerformanceSearchParams();
@@ -63,11 +65,10 @@ export class SearchComponent implements OnInit {
     this.performanceService.findAllPerformancesBy(this.performanceSearchParams).subscribe(
       (data) => {
         this.performances = data;
-        console.log(data);
       },
       error => {
-        console.error('Error searching horse', error.message);
-        alert('Could not find Performance with this properties');
+        console.error('Error searching performances', error.message);
+        this.showDanger('Could not find performances with this properties 😔');
       }
     );
   }
@@ -80,7 +81,7 @@ export class SearchComponent implements OnInit {
       },
       error => {
         console.error('Error searching artists', error.message);
-        alert('Could not find Artists with this properties');
+        this.showDanger('Could not find artists with this properties 😔');
       }
     );
   }
@@ -92,8 +93,8 @@ export class SearchComponent implements OnInit {
         this.events = data;
       },
       error => {
-        console.error('Error searching artists', error.message);
-        alert('Could not find Artists with this properties');
+        console.error('Error searching Events', error.message);
+        this.showDanger('Could not find events with this properties 😔');
       }
     );
   }
@@ -105,9 +106,15 @@ export class SearchComponent implements OnInit {
         this.locations = data;
       },
       error => {
-        console.error('Error searching artists', error.message);
-        alert('Could not find Locations with this properties');
+        console.error('Error searching locations', error.message);
+        this.showDanger('Could not find locations with this properties. 😔');
       }
     );
+  }
+  /**
+   * Displays message on a failure.
+   */
+  showDanger(msg: string) {
+    this.toastService.show(msg, {classname: 'bg-danger', delay: 5000});
   }
 }

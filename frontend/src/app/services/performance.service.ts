@@ -26,6 +26,11 @@ export class PerformanceService {
     return this.httpClient.get<Performance>(`${this.eventBaseUri}/${eventId}/performances/${performanceId}`);
   }
 
+  /**
+   * Finds all performances with given parameters
+   *
+   * @param searchTerms properties which the performance should have.
+   */
   findAllPerformancesBy(searchTerms: PerformanceSearchParams): Observable<Performance[]> {
     console.log(`Find all performances with search terms: ${searchTerms}`);
     let terms = new HttpParams();

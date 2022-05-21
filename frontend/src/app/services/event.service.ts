@@ -48,6 +48,12 @@ export class EventService {
 
     return this.httpClient.get<Event[]>(this.eventBaseUri, { params: p });
   }
+
+  /**
+   * Finds all events with given parameters
+   *
+   * @param searchParams properties which the event should have.
+   */
   findAllEventsBy(searchParams: EventSearchParams): Observable<Event[]>{
     console.log(`Find all Events with search params: ${searchParams}`);
     let terms = new HttpParams();
