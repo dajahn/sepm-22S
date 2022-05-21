@@ -174,7 +174,7 @@ label {
   margin-bottom: 0.3125em;
 }
 
-input[type=text], input[type=email], input[type=password], select {
+input[type=text], input[type=email], input[type=password], select, input[type=time], input[type=date], input[type=number]  {
   font-size: 0.9375em;
   color: var(--text-c-highlight);
   font-weight: var(--font-w-medium);

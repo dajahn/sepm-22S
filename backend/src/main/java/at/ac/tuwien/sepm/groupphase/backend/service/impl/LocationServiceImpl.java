@@ -60,7 +60,7 @@ public class LocationServiceImpl implements at.ac.tuwien.sepm.groupphase.backend
         SqlStringConverter converter = new SqlStringConverter();
         String name = converter.toSqlString(searchTermsDto.getName());
         String city = converter.toSqlString(searchTermsDto.getCity());
-        Country country = searchTermsDto.getCountry();
+        int country = searchTermsDto.getCountry().ordinal();
         String zipCode = searchTermsDto.getZipCode();
         String street = converter.toSqlString(searchTermsDto.getStreet());
         return locationRepository.findAllBy(name, city, country, zipCode, street);

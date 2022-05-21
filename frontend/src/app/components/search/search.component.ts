@@ -1,22 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import {Globals} from "../../global/globals";
-import {Router} from "@angular/router";
-import {AuthService} from "../../services/auth.service";
-import {PerformanceSearchParams} from "../../dtos/performanceSearchParams";
-import {Performance} from "../../dtos/performance";
-import {EventSearchParams} from "../../dtos/eventSearchParams";
-import {ArtistSearchParams} from "../../dtos/artistSearchParams";
-import {EventService} from "../../services/event.service";
-import {PerformanceService} from "../../services/performance.service";
-import {ArtistService} from "../../services/artist.service";
-import {LocationService} from "../../services/location.service";
-import {Artist} from "../../dtos/artist";
-import {Event, EventCategory} from "../../dtos/event";
-import {BigLocationSearchParams} from "../../dtos/bigLocationSearchParams";
-import {Location} from "../../dtos/location";
-import {CountriesCodeToName} from "../../enums/countriesCodeToName";
-import {DurationUtil} from "../../utils/duration-util";
-import {ToastService} from "../../services/toast-service.service";
+import {Globals} from '../../global/globals';
+import {Router} from '@angular/router';
+import {AuthService} from '../../services/auth.service';
+import {PerformanceSearchParams} from '../../dtos/performanceSearchParams';
+import {Performance} from '../../dtos/performance';
+import {EventSearchParams} from '../../dtos/eventSearchParams';
+import {ArtistSearchParams} from '../../dtos/artistSearchParams';
+import {EventService} from '../../services/event.service';
+import {PerformanceService} from '../../services/performance.service';
+import {ArtistService} from '../../services/artist.service';
+import {LocationService} from '../../services/location.service';
+import {Artist} from '../../dtos/artist';
+import {Event, EventCategory} from '../../dtos/event';
+import {BigLocationSearchParams} from '../../dtos/bigLocationSearchParams';
+import {Location} from '../../dtos/location';
+import {CountriesCodeToName} from '../../enums/countriesCodeToName';
+import {DurationUtil} from '../../utils/duration-util';
+import {ToastService} from '../../services/toast-service.service';
+import {LocationSearchParam} from '../../dtos/locationSearchParam';
 
 @Component({
   selector: 'app-search',
@@ -36,6 +37,10 @@ export class SearchComponent implements OnInit {
   categoriesValues = [];
   countries = CountriesCodeToName;
   countriesValues = [];
+  eventCategories = EventCategory;
+  eventCategoriesKeys = [];
+  countriesCodeToName = CountriesCodeToName;
+  countriesCodeToNameKeys = [];
 
   searchedPerformances = false;
   searchedArtists = false;
@@ -49,7 +54,10 @@ export class SearchComponent implements OnInit {
               private globals: Globals,
               private router: Router,
               public authService: AuthService,
-              private toastService: ToastService) {}
+              private toastService: ToastService) {
+    this.eventCategoriesKeys = Object.keys(this.eventCategories);
+    this.countriesCodeToNameKeys = Object.keys(this.countriesCodeToName);
+  }
 
   ngOnInit(): void {
     this.performanceSearchParams = new PerformanceSearchParams();
@@ -60,7 +68,7 @@ export class SearchComponent implements OnInit {
     this.countriesValues = Object.values(this.countries);
   }
 
-  findPerformances(){
+  findPerformances() {
     console.log('find performances with terms: {}', this.performanceSearchParams);
     this.performanceService.findAllPerformancesBy(this.performanceSearchParams).subscribe(
       (data) => {
@@ -73,7 +81,7 @@ export class SearchComponent implements OnInit {
     );
   }
 
-  findArtists(){
+  findArtists() {
     console.log('find artists with name: {}', this.artistSearchParams.name);
     this.artistService.search(this.artistSearchParams).subscribe(
       (data) => {
@@ -86,10 +94,11 @@ export class SearchComponent implements OnInit {
     );
   }
 
-  findEvents(){
+  findEvents() {
     console.log('find events with params: {}', this.eventSearchParams);
     this.eventService.findAllEventsBy(this.eventSearchParams).subscribe(
       (data) => {
+        console.log(data);
         this.events = data;
       },
       error => {
@@ -111,10 +120,27 @@ export class SearchComponent implements OnInit {
       }
     );
   }
+
   /**
    * Displays message on a failure.
    */
   showDanger(msg: string) {
     this.toastService.show(msg, {classname: 'bg-danger', delay: 5000});
+  }
+
+  resetEventSearchParams() {
+    this.eventSearchParams = new EventSearchParams();
+  }
+
+  resetPerformanceSearchParams() {
+    this.performanceSearchParams = new PerformanceSearchParams();
+  }
+
+  resetLocationSearchParams() {
+    this.locationSearchParams = new BigLocationSearchParams();
+  }
+
+  resetArtistSearchParams() {
+    this.artistSearchParams = new ArtistSearchParams();
   }
 }

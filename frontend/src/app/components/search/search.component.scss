@@ -15,13 +15,11 @@ i {
   font-size: 1em;
   color: var(--text-c-highlight);
 }
-input[type=time] {
-  border:  2px solid var(--text-c-highlight) !important;
-  background-color: transparent !important;
-  padding: 9px 9px !important;
-  width: 10px;
-  margin-left: 10px;
-  margin-top: 5px;
-  font-weight: var(--font-w-bold);
-  border-radius: 5px;
+
+
+.heading{
+  display: inline;
+}
+.search-btn{
+  margin-left: 3em;
 }

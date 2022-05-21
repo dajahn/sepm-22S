@@ -12,6 +12,6 @@ export class DurationPipe implements PipeTransform {
     if (min.length === 1) {
       min = '0' + min;
     }
-    return `${hours}h:${min}m`;
+    return `${hours} Hours ${min} Minutes`;
 }
 }
