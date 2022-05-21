@@ -17,6 +17,7 @@ export class TicketComponent implements OnInit {
   @Input() columnValue: string; // e.g. 1
   @Input() price: number;
   @Input() ticketClass: string;
+  @Input() removeButton: boolean;
 
   @Output() remove = new EventEmitter(); // when remove button is clicked
   @Output() inspect = new EventEmitter(); // when the ticket is clicked

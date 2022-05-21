@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CartService} from '../../services/cart.service';
 import {Cart} from '../../dtos/cart';
 import {Ticket} from '../../dtos/ticket';
@@ -23,7 +23,8 @@ export class CartComponent implements OnInit {
     private checkoutService: CheckoutService,
     private toastService: ToastService,
     public globals: Globals
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.loadCart();
@@ -53,15 +54,15 @@ export class CartComponent implements OnInit {
   private loadPurchasedTickets(upcoming: boolean) {
     this.cartService.getPurchasedTickets(upcoming).subscribe(
       (data) => {
-        if(upcoming) {
+        if (upcoming) {
           this.upcomingTickets = data;
-        }else{
+        } else {
           this.pastTickets = data;
         }
       },
       error => {
-        console.error('Error fetching purchased Tickets',error);
-        this.showDanger('Sorry, something went wrong. Could not load the top ten concerts 😔');
+        console.error('Error fetching purchased Tickets', error);
+        this.showDanger('Sorry, something went wrong. Could not load your puchased Tickets 😔');
       }
     );
   }
@@ -79,7 +80,7 @@ export class CartComponent implements OnInit {
   /**
    * Calculates the total price of all tickets combined
    */
-  calculateTotalSum(): number{
+  calculateTotalSum(): number {
     return this.cart?.tickets.reduce((accumulator, current) => accumulator + current?.sector.price, 0);
   }
 
@@ -130,7 +131,4 @@ export class CartComponent implements OnInit {
     this.toastService.show(msg, {classname: 'bg-danger', delay: 5000});
   }
 
-  removeButton(){
-    document.getElementById('app-ticket').removeAttribute('remove');
-  }
 }

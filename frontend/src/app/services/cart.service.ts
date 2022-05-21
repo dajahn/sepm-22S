@@ -46,6 +46,8 @@ export class CartService {
 
   /**
    * Get purchased Tickets of the currently logged-in user.
+   *
+   * @param upcoming if the performance of the ticket should be in the future
    */
   getPurchasedTickets(upcoming: boolean): Observable<Ticket[]> {
     console.log(`Get purchased Tickets of logged-in user.`);
