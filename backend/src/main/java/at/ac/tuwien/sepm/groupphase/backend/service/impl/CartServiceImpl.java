@@ -40,9 +40,7 @@ public class CartServiceImpl implements CartService {
     private final SeatTicketRepository seatTicketRepository;
     private final TicketRepository ticketRepository;
 
-    public CartServiceImpl(OrderRepository orderRepository, StandingSectorRepository standingSectorRepository,
-                           SeatRepository seatRepository, StandingTicketRepository standingTicketRepository,
-                           SeatTicketRepository seatTicketRepository, TicketRepository ticketRepository) {
+    public CartServiceImpl(OrderRepository orderRepository, StandingSectorRepository standingSectorRepository, SeatRepository seatRepository, StandingTicketRepository standingTicketRepository, SeatTicketRepository seatTicketRepository, TicketRepository ticketRepository) {
         this.orderRepository = orderRepository;
         this.standingSectorRepository = standingSectorRepository;
         this.seatRepository = seatRepository;
@@ -134,14 +132,12 @@ public class CartServiceImpl implements CartService {
         List<TicketOrder> ticketOrders = orderRepository.findTicketOrdersByTypeAndUserId(OrderType.PURCHASE, userId);
         List<Ticket> purchasedTickets = new ArrayList<>();
         List<Ticket> result = new ArrayList<>();
-
         if (!ticketOrders.isEmpty()) {
             for (TicketOrder ticketOrder : ticketOrders) {
                 if (!ticketOrder.getTickets().isEmpty()) {
                     purchasedTickets.addAll(ticketOrder.getTickets());
                 }
             }
-
             for (Ticket purchasedTicket : purchasedTickets) {
                 if (upcoming) {
                     if (purchasedTicket.getPerformance().getDateTime().isAfter(LocalDateTime.now())) {
@@ -153,7 +149,6 @@ public class CartServiceImpl implements CartService {
                     }
                 }
             }
-
             return result;
         } else {
             throw new NotFoundException(String.format("Could not find purchased Tickets form User with id %d", userId));

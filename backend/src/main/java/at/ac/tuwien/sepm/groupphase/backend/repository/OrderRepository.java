@@ -27,8 +27,14 @@ public interface OrderRepository extends JpaRepository<TicketOrder, Long> {
      * @param userId the ID of the user
      */
     void deleteAllByTypeAndUserId(OrderType type, long userId);
-    Optional<TicketOrder> findByTypeAndUserId(OrderType type, long userId);
 
+    /**
+     * Find all orders of a user by their ID and the order type.
+     *
+     * @param type   the type of the order
+     * @param userId the ID of the user
+     * @return all orders uf the user
+     */
     List<TicketOrder> findTicketOrdersByTypeAndUserId(OrderType type, long userId);
 
 }
