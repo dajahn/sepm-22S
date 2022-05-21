@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.exception.InternalServerException;
 import at.ac.tuwien.sepm.groupphase.backend.service.QRCodeGenerationService;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -36,8 +37,7 @@ public class QRCodeGenerationServiceImpl implements QRCodeGenerationService {
         try {
             bitMatrix = qrCodeWriter.encode(input, BarcodeFormat.QR_CODE, 128, 128, hintMap);
         } catch (WriterException e) {
-            e.printStackTrace(); // todo handle exception
-            return null;
+            throw new InternalServerException();
         }
 
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
@@ -46,7 +46,7 @@ public class QRCodeGenerationServiceImpl implements QRCodeGenerationService {
         try {
             MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream, con);
         } catch (IOException e) {
-            e.printStackTrace(); // todo handle exception
+            throw new InternalServerException();
         }
 
         return pngOutputStream.toByteArray();
