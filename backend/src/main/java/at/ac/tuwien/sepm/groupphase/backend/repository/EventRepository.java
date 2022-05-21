@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 import java.time.Duration;
-import java.util.List;
 
 import java.time.LocalDateTime;
 
@@ -76,6 +75,4 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             + "and (e.duration = :duration or :duration is null) "
             + "and (UPPER(e.name) like UPPER(:name) or :name is null)", nativeQuery = true)
     List<Event> findAllBy(@Param("category") int category, @Param("description") String description, @Param("duration") Duration duration, @Param("name") String name);
-}
-
 }
