@@ -40,7 +40,8 @@ public class CartServiceImpl implements CartService {
     private final SeatTicketRepository seatTicketRepository;
     private final TicketRepository ticketRepository;
 
-    public CartServiceImpl(OrderRepository orderRepository, StandingSectorRepository standingSectorRepository, SeatRepository seatRepository, StandingTicketRepository standingTicketRepository, SeatTicketRepository seatTicketRepository, TicketRepository ticketRepository) {
+    public CartServiceImpl(OrderRepository orderRepository, StandingSectorRepository standingSectorRepository, SeatRepository seatRepository,
+                           StandingTicketRepository standingTicketRepository, SeatTicketRepository seatTicketRepository, TicketRepository ticketRepository) {
         this.orderRepository = orderRepository;
         this.standingSectorRepository = standingSectorRepository;
         this.seatRepository = seatRepository;
