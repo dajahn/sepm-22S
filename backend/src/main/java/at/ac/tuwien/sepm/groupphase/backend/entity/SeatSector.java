@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatSectorDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SmallSeatSectorDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
 import at.ac.tuwien.sepm.groupphase.backend.enums.SeatType;
 import lombok.Getter;
@@ -41,8 +42,13 @@ public class SeatSector extends Sector {
     private List<Seat> seats = new ArrayList<>();
 
     @Override
-    public SectorDto mapToDto(SectorMapper mapper) {
-        return mapper.seatSectorToStandingSectorDto(this);
+    public SeatSectorDto mapToDto(SectorMapper mapper) {
+        return mapper.seatSectorToSeatSectorDto(this);
+    }
+
+    @Override
+    public SmallSeatSectorDto mapToSmallDto(SectorMapper mapper) {
+        return mapper.seatSectorToSmallSeatSectorDto(this);
     }
 
     @Override

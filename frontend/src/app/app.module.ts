@@ -28,6 +28,9 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { EditAccountComponent } from './components/edit-account/edit-account.component';
 import { CreateUserComponent } from './components/create-user/create-user.component';
 import { TopTenEventsComponent } from './components/top-ten-events/top-ten-events.component';
+import { LocationComponent } from './components/event/location/location.component';
+import { EventComponent } from './components/event/event.component';
+import {Location} from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -52,7 +55,9 @@ import { TopTenEventsComponent } from './components/top-ten-events/top-ten-event
     EditAccountComponent,
     ResetPasswordComponent,
     CreateUserComponent,
-    TopTenEventsComponent
+    TopTenEventsComponent,
+    LocationComponent,
+    EventComponent,
   ],
   imports: [
     BrowserModule,

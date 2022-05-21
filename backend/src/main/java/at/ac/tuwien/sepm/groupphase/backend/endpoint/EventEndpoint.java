@@ -1,16 +1,20 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedPerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventCategoryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
+import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
@@ -38,14 +42,18 @@ public class EventEndpoint {
 
     private final EventService eventService;
     private final PerformanceService performanceService;
+    private final TicketService ticketService;
     private final EventMapper eventMapper;
     private final PerformanceMapper performanceMapper;
+    private final TicketMapper ticketMapper;
 
-    public EventEndpoint(EventService eventService, PerformanceService performanceService, EventMapper eventMapper, PerformanceMapper performanceMapper) {
+    public EventEndpoint(EventService eventService, PerformanceService performanceService, TicketService ticketService, EventMapper eventMapper, PerformanceMapper performanceMapper, TicketMapper ticketMapper) {
         this.eventService = eventService;
         this.performanceService = performanceService;
+        this.ticketService = ticketService;
         this.eventMapper = eventMapper;
         this.performanceMapper = performanceMapper;
+        this.ticketMapper = ticketMapper;
     }
 
     @Secured("ROLE_USER")
@@ -53,23 +61,31 @@ public class EventEndpoint {
     @Operation(summary = "Finds matching Events by name Substring")
     public List<EventDto> findByNameSubstring(EventSearchDto eventSearchDto) {
         LOGGER.info("GET /api/v1/events/?name={}", eventSearchDto);
-        return this.eventService.getByNameSubstring(eventSearchDto).stream().map(this.eventMapper::eventToEventDto).toList();
+        return this.eventService.getByNameSubstring(eventSearchDto).stream().map(e -> this.eventMapper.eventToEventDto(e)).toList();
     }
 
     @Secured("ROLE_USER")
     @GetMapping(value = "/{eventId}")
     @Operation(summary = "Get information about a specific event", security = @SecurityRequirement(name = "apiKey"))
-    public EventDto findById(@PathVariable Long eventId) {
+    public DetailedEventDto findById(@PathVariable Long eventId) {
         LOGGER.info("GET /api/v1/events/{}", eventId);
-        return eventMapper.eventToEventDto(eventService.findOne(eventId));
+        return eventMapper.eventToDetailedEventDto(eventService.findOne(eventId));
     }
 
     @Secured("ROLE_USER")
     @GetMapping(value = "/{eventId}/performances/{performanceId}")
     @Operation(summary = "Get information about a specific performance from an event", security = @SecurityRequirement(name = "apiKey"))
-    public DetailedPerformanceDto findById(@PathVariable Long eventId, @PathVariable Long performanceId) {
+    public DetailedPerformanceDto findPerformanceByEventIdAndPerformanceId(@PathVariable Long eventId, @PathVariable Long performanceId) {
         LOGGER.info("GET /api/v1/events/{}/performances/{}", eventId, performanceId);
         return performanceMapper.performanceToDetailedPerformanceDto(performanceService.findOne(eventId, performanceId));
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/{eventId}/performances/{performanceId}/tickets")
+    @Operation(summary = "Get information about a specific performance from an event", security = @SecurityRequirement(name = "apiKey"))
+    public List<TicketDto> findTicketsByEventIdAndPerformanceId(@PathVariable Long eventId, @PathVariable Long performanceId) {
+        LOGGER.info("GET /api/v1/events/{}/performances/{}/tickets", eventId, performanceId);
+        return ticketMapper.ticketsToTicketDtos(ticketService.findByEventIdAndPerformanceId(eventId, performanceId));
     }
 
     @Secured("ROLE_ADMIN")

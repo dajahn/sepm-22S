@@ -8,7 +8,9 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.StandingTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import org.mapstruct.Mapper;
 
-@Mapper(uses = SectorMapper.class)
+import java.util.List;
+
+@Mapper(uses = {SectorMapper.class, PerformanceMapper.class})
 public interface TicketMapper {
 
     /**
@@ -22,7 +24,9 @@ public interface TicketMapper {
         return ticket.mapToDto(this);
     }
 
+    List<TicketDto> ticketsToTicketDtos(List<Ticket> tickets);
+
     StandingTicketDto standingTicketToStandingTicketDto(StandingTicket ticket);
 
-    SeatTicketDto seatTicketToStandingTicketDto(SeatTicket ticket);
+    SeatTicketDto seatTicketToSeatTicketDto(SeatTicket ticket);
 }
