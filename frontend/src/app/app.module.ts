@@ -28,6 +28,9 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { EditAccountComponent } from './components/edit-account/edit-account.component';
 import { CreateUserComponent } from './components/create-user/create-user.component';
 import { SearchComponent } from './components/search/search.component';
+import { LocationComponent } from './components/event/location/location.component';
+import { EventComponent } from './components/event/event.component';
+import {Location} from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -53,6 +56,8 @@ import { SearchComponent } from './components/search/search.component';
     ResetPasswordComponent,
     CreateUserComponent,
     SearchComponent,
+    LocationComponent,
+    EventComponent,
   ],
   imports: [
     BrowserModule,

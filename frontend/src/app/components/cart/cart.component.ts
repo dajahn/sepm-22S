@@ -5,6 +5,7 @@ import {Ticket} from '../../dtos/ticket';
 import {SeatTicket} from '../../dtos/seat-ticket';
 import {CheckoutService} from '../../services/checkout.service';
 import {ToastService} from '../../services/toast-service.service';
+import {Globals} from '../../global/globals';
 
 @Component({
   selector: 'app-cart',
@@ -15,7 +16,12 @@ export class CartComponent implements OnInit {
 
   cart: Cart;
 
-  constructor(private cartService: CartService, private checkoutService: CheckoutService, private toastService: ToastService) {}
+  constructor(
+    private cartService: CartService,
+    private checkoutService: CheckoutService,
+    private toastService: ToastService,
+    public globals: Globals
+  ) {}
 
   ngOnInit(): void {
     this.loadCart();
