@@ -107,13 +107,8 @@ public class TicketOrderGenerator {
 
                 TicketOrder order = new TicketOrder();
 
-                if (i < users.size() / 3) {
-                    order.setType(OrderType.CART);
-                } else if (i < (users.size() / 3) * 2) {
-                    order.setType(OrderType.RESERVATION);
-                } else {
-                    order.setType(OrderType.PURCHASE);
-                }
+                order.setType(OrderType.CART);
+
                 order.setDateTime(LocalDateTime.of(LocalDate.ofInstant(faker.date().future(365, TimeUnit.DAYS).toInstant(), TimeZone.getDefault().toZoneId()), LocalTime.of(faker.random().nextInt(0, 23), 0)));
                 order.setValidUntil(order.getDateTime().plusHours(1)); // VALID FOR 1 HOUR
                 order.setUser(users.get(i));

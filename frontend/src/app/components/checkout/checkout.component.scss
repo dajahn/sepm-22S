@@ -1,0 +1,87 @@
+/* DEFAULT */
+/* # Divs: */
+#wrapper {
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-rainbow);
+}
+
+.content {
+  margin-top:4em;
+}
+
+.terms-of-use {
+  margin-top: 15rem;
+}
+
+.order-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/* # Buttons: */
+#loginButtonSm, #loginButtonLg {
+  font-size: 0.9em;
+  padding: 9.25px 9px;
+}
+
+.abort {
+  padding: 0;
+  line-height: 0;
+  background-color: transparent;
+
+  i {
+    font-size: 1.5em;
+    padding: 0;
+    display: inline-block;
+    color: var(--text-c-highlight);
+  }
+}
+
+/* # Other: */
+a {
+  color: var(--accent-orange) !important;
+}
+
+i {
+  font-size: 1.6em;
+}
+
+hr {
+  height: 1px;
+  background-color: var(--text-c-highlight);
+  opacity: 1;
+}
+
+span {
+  color: var(--text-c-highlight);
+  font-size: 0.8em;
+  font-weight: var(--font-w-light);
+}
+
+p {
+  color: var(--text-c-highlight);
+  font-size: 0.8em;
+  font-weight: var(--font-w-light);
+}
+
+.order-headline {
+  margin-bottom: 0.2rem;
+}
+
+
+
+/* MEDIA QUERIES */
+@media (max-width: 991px) {
+
+  /* # Mobile: */
+  .order-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .shipping {
+    margin-top: 0.6rem;
+  }
+}

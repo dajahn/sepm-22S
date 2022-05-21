@@ -2,7 +2,10 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.PasswordReset;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
+import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
+import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.UserLockedException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PasswordResetRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
@@ -37,20 +40,25 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
 
     @Override
     public void forgotPassword(String email) {
+        LOGGER.trace("forgotPassword(String email) with email={}", email);
         User user = userRepository.findUserByEmail(email);
 
         if (user == null) {
             throw new NotFoundException();
         }
 
+        if (user.getRole() != UserRole.ADMIN && user.getStatus() == UserStatus.LOCKED) {
+            throw new UserLockedException();
+        }
+
         PasswordReset reset = new PasswordReset(user);
         resetRepository.save(reset);
-        System.out.println(reset.getHash()); // todo remove after development
         emailService.sendPasswordResetNotification(reset);
     }
 
     @Override
     public void resetPasswordFromHash(UUID hash, String password) {
+        LOGGER.trace("resetPasswordFromHash(UUID hash, String password) with hash={} password={}", hash.toString(), password);
         PasswordReset reset = resetRepository.findByHash(hash);
 
         if (reset == null) {
@@ -58,6 +66,10 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         }
 
         User user = reset.getUser();
+
+        if (user.getRole() != UserRole.ADMIN && user.getStatus() == UserStatus.LOCKED) {
+            throw new UserLockedException();
+        }
 
         userValidator.validatePassword(password);
 

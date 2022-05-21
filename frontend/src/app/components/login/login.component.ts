@@ -101,6 +101,9 @@ export class LoginComponent implements OnInit {
         } else {
           this.errorMessage = error.error;
         }
+        if (error.status === 403 || this.errorMessage === 'This user is currently locked! Consult an ADMIN!') {
+          this.showForgotPassword = false;
+        }
       }
     });
   }
