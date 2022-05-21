@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.util;
 
+import at.ac.tuwien.sepm.groupphase.backend.exception.UnexpectedException;
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 import lombok.Getter;
@@ -18,50 +19,44 @@ public class HtmlTemplate {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /**
-     * Template for creating the invoice pdf. <br>
-     * parameter: tbd // todo define parameters
+     * Template for creating the invoice pdf.
      */
-    public static final HtmlTemplate PDF_INVOICE = new HtmlTemplate("pdf_invoice", new String[]{"test1", "test2"}); // todo update required keys
+    public static final HtmlTemplate PDF_INVOICE = new HtmlTemplate("pdf_invoice");
 
     /**
-     * Template for creating the cancellation invoice pdf. <br>
-     * parameter: tbd // todo define parameters
+     * Template for creating the cancellation invoice pdf.
      */
-    public static final HtmlTemplate PDF_CANCELLATION_INVOICE = new HtmlTemplate("pdf_cancellation_invoice", new String[]{"test1", "test2"}); // todo update required keys
+    public static final HtmlTemplate PDF_CANCELLATION_INVOICE = new HtmlTemplate("pdf_cancellation_invoice");
 
     /**
-     * Template for creating a pdf ticket. <br>
-     * parameter: tbd // todo define parameters
+     * Template for creating a pdf ticket.
      */
-    public static final HtmlTemplate PDF_TICKET = new HtmlTemplate("pdf_ticket", new String[]{"test1", "test2"}); // todo update required keys
+    public static final HtmlTemplate PDF_TICKET = new HtmlTemplate("pdf_ticket");
 
     /**
      * Template for generic emails, including a title and some content. <br>
      * parameters: title, content
      */
-    public static final HtmlTemplate EMAIL_GENERIC = new HtmlTemplate("email_generic", new String[]{"title", "content"}); // todo: load images locally (not web)
+    public static final HtmlTemplate EMAIL_GENERIC = new HtmlTemplate("email_generic");  // todo: load images locally (not web)
 
     /**
-     * Template for notifying the user about a new invoice. <br>
-     * parameters: title, content
+     * Template for notifying the user about a new invoice.
      *
      * @see #EMAIL_GENERIC
      */
     public static final HtmlTemplate EMAIL_INVOICE_NOTIFICATION = EMAIL_GENERIC;
 
     /**
-     * Template for notifying the user about their pdf tickets. <br>
-     * parameters: title, content
+     * Template for notifying the user about their pdf tickets.
      *
      * @see #EMAIL_GENERIC
      */
     public static final HtmlTemplate EMAIL_TICKET_NOTIFICATION = EMAIL_GENERIC;
 
     /**
-     * Template for generic emails, including a title and some content. <br>
-     * parameters: title, content
+     * Template for generic emails, including a title and some content.
      */
-    public static final HtmlTemplate EMAIL_PASSWORD_RESET_NOTIFICATION = new HtmlTemplate("email_password_reset", new String[]{"title", "content"}); // todo: load images locally (not web)
+    public static final HtmlTemplate EMAIL_PASSWORD_RESET_NOTIFICATION = new HtmlTemplate("email_password_reset"); // todo: load images locally (not web)
 
 
     /**
@@ -75,8 +70,6 @@ public class HtmlTemplate {
         {"global.company.homepage", "http://localhost:4200/#"},
     }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
-
-    private final String[] requiredKeys;
     private final Template template;
 
     @Getter
@@ -85,18 +78,16 @@ public class HtmlTemplate {
     /**
      * Setup and loading of the template.
      *
-     * @param path         the path of the template relative to the '/templates' folder of the package (without the .html file extension)
-     * @param requiredKeys a list of keys which are required in order to display the template properly
+     * @param path the path of the template relative to the '/templates' folder of the package (without the .html file extension)
      */
-    public HtmlTemplate(String path, String[] requiredKeys) {
-        this.requiredKeys = requiredKeys;
+    public HtmlTemplate(String path) {
         this.path = path;
 
-        Template temp = null;
+        Template temp;
         try {
             temp = Mustache.compiler().compile(new FileReader("src/main/resources/templates/" + path + ".html"));
         } catch (FileNotFoundException e) {
-            e.printStackTrace(); // TODO: change to debug message
+            throw new UnexpectedException();
         }
         this.template = temp;
     }
@@ -109,10 +100,6 @@ public class HtmlTemplate {
      */
     public String compile(Map<String, Object> values) {
         LOGGER.trace("compile(Map<String, Object> values) with values={}", values);
-        for (String key : requiredKeys) {
-            values.putIfAbsent(key, "");
-            // TODO handle error properly
-        }
         values.putAll(GLOBALS);
         return this.template.execute(values);
     }

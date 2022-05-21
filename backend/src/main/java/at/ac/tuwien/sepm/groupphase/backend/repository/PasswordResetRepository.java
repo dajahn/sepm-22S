@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.PasswordReset;
+import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,5 +19,14 @@ public interface PasswordResetRepository extends JpaRepository<PasswordReset, UU
      */
     @Query("select p from PasswordReset p where p.hash = ?1 and p.used = FALSE and (p.validUntil > current_date)")
     PasswordReset findByHash(UUID hash);
+
+    /**
+     * Find the most recent password reset request for a user.
+     * Mostly used for testing.
+     *
+     * @param user the user of the password reset request
+     * @return the target password reset request or null
+     */
+    PasswordReset findFirstByUser(User user);
 
 }

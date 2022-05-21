@@ -46,7 +46,6 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
 
         PasswordReset reset = new PasswordReset(user);
         resetRepository.save(reset);
-        System.out.println(reset.getHash()); // todo remove after development
         emailService.sendPasswordResetNotification(reset);
     }
 

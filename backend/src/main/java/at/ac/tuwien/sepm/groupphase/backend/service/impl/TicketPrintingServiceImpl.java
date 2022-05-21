@@ -76,8 +76,7 @@ public class TicketPrintingServiceImpl implements TicketPrintingService {
         } else {
             data.put("sector", "Standing");
         }
-
-
+        
         return pdfGenerationService.generate(HtmlTemplate.PDF_TICKET, data);
     }
 
