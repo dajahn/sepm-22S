@@ -46,7 +46,8 @@ public class TicketOrderGenerator {
     private final EventDataGenerator eventDataGenerator;
     private final UserDataGenerator userDataGenerator;
 
-    public TicketOrderGenerator(OrderRepository orderRepository, UserRepository userRepository, PerformanceRepository performanceRepository, SeatSectorRepository seatSectorRepository, StandingSectorRepository standingSectorRepository, EventDataGenerator eventDataGenerator, UserDataGenerator userDataGenerator) {
+    public TicketOrderGenerator(OrderRepository orderRepository, UserRepository userRepository, PerformanceRepository performanceRepository, SeatSectorRepository seatSectorRepository,
+                                StandingSectorRepository standingSectorRepository, EventDataGenerator eventDataGenerator, UserDataGenerator userDataGenerator) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.performanceRepository = performanceRepository;
