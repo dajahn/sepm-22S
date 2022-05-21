@@ -187,17 +187,17 @@
           </button>
         </li>
 
-        <!-- ### Cart -->
+        <!-- ### Search -->
         <li class="nav-item">
           <button class="nav-button" (click)="clickSearch()">
-            <i [ngStyle]="currentRoute === routerLinks.search && {'color': 'var(--text-c-highlight)'}" class="bi bi-search"> Cart</i>
+            <i [ngStyle]="currentRoute === routerLinks.search && {'color': 'var(--text-c-highlight)'}" class="bi bi-search"> Search</i>
           </button>
         </li>
 
-        <!-- ### Search -->
+        <!-- ### Cart -->
         <li class="nav-item">
           <button class="nav-button" (click)="clickCart()">
-            <i [ngStyle]="currentRoute === routerLinks.cart && {'color': 'var(--text-c-highlight)'}" class="bi bi-cart"> Search</i>
+            <i [ngStyle]="currentRoute === routerLinks.cart && {'color': 'var(--text-c-highlight)'}" class="bi bi-cart"> Cart</i>
           </button>
         </li>
 
@@ -263,8 +263,8 @@
 
       <!-- ## Logged Out -->
       <div class="d-flex flex-column" *ngIf="!authService.isLoggedIn(); else loggedIn">
-        <input type="button" class="blue" [routerLink]="[routerLinks.signUp]" value="SIGN UP 🤙🏼">
-        <a class="a-gray" [routerLink]="routerLinks.logIn">Log in</a>
+        <input type="button" class="blue" (click)="clickSignUp()" value="SIGN UP 🤙🏼">
+        <a class="a-gray" (click)="clickLogIn()">Log in</a>
       </div>
 
       <!-- ## Logged In -->
