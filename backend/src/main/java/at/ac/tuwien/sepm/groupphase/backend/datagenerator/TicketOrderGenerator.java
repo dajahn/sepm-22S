@@ -46,13 +46,7 @@ public class TicketOrderGenerator {
     private final EventDataGenerator eventDataGenerator;
     private final UserDataGenerator userDataGenerator;
 
-    public TicketOrderGenerator(OrderRepository orderRepository,
-                                UserRepository userRepository,
-                                PerformanceRepository performanceRepository,
-                                SeatSectorRepository seatSectorRepository,
-                                StandingSectorRepository standingSectorRepository,
-                                EventDataGenerator eventDataGenerator,
-                                UserDataGenerator userDataGenerator) {
+    public TicketOrderGenerator(OrderRepository orderRepository, UserRepository userRepository, PerformanceRepository performanceRepository, SeatSectorRepository seatSectorRepository, StandingSectorRepository standingSectorRepository, EventDataGenerator eventDataGenerator, UserDataGenerator userDataGenerator) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.performanceRepository = performanceRepository;
@@ -121,15 +115,6 @@ public class TicketOrderGenerator {
                 order.setUserId(users.get(i).getId());
                 orderRepository.save(order);
 
-                TicketOrder order2 = new TicketOrder();
-
-                order2.setType(OrderType.CART);
-                order2.setDateTime(LocalDateTime.of(LocalDate.ofInstant(faker.date().future(365, TimeUnit.DAYS).toInstant(), TimeZone.getDefault().toZoneId()), LocalTime.of(faker.random().nextInt(0, 23), 0)));
-                order2.setValidUntil(order2.getDateTime().plusHours(1)); // VALID FOR 1 HOUR
-                order2.setUser(users.get(i));
-                order2.setUserId(users.get(i).getId());
-                orderRepository.save(order2);
-
                 List<Ticket> orderTickets = new ArrayList<>();
                 int numberOfTickets = faker.random().nextInt(2, 3);
                 for (int j = 0; j < numberOfTickets; j++) {
@@ -139,17 +124,8 @@ public class TicketOrderGenerator {
                 }
                 order.setTickets(orderTickets);
 
-                List<Ticket> orderTickets2 = new ArrayList<>();
-                for (int j = 0; j < numberOfTickets; j++) {
-                    Ticket ticket = tickets.remove((int) faker.random().nextInt(0, tickets.size() - 1));
-                    ticket.setOrderId(order2.getId());
-                    orderTickets2.add(ticket);
-                }
-                order2.setTickets(orderTickets2);
-
                 LOGGER.debug("Saving order {}", order);
                 orderRepository.save(order);
-                orderRepository.save(order2);
             }
         }
     }

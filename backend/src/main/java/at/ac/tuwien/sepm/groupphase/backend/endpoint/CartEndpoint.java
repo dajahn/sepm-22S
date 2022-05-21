@@ -91,7 +91,6 @@ public class CartEndpoint {
         LOGGER.info("GET /api/v1/cart/purchased, upcoming? : {}", upcoming);
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findApplicationUserByEmail(email);
-        LOGGER.info("userId: {}", user.getId());
         return ticketMapper.ticketsToTicketDtos(cartService.getPurchasedTickets(user.getId(), upcoming));
     }
 
