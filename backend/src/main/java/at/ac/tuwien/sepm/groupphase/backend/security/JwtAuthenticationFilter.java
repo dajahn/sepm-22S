@@ -2,9 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.security;
 
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
-import at.ac.tuwien.sepm.groupphase.backend.exception.UserLockedException;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -71,7 +69,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             }
             throw new BadCredentialsException("Wrong Username or Password!");
         } catch (LockedException e) {
-            LOGGER.error("User {} is currently locked", user.getEmail());
+            LOGGER.error("User {} is currently locked", user != null ? user.getEmail() : "'no user'");
             throw e;
         }
     }

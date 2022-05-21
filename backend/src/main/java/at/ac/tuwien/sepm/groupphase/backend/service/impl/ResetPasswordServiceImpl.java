@@ -2,7 +2,10 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.PasswordReset;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
+import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
+import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.UserLockedException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PasswordResetRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EmailService;
@@ -44,6 +47,10 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
             throw new NotFoundException();
         }
 
+        if (user.getRole() != UserRole.ADMIN && user.getStatus() == UserStatus.LOCKED) {
+            throw new UserLockedException();
+        }
+
         PasswordReset reset = new PasswordReset(user);
         resetRepository.save(reset);
         emailService.sendPasswordResetNotification(reset);
@@ -59,6 +66,10 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         }
 
         User user = reset.getUser();
+
+        if (user.getRole() != UserRole.ADMIN && user.getStatus() == UserStatus.LOCKED) {
+            throw new UserLockedException();
+        }
 
         userValidator.validatePassword(password);
 
