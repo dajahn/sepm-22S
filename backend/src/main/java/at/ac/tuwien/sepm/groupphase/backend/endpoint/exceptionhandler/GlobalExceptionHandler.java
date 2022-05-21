@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.exceptionhandler;
 
-import at.ac.tuwien.sepm.groupphase.backend.exception.InternalServerException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.UnexpectedException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
-    @ExceptionHandler(value = {InternalServerException.class})
+    @ExceptionHandler(value = {UnexpectedException.class})
     protected ResponseEntity<Object> handleInternalServerException(RuntimeException ex, WebRequest request) {
         LOGGER.warn("", ex);
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);

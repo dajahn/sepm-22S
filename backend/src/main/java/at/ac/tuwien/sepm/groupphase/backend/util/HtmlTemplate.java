@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.util;
 
-import at.ac.tuwien.sepm.groupphase.backend.exception.InternalServerException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.UnexpectedException;
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 import lombok.Getter;
@@ -87,7 +87,7 @@ public class HtmlTemplate {
         try {
             temp = Mustache.compiler().compile(new FileReader("src/main/resources/templates/" + path + ".html"));
         } catch (FileNotFoundException e) {
-            throw new InternalServerException();
+            throw new UnexpectedException();
         }
         this.template = temp;
     }

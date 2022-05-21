@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import at.ac.tuwien.sepm.groupphase.backend.exception.InternalServerException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.UnexpectedException;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ public class InvoiceId {
             identification.year = Integer.parseInt(parts[0]);
             identification.id = Integer.parseInt(parts[1]);
         } catch (NumberFormatException e) {
-            throw new InternalServerException();
+            throw new UnexpectedException();
         }
         return identification;
     }
