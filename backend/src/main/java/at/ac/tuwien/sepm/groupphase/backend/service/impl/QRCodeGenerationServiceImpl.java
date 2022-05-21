@@ -12,10 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
@@ -32,10 +29,10 @@ public class QRCodeGenerationServiceImpl implements QRCodeGenerationService {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
 
         // configure code generation
-        Map<EncodeHintType, Object> hintMap = new HashMap<EncodeHintType, Object>();
+        Map<EncodeHintType, Object> hintMap = new HashMap<>();
         hintMap.put(EncodeHintType.MARGIN, 0); // remove whitespace
 
-        BitMatrix bitMatrix = null;
+        BitMatrix bitMatrix;
         try {
             bitMatrix = qrCodeWriter.encode(input, BarcodeFormat.QR_CODE, 128, 128, hintMap);
         } catch (WriterException e) {
@@ -50,15 +47,6 @@ public class QRCodeGenerationServiceImpl implements QRCodeGenerationService {
             MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream, con);
         } catch (IOException e) {
             e.printStackTrace(); // todo handle exception
-        }
-
-        // TODO remove after testing
-        try {
-            BufferedImage qrcode = MatrixToImageWriter.toBufferedImage(bitMatrix, con);
-            File outputfile = new File("temp/output.png");
-            ImageIO.write(qrcode, "png", outputfile);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         return pngOutputStream.toByteArray();
