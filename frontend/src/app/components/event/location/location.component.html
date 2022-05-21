@@ -1,0 +1,102 @@
+<div class="d-flex flex-column align-items-center w-100 gap-4">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    [attr.viewBox]="[0, 0, (((maxX$ | async) || 0) + 1) * 100, (((maxY$ | async) || 0) + 1) * 100].join(' ')">
+    <defs>
+      <linearGradient id="gradient-orange" gradientTransform="rotate(90)">
+        <stop offset="0%" stop-color="var(--gradient-orange-color-0)"/>
+        <stop offset="100%" stop-color="var(--gradient-orange-color-100)"/>
+      </linearGradient>
+      <linearGradient id="gradient-rainbow" gradientTransform="rotate(90)">
+        <stop offset="0%" stop-color="var(--gradient-rainbow-color-0)"/>
+        <stop offset="50%" stop-color="var(--gradient-rainbow-color-50)"/>
+        <stop offset="100%" stop-color="var(--gradient-rainbow-color-100)"/>
+      </linearGradient>
+    </defs>
+    <g>
+      <svg
+        (click)="getUnavailableStandingSpots(sector.id) < sector.capacity && onStandingSectorClick(sector)"
+        [class.clickable]="getUnavailableStandingSpots(sector.id) < sector.capacity"
+        *ngFor="let sector of standingSectors$ | async"
+        [attr.x]="sector.point1.x * 100"
+        [attr.y]="sector.point1.y * 100"
+        [attr.width]="(sector.point2.x - sector.point1.x) * 100"
+        [attr.height]="(sector.point2.y - sector.point1.y) * 100"
+        fill="red">
+        <rect
+          x="10"
+          y="10"
+          [attr.width]="(sector.point2.x - sector.point1.x) * 100 - 10 * 2"
+          [attr.height]="(sector.point2.y - sector.point1.y) * 100 - 10 * 2"
+          fill="var(--bg-tertiary)"
+          stroke="var(--bg-secondary)"
+          [attr.rx]="10"
+          [attr.ry]="10"
+          [attr.stroke-width]="10"/>
+        <text
+          x="50%"
+          y="50%"
+          dy="-1em"
+          dominant-baseline="middle"
+          text-anchor="middle"
+          fill="var(--text-c-highlight)"
+          style="font-size: 2em">
+          <tspan class="fw-bold">{{sector.name}}</tspan>
+        </text>
+        <text
+          x="50%"
+          y="50%"
+          dy="+1em"
+          dominant-baseline="middle"
+          text-anchor="middle"
+          fill="var(--text-c-highlight)"
+          style="font-size: 2em">
+          {{getSelectedStandingSpots(sector.id)}}+{{getOccupiedStandingSpots(sector.id)}}/{{sector.capacity}}
+        </text>
+      </svg>
+    </g>
+    <g>
+      <g *ngFor="let sector of seatSectors$ | async">
+        <svg
+          *ngFor="let seat of sector.seats"
+          (click)="isSeatOccupied(seat.id) || onSeatClick(sector, seat)"
+          [class.clickable]="!isSeatOccupied(seat.id)"
+          [attr.x]="seat.point.x * 100"
+          [attr.y]="seat.point.y * 100">
+          <path
+            class="seat"
+            d="M 10 10
+               L 10 50
+               A 40 40 0 0 0 90 50
+               L 90 10
+               z
+            "
+            [attr.fill]="isSeatSelected(seat.id) ? 'var(--color-selected)' : gradients[sector.seatType]"
+            fill="red"/>
+          <ng-container *ngIf="isSeatOccupied(seat.id)">
+            <rect
+              fill="var(--text-c-highlight)"
+              x="10"
+              y="40"
+              width="70"
+              height="10"
+              rx="5"
+              ry="5"
+              transform="rotate(45 50 50)"/>
+            <rect
+              fill="var(--text-c-highlight)"
+              x="20"
+              y="40"
+              width="70"
+              height="10"
+              rx="5"
+              ry="5"
+              transform="rotate(-45 50 50)"/>
+          </ng-container>
+        </svg>
+      </g>
+    </g>
+  </svg>
+  <span>📍  <a class="ms-2"
+               [href]="getAddressMapsUrl((location$ | async)?.address)">{{getAddressString((location$ | async)?.address)}}</a></span>
+</div>

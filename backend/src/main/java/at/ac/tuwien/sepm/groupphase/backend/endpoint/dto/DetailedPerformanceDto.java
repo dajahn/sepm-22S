@@ -13,4 +13,5 @@ public class DetailedPerformanceDto {
     private long id;
     private LocalDateTime dateTime;
     private DetailedLocationDto location;
+    private EventDto event;
 }

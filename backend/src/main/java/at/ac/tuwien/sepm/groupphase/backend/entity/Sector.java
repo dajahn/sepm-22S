@@ -2,9 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -12,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.LazyGroup;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -59,6 +55,14 @@ public abstract class Sector {
      * @return the sector DTO
      */
     public abstract SectorDto mapToDto(SectorMapper mapper);
+
+    /**
+     * Maps a StandingSector or SeatSector to its corresponding StandingSectorDto or SmallSeatSectorDto.
+     *
+     * @param mapper the mapper used to Map sector sub-classes to small SectorDto sub-classes
+     * @return the small sector DTO
+     */
+    public abstract SectorDto mapToSmallDto(SectorMapper mapper);
 
     @Override
     public boolean equals(Object o) {

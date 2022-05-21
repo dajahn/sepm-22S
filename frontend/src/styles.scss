@@ -1,8 +1,6 @@
 /* IMPORTS */
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 
-
-
 /* CUSTOM FONTS */
 @font-face {
   font-family: 'Montserrat';
@@ -17,8 +15,6 @@
   src: url('/assets/fonts/Montserrat-Italic-VariableFont_wght.ttf') format("truetype-variations");
   font-weight: 1 999;
 }
-
-
 
 /* DEFAULT / LIGHT MODE */
 :root {
@@ -40,11 +36,45 @@
   --accent-blue: #7172F8;
 
   /* ## Gradients */
-  --gradient-orange: linear-gradient(90deg, rgba(241,147,109,1) 0%, rgba(240,113,169,1) 100%);
-  --gradient-purple: linear-gradient(90deg, rgba(178,39,246,1) 0%, rgba(224,125,250,1) 100%);
-  --gradient-blue: linear-gradient(90deg, rgba(113,114,248,1) 0%, rgba(156,161,250,1) 100%);
-  --gradient-rainbow: linear-gradient(90deg, rgba(241,147,109,1) 0%, rgba(178,39,246,1) 50%, rgba(113,114,248,1) 100%);
-  --gradient-rainbow-bg-secondary : linear-gradient(90deg, rgba(241,147,109,1) 0%, rgba(178,39,246,1) 25%, rgba(113,114,248,1) 50%, var(--bg-tertiary) 100%);
+
+  /* ### Gradient Orange */
+  --gradient-orange-color-0: rgba(241, 147, 109, 1);
+  --gradient-orange-color-100: rgba(240, 113, 169, 1);
+  --gradient-orange: linear-gradient(90deg, var(--gradient-orange-color-0) 0%, var(--gradient-orange-color-100) 100%);
+
+  /* ### Gradient Purple */
+  --gradient-purple-color-0: rgba(178, 39, 246, 1);
+  --gradient-purple-color-100: rgba(224, 125, 250, 1);
+  --gradient-purple: linear-gradient(90deg, var(--gradient-purple-color-0) 0%, var(--gradient-purple-color-100) 100%);
+
+  /* ### Gradient Blue */
+  --gradient-blue-color-0: rgba(113, 114, 248, 1);
+  --gradient-blue-color-100: rgba(156, 161, 250, 1);
+  --gradient-blue: linear-gradient(90deg, var(--gradient-blue-color-0) 0%, var(--gradient-blue-color-100) 100%);
+
+  /* ### Gradient Rainbow */
+  --gradient-rainbow-color-0: rgba(241, 147, 109, 1);
+  --gradient-rainbow-color-50: rgba(178, 39, 246, 1);
+  --gradient-rainbow-color-100: rgba(113, 114, 248, 1);
+  --gradient-rainbow: linear-gradient(
+      90deg,
+      var(--gradient-rainbow-color-0) 0%,
+      var(--gradient-rainbow-color-50) 50%,
+      var(--gradient-rainbow-color-100) 100%
+  );
+
+  /* ### Gradient Rainbow BG Secondary */
+  --gradient-rainbow-bg-secondary-color-0: rgba(241, 147, 109, 1);
+  --gradient-rainbow-bg-secondary-color-25: rgba(178, 39, 246, 1);
+  --gradient-rainbow-bg-secondary-color-50: rgba(113, 114, 248, 1);
+  --gradient-rainbow-bg-secondary-color-100: var(--bg-tertiary);
+  --gradient-rainbow-bg-secondary: linear-gradient(
+      90deg,
+      var(--gradient-rainbow-bg-secondary-color-0) 0%,
+      var(--gradient-rainbow-bg-secondary-color-25) 25%,
+      var(--gradient-rainbow-bg-secondary-color-50) 50%,
+      var(--gradient-rainbow-bg-secondary-color-100) 100%
+  );
 
   /* # FONT WEIGHT: */
   --font-w-light: 300;
@@ -70,7 +100,6 @@
     --text-c-lowlight: #5C607F;
   }
 }
-
 
 
 /* # CHANGED TAGS + CLASSES: */
@@ -145,7 +174,7 @@ label {
   margin-bottom: 0.3125em;
 }
 
-input[type=text], input[type=email], input[type=password] {
+input[type=text], input[type=email], input[type=password], select {
   font-size: 0.9375em;
   color: var(--text-c-highlight);
   font-weight: var(--font-w-medium);
@@ -162,7 +191,7 @@ input[type=text], input[type=email], input[type=password] {
 
   &:focus {
     outline: none !important;
-    border:3px solid var(--accent-orange);
+    border: 3px solid var(--accent-orange);
   }
 }
 
@@ -183,7 +212,7 @@ textarea { // added extra selection cause everywhere has to be "!important" for 
 
   &:focus {
     outline: none !important;
-    border:3px solid var(--accent-orange) !important;
+    border: 3px solid var(--accent-orange) !important;
     background-color: white !important;
     color: #212529 !important;
   }
@@ -199,7 +228,7 @@ input[type=button], button, input[type=submit] {
   border-radius: 10px;
   padding: 7px 20px;
 
-  &:hover{
+  &:hover {
     transform: scale(1.1);
   }
 

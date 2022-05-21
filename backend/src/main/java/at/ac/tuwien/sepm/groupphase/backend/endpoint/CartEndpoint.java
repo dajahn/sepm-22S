@@ -43,6 +43,7 @@ public class CartEndpoint {
         this.userService = userService;
     }
 
+    @Transactional
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping

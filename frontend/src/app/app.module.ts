@@ -22,10 +22,14 @@ import { CartComponent } from './components/cart/cart.component';
 import { TicketComponent } from './components/ticket/ticket.component';
 import { ToastComponentComponent } from './components/toast-component/toast-component.component';
 import { RegisterComponent } from './components/register/register.component';
+import { UserManagementComponent } from './components/user-management/user-management.component';
 import { NewsCreateAddEventComponent } from './components/news-create-add-event/news-create-add-event.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { EditAccountComponent } from './components/edit-account/edit-account.component';
 import { CreateUserComponent } from './components/create-user/create-user.component';
+import { LocationComponent } from './components/event/location/location.component';
+import { EventComponent } from './components/event/event.component';
+import {Location} from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -45,10 +49,13 @@ import { CreateUserComponent } from './components/create-user/create-user.compon
     CreateEventAddArtistComponent,
     ToastComponentComponent,
     RegisterComponent,
-    EditAccountComponent,
     NewsCreateAddEventComponent,
+    UserManagementComponent,
+    EditAccountComponent,
     ResetPasswordComponent,
-    CreateUserComponent
+    CreateUserComponent,
+    LocationComponent,
+    EventComponent,
   ],
   imports: [
     BrowserModule,
