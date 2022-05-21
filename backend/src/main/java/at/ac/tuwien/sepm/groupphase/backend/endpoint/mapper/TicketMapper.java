@@ -25,14 +25,6 @@ public interface TicketMapper {
         return ticket.mapToDto(this);
     }
 
-    default List<TicketDto> ticketToTicketDto(List<Ticket> tickets) {
-        List<TicketDto> ticketDtos = new ArrayList<>();
-        for (Ticket ticket : tickets) {
-            ticketDtos.add(ticket.mapToDto(this));
-        }
-        return ticketDtos;
-    }
-
     List<TicketDto> ticketsToTicketDtos(List<Ticket> tickets);
 
     StandingTicketDto standingTicketToStandingTicketDto(StandingTicket ticket);

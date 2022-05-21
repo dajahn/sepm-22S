@@ -87,12 +87,12 @@ public class CartEndpoint {
     @Secured("ROLE_USER")
     @GetMapping(value = "/purchased")
     @Operation(summary = "Get summary of all upcoming purchased events", security = @SecurityRequirement(name = "apiKey"))
-    public List<TicketDto> findUpcomingPurchasedEvents(Boolean upcoming) {
+    public List<TicketDto> findPurchasedEvents(Boolean upcoming) {
         LOGGER.info("GET /api/v1/cart/purchased, upcoming? : {}", upcoming);
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findApplicationUserByEmail(email);
         LOGGER.info("userId: {}", user.getId());
-        return ticketMapper.ticketToTicketDto(cartService.getPurchasedTickets(user.getId(), upcoming));
+        return ticketMapper.ticketsToTicketDtos(cartService.getPurchasedTickets(user.getId(), upcoming));
     }
 
 }

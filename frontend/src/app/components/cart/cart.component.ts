@@ -15,7 +15,8 @@ import {Globals} from '../../global/globals';
 export class CartComponent implements OnInit {
 
   cart: Cart;
-  purchasedTickets: Ticket[];
+  upcomingTickets: Ticket[];
+  pastTickets: Ticket[];
 
   constructor(
     private cartService: CartService,
@@ -26,7 +27,8 @@ export class CartComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCart();
-    this.loadPurchasedTickets();
+    this.loadPurchasedTickets(true);
+    this.loadPurchasedTickets(false);
   }
 
   /**
@@ -48,11 +50,14 @@ export class CartComponent implements OnInit {
   /**
    * Loads purchased Tickets
    */
-  private loadPurchasedTickets() {
-    this.cartService.getPurchasedTickets(true).subscribe(
+  private loadPurchasedTickets(upcoming: boolean) {
+    this.cartService.getPurchasedTickets(upcoming).subscribe(
       (data) => {
-        console.log(data);
-        this.purchasedTickets = data;
+        if(upcoming) {
+          this.upcomingTickets = data;
+        }else{
+          this.pastTickets = data;
+        }
       },
       error => {
         console.error('Error fetching purchased Tickets',error);
@@ -123,5 +128,9 @@ export class CartComponent implements OnInit {
    */
   showDanger(msg: string) {
     this.toastService.show(msg, {classname: 'bg-danger', delay: 5000});
+  }
+
+  removeButton(){
+    document.getElementById('app-ticket').removeAttribute('remove');
   }
 }
