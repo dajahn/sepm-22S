@@ -97,7 +97,7 @@ public class EventServiceImpl implements EventService {
 
         String du = eventSearchTermsDto.getDuration();
         Duration duration = null;
-        if(du != null) {
+        if (du != null) {
             String hours = du.substring(0, 2);
             String minutes = du.substring(3, 5);
             String time = "PT" + hours + "H" + minutes + "M";
