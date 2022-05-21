@@ -18,8 +18,6 @@ import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepm.groupphase.backend.service.LocationService;
 import at.ac.tuwien.sepm.groupphase.backend.util.EventValidator;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -122,7 +120,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<TopTenEventDto> topTenEventsByCategory(EventCategory category) {
-        LOGGER.trace("FindTopTenEvents in category: {}", category);
+        LOGGER.trace("FindTopTenEvents this month in category: {}", category);
         LocalDateTime from = LocalDateTime.now().with(firstDayOfMonth());
         LocalDateTime to = LocalDateTime.now().with(lastDayOfMonth());
 

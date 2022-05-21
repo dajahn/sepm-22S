@@ -14,10 +14,10 @@ public interface EventMapper {
 
     EventDto eventToEventDto(Event event);
 
-    Event eventDtoToEvent(EventDto eventDto);
-
     List<EventDto> eventToEventDto(List<Event> events);
 
+    Event eventDtoToEvent(EventDto eventDto);
+    
     //Maps event, and it's ticket count to one dto.
     default TopTenEventDto eventToTopTenEventDto(Event event, int ticketCount) {
         FileDto fileDto = new FileDto();

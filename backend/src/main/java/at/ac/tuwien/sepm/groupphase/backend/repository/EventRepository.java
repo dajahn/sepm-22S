@@ -22,6 +22,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findByNameContaining(@Param("name") String name);
 
     List<Event> findByNameContaining(@Param("name") String name, Pageable pageable);
+
     /**
      * Find all top ten events by category.
      *
