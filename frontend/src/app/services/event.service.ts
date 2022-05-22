@@ -2,9 +2,9 @@ import {Injectable} from '@angular/core';
 import {Globals} from '../global/globals';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {CreateEvent, Event, EventCategory} from '../dtos/event';
+import {CreateEvent, Event} from '../dtos/event';
 import {TopTenEvent} from '../dtos/top-ten-event';
-import { EventCategory } from '../enums/event-category';
+import {EventCategory} from '../enums/event-category';
 
 @Injectable({
   providedIn: 'root'
@@ -43,11 +43,11 @@ export class EventService {
   getBySubString(eventName: string, maxRecords: number): Observable<Event[]> {
     let p = new HttpParams();
     if (eventName) {
-p = p.set('name', eventName);
-}
+      p = p.set('name', eventName);
+    }
     if (maxRecords) {
-p = p.set('maxRecords', maxRecords);
-}
+      p = p.set('maxRecords', maxRecords);
+    }
 
     return this.httpClient.get<Event[]>(this.eventBaseUri, {params: p});
   }
