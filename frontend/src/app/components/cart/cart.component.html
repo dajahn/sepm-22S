@@ -83,7 +83,8 @@
                   [rowValue]="toSeatTicket(ticket).seat.row+''"
                   columnTitle="SEAT"
                   [columnValue]="toSeatTicket(ticket).seat.column+''"
-                  [ticketClass]="toSeatTicket(ticket).sector.seatType">
+                  [ticketClass]="toSeatTicket(ticket).sector.seatType"
+                  (inspect)="inspect(ticket.performance.event.id, ticket.performance.id)">
       </app-ticket>
 
       <!-- ### Standing -->
@@ -95,7 +96,8 @@
                   [performance]="ticket.performance.location.name"
                   [price]="ticket.sector.price"
                   rowTitle="SECTOR"
-                  [rowValue]="ticket.sector.name">
+                  [rowValue]="ticket.sector.name"
+                  (inspect)="inspect(ticket.performance.event.id, ticket.performance.id)">
       </app-ticket>
     </div>
   </div>
