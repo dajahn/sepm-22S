@@ -284,31 +284,31 @@
             type="text"
             class="form-control"
 
-            placeholder="Locations' Name"
+            placeholder="Location Name"
             [(ngModel)]="locationSearchParams.name">
         </div>
 
         <div class="col-lg-4">
-          <label for="street">Locations' Address' Street</label>
+          <label for="street">Street</label>
           <input
             id="street"
             ngModel name="street"
             #street="ngModel"
             type="text"
             class="form-control"
-            placeholder="Locations' Address' Street"
+            placeholder="Street"
             [(ngModel)]="locationSearchParams.street">
         </div>
 
         <div class="col-lg-4">
-          <label for="street">Locations' Address' City</label>
+          <label for="street">City</label>
           <input
             id="city"
             ngModel name="city"
             #city="ngModel"
             type="text"
             class="form-control"
-            placeholder="Locations' Address' City"
+            placeholder="City"
             [(ngModel)]="locationSearchParams.city">
         </div>
 
@@ -316,7 +316,7 @@
      <div class="row mt-3">
 
        <div class="col-lg-4">
-         <label for="zipCode">Locations' Address' Zip Code</label>
+         <label for="zipCode">Zip Code</label>
 
          <input
            id="zipCode"
@@ -324,12 +324,12 @@
            #zipCode="ngModel"
            type="text"
            class="form-control"
-           placeholder="Locations' Address' Zip Code"
+           placeholder="Zip Code"
            [(ngModel)]="locationSearchParams.zipCode">
        </div>
 
        <div class="col-lg-4">
-         <label for="country">Locations' Address' Country</label>
+         <label for="country">Country</label>
          <select class="form-control" required name="country" id="country" [(ngModel)]="locationSearchParams.country">
            <option value="{{null}}"  selected>All Countries</option>
            <option *ngFor="let coun of countriesCodeToNameKeys" value="{{coun}}">{{countriesCodeToName[coun]}}</option>

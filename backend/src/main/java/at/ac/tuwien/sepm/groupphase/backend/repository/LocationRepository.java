@@ -36,7 +36,7 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
     @Query(value = "select * from location l "
         + "where (UPPER(l.name) like UPPER(:name) or :name is null) "
         + "and (UPPER(l.city) like UPPER(:city) or :city is null) "
-        + "and (l.country = :country or :country is null) "
+        + "and (l.country = :country or :country = -1) "
         + "and (l.zip_Code like :zipCode or :zipCode is null) "
         + "and (UPPER(l.street) like UPPER(:street) or :street is null)", nativeQuery = true)
     List<Location> findAllBy(@Param("name") String name, @Param("city") String city, @Param("country") int country, @Param("zipCode") String zipCode, @Param("street") String street);

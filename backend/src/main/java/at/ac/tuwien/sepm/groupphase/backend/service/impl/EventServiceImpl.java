@@ -2,9 +2,9 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreatePerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchTermsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ArtistMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
@@ -22,13 +22,14 @@ import at.ac.tuwien.sepm.groupphase.backend.util.EventValidator;
 import at.ac.tuwien.sepm.groupphase.backend.util.SqlStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.time.LocalDateTime;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -105,12 +106,14 @@ public class EventServiceImpl implements EventService {
         String description = converter.toSqlString(eventSearchTermsDto.getDescription());
 
         String du = eventSearchTermsDto.getDuration();
-        Duration duration = null;
+        Duration minDuration = null;
+        Duration maxDuration = null;
         if (du != null) {
             String hours = du.substring(0, 2);
             String minutes = du.substring(3, 5);
             String time = "PT" + hours + "H" + minutes + "M";
-            duration = Duration.parse(time);
+            minDuration = Duration.parse(time).minusMinutes(30);
+            maxDuration = minDuration.plusMinutes(60);
         }
 
         String name = converter.toSqlString(eventSearchTermsDto.getName());
@@ -119,7 +122,7 @@ public class EventServiceImpl implements EventService {
             category = eventSearchTermsDto.getCategory().ordinal();
         }
 
-        return eventRepository.findAllBy(category, description, duration, name);
+        return eventRepository.findAllBy(category, description, minDuration, maxDuration, name);
     }
 
     private Event mapFromCreateEventToEvent(CreateEventDto createEventDto, File file) {

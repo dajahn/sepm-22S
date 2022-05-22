@@ -72,7 +72,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(value = "select * from Event e "
             + "where (e.category = :category or :category = -1) "
             + "and (UPPER(e.description) like UPPER(:description) or :description is null) "
-            + "and (e.duration = :duration or :duration is null) "
+            + "and (e.duration >= :minDuration and e.duration <= :maxDuration or :minDuration is null) "
             + "and (UPPER(e.name) like UPPER(:name) or :name is null)", nativeQuery = true)
-    List<Event> findAllBy(@Param("category") int category, @Param("description") String description, @Param("duration") Duration duration, @Param("name") String name);
+    List<Event> findAllBy(@Param("category") int category, @Param("description") String description, @Param("minDuration") Duration minDuration, @Param("maxDuration") Duration maxDuration, @Param("name") String name);
 }

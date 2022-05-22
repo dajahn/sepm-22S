@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { CreateEvent, Event } from '../dtos/event';
 import { EventSearchParams } from "../dtos/eventSearchParams";
 import {TopTenEvent} from '../dtos/top-ten-event';
+import {EventCategory} from "../enums/event-category";
 
 @Injectable({
   providedIn: 'root'
