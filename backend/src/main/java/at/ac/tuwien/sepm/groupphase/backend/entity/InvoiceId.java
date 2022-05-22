@@ -1,12 +1,19 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import at.ac.tuwien.sepm.groupphase.backend.exception.UnexpectedException;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
 
 @Getter
 @RequiredArgsConstructor
 public class InvoiceId {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @NonNull
     private Integer year;
@@ -32,7 +39,7 @@ public class InvoiceId {
             identification.year = Integer.parseInt(parts[0]);
             identification.id = Integer.parseInt(parts[1]);
         } catch (NumberFormatException e) {
-            // todo handle error
+            throw new UnexpectedException();
         }
         return identification;
     }

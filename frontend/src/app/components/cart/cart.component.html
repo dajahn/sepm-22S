@@ -29,6 +29,7 @@
                   columnTitle="SEAT"
                   [columnValue]="toSeatTicket(ticket).seat.column+''"
                   [ticketClass]="toSeatTicket(ticket).sector.seatType"
+                  (inspect)="inspect(ticket.performance.event.id, ticket.performance.id)"
                   (remove)="onRemove(ticket.id)">
       </app-ticket>
 
@@ -42,6 +43,7 @@
                   [price]="ticket.sector.price"
                   rowTitle="SECTOR"
                   [rowValue]="ticket.sector.name"
+                  (inspect)="inspect(ticket.performance.event.id, ticket.performance.id)"
                   (remove)="onRemove(ticket.id)">
       </app-ticket>
     </div>

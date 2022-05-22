@@ -11,12 +11,12 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotLockUserException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticatedUser;
+import at.ac.tuwien.sepm.groupphase.backend.service.ResetPasswordService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepm.groupphase.backend.util.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Optional;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,13 +35,15 @@ public class CustomUserDetailService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final UserValidator userValidator;
+    private final ResetPasswordService resetPasswordService;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, UserValidator userValidator) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, UserValidator userValidator, ResetPasswordService resetPasswordService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
         this.userValidator = userValidator;
+        this.resetPasswordService = resetPasswordService;
     }
 
     @Override
@@ -81,6 +82,10 @@ public class CustomUserDetailService implements UserService {
         if (u.getFailedLoginAttempts() >= 5) {
             LOGGER.debug("user with mail: {} is now LOCKED!", userDto.getEmail());
             u.setStatus(UserStatus.LOCKED);
+
+            if (u.getRole() == UserRole.ADMIN) {
+                resetPasswordService.forgotPassword(u.getEmail());
+            }
         }
 
         userRepository.save(u);

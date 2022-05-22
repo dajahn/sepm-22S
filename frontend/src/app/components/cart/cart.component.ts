@@ -6,6 +6,7 @@ import {SeatTicket} from '../../dtos/seat-ticket';
 import {CheckoutService} from '../../services/checkout.service';
 import {ToastService} from '../../services/toast-service.service';
 import {Globals} from '../../global/globals';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -22,9 +23,8 @@ export class CartComponent implements OnInit {
     private cartService: CartService,
     private checkoutService: CheckoutService,
     private toastService: ToastService,
-    public globals: Globals
-  ) {
-  }
+    public globals: Globals,
+    private router: Router) {}
 
   ngOnInit(): void {
     this.loadCart();
@@ -43,7 +43,7 @@ export class CartComponent implements OnInit {
       },
       error: err => {
         console.error('Error fetching cart', err);
-        this.showDanger('Sorry, something went wrong. Could not load the cart 😔');
+        this.showDanger('Sorry, something went wrong. Could not load the cart 😔 Please try again later!');
       }
     });
   }
@@ -95,7 +95,7 @@ export class CartComponent implements OnInit {
       },
       error: err => {
         console.error(`Error, could not remove ticket ${id} from cart.`, err);
-        this.showDanger(`Sorry, ticket could not be removed from the cart 😔`);
+        this.showDanger(`Sorry, ticket could not be removed from the cart 😔 Please try again later!`);
       }
     });
   }
@@ -104,17 +104,7 @@ export class CartComponent implements OnInit {
    * Checks out the cart of the currently logged-in user.
    */
   checkout() {
-    this.checkoutService.checkout().subscribe({
-      next: () => {
-        console.log('Successfully checked out cart!');
-        this.cart.tickets = [];
-        this.showSuccess('Successfully checked out cart 🎉');
-      },
-      error: err => {
-        console.error('Error checking out cart', err);
-        this.showDanger('Sorry, something went wrong during checkout 😔');
-      }
-    });
+    this.router.navigate(['/checkout']).then();
   }
 
   /**
@@ -131,4 +121,11 @@ export class CartComponent implements OnInit {
     this.toastService.show(msg, {classname: 'bg-danger', delay: 5000});
   }
 
+  /**
+   *
+   * Navigates to corresponding event and performance.
+   */
+  inspect(eventID: number, performanceID: number) {
+    this.router.navigate([`events/${eventID}/performances/${performanceID}`]).then();
+  }
 }

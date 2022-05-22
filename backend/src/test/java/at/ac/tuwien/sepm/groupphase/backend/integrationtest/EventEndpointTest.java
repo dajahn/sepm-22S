@@ -13,7 +13,6 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SmallLocationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ArtistMapper;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Location;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Seat;
@@ -76,28 +75,27 @@ public class EventEndpointTest implements EventTestData, ArtistTestData, Locatio
     @Autowired
     private EventRepository eventRepository;
 
-    @Autowired
     private static ObjectMapper MAPPER;
-
-    @Autowired
-    private EventMapper eventMapper;
 
     @Autowired
     private JwtTokenizer jwtTokenizer;
 
     @Autowired
     private SecurityProperties securityProperties;
+
     @Autowired
     private ArtistRepository artistRepository;
+
     @Autowired
     private LocationRepository locationRepository;
+
     @Autowired
     private ArtistMapper artistMapper;
 
     private CreateEventDto createEventDto;
 
     @BeforeAll
-    public static void  initMapper() {
+    public static void initMapper() {
         MAPPER = new ObjectMapper();
         MAPPER.findAndRegisterModules();
         SimpleModule serializer =
@@ -114,7 +112,9 @@ public class EventEndpointTest implements EventTestData, ArtistTestData, Locatio
 
     @BeforeEach
     public void setCreateEventDto() throws FileNotFoundException {
-        eventRepository.deleteAll();
+        if (eventRepository != null) {
+            eventRepository.deleteAll();
+        }
         createEventDto = new CreateEventDto();
 
         //generate location for event
@@ -131,7 +131,7 @@ public class EventEndpointTest implements EventTestData, ArtistTestData, Locatio
         Set<Sector> sectors = new HashSet<>();
         for (int j = 0; j < STANDING_SEC_ROWS; j++) {
             StandingSector sector = new StandingSector();
-            sector.setName(STANDING_SEC_NAME+j);
+            sector.setName(STANDING_SEC_NAME + j);
             sector.setPrice(STANDING_SEC_PRICE);
             sector.setCapacity(STANDING_SEC_CAPACITY);
             Point point = new Point();
@@ -194,7 +194,7 @@ public class EventEndpointTest implements EventTestData, ArtistTestData, Locatio
 
         FileInputStream fis = new FileInputStream("src/test/resources/" + IMAGE_FILE_NAME);
         FileDto fileDto = new FileDto();
-        fileDto.setType(new MediaType("image","jpeg"));
+        fileDto.setType(new MediaType("image", "jpeg"));
         String fileString = IOUtils.toString(fis, Charset.availableCharsets().get("UTF-8"));
         fileString = fileString.replace("\n", "");
         fileDto.setImageBase64(fileString);
