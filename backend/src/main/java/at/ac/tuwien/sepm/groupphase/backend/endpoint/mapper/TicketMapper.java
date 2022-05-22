@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.StandingTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import org.mapstruct.Mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(uses = {SectorMapper.class, PerformanceMapper.class})

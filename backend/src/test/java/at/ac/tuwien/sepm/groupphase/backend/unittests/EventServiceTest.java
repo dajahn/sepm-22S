@@ -14,7 +14,6 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ArtistMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Location;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Seat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatSector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
@@ -29,13 +28,9 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import io.micrometer.core.instrument.util.IOUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -304,5 +299,5 @@ public class EventServiceTest implements EventTestData, LocationTestData, Addres
             ValidationException.class, () -> eventService.createEvent(event)
         );
     }
-
 }
+

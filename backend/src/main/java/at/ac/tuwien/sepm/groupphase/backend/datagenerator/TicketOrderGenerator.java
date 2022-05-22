@@ -46,13 +46,8 @@ public class TicketOrderGenerator {
     private final EventDataGenerator eventDataGenerator;
     private final UserDataGenerator userDataGenerator;
 
-    public TicketOrderGenerator(OrderRepository orderRepository,
-                                UserRepository userRepository,
-                                PerformanceRepository performanceRepository,
-                                SeatSectorRepository seatSectorRepository,
-                                StandingSectorRepository standingSectorRepository,
-                                EventDataGenerator eventDataGenerator,
-                                UserDataGenerator userDataGenerator) {
+    public TicketOrderGenerator(OrderRepository orderRepository, UserRepository userRepository, PerformanceRepository performanceRepository, SeatSectorRepository seatSectorRepository,
+                                StandingSectorRepository standingSectorRepository, EventDataGenerator eventDataGenerator, UserDataGenerator userDataGenerator) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.performanceRepository = performanceRepository;
@@ -107,13 +102,28 @@ public class TicketOrderGenerator {
 
                 TicketOrder order = new TicketOrder();
 
-                order.setType(OrderType.CART);
+                if (i < users.size() / 3) {
+                    order.setType(OrderType.CART);
+                } else if (i < (users.size() / 3) * 2) {
+                    order.setType(OrderType.RESERVATION);
+                } else {
+                    order.setType(OrderType.PURCHASE);
+                }
 
                 order.setDateTime(LocalDateTime.of(LocalDate.ofInstant(faker.date().future(365, TimeUnit.DAYS).toInstant(), TimeZone.getDefault().toZoneId()), LocalTime.of(faker.random().nextInt(0, 23), 0)));
                 order.setValidUntil(order.getDateTime().plusHours(1)); // VALID FOR 1 HOUR
                 order.setUser(users.get(i));
                 order.setUserId(users.get(i).getId());
                 orderRepository.save(order);
+
+                TicketOrder order2 = new TicketOrder();
+
+                order2.setType(OrderType.CART);
+                order2.setDateTime(LocalDateTime.of(LocalDate.ofInstant(faker.date().future(365, TimeUnit.DAYS).toInstant(), TimeZone.getDefault().toZoneId()), LocalTime.of(faker.random().nextInt(0, 23), 0)));
+                order2.setValidUntil(order2.getDateTime().plusHours(1)); // VALID FOR 1 HOUR
+                order2.setUser(users.get(i));
+                order2.setUserId(users.get(i).getId());
+                orderRepository.save(order2);
 
                 List<Ticket> orderTickets = new ArrayList<>();
                 int numberOfTickets = faker.random().nextInt(2, 3);
@@ -122,13 +132,11 @@ public class TicketOrderGenerator {
                     ticket.setOrderId(order.getId());
                     orderTickets.add(ticket);
                 }
-
                 order.setTickets(orderTickets);
 
                 LOGGER.debug("Saving order {}", order);
                 orderRepository.save(order);
             }
-
         }
     }
 
