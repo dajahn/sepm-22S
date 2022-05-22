@@ -45,7 +45,7 @@
     </div>
 
     <!-- # Remove Button: -->
-    <button type="button" class="btn remove" (click)="remove.emit('data')" title="Remove"><i class="bi bi-x"></i></button>
+    <button *ngIf="removeButton" type="button" class="btn remove" (click)="remove.emit('data')" title="Remove"><i class="bi bi-x"></i></button>
   </div>
 </div>
 

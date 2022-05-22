@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {CreateTicket} from '../dtos/create-ticket';
 import {Observable} from 'rxjs';
 import {Cart} from '../dtos/cart';
+import {Ticket} from '../dtos/ticket';
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +42,17 @@ export class CartService {
   removeTicketFromCart(ticketId: number): Observable<void> {
     console.log(`Remove ticket ${ticketId} from cart.`);
     return this.httpClient.delete<void>(`${this.cartBaseUri}/tickets/${ticketId}`);
+  }
+
+  /**
+   * Get purchased Tickets of the currently logged-in user.
+   *
+   * @param upcoming if the performance of the ticket should be in the future
+   */
+  getPurchasedTickets(upcoming: boolean): Observable<Ticket[]> {
+    console.log(`Get purchased Tickets of logged-in user.`);
+    let terms = new HttpParams();
+    terms = terms.set('upcoming', upcoming);
+    return this.httpClient.get<Ticket[]>(this.cartBaseUri+ '/purchased', {params:terms});
   }
 }
