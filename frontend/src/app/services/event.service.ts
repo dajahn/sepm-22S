@@ -3,9 +3,9 @@ import { Globals } from '../global/globals';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CreateEvent, Event } from '../dtos/event';
-import { EventSearchParams } from "../dtos/eventSearchParams";
+import { EventSearchParams } from '../dtos/eventSearchParams';
 import {TopTenEvent} from '../dtos/top-ten-event';
-import {EventCategory} from "../enums/event-category";
+import { EventCategory } from '../enums/event-category';
 
 @Injectable({
   providedIn: 'root'
@@ -39,14 +39,17 @@ export class EventService {
   /**
    * Gets an event by substring
    *
-   * @param eventName
+   * @param eventName the name of the event
+   * @param maxRecords the number of records we want to list
    */
   getBySubString(eventName: string, maxRecords: number): Observable<Event[]> {
     let p = new HttpParams();
-    if (eventName)
-      p = p.set('name', eventName)
-    if (maxRecords)
+    if (eventName) {
+      p = p.set('name', eventName);
+    }
+    if (maxRecords) {
       p = p.set('maxRecords', maxRecords);
+    }
 
     return this.httpClient.get<Event[]>(this.eventBaseUri, { params: p });
   }

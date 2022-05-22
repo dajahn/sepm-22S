@@ -17,7 +17,7 @@ import { EditAccountComponent } from './components/edit-account/edit-account.com
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { CreateUserComponent } from './components/create-user/create-user.component';
 import { EventComponent } from './components/event/event.component';
-import {SearchComponent} from "./components/search/search.component";
+import {SearchComponent} from './components/search/search.component';
 import {CheckoutComponent} from './components/checkout/checkout.component';
 import {AntiAuthGuard} from './guards/anti-auth.guard';
 
