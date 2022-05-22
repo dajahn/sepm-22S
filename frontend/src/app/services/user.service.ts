@@ -40,15 +40,19 @@ export class UserService {
   }
 
   loadUser(userSearch: UserSearchDto): Observable<User[]> {
-    let queryParams: string = Object.keys(userSearch).map(key => key + '=' + userSearch[key]).join('&');
-    return this.httpClient.get<User[]>(this.baseUri + "?" + queryParams);
+    const queryParams: string = Object.keys(userSearch).map(key => key + '=' + userSearch[key]).join('&');
+    return this.httpClient.get<User[]>(this.baseUri + '?' + queryParams);
   }
 
   unlockUser(id: number): Observable<User> {
-    return this.httpClient.put<User>(this.baseUri + "/unlock/" + id, {});
+    return this.httpClient.put<User>(this.baseUri + '/unlock/' + id, {});
   }
 
   lockUser(id: number): Observable<User> {
-    return this.httpClient.put<User>(this.baseUri + "/lock/ " + id, {});
+    return this.httpClient.put<User>(this.baseUri + '/lock/ ' + id, {});
+  }
+
+  deleteUser(): Observable<void> {
+    return this.httpClient.delete<void>(this.baseUri);
   }
 }

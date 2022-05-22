@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUpdateUserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserSearchDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUpdateUserDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -53,10 +53,16 @@ public interface UserService extends UserDetailsService {
     User updateUser(CreateUpdateUserDto userDto, Long id, boolean adminRole);
 
     /**
+     * Deletes an existing User.
+     *
+     * @param id of the user to delete
+     */
+    void deleteUser(Long id);
+
+    /**
      * Increases the failedLoginAttempts property by 1.
      *
      * @param userDto which failed the login attempt
-     *
      */
     void addFailedLoginAttemptToUser(UserLoginDto userDto);
 
@@ -93,7 +99,7 @@ public interface UserService extends UserDetailsService {
     /**
      * Locks a user by id.
      *
-     * @param id of the user
+     * @param id   of the user
      * @param mail of the admin which executes the request
      * @return the user object
      */
