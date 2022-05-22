@@ -11,6 +11,7 @@ import at.ac.tuwien.sepm.groupphase.backend.util.HtmlTemplate;
 import com.sun.istack.ByteArrayDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @Service
+@Profile("!test")
 public class EmailServiceImpl implements EmailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

@@ -3,7 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {Performance} from '../dtos/performance';
-import {PerformanceSearchParams} from "../dtos/performanceSearchParams";
+import {PerformanceSearchParams} from '../dtos/performanceSearchParams';
 
 @Injectable({
   providedIn: 'root'
@@ -34,19 +34,19 @@ export class PerformanceService {
   findAllPerformancesBy(searchTerms: PerformanceSearchParams): Observable<Performance[]> {
     console.log(`Find all performances with search terms: ${searchTerms}`);
     let terms = new HttpParams();
-    if(searchTerms.locationName) {
+    if (searchTerms.locationName) {
       terms = terms.set('locationName', searchTerms.locationName);
     }
-    if(searchTerms.eventName) {
+    if (searchTerms.eventName) {
       terms = terms.set('eventName', searchTerms.eventName);
     }
-    if(searchTerms.toDate) {
+    if (searchTerms.toDate) {
       terms = terms.set('toDate', searchTerms.toDate.toString());
     }
-    if(searchTerms.fromDate) {
+    if (searchTerms.fromDate) {
       terms = terms.set('fromDate', searchTerms.fromDate.toString());
     }
-    if(searchTerms.price) {
+    if (searchTerms.price) {
       terms = terms.set('price', searchTerms.price);
     }
     return this.httpClient.get<Performance[]>(this.eventBaseUri + '/performances/search', {params: terms});

@@ -24,6 +24,7 @@ export class TopTenEventsComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentMonth = this.months[new Date().getMonth() - 1];
+    // eslint-disable-next-line guard-for-in
     for (const category in this.categoriesValues) {
       this.getTopTenEvents(this.categoriesValues[category]);
     }
@@ -38,7 +39,7 @@ export class TopTenEventsComponent implements OnInit {
         this.topTenEvents[eventCategory] = data;
         console.log(data);
         for (const n of this.topTenEvents[eventCategory]) {
-          if(n.thumbnail !== null) {
+          if (n.thumbnail !== null) {
             n.thumbnail.url = this.globals.backendUri + n.thumbnail.url;
           }
         }

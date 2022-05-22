@@ -1,6 +1,4 @@
-import {CountriesCodeToName} from "../enums/countriesCodeToName";
-
-export class BigLocationSearchParams{
+export class BigLocationSearchParams {
   name: string;
   street: number;
   zipCode: string;

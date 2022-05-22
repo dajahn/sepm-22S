@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {LocationSearchParam} from '../dtos/locationSearchParam';
 import {SmallLocation} from '../dtos/smallLocation';
-import {BigLocationSearchParams} from "../dtos/bigLocationSearchParams";
-import {Location} from "../dtos/location";
+import {BigLocationSearchParams} from '../dtos/bigLocationSearchParams';
+import {Location} from '../dtos/location';
 
 const baseUri = new Globals().backendUri + '/locations';
 
@@ -33,22 +33,22 @@ export class LocationService {
    *
    * @param searchParams properties which the location should have.
    */
-  findAllLocationsBy(searchParams: BigLocationSearchParams): Observable<Location[]>{
+  findAllLocationsBy(searchParams: BigLocationSearchParams): Observable<Location[]> {
     console.log(`Find all Locations with search params: ${searchParams}`);
     let terms = new HttpParams();
-    if(searchParams.name) {
+    if (searchParams.name) {
       terms = terms.set('name', searchParams.name);
     }
-    if(searchParams.city) {
+    if (searchParams.city) {
       terms = terms.set('city', searchParams.city);
     }
-    if(searchParams.country) {
+    if (searchParams.country) {
       terms = terms.set('country', searchParams.country);
     }
-    if(searchParams.street) {
+    if (searchParams.street) {
       terms = terms.set('street', searchParams.street);
     }
-    if(searchParams.zipCode) {
+    if (searchParams.zipCode) {
       terms = terms.set('zipCode', searchParams.zipCode);
     }
     return this.http.get<Location[]>(baseUri + '/search', {params: terms});
