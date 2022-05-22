@@ -11,8 +11,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,25 +43,37 @@ public class CheckoutServiceTest implements CheckoutTestData {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void givenFilledCart_whenCheckout_thenCartEmpty() {
-        // BEFORE CHECKOUT
-        Optional<TicketOrder> tmp = orderRepository.findById(1L);
-        TicketOrder cart = tmp.get();
+        // GIVEN
+        List<TicketOrder> orders = orderRepository.findAll();
+        TicketOrder cart = null;
+        for (TicketOrder order: orders) {
+            if( order.getType() == OrderType.CART && order.getTickets().size() > 0) {
+                cart = order;
+                break;
+            }
+        }
+        boolean gt = false;
+        if (cart.getTickets().size() > 0) gt = true;
         assertEquals(OrderType.CART, cart.getType());
-        assertEquals(6, cart.getTickets().size());
+        assertEquals(true, gt);
 
-        // CHECKOUT
-        checkoutService.checkout(cart.getUserId(),checkoutDto);
+        // WHEN
+        checkoutService.checkout(cart.getUserId(), checkoutDto);
 
-        // AFTER CHECKOUT
-        tmp = orderRepository.findById(1L);
-        cart = tmp.get();
-        assertEquals(OrderType.PURCHASE, cart.getType());
+        // THEN
+        Optional<TicketOrder> tmp = orderRepository.findById(cart.getId());
+        TicketOrder cart2 = tmp.get();
+        assertEquals(OrderType.PURCHASE, cart2.getType());
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void givenEmptyCart_whenCheckout_thenThrowValidationException() {
-        // BEFORE CHECKOUT
+        // GIVEN
         Optional<TicketOrder> tmp = orderRepository.findById(1L);
         TicketOrder cart = tmp.get();
         cart.getTickets().clear();
@@ -71,23 +86,35 @@ public class CheckoutServiceTest implements CheckoutTestData {
         long userID = cart.getUserId();
         ValidationException vex;
 
-        // CHECKOUT
+        // WHEN
         vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
+
+        // THEN
         assertEquals("Cart tickets must not be empty!", vex.getMessage());
     }
 
     @Test
-    public void givenInvalidCheckout_whenCheckout_thenThrowValidationException() {
-        // BEFORE CHECKOUT
-        Optional<TicketOrder> tmp = orderRepository.findById(1L);
-        TicketOrder cart = tmp.get();
+    @Rollback
+    @Transactional
+    public void givenValidCartInvalidCheckout_whenCheckout_thenThrowValidationException() {
+        // GIVEN
+        List<TicketOrder> orders = orderRepository.findAll();
+        TicketOrder cart = null;
+        for (TicketOrder order: orders) {
+            if( order.getType() == OrderType.CART && order.getTickets().size() > 0) {
+                cart = order;
+                break;
+            }
+        }
+        boolean gt = false;
+        if (cart.getTickets().size() > 0) gt = true;
         assertEquals(OrderType.CART, cart.getType());
-        assertEquals(6, cart.getTickets().size());
+        assertEquals(true, gt);
         ValidationException vex;
         long userID = cart.getUserId();
         CheckoutDto checkoutDto = this.checkoutDto;
 
-        // CHECKOUT
+        // WHEN / THEN
         // - invalid name
         checkoutDto.setCardholder(null);
         vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
