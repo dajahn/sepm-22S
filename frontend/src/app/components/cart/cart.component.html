@@ -3,7 +3,6 @@
 <h5>Buy tickets or view the ones you have already bought</h5>
 
 
-
 <!-- CART -->
 <h4 class="headline">in you cart ({{cart?.tickets.length}})</h4>
 
@@ -18,7 +17,7 @@
     <div *ngFor="let ticket of cart?.tickets">
       <!-- ### Seat -->
       <app-ticket *ngIf="ticket?.sector.type === 'SEAT'"
-                  removeButton = "true"
+                  removeButton="true"
                   [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
                   [title]="ticket.performance.event?.name"
                   [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
@@ -35,7 +34,7 @@
 
       <!-- ### Standing -->
       <app-ticket *ngIf="ticket?.sector.type === 'STANDING'"
-                  removeButton = "true"
+                  removeButton="true"
                   [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
                   [title]="ticket.performance.event?.name"
                   [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
@@ -59,13 +58,12 @@
 </ng-template>
 
 
-
 <!-- PURCHASED UPCOMING EVENTS -->
-<h4 class="headline">purchased upcoming events ({{upcomingTickets.length}})</h4>
+<h4 class="headline">purchased upcoming events ({{upcomingTickets?.length}})</h4>
 
 <!-- # Purchased Tickets Grid: -->
 <!-- ## No purchased Tickets -->
-<div *ngIf="upcomingTickets.length <= 0; else upcomingTicketsNotEmpty">
+<div *ngIf="upcomingTickets && upcomingTickets.length <= 0; else upcomingTicketsNotEmpty">
   <h5 class="empty">Nothing in here ... chirp chirp 🦗</h5>
 </div>
 
@@ -75,7 +73,7 @@
     <div *ngFor="let ticket of upcomingTickets">
       <!-- ### Seat -->
       <app-ticket *ngIf="ticket?.sector.type === 'SEAT'"
-                  removeButton = "true"
+                  removeButton="true"
                   [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
                   [title]="ticket.performance.event?.name"
                   [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
@@ -90,7 +88,7 @@
 
       <!-- ### Standing -->
       <app-ticket *ngIf="ticket?.sector.type === 'STANDING'"
-                  removeButton = "true"
+                  removeButton="true"
                   [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
                   [title]="ticket.performance.event?.name"
                   [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
@@ -105,11 +103,11 @@
 
 
 <!-- PURCHASED PAST EVENTS -->
-<h4 class="headline" style="margin-top: 4rem">past events ({{pastTickets.length}})</h4>
+<h4 class="headline" style="margin-top: 4rem">past events ({{pastTickets?.length}})</h4>
 
 <!-- # Purchased Tickets Grid: -->
 <!-- ## No purchased Tickets -->
-<div *ngIf="pastTickets.length <= 0; else pastTicketsNotEmpty">
+<div *ngIf="pastTickets?.length <= 0; else pastTicketsNotEmpty">
   <h5 class="empty">Nothing in here ... chirp chirp 🦗</h5>
 </div>
 

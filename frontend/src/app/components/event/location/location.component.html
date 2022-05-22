@@ -23,6 +23,10 @@
         [attr.width]="(sector.point2.x - sector.point1.x) * 100"
         [attr.height]="(sector.point2.y - sector.point1.y) * 100"
         fill="red">
+        <title>
+          Sector {{sector.name}}
+          {{'\n'}}Price: {{sector.price | price}}
+        </title>
         <rect
           x="10"
           y="10"
@@ -63,6 +67,11 @@
           [class.clickable]="!isSeatOccupied(seat.id)"
           [attr.x]="seat.point.x * 100"
           [attr.y]="seat.point.y * 100">
+          <title>
+            Row {{seat.row}}, Seat {{seat.column}}
+            {{'\n'}}Price: {{sector.price | price}} {{sector.seatType === 'NONE' ? '' : '(' + (sector.seatType |
+            capitalizeFirst) + ')'}}
+          </title>
           <path
             class="seat"
             d="M 10 10
