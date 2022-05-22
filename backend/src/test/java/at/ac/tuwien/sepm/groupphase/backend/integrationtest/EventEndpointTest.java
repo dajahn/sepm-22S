@@ -112,9 +112,9 @@ public class EventEndpointTest implements EventTestData, ArtistTestData, Locatio
 
     @BeforeEach
     public void setCreateEventDto() throws FileNotFoundException {
-        if (eventRepository != null) {
-            eventRepository.deleteAll();
-        }
+//        if (eventRepository != null) {
+//            eventRepository.deleteAll();
+//        }
         createEventDto = new CreateEventDto();
 
         //generate location for event

@@ -39,13 +39,11 @@ public class ArtistServiceTest implements ArtistTestData {
 
     @Test
     public void givenNoMatchingArtistInDb_whenFindById_throwNotFoundException() {
-        artistRepository.deleteAll();
         assertThrows(NotFoundException.class, () ->  artistService.findById(-1L));
     }
 
     @Test
     public void givenArtistsInDb_whenSearchByName_thenFindListOfMatchingArtists() {
-        artistRepository.deleteAll();
         artistRepository.save(new Artist(ARTIST_NAME + "ZZZZ", ARTIST_DESCRIPTION));
         artistRepository.save(new Artist(ARTIST_NAME + "ZZZ", ARTIST_DESCRIPTION));
         artistRepository.save(new Artist(ARTIST_NAME + "YYY", ARTIST_DESCRIPTION));

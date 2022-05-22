@@ -29,6 +29,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.LocalDateTime;
+
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_ROLES;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_USER;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -89,7 +91,7 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     @Test
     public void givenNothing_whenCreate_thenCreatedUserWithAllSetPropertiesPlusId()
         throws Exception {
-        userRepository.deleteAll();
+        createUpdateUserDto.setEmail("user"+  System.currentTimeMillis()+"@example.com");
         String body = MAPPER.writeValueAsString(createUpdateUserDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
@@ -117,7 +119,7 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     @Test
     public void givenNothing_whenCreateAdminUserWithAdminRights_thenCreatedUserWithAllSetPropertiesPlusId()
         throws Exception {
-        userRepository.deleteAll();
+        createUpdateUserDto.setEmail("user"+  System.currentTimeMillis()+"@example.com");
         createUpdateUserDto.setRole(UserRole.ADMIN);
         String body = MAPPER.writeValueAsString(createUpdateUserDto);
 
@@ -147,7 +149,6 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     @Test
     public void givenNothing_whenCreateAdminUserWithoutAdminRights_then422()
         throws Exception {
-        userRepository.deleteAll();
         createUpdateUserDto.setRole(UserRole.ADMIN);
         String body = MAPPER.writeValueAsString(createUpdateUserDto);
 
@@ -164,7 +165,6 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     @Test
     public void givenNothing_whenCreateUserValueInvalid_then422()
         throws Exception {
-        userRepository.deleteAll();
         createUpdateUserDto.setFirstName(null);
         String body = MAPPER.writeValueAsString(createUpdateUserDto);
 
@@ -197,7 +197,7 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     @Test
     public void givenNothing_whenUpdate_thenNoContentAndUserUpdatedInDb()
         throws Exception {
-        userRepository.deleteAll();
+        createUpdateUserDto.setEmail("user"+ System.currentTimeMillis()+"@example.com");
         User inDb = userService.registerUser(createUpdateUserDto, true);
         String newMail = "new-email@example.com";
         createUpdateUserDto.setEmail(newMail);
@@ -230,7 +230,6 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     @Test
     public void givenNothing_whenUpdateUserValueInvalid_then422()
         throws Exception {
-        userRepository.deleteAll();
         User inDb = userService.registerUser(createUpdateUserDto, true);
         createUpdateUserDto.setEmail("asdfasdf");
         String body = MAPPER.writeValueAsString(createUpdateUserDto);

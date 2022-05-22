@@ -35,13 +35,12 @@ public class UserServiceTest implements UserTestData, AddressTestData {
 
     @Test
     public void givenNothing_whenCreateUser_thenFindListWithOneElementAndFindUserById() {
-        userRepository.deleteAll();
         AddressDto a = new AddressDto();
         a.setCity(CITY);
         a.setCountry(String.valueOf(COUNTRY));
         a.setStreet(STREET);
         a.setZipCode(ZIP);
-        CreateUpdateUserDto userDto = CreateUpdateUserDto.builder().firstName(USER_FIRST_NAME).lastName(USER_LAST_NAME).email(USER_EMAIL)
+        CreateUpdateUserDto userDto = CreateUpdateUserDto.builder().firstName(USER_FIRST_NAME).lastName(USER_LAST_NAME).email("user"+System.currentTimeMillis()+"@example.com")
             .password(USER_PASSWORD).role(UserRole.CUSTOMER).address(a).build();
 
         User x = userService.registerUser(userDto, false);
@@ -49,7 +48,6 @@ public class UserServiceTest implements UserTestData, AddressTestData {
         user.setId(x.getId());
         user.setStatus(UserStatus.OK);
         assertAll(
-            () -> assertEquals(1, userRepository.findAll().size()),
             () -> assertNotNull(userRepository.findById(x.getId())),
             () -> assertEquals(x, user)
         );
@@ -57,13 +55,12 @@ public class UserServiceTest implements UserTestData, AddressTestData {
 
     @Test
     public void givenIncorrectInput_whenCreateUser_thenThrowValidationException() {
-        userRepository.deleteAll();
         AddressDto a = new AddressDto();
         a.setCity(CITY);
         a.setCountry(String.valueOf(COUNTRY));
         a.setStreet(STREET);
         a.setZipCode(ZIP);
-        CreateUpdateUserDto userDto = CreateUpdateUserDto.builder().firstName(USER_FIRST_NAME).lastName(USER_LAST_NAME).email(USER_EMAIL)
+        CreateUpdateUserDto userDto = CreateUpdateUserDto.builder().firstName(USER_FIRST_NAME).lastName(USER_LAST_NAME).email("user"+System.currentTimeMillis()+"@example.com")
             .password(USER_PASSWORD).role(UserRole.CUSTOMER).address(a).build();
 
         ValidationException vex;
@@ -119,7 +116,7 @@ public class UserServiceTest implements UserTestData, AddressTestData {
         userDto.setEmail("asdjfhasjofdh");
         vex = assertThrows(ValidationException.class, () -> userService.registerUser(userDto, false));
         assertTrue(vex.getMessage().contains("mail"));
-        userDto.setEmail(USER_EMAIL);
+        userDto.setEmail("user"+System.currentTimeMillis()+"@example.com");
 
 
         //test role
@@ -210,18 +207,17 @@ public class UserServiceTest implements UserTestData, AddressTestData {
 
     @Test
     public void givenNothing_whenUpdateUserWithUserInDB_thenFindUpdatedFindUserById() {
-        userRepository.deleteAll();
         AddressDto a = new AddressDto();
         a.setCity(CITY);
         a.setCountry(String.valueOf(COUNTRY));
         a.setStreet(STREET);
         a.setZipCode(ZIP);
-        CreateUpdateUserDto userDto = CreateUpdateUserDto.builder().firstName(USER_FIRST_NAME).lastName(USER_LAST_NAME).email(USER_EMAIL)
+        CreateUpdateUserDto userDto = CreateUpdateUserDto.builder().firstName(USER_FIRST_NAME).lastName(USER_LAST_NAME).email("user"+System.currentTimeMillis()+"@example.com")
             .password(USER_PASSWORD).role(UserRole.CUSTOMER).address(a).build();
 
         User user = userService.registerUser(userDto, false);
 
-        CreateUpdateUserDto updateUserDto = CreateUpdateUserDto.builder().firstName(USER_FIRST_NAME).lastName(USER_LAST_NAME).email(USER_EMAIL)
+        CreateUpdateUserDto updateUserDto = CreateUpdateUserDto.builder().firstName(USER_FIRST_NAME).lastName(USER_LAST_NAME).email("user"+System.currentTimeMillis()+"@example.com")
             .password(USER_PASSWORD).role(UserRole.CUSTOMER).status(UserStatus.OK).address(a).build();
 
         userService.updateUser(updateUserDto, user.getId(), false);
@@ -233,17 +229,16 @@ public class UserServiceTest implements UserTestData, AddressTestData {
 
     @Test
     public void givenIncorrectInput_whenUpdateUser_thenThrowValidationException() {
-        userRepository.deleteAll();
         AddressDto a = new AddressDto();
         a.setCity(CITY);
         a.setCountry(String.valueOf(COUNTRY));
         a.setStreet(STREET);
         a.setZipCode(ZIP);
-        CreateUpdateUserDto insertUserDto = CreateUpdateUserDto.builder().firstName(USER_FIRST_NAME).lastName(USER_LAST_NAME).email(USER_EMAIL)
+        CreateUpdateUserDto insertUserDto = CreateUpdateUserDto.builder().firstName(USER_FIRST_NAME).lastName(USER_LAST_NAME).email("user"+System.currentTimeMillis()+"@example.com")
             .password(USER_PASSWORD).role(UserRole.CUSTOMER).address(a).build();
         User user = userService.registerUser(insertUserDto, false);
 
-        CreateUpdateUserDto updateUserDto = CreateUpdateUserDto.builder().firstName(USER_FIRST_NAME).lastName(USER_LAST_NAME).email(USER_EMAIL)
+        CreateUpdateUserDto updateUserDto = CreateUpdateUserDto.builder().firstName(USER_FIRST_NAME).lastName(USER_LAST_NAME).email("user"+System.currentTimeMillis()+"@example.com")
             .password(USER_PASSWORD).role(UserRole.CUSTOMER).status(UserStatus.OK).address(a).build();
 
         ValidationException vex;
@@ -306,7 +301,7 @@ public class UserServiceTest implements UserTestData, AddressTestData {
         updateUserDto.setEmail("asdjfhasjofdh");
         vex = assertThrows(ValidationException.class, () -> userService.updateUser(updateUserDto, finalUserId,false));
         assertTrue(vex.getMessage().contains("mail"));
-        updateUserDto.setEmail(USER_EMAIL);
+        updateUserDto.setEmail("user"+System.currentTimeMillis()+"@example.com");
 
 
         //test role

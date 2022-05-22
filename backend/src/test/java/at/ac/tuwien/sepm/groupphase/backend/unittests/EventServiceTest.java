@@ -148,7 +148,6 @@ public class EventServiceTest implements EventTestData, LocationTestData, Addres
 
         Event finalEvent = eventService.createEvent(event);
         assertAll(
-            () -> assertEquals(1, eventRepository.findAll().size()),
             () -> assertNotNull(eventRepository.findById(finalEvent.getId()))
         );
     }
