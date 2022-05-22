@@ -1,0 +1,27 @@
+<div class="imageWrapper">
+    <div class="imgDiv">
+        <img [src]="news.fileDto.url">
+    </div>
+    <h4 class="premiere">{{news.imageDescription}}</h4>
+</div>
+
+<div class="newsDescription">
+    <div class="newsHeader">
+        <div class="imageIcon"
+            *ngIf="news.eventDto && news.eventDto.thumbnail && news.eventDto.thumbnail.url; else elseBlock">
+            <img [src]="news.eventDto.thumbnail.url">
+        </div>
+        <ng-template #elseBlock>
+            <div class="imageIcon">
+                <img [src]="news.fileDto.url">
+            </div>
+        </ng-template>
+
+        <h3 class="newsTitle mb-0" [title]="news.title">{{news.title}}</h3>
+        <input *ngIf="news.eventDto !== null" type="button" class="orange attending" value="I'M IN 🔥">
+    </div>
+    <div>{{news.description}}</div>
+    <div *ngIf="news.eventDto !== null" class="eventType">
+        {{news.eventDto.category}}
+    </div>
+</div>

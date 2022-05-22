@@ -10,15 +10,30 @@ spring:
     driver-class-name: org.h2.Driver
     username: admin
     password: password
+  h2:
+    console:
+      enabled: true
   jpa:
     # Set this property to true if you want to see the executed queries
     show-sql: false
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
     # Allows to fetch lazy properties outside of the original transaction. Although this sounds helpful, the property
     # is disabled since it breaks the principle of least astonishment and leads to bad performance. The learn more,
     # follow this link: https://bit.ly/2LaX9ku
     open-in-view: false
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
+
+jps:
+  track:
+    ap:
+      dependencies: false
 
 security:
   auth:
@@ -70,3 +85,6 @@ spring:
     timeout-per-shutdown-phase: 30s
 server:
   shutdown: graceful
+  error:
+    include-message: always
+    # So we can send meaningful error responses, not like "Validation error"

@@ -1,0 +1,123 @@
+<!-- DEFAULT TICKET -->
+<div id="default-ticket">
+  <div class="d-flex flex-row align-items-start">
+
+    <!-- # Ticket: -->
+    <div class="d-flex flex-row justify-content-between align-items-center ticket-wrapper"
+         [style.background]="classStyle().background"
+         (click)="inspect.emit('data')"
+         title="Inspect">
+      <div class="flex-fill d-flex flex-row align-items-center" style="height: 100%;">
+
+        <!-- ## Image -->
+        <div class="thumbnail">
+          <img *ngIf="imageSrc" class="thumbnail" src="{{imageSrc}}" alt="thumbnail">
+        </div>
+        <span class="ticket-class-emoji">{{classStyle().emoji}}</span>
+        <span class="ticket-class">{{classStyle().acronym}}</span>
+
+        <!-- ## Content -->
+        <div class="d-flex flex-column content">
+          <div class="d-flex flex-row align-items-center">
+
+            <!-- ### Event Title -->
+            <span *ngIf="title" class="title">{{title}}</span>
+            <span *ngIf="title && datetime" class="title">&nbsp;-&nbsp;</span>
+
+            <!-- ### Datetime -->
+            <span *ngIf="datetime" class="datetime">&nbsp;{{datetime}}</span>
+          </div>
+
+          <!-- ### Performance + Seat -->
+          <div class="d-flex flex-row align-items-center performance-wrapper" >
+            <span *ngIf="performance">{{performance}}</span>
+            <span *ngIf="performance && ((rowTitle) || (columnTitle))">:&emsp;</span>
+            <span *ngIf="rowTitle" class="title">{{rowTitle}}&nbsp;</span>
+            <span *ngIf="rowValue" class="value">{{rowValue}}&emsp;</span>
+            <span *ngIf="columnTitle" class="title">{{columnTitle}}&nbsp;</span>
+            <span *ngIf="columnValue" class="value">{{columnValue}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- # Price: -->
+      <span *ngIf="price" class="price">€ {{price}}</span>
+    </div>
+
+    <!-- # Remove Button: -->
+    <button *ngIf="removeButton" type="button" class="btn remove" (click)="remove.emit('data')" title="Remove"><i class="bi bi-x"></i></button>
+  </div>
+</div>
+
+
+
+<!-- MOBILE TICKET -->
+<div id="mobile-ticket">
+  <div class="d-flex flex-row align-items-start">
+
+    <!-- # Ticket: -->
+    <div class="d-flex flex-column ticket-wrapper"
+         [style.background]="classStyle().background"
+         (click)="inspect.emit('data')"
+         title="Inspect">
+
+      <!-- ## Top -->
+      <div class="d-flex flex-row align-items-center">
+
+        <!-- ### Image -->
+        <div class="thumbnail">
+          <img *ngIf="imageSrc" class="thumbnail" src="{{imageSrc}}" alt="thumbnail">
+        </div>
+        <span class="ticket-class-emoji">{{classStyle().emoji}}</span>
+        <span class="ticket-class">{{classStyle().acronym}}</span>
+
+        <!-- ### Main Information -->
+        <div *ngIf="title && datetime" class="d-flex flex-column" style="margin-left: 1.5rem">
+          <span class="title">{{title}}</span>
+          <span class="datetime">&nbsp;{{datetime}}</span>
+        </div>
+
+        <!-- ### Show Performance Only -->
+        <p *ngIf="!title && !datetime" class="performance-wrapper" style="margin-left: 1.5rem; margin-top: 1rem; width: 100%">
+          <span *ngIf="performance">{{performance}}</span>
+          <span *ngIf="performance && ((rowTitle) || (columnTitle))">:&emsp;</span>
+          <span *ngIf="rowTitle" class="title">{{rowTitle}}&nbsp;</span>
+          <span *ngIf="rowValue" class="value">{{rowValue}}&emsp;</span>
+          <span *ngIf="columnTitle" class="title">{{columnTitle}}&nbsp;</span>
+          <span *ngIf="columnValue" class="value">{{columnValue}}</span>
+          <br>
+          <span *ngIf="price" class="price" style="float: left">€ {{price}}</span>
+        </p>
+      </div>
+      <hr *ngIf="title && datetime">
+
+      <!-- ## Bottom -->
+      <div *ngIf="title && datetime" class="d-flex flex-row justify-content-between align-items-center mobile-stats-wrapper">
+
+        <!-- ### Detail Information -->
+        <div class="d-flex flex-column">
+
+          <!-- #### Performance -->
+          <div class="d-flex flex-row align-items-center performance-wrapper" >
+            <span *ngIf="performance">{{performance}}</span>
+            <span *ngIf="performance && ((rowTitle) || (columnTitle))">:&emsp;</span>
+          </div>
+
+          <!-- #### Seat -->
+          <div class="d-flex flex-row align-items-center performance-wrapper" >
+            <span *ngIf="rowTitle" class="title">{{rowTitle}}&nbsp;</span>
+            <span *ngIf="rowValue" class="value">{{rowValue}}&emsp;</span>
+            <span *ngIf="columnTitle" class="title">{{columnTitle}}&nbsp;</span>
+            <span *ngIf="columnValue" class="value">{{columnValue}}</span>
+          </div>
+        </div>
+
+        <!-- ### Price -->
+        <span class="price">€ {{price}}</span>
+      </div>
+    </div>
+
+    <!-- # Remove Button: -->
+    <button type="button" class="btn remove" (click)="remove.emit('data')" title="Remove"><i class="bi bi-x"></i></button>
+  </div>
+</div>

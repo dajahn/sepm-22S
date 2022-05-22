@@ -1,0 +1,28 @@
+div.inputStyling{
+    max-height: 60.5px;
+  }
+.inputStyling{
+    font-size: 0.9375em;
+    color: var(--text-c-highlight);
+    font-weight: var(--font-w-medium);
+    background-color: transparent;
+    border: 3px solid var(--text-c-highlight);
+    border-radius: 10px;
+    padding: 16px 12px;
+  
+    &::placeholder {
+      font-size: 0.9375em;
+      color: var(--text-c-highlight);
+      font-weight: var(--font-w-regular);
+    }
+  
+    &:focus {
+      outline: none !important;
+      border:3px solid var(--accent-orange);
+    }
+  
+    i{
+        color: var(--text-c-highlight);
+    }
+  }
+  

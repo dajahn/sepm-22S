@@ -1,0 +1,235 @@
+<div id="wrapper">
+  <div class="page-container container">
+
+    <div class="row">
+      <div class="col-3">
+        <!--      Placeholder-->
+      </div>
+      <div class="col-6">
+        <div class="pt-5 content">
+          <!--          Header-->
+          <div class="col-12">
+            <h1 class="text-center">Edit Account</h1>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h4 class="text-center logo">Want to <a id="deleteLink" (click)="deleteAccount()">delete</a> your Account?
+              </h4>
+            </div>
+          </div>
+          <form class="form" [formGroup]="updateAccountForm" (ngSubmit)="updateUser()">
+            <div class="row mt-2">
+              <!--Fist name input-->
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="firstName">First Name(s)</label>
+                  <input type="text" name="firstName" formControlName="firstName" class="form-control" id="firstName"
+                         aria-describedby="firstNameHelp" placeholder="Enter your First Name(s)">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.firstName">
+                      <div class="error"
+                           *ngIf="updateAccountForm.controls.firstName.hasError(validation.type) && (updateAccountForm.controls.firstName.dirty || updateAccountForm.controls.firstName.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <!--Last name input-->
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="lastName">Last Name</label>
+                  <input type="text" name="lastName" formControlName="lastName" class="form-control" id="lastName"
+                         aria-describedby="lastNameHelp" placeholder="Enter your Last Name">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.lastName">
+                      <div class="error"
+                           *ngIf="updateAccountForm.controls.lastName.hasError(validation.type) && (updateAccountForm.controls.lastName.dirty || updateAccountForm.controls.lastName.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--Email input-->
+            <div class="row mt-3">
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="email">Email Address</label>
+                  <input type="email" name="email" formControlName="email" class="form-control" id="email"
+                         aria-describedby="emailHelp" placeholder="Enter your email address">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.email">
+                      <div class="error"
+                           *ngIf="updateAccountForm.controls.email.hasError(validation.type) && (updateAccountForm.controls.email.dirty || updateAccountForm.controls.email.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--Address - Street input-->
+            <div class="row mt-3">
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="street">Address</label>
+                  <input type="text" name="street" formControlName="street" class="form-control" id="street"
+                         aria-describedby="streetHelp" placeholder="Enter your address and house number">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.street">
+                      <div class="error"
+                           *ngIf="updateAccountForm.controls.street.hasError(validation.type) && (updateAccountForm.controls.street.dirty || updateAccountForm.controls.street.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--Address - ZIP and city input-->
+            <div class="row mt-3">
+              <!--Address - ZIP input-->
+              <div class="col-3">
+                <div class="form-group">
+                  <label for="zip">Zip Code</label>
+                  <input type="text" name="zip" formControlName="zip" class="form-control" id="zip"
+                         aria-describedby="zipHelp" placeholder="Zip Code">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.zip">
+                      <div class="error"
+                           *ngIf="updateAccountForm.controls.zip.hasError(validation.type) && (updateAccountForm.controls.zip.dirty || updateAccountForm.controls.zip.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+
+              <!--Address - city input-->
+              <div class="col-9">
+                <div class="form-group">
+                  <label for="city">City</label>
+                  <input type="text" name="city" formControlName="city" class="form-control" id="city"
+                         aria-describedby="cityHelp" placeholder="Enter your city">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.city">
+                      <div class="error"
+                           *ngIf="updateAccountForm.controls.city.hasError(validation.type) && (updateAccountForm.controls.city.dirty || updateAccountForm.controls.city.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-12">
+                <label for="country">Country</label>
+                <select class="form-control" required name="country" formControlName="country" id="country">
+                  <option value="" disabled selected>Select Country</option>
+                  <option *ngFor="let coun of countriesCodeToNameKeys"
+                          value="{{coun}}">{{countriesCodeToName[coun]}}</option>
+                </select>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.country">
+                      <div class="error"
+                           *ngIf="updateAccountForm.controls.country.hasError(validation.type) && (updateAccountForm.controls.country.dirty || updateAccountForm.controls.country.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--          Passwords input-->
+            <div class="row mt-2">
+              <!--First Password input-->
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="password">New Password</label>
+                  <input type="password" name="password" formControlName="password" class="form-control" id="password"
+                         aria-describedby="passwordHelp" placeholder="Enter your new password">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.password">
+                      <div class="error"
+                           *ngIf="updateAccountForm.controls.password.hasError(validation.type) && (updateAccountForm.controls.password.dirty || updateAccountForm.controls.password.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <!--Password confirm input-->
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="passwordConfirm">Confirm new Password</label>
+                  <input type="password" name="passwordConfirm" formControlName="passwordConfirm" class="form-control"
+                         id="passwordConfirm"
+                         aria-describedby="passwordConfirmHelp" placeholder="Please confirm your new password">
+                </div>
+                <div class="row mt-1">
+                  <div class="col">
+                    <ng-container *ngFor="let validation of updateAccountFormMessages.passwordConfirm">
+                      <div class="error"
+                           *ngIf="updateAccountForm.controls.passwordConfirm.hasError(validation.type) && (updateAccountForm.controls.passwordConfirm.dirty || updateAccountForm.controls.passwordConfirm.touched)">
+                        <small class="form-text text-warning">{{ validation.message }} </small>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-1">
+                <div class="col-12">
+<!--                  password must match - error message-->
+                  <ng-container>
+                    <div class="error text-center"
+                         *ngIf="(updateAccountForm.controls.password.dirty || updateAccountForm.controls.password.touched) &&
+                       (updateAccountForm.controls.passwordConfirm.dirty || updateAccountForm.controls.passwordConfirm.touched) &&
+                       updateAccountForm.controls.passwordConfirm.value !== updateAccountForm.controls.password.value">
+                      <small
+                        class="form-text text-warning ">{{ updateAccountFormMessages.password[1].message }} </small>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-5">
+              <div class="col-12">
+                <div class="form-group d-grid">
+<!--                  Submit button-->
+                  <input [disabled]="!this.updateAccountForm.valid || ((updateAccountForm.controls.password.dirty || updateAccountForm.controls.password.touched) &&
+                       (updateAccountForm.controls.passwordConfirm.dirty || updateAccountForm.controls.passwordConfirm.touched) &&
+                       updateAccountForm.controls.passwordConfirm.value !== updateAccountForm.controls.password.value)"
+                         type="submit" name="button" value="Confirm" class="btn white">
+                </div>
+              </div>
+              <div class="col-lg-4"></div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

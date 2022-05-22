@@ -1,0 +1,27 @@
+#wrapper {
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-rainbow);
+}
+
+.terms-of-use {
+  margin-top:5rem;
+}
+
+a {
+  color: var(--accent-orange);
+}
+
+p {
+  color: var(--text-c-highlight)
+}
+
+#loginButtonSm, #loginButtonLg {
+  font-size: 0.9em;
+  padding: 9.25px 9px;
+}
+
+i {
+  font-size: 1.6em;
+}
+

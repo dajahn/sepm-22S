@@ -1,0 +1,66 @@
+
+div.inputStyling{
+  max-height: 64.65px;
+}
+
+//TODO This is needed because otherwise bootstrap overrides the styling
+// Any other way possible?
+.inputStyling{
+  font-size: 0.9375em;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-medium);
+  background-color: transparent;
+  border: 3px solid var(--text-c-highlight);
+  border-radius: 10px;
+  padding: 16px 12px;
+
+  &::placeholder {
+    font-size: 0.9375em;
+    color: var(--text-c-highlight);
+    font-weight: var(--font-w-regular);
+  }
+
+  &:focus {
+    outline: none !important;
+    border:3px solid var(--accent-orange);
+  }
+
+  i{
+      color: var(--text-c-highlight);
+  }
+}
+
+#file-upload-label {
+  transition: all .2s ease-in-out;
+  font-size: 1em;
+  font-weight: var(--font-w-bold);
+  color: var(--text-c-highlight);
+  border: none;
+  border-radius: 10px;
+  padding: 7px 20px;
+  width: 100%;
+  height: 50%;
+  text-align: center;
+  vertical-align: middle;
+  margin-bottom: 0.5rem;
+
+  &:hover{
+    cursor: pointer;
+  }
+
+  &.white {
+    font-size: 1.25em;
+    font-weight: var(--font-w-bold); 
+    background-color: transparent;
+    border: 3px solid var(--text-c-highlight);
+    padding: 12.25px 12px;
+  }
+}
+
+input[type="file"] {
+  display: none;
+}
+.imgHint{
+  margin-top:-2em;
+  z-index: 9999999999;
+}

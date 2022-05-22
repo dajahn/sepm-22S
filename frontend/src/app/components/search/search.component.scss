@@ -1,0 +1,25 @@
+.search-bar{
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+button{
+  border: 2px solid var(--text-c-highlight) !important;
+  background-color: transparent !important;
+  padding: 9px 9px !important;
+  scale: 80%;
+  margin-left: 10px;
+  margin-top: 5px;
+  font-weight: var(--font-w-bold);
+}
+i {
+  font-size: 1em;
+  color: var(--text-c-highlight);
+}
+
+
+.heading{
+  display: inline;
+}
+.search-btn{
+  margin-left: 3em;
+}

@@ -1,38 +1,63 @@
-<div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
-  <strong>Authentication problems!</strong> {{ errorMessage }}
-  <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
-<div class="pt-5">
-  <div class="row">
-    <div class="col-md-6 mx-auto">
-      <span class="anchor" id="formLogin"></span>
-
-      <div class="card rounded-0">
-        <div class="card-header">
-          <h3 class="mb-0">Login</h3>
+<div id="wrapper">
+  <div class="page-container container">
+    <div id="header" class="pt-4">
+      <nav class="navbar navbar-expand-lg navbar-dark ">
+        <a class="navbar-brand ml-lg-5" href="">
+          <h3 class="logo" style="display: inline"><span>🎟️</span> TICKETLINE</h3>
+        </a>
+        <div class=" navbar-right ms-auto justify-content-end float-right" id="navbarSupportedContent">
+          <div class="d-none d-md-inline d-lg-block">
+            <h4>New to TICKETLINE? <input type="button" id="loginButtonLg" class="white" routerLink="/register"
+                value="Sign up" style="margin-left: 1rem;" routerLinkActive="active"></h4>
+          </div>
+          <div class="d-md-none">
+            <input type="button" id="loginButtonSm" class="white" routerLink="/register" value="Sign up"
+              style="margin-left: 1rem;" routerLinkActive="active">
+          </div>
         </div>
-
-        <div class="card-body">
-          <form class="form" [formGroup]="loginForm" (ngSubmit)="loginUser()">
-
+      </nav>
+    </div>
+    <div class="pt-5 content">
+      <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+          <h1 class="text-center">Sign into Account</h1>
+        </div>
+        <div class="col-2"></div>
+      </div>
+      <div class="row">
+        <div class="col-2"></div>
+        <div class="col">
+          <h4 class="text-center logo">New to TICKETLINE? <a routerLink="/register">Sign up</a></h4>
+        </div>
+        <div class="col-2"></div>
+      </div>
+      <form class="form" [formGroup]="loginForm">
+        <div class="row mt-3">
+          <div class="col-lg-4"></div>
+          <div class="col-lg-4">
             <div class="form-group">
-              <label for="inputUsername">Username</label>
-              <input type="text" name="username" formControlName="username" class="form-control" id="inputUsername"
-                     aria-describedby="usernameHelp" placeholder="Enter username">
-              <div *ngIf="submitted && loginForm.controls.username.errors" class="error">
-                <small class="form-text text-warning" *ngIf="loginForm.controls.username.errors.required">Your username is
+              <label for="inputEmail">Email address</label>
+              <input type="email" name="email" formControlName="email" class="form-control" id="inputEmail"
+                aria-describedby="emailHelp" placeholder="Enter your email address">
+              <div *ngIf="submitted && loginForm.controls.email.errors" class="error">
+                <small class="form-text text-warning" *ngIf="loginForm.controls.email.errors.required">Your email
+                  address
+                  is
                   required!
                 </small>
               </div>
             </div>
-
+          </div>
+          <div class="col-lg-4"></div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-lg-4"></div>
+          <div class="col-lg-4">
             <div class="form-group">
               <label for="password">Password</label>
               <input type="password" name="password" formControlName="password" class="form-control" id="password"
-                     placeholder="Password">
+                placeholder="Enter your password">
               <div *ngIf="submitted && loginForm.controls.password.errors" class="error">
                 <small class="form-text text-warning" *ngIf="loginForm.controls.password.errors.required">Your password
                   is
@@ -43,14 +68,58 @@
                 </small>
               </div>
             </div>
-
-            <button type="button" (click)="loginUser()" class="btn btn-success float-right">Login</button>
-
-          </form>
+          </div>
+          <div class="col-lg-4"></div>
         </div>
 
-      </div>
+        <div class="row" *ngIf="error">
+          <div class="col-lg-4">
+          </div>
+          <div class="col-lg-4">
+            <div class="mt-3 alert alert-danger alert-dismissible fade show" role="alert">
+              <div class="row">
+                <div class="col-11"><strong>{{errorMessage}}</strong></div>
+                <div class="col-1">
+                  <button type="button" style="padding: 0;" (click)="vanishError()" class="close btn"
+                    data-dismiss="alert" aria-label="Close">
+                    <i class="bi bi-x-circle"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <div class="row mt-5" *ngIf="showForgotPassword">
+          <div class="col-lg-4"></div>
+          <div class="col-lg-4 text-center">
+            <div class="forgot-password" (click)="resetPassword()">
+              {{ forgotPasswordLoading ? 'loading' : 'Forgot Password' }}
+            </div>
+          </div>
+          <div class="col-lg-4"></div>
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-lg-4"></div>
+          <div class="col-lg-4">
+            <div class="form-group d-grid">
+              <input type="submit" name="button" value="Log in" (click)="loginUser()" class="btn white">
+            </div>
+          </div>
+          <div class="col-lg-4"></div>
+        </div>
+
+      </form>
+      <div class="row terms-of-use">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+          <p class="text-center small">By clicking, you agree to TICKETLINE's <a routerLink="/terms-of-use">Term of
+              Use</a> &amp; <a routerLink="/privacy-policy">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
     </div>
+
   </div>
 </div>

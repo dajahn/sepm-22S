@@ -1,7 +1,19 @@
-<app-header></app-header>
+<!-- NAVIGATION -->
+<!-- (i) hide navigation if 'register' or 'signup' route is activated -->
+<app-navigation *ngIf="!hasRoute('login') && !hasRoute('register') && !hasRoute('checkout')"></app-navigation>
 
-<div class="container">
+
+<!-- CONTENT -->
+<!-- (i) remove margin if 'register' or 'signup' route is activated -->
+<div id="wrapper" *ngIf="!hasRoute('login')  && !hasRoute('register') && !hasRoute('checkout'); else noWrapper">
   <router-outlet></router-outlet>
 </div>
+<ng-template #noWrapper>
+  <router-outlet></router-outlet>
+</ng-template>
 
+
+
+<!-- FOOTER -->
 <app-footer></app-footer>
+<app-toasts aria-live="polite" aria-atomic="true"></app-toasts>

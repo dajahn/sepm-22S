@@ -1,0 +1,19 @@
+.seat {
+  --color-selected: green;
+}
+
+.clickable {
+  cursor: pointer;
+
+  :hover {
+    filter: brightness(90%);
+  }
+
+  :active {
+    filter: brightness(85%);
+  }
+}
+
+text {
+  pointer-events: none;
+}

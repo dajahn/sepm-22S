@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 
-@Profile("generateData")
+@Profile({"generateData"})
 @Component
 public class MessageDataGenerator {
 
@@ -33,7 +33,9 @@ public class MessageDataGenerator {
             LOGGER.debug("message already generated");
         } else {
             LOGGER.debug("generating {} message entries", NUMBER_OF_MESSAGES_TO_GENERATE);
-            for (int i = 0; i < NUMBER_OF_MESSAGES_TO_GENERATE; i++) {
+            for (int i = 0;
+                 i < NUMBER_OF_MESSAGES_TO_GENERATE;
+                 i++) {
                 Message message = Message.MessageBuilder.aMessage()
                     .withTitle(TEST_NEWS_TITLE + " " + i)
                     .withSummary(TEST_NEWS_SUMMARY + " " + i)

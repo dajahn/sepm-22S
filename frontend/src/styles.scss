@@ -1,4 +1,330 @@
-/* You can add global styles to this file, and also import other style files */
-body {
-  background-color: whitesmoke;
+/* IMPORTS */
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
+
+
+/* CUSTOM FONTS */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  src: url('/assets/fonts/Montserrat-VariableFont_wght.ttf') format("truetype-variations");
+  font-weight: 1 999;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: italic;
+  src: url('/assets/fonts/Montserrat-Italic-VariableFont_wght.ttf') format("truetype-variations");
+  font-weight: 1 999;
+}
+
+
+
+/* DEFAULT / LIGHT MODE */
+:root {
+  /* # COLORS: */
+  /* ## Background Colors */
+  --bg-primary: #EFF0F2;
+  --bg-secondary: #F9F9FA;
+  --bg-tertiary: #FFFFFF;
+
+  /* ## Text Colors */
+  --text-c-primary: #494949;
+  --text-c-highlight: #0e0e0e;
+  --text-c-lowlight: #8a8a8a;
+  --text-c-link: #4351AD;
+
+  /* ## Accent Colors */
+  --accent-orange: #F1936D;
+  --accent-purple: #B227F6;
+  --accent-blue: #7172F8;
+
+  /* ## Gradients */
+  /* ### Gradient Orange */
+  --gradient-orange-color-0: rgba(241, 147, 109, 1);
+  --gradient-orange-color-100: rgba(240, 113, 169, 1);
+  --gradient-orange: linear-gradient(90deg, var(--gradient-orange-color-0) 0%, var(--gradient-orange-color-100) 100%);
+
+  /* ### Gradient Purple */
+  --gradient-purple-color-0: rgba(178, 39, 246, 1);
+  --gradient-purple-color-100: rgba(224, 125, 250, 1);
+  --gradient-purple: linear-gradient(90deg, var(--gradient-purple-color-0) 0%, var(--gradient-purple-color-100) 100%);
+
+  /* ### Gradient Blue */
+  --gradient-blue-color-0: rgba(113, 114, 248, 1);
+  --gradient-blue-color-100: rgba(156, 161, 250, 1);
+  --gradient-blue: linear-gradient(90deg, var(--gradient-blue-color-0) 0%, var(--gradient-blue-color-100) 100%);
+
+  /* ### Gradient Rainbow */
+  --gradient-rainbow-color-0: rgba(241, 147, 109, 1);
+  --gradient-rainbow-color-50: rgba(178, 39, 246, 1);
+  --gradient-rainbow-color-100: rgba(113, 114, 248, 1);
+  --gradient-rainbow: linear-gradient(
+      90deg,
+      var(--gradient-rainbow-color-0) 0%,
+      var(--gradient-rainbow-color-50) 50%,
+      var(--gradient-rainbow-color-100) 100%
+  );
+
+  /* ### Gradient Rainbow BG Secondary */
+  --gradient-rainbow-bg-secondary-color-0: rgba(241, 147, 109, 1);
+  --gradient-rainbow-bg-secondary-color-25: rgba(178, 39, 246, 1);
+  --gradient-rainbow-bg-secondary-color-50: rgba(113, 114, 248, 1);
+  --gradient-rainbow-bg-secondary-color-100: var(--bg-tertiary);
+  --gradient-rainbow-bg-secondary: linear-gradient(
+      90deg,
+      var(--gradient-rainbow-bg-secondary-color-0) 0%,
+      var(--gradient-rainbow-bg-secondary-color-25) 25%,
+      var(--gradient-rainbow-bg-secondary-color-50) 50%,
+      var(--gradient-rainbow-bg-secondary-color-100) 100%
+  );
+
+  /* # FONT WEIGHT: */
+  --font-w-light: 300;
+  --font-w-regular: 400;
+  --font-w-medium: 500;
+  --font-w-semi-bold: 600;
+  --font-w-bold: 700;
+  --font-w-black: 800;
+}
+
+/* DARK MODE */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* # COLORS: */
+    /* ## Background Colors */
+    --bg-primary: #222540;
+    --bg-secondary: #25284C;
+    --bg-tertiary: #2D3154;
+
+    /* ## Text Colors */
+    --text-c-primary: #8F92A6;
+    --text-c-highlight: #EDEFF5;
+    --text-c-lowlight: #5C607F;
+  }
+}
+
+
+
+/* # CHANGED TAGS + CLASSES: */
+/* ## General */
+html, body {
+  background: var(--bg-primary);
+  min-height: 100vh;
+}
+
+* {
+  margin: 0;
+  font-size: 1em;
+  color: var(--text-c-primary);
+  font-family: Montserrat, serif;
+}
+
+/* ## Headings */
+h1 {
+  font-size: 2.8em;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-medium);
+}
+
+h2 {
+  font-size: 2em;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-regular);
+  margin-bottom: 0.6rem;
+}
+
+h3 {
+  font-size: 1.56em;
+  color: var(--text-c-highlight);
+
+  &.logo {
+    font-style: italic;
+    font-weight: var(--font-w-bold);
+  }
+}
+
+h4 {
+  font-size: 1.125em;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-regular);
+
+  &.headline {
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin-bottom: 0.6rem;
+  }
+}
+
+h5 {
+  font-size: 1em;
+  color: var(--text-c-primary);
+  font-weight: var(--font-w-regular);
+  margin-bottom: 2.5rem;
+}
+
+/* ## Link */
+a {
+  font-size: 1em;
+  text-decoration: none;
+  color: var(--text-c-link);
+}
+
+/* ## Text field */
+label {
+  font-size: 0.75em;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-regular);
+  margin-bottom: 0.3125em;
+}
+
+input[type=text], input[type=email], input[type=password], select, input[type=time], input[type=date], input[type=number]  {
+  font-size: 0.9375em;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-medium);
+  background-color: transparent;
+  border: 3px solid var(--text-c-highlight);
+  border-radius: 10px;
+  padding: 16px 12px;
+
+  &::placeholder {
+    font-size: 0.9375em;
+    color: var(--text-c-highlight);
+    font-weight: var(--font-w-regular);
+  }
+
+  &:focus {
+    outline: none !important;
+    border: 3px solid var(--accent-orange);
+  }
+}
+
+textarea { // added extra selection cause everywhere has to be "!important" for textarea
+  font-size: 0.9375em !important;
+  color: var(--text-c-highlight) !important;
+  font-weight: var(--font-w-medium) !important;
+  background-color: transparent !important;
+  border: 3px solid var(--text-c-highlight) !important;
+  border-radius: 10px !important;
+  padding: 16px 12px !important;
+
+  &::placeholder {
+    font-size: 0.9375em !important;
+    color: var(--text-c-highlight) !important;
+    font-weight: var(--font-w-regular) !important;
+  }
+
+  &:focus {
+    outline: none !important;
+    border: 3px solid var(--accent-orange) !important;
+    background-color: white !important;
+    color: #212529 !important;
+  }
+}
+
+/* ## Buttons */
+input[type=button], button, input[type=submit] {
+  transition: all .2s ease-in-out;
+  font-size: 1em;
+  font-weight: var(--font-w-bold);
+  color: var(--text-c-highlight);
+  border: none;
+  border-radius: 10px;
+  padding: 7px 20px;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &.white {
+    font-size: 1.25em;
+    font-weight: var(--font-w-bold);
+    background-color: transparent;
+    border: 3px solid var(--text-c-highlight);
+    padding: 12.25px 12px;
+    color: var(--text-c-highlight);
+  }
+
+  &.orange {
+    background: var(--gradient-orange);
+  }
+
+  &.blue {
+    background: var(--gradient-blue);
+  }
+}
+
+/* ## Files */
+input[type=file] {
+  font-size: 0.9375em;
+  color: var(--text-c-highlight);
+  font-weight: var(--font-w-medium);
+  background-color: transparent;
+  border: 3px solid var(--text-c-highlight);
+  border-radius: 10px;
+  padding: 16px 12px;
+
+  &::placeholder {
+    font-size: 0.9375em;
+    color: var(--text-c-highlight);
+    font-weight: var(--font-w-regular);
+  }
+
+  &:focus {
+    outline: none !important;
+    border: 3px solid var(--accent-orange);
+  }
+}
+
+select {
+  font-size: 0.9375em;
+  color: var(--text-c-highlight) !important;
+  font-weight: var(--font-w-medium) !important;
+  background-color: transparent !important;
+  border: 3px solid var(--text-c-highlight) !important;
+  border-radius: 10px !important;
+  padding: 16px 12px !important;
+
+  &:focus {
+    outline: none !important;
+    border: 3px solid var(--accent-orange) !important;
+  }
+}
+
+/* ## Icons */
+i {
+  font-size: 2em;
+  color: var(--text-c-lowlight);
+}
+
+/* ## Toast */
+.toast {
+  margin-top: 4rem;
+
+  * {
+    color: white;
+    font-weight: var(--font-w-medium);
+  }
+}
+
+
+
+/* MEDIA QUERIES */
+@media (max-width: 900px) {
+
+  /* # Mobile: */
+  h2 {
+    margin-bottom: 0.2rem;
+  }
+
+  h4 {
+
+    &.headline {
+      margin-bottom: 0.3rem;
+    }
+  }
+
+  h5 {
+    margin-bottom: 1rem;
+  }
 }
