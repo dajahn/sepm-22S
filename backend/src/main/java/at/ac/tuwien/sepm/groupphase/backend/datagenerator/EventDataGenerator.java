@@ -74,7 +74,6 @@ public class EventDataGenerator {
 
                 List<Performance> performances = new ArrayList<>();
                 for (Location location : locations) {
-                    //if (faker.random().nextBoolean()) {
                     Performance performance = new Performance();
                     performance.setLocation(location);
                     if (faker.random().nextBoolean()) {
@@ -84,7 +83,6 @@ public class EventDataGenerator {
                     }
                     performance.setEvent(event);
                     performances.add(performance);
-                    //}
                 }
 
                 event.setPerformances(performances);

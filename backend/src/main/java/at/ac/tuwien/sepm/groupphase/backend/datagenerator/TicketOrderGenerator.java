@@ -116,6 +116,15 @@ public class TicketOrderGenerator {
                 order.setUserId(users.get(i).getId());
                 orderRepository.save(order);
 
+                TicketOrder order2 = new TicketOrder();
+
+                order2.setType(OrderType.CART);
+                order2.setDateTime(LocalDateTime.of(LocalDate.ofInstant(faker.date().future(365, TimeUnit.DAYS).toInstant(), TimeZone.getDefault().toZoneId()), LocalTime.of(faker.random().nextInt(0, 23), 0)));
+                order2.setValidUntil(order2.getDateTime().plusHours(1)); // VALID FOR 1 HOUR
+                order2.setUser(users.get(i));
+                order2.setUserId(users.get(i).getId());
+                orderRepository.save(order2);
+
                 List<Ticket> orderTickets = new ArrayList<>();
                 int numberOfTickets = faker.random().nextInt(2, 3);
                 for (int j = 0; j < numberOfTickets; j++) {
