@@ -6,9 +6,9 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserForgotPasswordDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserResetPasswordDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotLockUserException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ResetPasswordService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -20,19 +20,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
-import java.io.IOException;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -137,6 +137,18 @@ public class UserEndpoint {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping
+    @Secured("ROLE_USER")
+    @Operation(summary = "Deletes the logged in Customer", security = @SecurityRequirement(name = "apiKey"))
+    @Transactional
+    public void deleteUser() {
+        LOGGER.info("DELETE /api/v1/users");
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findApplicationUserByEmail(email);
+        userService.deleteUser(user.getId());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

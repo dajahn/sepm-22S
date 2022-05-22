@@ -22,10 +22,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
@@ -82,8 +80,8 @@ public class User {
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_news",
-        joinColumns =  @JoinColumn(name = "user_id"),
-        inverseJoinColumns =  @JoinColumn(name = "news_id"))
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "news_id"))
     Set<News> readNews;
 
     @Override

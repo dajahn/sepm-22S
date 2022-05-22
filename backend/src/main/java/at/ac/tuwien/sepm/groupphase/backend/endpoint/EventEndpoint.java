@@ -5,6 +5,9 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.DetailedPerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventCategoryDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchTermsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceSearchTermsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventDto;
@@ -108,6 +111,24 @@ public class EventEndpoint {
     public List<TopTenEventDto> topTenEventsByCategory(EventCategoryDto eventCategoryDto) {
         LOGGER.info("GET /api/v1/events/top-ten with {}", eventCategoryDto);
         return eventService.topTenEventsByCategory(eventCategoryDto.getCategory());
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/search")
+    @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
+    public List<EventDto> findAllEventsBy(EventSearchTermsDto eventSearchTermsDto) {
+        LOGGER.info("GET /api/v1/search events with {}", eventSearchTermsDto);
+        List<EventDto> eventDtos = eventMapper.eventToEventDto(eventService.findAllEventsBy(eventSearchTermsDto));
+        return eventDtos;
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/performances/search")
+    @Operation(summary = "", security = @SecurityRequirement(name = "apiKey"))
+    public List<PerformanceDto> findAllPerformancesBy(PerformanceSearchTermsDto performanceSearchTermsDto) {
+        LOGGER.info("GET /api/v1/search performances with {}", performanceSearchTermsDto);
+        List<PerformanceDto> performanceDtos = performanceMapper.performanceToPerformanceDto(performanceService.findAllPerformancesBy(performanceSearchTermsDto));
+        return performanceDtos;
     }
 
 }

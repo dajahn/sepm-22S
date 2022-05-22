@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.LocationSearchTermsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SearchLocationDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Location;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.util.SqlStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -50,5 +52,22 @@ public class LocationServiceImpl implements at.ac.tuwien.sepm.groupphase.backend
             throw new NotFoundException("Location with id " + id + " not found!");
         }
 
+    }
+
+    @Override
+    public List<Location> findAllLocationsBy(LocationSearchTermsDto searchTermsDto) {
+        SqlStringConverter converter = new SqlStringConverter();
+
+        String name = converter.toSqlString(searchTermsDto.getName());
+        String city = converter.toSqlString(searchTermsDto.getCity());
+        String zipCode = searchTermsDto.getZipCode();
+        String street = converter.toSqlString(searchTermsDto.getStreet());
+
+        int country = -1;
+        if (searchTermsDto.getCountry() != null) {
+            country = searchTermsDto.getCountry().ordinal();
+        }
+
+        return locationRepository.findAllBy(name, city, country, zipCode, street);
     }
 }

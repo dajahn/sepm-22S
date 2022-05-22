@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
 import at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotLockUserException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticatedUser;
 import at.ac.tuwien.sepm.groupphase.backend.service.ResetPasswordService;
@@ -36,14 +37,23 @@ public class CustomUserDetailService implements UserService {
     private final UserMapper userMapper;
     private final UserValidator userValidator;
     private final ResetPasswordService resetPasswordService;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, UserValidator userValidator, ResetPasswordService resetPasswordService) {
+    public CustomUserDetailService(
+        UserRepository userRepository,
+        PasswordEncoder passwordEncoder,
+        UserMapper userMapper,
+        UserValidator userValidator,
+        ResetPasswordService resetPasswordService,
+        OrderRepository orderRepository
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
         this.userValidator = userValidator;
         this.resetPasswordService = resetPasswordService;
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -203,5 +213,13 @@ public class CustomUserDetailService implements UserService {
         }
 
         return this.userRepository.loadUsers(userSearchDto.getNameSearch(), role, status);
+    }
+
+    @Transactional
+    @Override
+    public void deleteUser(Long id) {
+        LOGGER.info("deleteUser(Long id) with id = {]", id);
+        orderRepository.deleteAllByUserId(id);
+        userRepository.deleteById(id);
     }
 }

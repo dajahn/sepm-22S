@@ -5,9 +5,7 @@ import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {ToastService} from '../../services/toast-service.service';
 import {CreateUpdateUser, User} from '../../dtos/user';
-import {UserStatus} from '../../enums/user-status';
 import {AuthRequest} from '../../dtos/auth-request';
-import {logger} from 'codelyzer/util/logger';
 import {CountriesCodeToName} from '../../enums/countriesCodeToName';
 
 @Component({
@@ -126,8 +124,17 @@ export class EditAccountComponent implements OnInit {
   }
 
   deleteAccount() {
-    console.log('TODO: delete account');
-    //TODO when Grantner has finished delete account in backend, then reroute to /register
+    this.userService.deleteUser().subscribe({
+      next: () => {
+        this.authService.logoutUser();
+        this.showSuccess('Successfully deleted user.');
+        this.router.navigate(['/register']);
+      },
+      error: err => {
+        console.log('Error while trying to delete user.', err);
+        this.showDanger('Unable to delete user.');
+      }
+    });
   }
 
   private showSuccess(msg: string) {

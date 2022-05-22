@@ -1,9 +1,12 @@
-import {UserSearchDto} from './../dtos/user';
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Globals} from '../global/globals';
-import {CreateUpdateUser, User} from '../dtos/user';
-import {Observable} from 'rxjs';
+import { UserSearchDto } from './../dtos/user';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Globals } from '../global/globals';
+import { AuthService } from './auth.service';
+import { CreateUpdateUser, User } from '../dtos/user';
+import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { AuthRequest } from '../dtos/auth-request';
 
 @Injectable({
   providedIn: 'root'
@@ -29,11 +32,11 @@ export class UserService {
   }
 
   forgotPassword(email: string): Observable<void> {
-    return this.httpClient.post<void>(this.baseUri + '/forgot-password', {email});
+    return this.httpClient.post<void>(this.baseUri + '/forgot-password', { email });
   }
 
   resetPassword(hash: string, password: string): Observable<void> {
-    return this.httpClient.post<void>(this.baseUri + '/reset-password', {hash, password});
+    return this.httpClient.post<void>(this.baseUri + '/reset-password', { hash, password });
   }
 
   loadUser(userSearch: UserSearchDto): Observable<User[]> {
@@ -47,5 +50,9 @@ export class UserService {
 
   lockUser(id: number): Observable<User> {
     return this.httpClient.put<User>(this.baseUri + '/lock/ ' + id, {});
+  }
+
+  deleteUser(): Observable<void> {
+    return this.httpClient.delete<void>(this.baseUri);
   }
 }
