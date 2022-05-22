@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CartService} from '../../services/cart.service';
 import {Cart} from '../../dtos/cart';
 import {Ticket} from '../../dtos/ticket';
@@ -16,6 +16,8 @@ import {Router} from '@angular/router';
 export class CartComponent implements OnInit {
 
   cart: Cart;
+  upcomingTickets: Ticket[];
+  pastTickets: Ticket[];
 
   constructor(
     private cartService: CartService,
@@ -26,6 +28,8 @@ export class CartComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCart();
+    this.loadPurchasedTickets(true);
+    this.loadPurchasedTickets(false);
   }
 
   /**
@@ -45,6 +49,26 @@ export class CartComponent implements OnInit {
   }
 
   /**
+   * Loads purchased Tickets
+   */
+  private loadPurchasedTickets(upcoming: boolean) {
+    this.cartService.getPurchasedTickets(upcoming).subscribe(
+      (data) => {
+        if (upcoming) {
+          this.upcomingTickets = data;
+        } else {
+          this.pastTickets = data;
+        }
+      },
+      error => {
+        console.error('Error fetching purchased Tickets', error);
+        this.showDanger('Sorry, something went wrong. Could not load your puchased Tickets 😔');
+      }
+    );
+  }
+
+
+  /**
    * Converts a general ticket into a SeatTicket
    *
    * @param ticket to convert
@@ -56,7 +80,7 @@ export class CartComponent implements OnInit {
   /**
    * Calculates the total price of all tickets combined
    */
-  calculateTotalSum(): number{
+  calculateTotalSum(): number {
     return this.cart?.tickets.reduce((accumulator, current) => accumulator + current?.sector.price, 0);
   }
 

@@ -12,6 +12,7 @@ import { MessageComponent } from './components/message/message.component';
 import { NewsDetailComponent } from './components/news-detail/news-detail.component';
 import { CartComponent } from './components/cart/cart.component';
 import { RegisterComponent } from './components/register/register.component';
+import { TopTenEventsComponent} from './components/top-ten-events/top-ten-events.component';
 import { EditAccountComponent } from './components/edit-account/edit-account.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { CreateUserComponent } from './components/create-user/create-user.component';
@@ -21,6 +22,7 @@ import {AntiAuthGuard} from './guards/anti-auth.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'events/topten', component: TopTenEventsComponent },
   { path: 'message', canActivate: [AuthGuard], component: MessageComponent },
   { path: 'login',  canActivate: [AntiAuthGuard], component: LoginComponent },
   { path: 'register', canActivate: [AntiAuthGuard], component: RegisterComponent },

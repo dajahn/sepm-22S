@@ -18,6 +18,7 @@
     <div *ngFor="let ticket of cart?.tickets">
       <!-- ### Seat -->
       <app-ticket *ngIf="ticket?.sector.type === 'SEAT'"
+                  removeButton = "true"
                   [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
                   [title]="ticket.performance.event?.name"
                   [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
@@ -34,6 +35,7 @@
 
       <!-- ### Standing -->
       <app-ticket *ngIf="ticket?.sector.type === 'STANDING'"
+                  removeButton = "true"
                   [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
                   [title]="ticket.performance.event?.name"
                   [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
@@ -59,11 +61,86 @@
 
 
 <!-- PURCHASED UPCOMING EVENTS -->
-<!-- TODO Implement purchased upcoming events -->
-<h4 class="headline">purchased upcoming events</h4>
+<h4 class="headline">purchased upcoming events ({{upcomingTickets.length}})</h4>
+
+<!-- # Purchased Tickets Grid: -->
+<!-- ## No purchased Tickets -->
+<div *ngIf="upcomingTickets.length <= 0; else upcomingTicketsNotEmpty">
+  <h5 class="empty">Nothing in here ... chirp chirp 🦗</h5>
+</div>
+
+<!-- ## Tickets -->
+<ng-template #upcomingTicketsNotEmpty>
+  <div class="ticket-grid">
+    <div *ngFor="let ticket of upcomingTickets">
+      <!-- ### Seat -->
+      <app-ticket *ngIf="ticket?.sector.type === 'SEAT'"
+                  removeButton = "true"
+                  [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
+                  [title]="ticket.performance.event?.name"
+                  [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
+                  [performance]="ticket.performance.location.name"
+                  [price]="ticket?.sector.price"
+                  rowTitle="ROW"
+                  [rowValue]="toSeatTicket(ticket).seat.row+''"
+                  columnTitle="SEAT"
+                  [columnValue]="toSeatTicket(ticket).seat.column+''"
+                  [ticketClass]="toSeatTicket(ticket).sector.seatType">
+      </app-ticket>
+
+      <!-- ### Standing -->
+      <app-ticket *ngIf="ticket?.sector.type === 'STANDING'"
+                  removeButton = "true"
+                  [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
+                  [title]="ticket.performance.event?.name"
+                  [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
+                  [performance]="ticket.performance.location.name"
+                  [price]="ticket.sector.price"
+                  rowTitle="SECTOR"
+                  [rowValue]="ticket.sector.name">
+      </app-ticket>
+    </div>
+  </div>
+</ng-template>
 
 
+<!-- PURCHASED PAST EVENTS -->
+<h4 class="headline" style="margin-top: 4rem">past events ({{pastTickets.length}})</h4>
 
-<!-- PAST EVENTS -->
-<!-- TODO Implement past events -->
-<h4 class="headline">past events</h4>
+<!-- # Purchased Tickets Grid: -->
+<!-- ## No purchased Tickets -->
+<div *ngIf="pastTickets.length <= 0; else pastTicketsNotEmpty">
+  <h5 class="empty">Nothing in here ... chirp chirp 🦗</h5>
+</div>
+
+<!-- ## Tickets -->
+<ng-template #pastTicketsNotEmpty>
+  <div class="ticket-grid">
+    <div *ngFor="let ticket of pastTickets">
+      <!-- ### Seat -->
+      <app-ticket *ngIf="ticket?.sector.type === 'SEAT'"
+                  [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
+                  [title]="ticket.performance.event?.name"
+                  [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
+                  [performance]="ticket.performance.location.name"
+                  [price]="ticket?.sector.price"
+                  rowTitle="ROW"
+                  [rowValue]="toSeatTicket(ticket).seat.row+''"
+                  columnTitle="SEAT"
+                  [columnValue]="toSeatTicket(ticket).seat.column+''"
+                  [ticketClass]="toSeatTicket(ticket).sector.seatType">
+      </app-ticket>
+
+      <!-- ### Standing -->
+      <app-ticket *ngIf="ticket?.sector.type === 'STANDING'"
+                  [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
+                  [title]="ticket.performance.event?.name"
+                  [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
+                  [performance]="ticket.performance.location.name"
+                  [price]="ticket.sector.price"
+                  rowTitle="SECTOR"
+                  [rowValue]="ticket.sector.name">
+      </app-ticket>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,26 @@
+input[type=button]{
+  margin-right: 20px;
+  margin-left: 20px;
+  padding: 3px;
+  background: var(--bg-tertiary);
+  font-size: 24px;
+}
+
+.p-2{
+  border-radius: 5px;
+  color:var(--text-c-highlight);
+  margin-bottom: 30px;
+  font-weight: var(--font-w-regular);
+}
+.p-2 div{
+  float: left;
+  color:var(--text-c-highlight);
+}
+img {
+  width: 30px;
+  height: 26px;
+  margin-right: 20px;
+  border-radius: 5px;
+
+}
+
