@@ -104,6 +104,7 @@ export class CreateEventComponent implements OnInit {
     return new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       reader.onload = () => resolve(<string>reader.result);
       reader.onerror = (error) => reject(error);
     });

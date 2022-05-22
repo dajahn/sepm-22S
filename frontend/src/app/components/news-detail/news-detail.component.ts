@@ -1,8 +1,8 @@
-import { Globals } from './../../global/globals';
-import { NewsService } from './../../services/news.service';
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { News } from 'src/app/dtos/news';
+import {Globals} from './../../global/globals';
+import {NewsService} from './../../services/news.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {News} from 'src/app/dtos/news';
 
 @Component({
   selector: 'app-news-detail',
@@ -17,9 +17,10 @@ export class NewsDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      if (params.hasOwnProperty('id'))
+      if (params.hasOwnProperty('id')) {
         this.loadNewsDetail(params['id']);
-    })
+      }
+    });
   }
 
   private loadNewsDetail(id: number) {
