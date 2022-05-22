@@ -2,8 +2,9 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreatePerformanceDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchTermsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ArtistMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
@@ -18,13 +19,16 @@ import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepm.groupphase.backend.service.LocationService;
 import at.ac.tuwien.sepm.groupphase.backend.util.EventValidator;
+import at.ac.tuwien.sepm.groupphase.backend.util.SqlStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,7 +50,9 @@ public class EventServiceImpl implements EventService {
     private final EventValidator eventValidator;
     private final EventMapper eventMapper;
 
-    public EventServiceImpl(EventRepository eventRepository, LocationService locationService, ArtistMapper artistMapper, FileService fileService, EventValidator eventValidator, EventMapper eventMapper) {
+    public EventServiceImpl(EventRepository eventRepository,
+                            LocationService locationService, ArtistMapper artistMapper,
+                            FileService fileService, EventValidator eventValidator, EventMapper eventMapper) {
         this.eventRepository = eventRepository;
         this.locationService = locationService;
         this.artistMapper = artistMapper;
@@ -91,6 +97,32 @@ public class EventServiceImpl implements EventService {
             Pageable topResults = PageRequest.of(0, eventSearchDto.getMaxRecords());
             return eventRepository.findByNameContaining(eventSearchDto.getName(), topResults);
         }
+    }
+
+    @Override
+    public List<Event> findAllEventsBy(EventSearchTermsDto eventSearchTermsDto) {
+        SqlStringConverter converter = new SqlStringConverter();
+
+        String description = converter.toSqlString(eventSearchTermsDto.getDescription());
+
+        String du = eventSearchTermsDto.getDuration();
+        Duration minDuration = null;
+        Duration maxDuration = null;
+        if (du != null) {
+            String hours = du.substring(0, 2);
+            String minutes = du.substring(3, 5);
+            String time = "PT" + hours + "H" + minutes + "M";
+            minDuration = Duration.parse(time).minusMinutes(30);
+            maxDuration = minDuration.plusMinutes(60);
+        }
+
+        String name = converter.toSqlString(eventSearchTermsDto.getName());
+        int category = -1;
+        if (eventSearchTermsDto.getCategory() != null) {
+            category = eventSearchTermsDto.getCategory().ordinal();
+        }
+
+        return eventRepository.findAllBy(category, description, minDuration, maxDuration, name);
     }
 
     private Event mapFromCreateEventToEvent(CreateEventDto createEventDto, File file) {

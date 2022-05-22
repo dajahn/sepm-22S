@@ -71,13 +71,13 @@ public class CartServiceTest implements EventTestData, LocationTestData, Address
 
     @Test
     public void givenNothing_whenCreatePurchaseOrders_thenFindPurchasedEvents() {
-        eventRepository.deleteAll();
-        orderRepository.deleteAll();
-        locationRepository.deleteAll();
-        artistRepository.deleteAll();
-        userRepository.deleteAll();
-        ticketRepository.deleteAll();
-        performanceRepository.deleteAll();
+//        eventRepository.deleteAll();
+//        orderRepository.deleteAll();
+//        locationRepository.deleteAll();
+//        artistRepository.deleteAll();
+//        userRepository.deleteAll();
+//        ticketRepository.deleteAll();
+//        performanceRepository.deleteAll();
 
         //generate location for event
         Location location = new Location();
@@ -159,7 +159,7 @@ public class CartServiceTest implements EventTestData, LocationTestData, Address
         Faker faker = new Faker();
 
         User user = User.builder().firstName(faker.name().firstName()).lastName(faker.name().lastName())
-            .address(address).password("ABC").email(faker.name().firstName() + "." + faker.name().lastName() + '@')
+            .address(address).password("ABC").email(faker.name().firstName() + "." + faker.name().lastName()+System.currentTimeMillis() + '@')
             .role(UserRole.CUSTOMER).status(UserStatus.OK).readNews(new HashSet<>()).failedLoginAttempts(0).build();
 
         user = userRepository.save(user);

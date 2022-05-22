@@ -123,13 +123,13 @@ public class CartEndpointTest implements EventTestData, ArtistTestData, Location
 
     @BeforeEach
     public void createEventAndPurchaseTicketOrder() {
-        eventRepository.deleteAll();
-        orderRepository.deleteAll();
-        locationRepository.deleteAll();
-        artistRepository.deleteAll();
-        userRepository.deleteAll();
-        ticketRepository.deleteAll();
-        performanceRepository.deleteAll();
+//        eventRepository.deleteAll();
+//        orderRepository.deleteAll();
+//        locationRepository.deleteAll();
+//        artistRepository.deleteAll();
+//        userRepository.deleteAll();
+//        ticketRepository.deleteAll();
+//        performanceRepository.deleteAll();
 
         //generate location for event
         Location location = new Location();

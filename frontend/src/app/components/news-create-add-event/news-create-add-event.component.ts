@@ -1,7 +1,7 @@
-import { EventService } from './../../services/event.service';
-import { OperatorFunction, Observable, switchMap, of, tap, debounceTime, distinctUntilChanged, catchError } from 'rxjs';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Event } from 'src/app/dtos/event';
+import {EventService} from './../../services/event.service';
+import {OperatorFunction, Observable, switchMap, of, tap, debounceTime, distinctUntilChanged, catchError} from 'rxjs';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Event} from 'src/app/dtos/event';
 
 @Component({
   selector: 'app-news-create-add-event',
@@ -9,14 +9,15 @@ import { Event } from 'src/app/dtos/event';
   styleUrls: ['./news-create-add-event.component.scss']
 })
 export class NewsCreateAddEventComponent implements OnInit {
-
-  public searchEventFailed: boolean = false;
-  public eventError: boolean = false;
-  public event: Event;
-
   @Output() updateEventEmitter = new EventEmitter<Event>();
 
-  constructor(private eventService: EventService) { }
+  public searchEventFailed = false;
+  public eventError = false;
+  public event: Event;
+
+
+  constructor(private eventService: EventService) {
+  }
 
   ngOnInit(): void {
   }
@@ -52,14 +53,12 @@ export class NewsCreateAddEventComponent implements OnInit {
     text$.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap(name => {
-        return this.eventService.getBySubString(name, 5).pipe(
-          tap(() => this.searchEventFailed = false),
-          catchError(() => {
-            this.searchEventFailed = true;
-            return of([]);
-          }))
-      }),
+      switchMap(name => this.eventService.getBySubString(name, 5).pipe(
+        tap(() => this.searchEventFailed = false),
+        catchError(() => {
+          this.searchEventFailed = true;
+          return of([]);
+        }))),
       catchError(() => {
         this.searchEventFailed = true;
         return of([]);

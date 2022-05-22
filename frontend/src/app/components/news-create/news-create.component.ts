@@ -1,10 +1,10 @@
-import { ToastService } from './../../services/toast-service.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NewsService } from './../../services/news.service';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { News } from 'src/app/dtos/news';
-import { Router } from '@angular/router';
-import { Event } from 'src/app/dtos/event';
+import {ToastService} from './../../services/toast-service.service';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {NewsService} from './../../services/news.service';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {News} from 'src/app/dtos/news';
+import {Router} from '@angular/router';
+import {Event} from 'src/app/dtos/event';
 
 @Component({
   selector: 'app-news-create',
@@ -18,8 +18,8 @@ export class NewsCreateComponent implements OnInit {
   public image: File;
   public event: Event;
 
-  public submitted: boolean = false;
-  public addEvent: boolean = false;
+  public submitted = false;
+  public addEvent = false;
 
   constructor(private newsService: NewsService, private formBuilder: FormBuilder
     , private toastService: ToastService, private router: Router) {
@@ -37,11 +37,12 @@ export class NewsCreateComponent implements OnInit {
 
   public getBase64(file: File) {
     return new Promise<string>((resolve, reject) => {
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.readAsDataURL(file);
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       reader.onload = () => resolve(<string>reader.result);
       reader.onerror = (error) => reject(error);
-    })
+    });
   }
 
   public handleEventChange(event: Event) {
@@ -56,7 +57,7 @@ export class NewsCreateComponent implements OnInit {
     let base64img = await this.getBase64(this.image);
     base64img = base64img.split(',')[1];
 
-    let news: News = {
+    const news: News = {
       title: this.newsForm.controls.title.value,
       description: this.newsForm.controls.description.value,
       imageDescription: this.newsForm.controls.imageDescription.value,
@@ -76,7 +77,7 @@ export class NewsCreateComponent implements OnInit {
         this.router.navigate(['/news']);
       },
       error: err => {
-        this.showDanger('An error occurred: \n' + err.error.message)
+        this.showDanger('An error occurred: \n' + err.error.message);
       }
     });
   }
@@ -88,7 +89,7 @@ export class NewsCreateComponent implements OnInit {
   }
 
   private showDanger(msg: string) {
-    this.toastService.show(msg, { classname: 'bg-danger text-light', delay: 5000 });
+    this.toastService.show(msg, {classname: 'bg-danger text-light', delay: 5000});
   }
 
   public toggleAddEvent() {
@@ -97,8 +98,9 @@ export class NewsCreateComponent implements OnInit {
 
   public handleFileInput(files: any) {
     //TODO: Possibility to upload multiple files?
-    if (files == null)
-      this.image = null;
+    if (files == null) {
+this.image = null;
+}
 
     this.image = files[0];
   }
