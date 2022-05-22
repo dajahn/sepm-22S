@@ -4,6 +4,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {CreateEvent, Event, EventCategory} from '../dtos/event';
 import {TopTenEvent} from '../dtos/top-ten-event';
+import { EventCategory } from '../enums/event-category';
 
 @Injectable({
   providedIn: 'root'
