@@ -3,6 +3,7 @@ import {EventCategory} from '../../dtos/event';
 import {EventService} from '../../services/event.service';
 import {Globals} from '../../global/globals';
 import {ToastService} from '../../services/toast-service.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-top-ten-events',
@@ -18,7 +19,7 @@ export class TopTenEventsComponent implements OnInit {
   months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   currentMonth: string;
 
-  constructor(private eventService: EventService, private globals: Globals, private toastService: ToastService) {
+  constructor(private eventService: EventService, private globals: Globals, private toastService: ToastService, private router: Router) {
     this.categoriesValues = Object.values(this.categories);
   }
 
@@ -69,5 +70,12 @@ export class TopTenEventsComponent implements OnInit {
       percent = 40;
     }
     return percent;
+  }
+
+  /**
+   * Navigates to corresponding event and performance.
+   */
+  inspect(eventID: number) {
+    this.router.navigate([`events/${eventID}`]).then();
   }
 }

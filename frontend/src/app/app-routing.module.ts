@@ -42,6 +42,7 @@ const routes: Routes = [
   { path: 'reset-password/:hash', component: ResetPasswordComponent },
   {
     path: 'events/:eventId',
+    canActivate: [AuthGuard],
     children: [
       { path: '', component: EventComponent },
       { path: 'performances/:performanceId', component: EventComponent }

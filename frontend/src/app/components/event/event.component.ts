@@ -92,7 +92,7 @@ export class EventComponent implements OnInit {
     private readonly ticketService: TicketService,
     private readonly cartService: CartService,
     private readonly toastService: ToastService,
-    readonly route: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly globals: Globals,
   ) {
