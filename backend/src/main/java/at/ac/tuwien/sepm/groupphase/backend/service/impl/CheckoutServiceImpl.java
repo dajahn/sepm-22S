@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
 import at.ac.tuwien.sepm.groupphase.backend.service.CheckoutService;
 import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceService;
+import at.ac.tuwien.sepm.groupphase.backend.service.TicketPrintingService;
 import at.ac.tuwien.sepm.groupphase.backend.util.CheckoutValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,12 +25,14 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final InvoiceService invoiceService;
     private final OrderRepository orderRepository;
     private final CheckoutValidator checkoutValidator;
+    private final TicketPrintingService ticketPrintingService;
 
-    public CheckoutServiceImpl(CartService cartService, InvoiceService invoiceService, OrderRepository orderRepository, CheckoutValidator checkoutValidator) {
+    public CheckoutServiceImpl(CartService cartService, InvoiceService invoiceService, OrderRepository orderRepository, CheckoutValidator checkoutValidator, TicketPrintingService ticketPrintingService) {
         this.cartService = cartService;
         this.invoiceService = invoiceService;
         this.orderRepository = orderRepository;
         this.checkoutValidator = checkoutValidator;
+        this.ticketPrintingService = ticketPrintingService;
     }
 
 
@@ -48,6 +51,8 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         cart.setType(OrderType.PURCHASE);
         orderRepository.save(cart);
+        
+        ticketPrintingService.processOrder(cart);
         invoiceService.create(cart);
     }
 }

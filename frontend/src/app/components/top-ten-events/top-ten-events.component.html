@@ -20,7 +20,7 @@
     <span *ngIf="i === 0">
       <div class="d-flex flex-row">
         <div class="p-2">{{i + 1}}.</div>
-        <div><input type="button" style="margin-left: 23px" value="🎟️"></div>
+        <div><input type="button" style="margin-left: 23px" (click) = "inspect(event.id)" value="🎟️"></div>
         <div class="p-2" style="background: var(--gradient-orange)" [style.width.%]=getPercent(i,category)>
           <div><img [src]="event.thumbnail?.url"></div>
           <div>{{event.name}}</div>
@@ -34,7 +34,7 @@
     <span *ngIf="i === 1">
       <div class="d-flex flex-row">
         <div class="p-2">{{i + 1}}.</div>
-        <div><input type="button" value="🎟️"></div>
+        <div><input type="button" (click) = "inspect(event.id)" value="🎟️"></div>
         <div class="p-2" style="background: var(--gradient-purple)" [style.width.%]=getPercent(i,category)>
           <div><img [src]="event.thumbnail?.url"></div>
           <div>{{event.name}}</div>
@@ -48,7 +48,7 @@
     <span *ngIf="i === 2">
       <div class="d-flex flex-row">
         <div class="p-2">{{i + 1}}.</div>
-        <div><input type="button" value="🎟️"></div>
+        <div><input type="button" (click) = "inspect(event.id)" value="🎟️"></div>
         <div class="p-2" style="background: var(--gradient-blue)" [style.width.%]=getPercent(i,category)>
           <div><img [src]="event.thumbnail?.url"></div>
           <div>{{event.name}}</div>
@@ -62,7 +62,7 @@
     <span *ngIf="i !== 0 && i !== 1 && i !==2 && i!== 9 ">
       <div class="d-flex flex-row">
         <div class="p-2">{{i + 1}}.</div>
-        <div><input type="button" value="🎟️"></div>
+        <div><input type="button" (click) = "inspect(event.id)" value="🎟️"></div>
         <div class="p-2" style="background: var(--bg-tertiary)" [style.width.%]=getPercent(i,category)>
           <div><img [src]="event.thumbnail?.url"></div>
           <div>{{event.name}}</div>
@@ -75,7 +75,7 @@
     <span *ngIf="i===9 ">
       <div class="d-flex flex-row">
         <div class="p-2">{{i + 1}}.</div>
-        <div><input type="button" style="margin-left: 13px" value="🎟️"></div>
+        <div><input type="button" (click) = "inspect(event.id)" style="margin-left: 13px" value="🎟️"></div>
         <div class="p-2" style="background: var(--bg-tertiary)" [style.width.%]=getPercent(i,category)>
           <div><img [src]="event.thumbnail?.url"></div>
           <div>{{event.name}}</div>

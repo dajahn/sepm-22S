@@ -8,7 +8,6 @@ import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { AuthGuard } from './guards/auth.guard';
-import { MessageComponent } from './components/message/message.component';
 import { NewsDetailComponent } from './components/news-detail/news-detail.component';
 import { CartComponent } from './components/cart/cart.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -24,7 +23,7 @@ import {AntiAuthGuard} from './guards/anti-auth.guard';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'events/topten', component: TopTenEventsComponent },
-  { path: 'message', canActivate: [AuthGuard], component: MessageComponent },
+  { path: 'message', redirectTo:'/' },
   { path: 'login',  canActivate: [AntiAuthGuard], component: LoginComponent },
   { path: 'register', canActivate: [AntiAuthGuard], component: RegisterComponent },
   { path: 'account/edit', canActivate: [AuthGuard], component: EditAccountComponent },
@@ -42,6 +41,7 @@ const routes: Routes = [
   { path: 'reset-password/:hash', component: ResetPasswordComponent },
   {
     path: 'events/:eventId',
+    canActivate: [AuthGuard],
     children: [
       { path: '', component: EventComponent },
       { path: 'performances/:performanceId', component: EventComponent }

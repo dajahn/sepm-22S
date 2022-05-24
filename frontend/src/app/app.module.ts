@@ -32,7 +32,8 @@ import { SearchComponent } from './components/search/search.component';
 import { TopTenEventsComponent } from './components/top-ten-events/top-ten-events.component';
 import { LocationComponent } from './components/event/location/location.component';
 import { EventComponent } from './components/event/event.component';
-import {Location} from '@angular/common';
+import { CapitalizeFirstPipe } from './pipes/capitalize-first.pipe';
+import { PricePipe } from './pipes/price.pipe';
 import { DurationPipe } from './pipes/duration.pipe';
 
 @NgModule({
@@ -66,6 +67,8 @@ import { DurationPipe } from './pipes/duration.pipe';
     LocationComponent,
     EventComponent,
     DurationPipe,
+    CapitalizeFirstPipe,
+    PricePipe,
   ],
   imports: [
     BrowserModule,
