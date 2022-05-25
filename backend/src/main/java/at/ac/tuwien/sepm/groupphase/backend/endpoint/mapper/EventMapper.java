@@ -26,16 +26,8 @@ public interface EventMapper {
 
     //Maps event, and it's ticket count to one dto.
     default TopTenEventDto eventToTopTenEventDto(Event event, int ticketCount) {
-        FileDto fileDto = new FileDto();
-        File f = event.getThumbnail();
-        if (f != null) {
-            fileDto.setType(f.getType());
-            fileDto.setUrl("/files/" + f.getId().toString());
-        } else {
-            fileDto = null;
-        }
         TopTenEventDto result = new TopTenEventDto();
-        result.setThumbnail(fileDto);
+        result.setThumbnail(null);
         result.setName(event.getName());
         result.setId(event.getId());
         result.setCategory(event.getCategory());
