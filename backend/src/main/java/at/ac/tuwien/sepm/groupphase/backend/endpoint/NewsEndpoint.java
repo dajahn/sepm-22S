@@ -43,7 +43,6 @@ import java.util.List;
 public class NewsEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-
     private final NewsService newsService;
     private final FileService fileService;
 

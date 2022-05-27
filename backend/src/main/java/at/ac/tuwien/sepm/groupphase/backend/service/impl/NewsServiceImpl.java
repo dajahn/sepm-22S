@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import java.util.Objects;
 
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @Service
 public class NewsServiceImpl implements NewsService {
@@ -69,6 +71,7 @@ public class NewsServiceImpl implements NewsService {
                         .file(file).build();
 
         if (newsDto.getEventDto() != null) {
+            LOGGER.debug("{}", newsDto.getEventDto());
             news.setEvent(this.eventMapper.eventDtoToEvent(newsDto.getEventDto()));
         }
 

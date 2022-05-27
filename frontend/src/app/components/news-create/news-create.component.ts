@@ -64,12 +64,14 @@ export class NewsCreateComponent implements OnInit {
       fileDto: {
         imageBase64: base64img,
         type: this.image.type
-      },
-      eventDto: {
-        ...this.event
       }
     };
 
+    if(this.event != null){
+      news.eventDto = {
+        ...this.event
+      };
+    }
 
     this.newsService.createNews(news).subscribe({
       next: value => {
