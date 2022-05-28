@@ -29,7 +29,6 @@ import java.util.Set;
 @Service
 public class NewsServiceImpl implements NewsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
     private final UserRepository userRepository;
     private final NewsRepository newsRepository;
     private final NewsValidator newsValidator;

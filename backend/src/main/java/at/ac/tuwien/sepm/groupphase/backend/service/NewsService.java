@@ -17,7 +17,6 @@ public interface NewsService {
      */
     News createNews(NewsDto news) throws IOException;
 
-
     /**
      *  Gets all the available news entries.
      *
