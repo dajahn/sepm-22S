@@ -18,19 +18,13 @@ import at.ac.tuwien.sepm.groupphase.backend.util.NewsValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import java.util.Objects;
-
-
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 @Service
 public class NewsServiceImpl implements NewsService {
@@ -121,7 +115,6 @@ public class NewsServiceImpl implements NewsService {
         if (e != null) {
             newsDto.setEventDto(eventMapper.eventToEventDto(e));
         }
-
 
         newsDto.setFileDto(fileDto);
 

@@ -74,7 +74,7 @@
                             <span class="me-1">
                                 <i class="bi bi-trash" (click)="removeImageCandidate()" role="button"></i>
                             </span>
-                            {{image.name}}
+                            {{(image.name.length>15)? (image.name | slice:0:15)+'...':(image.name)}}
                         </small>
                     </div>
                 </div>
