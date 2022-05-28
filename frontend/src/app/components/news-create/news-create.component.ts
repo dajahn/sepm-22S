@@ -5,6 +5,7 @@ import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {News} from 'src/app/dtos/news';
 import {Router} from '@angular/router';
 import {Event} from 'src/app/dtos/event';
+import { FileDto } from 'src/app/dtos/file';
 
 @Component({
   selector: 'app-news-create',
@@ -17,6 +18,7 @@ export class NewsCreateComponent implements OnInit {
   public newsForm: FormGroup;
   public image: File;
   public event: Event;
+  public fileDto: FileDto;
 
   public submitted = false;
   public addEvent = false;
@@ -27,9 +29,11 @@ export class NewsCreateComponent implements OnInit {
       title: ['', [Validators.required, Validators.maxLength(255)]],
       description: ['', [Validators.required, Validators.maxLength(255)]],
       imageDescription: ['', [Validators.required, Validators.maxLength(255)]],
-      image: [''],
+      image: ['',],
       eventId: ['']
     });
+
+    this.fileDto = {};
   }
 
   ngOnInit(): void {
@@ -51,19 +55,19 @@ export class NewsCreateComponent implements OnInit {
 
   async onSubmit(e: any) {
     e.preventDefault();
-
     this.submitted = true;
 
-    let base64img = await this.getBase64(this.image);
-    base64img = base64img.split(',')[1];
+    if(!this.newsForm.valid)
+      return;
+
+
 
     const news: News = {
       title: this.newsForm.controls.title.value,
       description: this.newsForm.controls.description.value,
       imageDescription: this.newsForm.controls.imageDescription.value,
       fileDto: {
-        imageBase64: base64img,
-        type: this.image.type
+        ...this.fileDto
       }
     };
 
@@ -79,7 +83,8 @@ export class NewsCreateComponent implements OnInit {
         this.router.navigate(['/news']);
       },
       error: err => {
-        this.showDanger('An error occurred: \n' + err.error.message);
+        debugger;
+        this.showDanger('Something went wrong!');
       }
     });
   }
@@ -98,13 +103,19 @@ export class NewsCreateComponent implements OnInit {
     this.addEvent = !this.addEvent;
   }
 
-  public handleFileInput(files: any) {
+  public async handleFileInput(files: any) {
     //TODO: Possibility to upload multiple files?
     if (files == null) {
-this.image = null;
-}
+      this.image = null;
+    }
 
     this.image = files[0];
+
+    //Sets the base64 of the dto
+    let base64img = await this.getBase64(this.image);
+    base64img = base64img.split(',')[1];
+    this.fileDto.imageBase64 = base64img;
+    this.fileDto.type = this.image.type;
   }
 
   public removeImageCandidate() {

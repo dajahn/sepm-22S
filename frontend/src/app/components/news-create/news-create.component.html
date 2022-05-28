@@ -10,12 +10,16 @@
                     <label for="title" class="control-label">Title</label>
                     <input type="text" formControlName="title" class="form-control" id="title" placeholder="Title"
                         name="title">
-                    <div *ngIf="submitted && newsForm.controls.title.errors" class="error">
-                        <small class="form-text text-warning" *ngIf="newsForm.controls.title.errors.required">News title
-                            is
-                            required!
-                        </small>
-                    </div>
+                        <div *ngIf="submitted && newsForm.controls.title.errors" class="error">
+                            <small class="form-text text-warning" *ngIf="newsForm.controls.title.hasError('required')">News title
+                                is
+                                required!
+                            </small>
+                            <small class="form-text text-warning" *ngIf="newsForm.controls.title.hasError('maxlength')">
+                                News title max length is 255!
+                            </small>
+                        </div>
+
                 </div>
 
                 <div class="col-md-12 mb-2">
@@ -27,6 +31,9 @@
                             description
                             is
                             required!
+                        </small>
+                        <small class="form-text text-warning" *ngIf="newsForm.controls.description.hasError('maxlength')">
+                            Description title max length is 255!
                         </small>
                     </div>
                 </div>
@@ -50,7 +57,14 @@
 
                         <input id="file-upload" required (change)="handleFileInput($event.target.files)"
                             name="thumbnail" class="form-control" type="file" accept="image/png, image/jpeg"
-                            #imgUpload />
+                            #imgUpload/>
+                        <div *ngIf="submitted && newsForm.controls.image.errors" class="error">
+                            <small class="form-text text-warning"
+                                *ngIf="newsForm.controls.image.errors.required">Image 
+                                is
+                                required!
+                            </small>
+                        </div>
                     </div>
                 </div>
                 <div class="clearfix imgHint">
@@ -81,6 +95,9 @@
                             Description
                             is
                             required!
+                        </small>
+                        <small class="form-text text-warning" *ngIf="newsForm.controls.imageDescription.hasError('maxlength')">
+                            Image description max length is 255!
                         </small>
                     </div>
                 </div>
