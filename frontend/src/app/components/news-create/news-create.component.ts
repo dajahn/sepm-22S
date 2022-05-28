@@ -29,7 +29,7 @@ export class NewsCreateComponent implements OnInit {
       title: ['', [Validators.required, Validators.maxLength(255)]],
       description: ['', [Validators.required, Validators.maxLength(255)]],
       imageDescription: ['', [Validators.required, Validators.maxLength(255)]],
-      image: ['',],
+      image: [''],
       eventId: ['']
     });
 
