@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 
@@ -22,7 +23,7 @@ public interface NewsService {
      *
      *  @return all news entries
      */
-    List<NewsDto> getAll();
+    PagedNewsDto getAll(int page, int size);
 
     /**
      * Gets all the unread news entries for a user.
@@ -31,7 +32,7 @@ public interface NewsService {
      *
      * @return all unread news entries
      */
-    List<NewsDto> getUnread(String mail);
+    PagedNewsDto getUnread(String mail, int page, int size);
 
     /**
      * Gets a news entry by id.

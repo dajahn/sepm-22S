@@ -1,5 +1,5 @@
-import {FileDto} from './file';
-import {Event} from './event';
+import { FileDto } from './file';
+import { Event } from './event';
 
 export class News {
   id?: number;
@@ -9,4 +9,9 @@ export class News {
   date?: string;
   fileDto?: FileDto;
   eventDto?: Event;
+}
+
+export class PagedNewsDto {
+  news: News[];
+  totalCount: number;
 }

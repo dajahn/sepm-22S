@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -62,12 +64,10 @@ public class NewsEndpoint {
     @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Gets all the news Entries", security = @SecurityRequirement(name = "apiKey"))
-    public List<NewsDto> getNews() {
+    public PagedNewsDto getNews(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
         LOGGER.info("GET /api/v1/news");
 
-        List<NewsDto> newsDtos = this.newsService.getAll();
-
-        return newsDtos;
+        return this.newsService.getAll(page, size);
     }
 
     @Secured("ROLE_USER")
@@ -89,11 +89,11 @@ public class NewsEndpoint {
     @Secured("ROLE_USER")
     @GetMapping(path = "/unread")
     @Operation(summary = "Gets all unread news for user", security = @SecurityRequirement(name = "apiKey"))
-    public List<NewsDto> getUnreadNews() {
+    public PagedNewsDto getUnreadNews(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
         LOGGER.info("Get /api/v1/news/unread");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String mail = authentication.getName();
 
-        return this.newsService.getUnread(mail);
+        return this.newsService.getUnread(mail, page, size);
     }
 }

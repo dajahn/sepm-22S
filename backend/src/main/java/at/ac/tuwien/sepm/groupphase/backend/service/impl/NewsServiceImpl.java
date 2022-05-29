@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
@@ -17,6 +18,9 @@ import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
 import at.ac.tuwien.sepm.groupphase.backend.util.NewsValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
@@ -73,18 +77,37 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDto> getAll() {
+    public PagedNewsDto getAll(int page, int size) {
         LOGGER.trace("getAll()");
-        List<News> news = this.newsRepository.findAll(Sort.by(Sort.Direction.DESC, "date", "id"));
-        return mapOtherDtos(news);
+
+        Long totalCount = newsRepository.count();
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "date", "id"));
+        Page<News> news = newsRepository.findAll(pageable);
+
+        List<NewsDto> newsDtos = mapOtherDtos(news.toList());
+
+        PagedNewsDto pagedNewsDto = new PagedNewsDto();
+        pagedNewsDto.setNews(newsDtos);
+        pagedNewsDto.setTotalCount(totalCount);
+        return pagedNewsDto;
     }
 
     @Override
-    public List<NewsDto> getUnread(String mail) {
+    public PagedNewsDto getUnread(String mail, int page, int size) {
         LOGGER.trace("getUnread()");
         User user = userRepository.findUserByEmail(mail);
-        List<News> news = newsRepository.loadUnreadNews(user.getId());
-        return mapOtherDtos(news);
+
+        Pageable pageable = PageRequest.of(page, size);
+        List<News> news = newsRepository.loadUnreadNews(user.getId(), pageable);
+        List<NewsDto> newsDtos = mapOtherDtos(news);
+
+        PagedNewsDto pagedNewsDto = new PagedNewsDto();
+        pagedNewsDto.setNews(newsDtos);
+
+        Long totalCount = newsRepository.getUnreadNewsCount(user.getId());
+        pagedNewsDto.setTotalCount(totalCount);
+
+        return pagedNewsDto;
     }
 
     @Override
