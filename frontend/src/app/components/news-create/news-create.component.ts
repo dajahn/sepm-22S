@@ -1,10 +1,10 @@
-import {ToastService} from './../../services/toast-service.service';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {NewsService} from './../../services/news.service';
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {News} from 'src/app/dtos/news';
-import {Router} from '@angular/router';
-import {Event} from 'src/app/dtos/event';
+import { ToastService } from './../../services/toast-service.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { NewsService } from './../../services/news.service';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { News } from 'src/app/dtos/news';
+import { Router } from '@angular/router';
+import { Event } from 'src/app/dtos/event';
 import { FileDto } from 'src/app/dtos/file';
 
 @Component({
@@ -57,8 +57,9 @@ export class NewsCreateComponent implements OnInit {
     e.preventDefault();
     this.submitted = true;
 
-    if(!this.newsForm.valid)
+    if (!this.newsForm.valid) {
       return;
+    }
 
 
 
@@ -71,7 +72,7 @@ export class NewsCreateComponent implements OnInit {
       }
     };
 
-    if(this.event != null){
+    if (this.event != null) {
       news.eventDto = {
         ...this.event
       };
@@ -83,7 +84,6 @@ export class NewsCreateComponent implements OnInit {
         this.router.navigate(['/news']);
       },
       error: err => {
-        debugger;
         this.showDanger('Something went wrong!');
       }
     });
@@ -96,7 +96,7 @@ export class NewsCreateComponent implements OnInit {
   }
 
   private showDanger(msg: string) {
-    this.toastService.show(msg, {classname: 'bg-danger text-light', delay: 5000});
+    this.toastService.show(msg, { classname: 'bg-danger text-light', delay: 5000 });
   }
 
   public toggleAddEvent() {

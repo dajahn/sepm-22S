@@ -12,19 +12,19 @@ import { News, PagedNewsDto } from 'src/app/dtos/news';
 })
 export class NewsComponent implements OnInit {
   //Pagination configuration, same for both
-  public pageSize: number = 5;
+  public pageSize = 5;
 
   //Current page for unread / all news
-  public page: number = 1;
-  public allNewsPage: number = 1;
+  public page = 1;
+  public allNewsPage = 1;
 
   //Unread News
   public news: News[] = [];
-  public totalUnreadNews: number = 0;
+  public totalUnreadNews = 0;
 
   //All News
   public allNews: News[];
-  public totalAllNews: number = 0;
+  public totalAllNews = 0;
 
   //Styling variables
   public expandAllNews = false;
@@ -44,7 +44,6 @@ export class NewsComponent implements OnInit {
   }
 
   public handlePageChangeAllNews() {
-    debugger;
     this.loadAllNews();
   }
 
@@ -64,7 +63,6 @@ export class NewsComponent implements OnInit {
     this.newsService.getAllNews(this.allNewsPage - 1, this.pageSize).subscribe((pagedNews: PagedNewsDto) => {
       this.allNews = pagedNews.news;
       this.totalAllNews = pagedNews.totalCount;
-      debugger;
 
       for (const n of this.allNews) {
         n.fileDto.url = this.globals.backendUri + n.fileDto.url;

@@ -12,7 +12,7 @@ import {News} from 'src/app/dtos/news';
 export class NewsDetailComponent implements OnInit {
   @Input() public news: News;
 
-  public link:string;
+  public link: string;
 
   constructor(private route: ActivatedRoute, private newsService: NewsService, private globals: Globals) {
   }
@@ -36,7 +36,8 @@ export class NewsDetailComponent implements OnInit {
 
   private setLink(){
       //When eventId exists set linkt to event
-      if(this.news && this.news.eventDto && this.news.eventDto.id)
-        this.link = '/events/'+this.news.eventDto.id;
+      if(this.news && this.news.eventDto && this.news.eventDto.id) {
+this.link = '/events/'+this.news.eventDto.id;
+}
   }
 }
