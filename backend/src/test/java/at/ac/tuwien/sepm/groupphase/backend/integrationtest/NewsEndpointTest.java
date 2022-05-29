@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SimpleMessageDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
@@ -215,8 +216,8 @@ public class NewsEndpointTest {
             .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
-        List<NewsDto> newsDto1 = Arrays.asList(MAPPER.readValue(response.getContentAsString(),NewsDto[].class));
-        assertEquals(1,newsDto1.size());
+        PagedNewsDto pagedNewsDto = MAPPER.readValue(response.getContentAsString(),PagedNewsDto.class);
+        assertEquals(1,pagedNewsDto.getNews().size());
     }
 
 }

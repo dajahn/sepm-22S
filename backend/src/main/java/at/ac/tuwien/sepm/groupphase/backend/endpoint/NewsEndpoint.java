@@ -66,7 +66,6 @@ public class NewsEndpoint {
     @Operation(summary = "Gets all the news Entries", security = @SecurityRequirement(name = "apiKey"))
     public PagedNewsDto getNews(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
         LOGGER.info("GET /api/v1/news");
-
         return this.newsService.getAll(page, size);
     }
 
