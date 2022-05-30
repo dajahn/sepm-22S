@@ -34,6 +34,11 @@
   --text-c-lowlight: #8a8a8a;
   --text-c-link: #4351AD;
 
+  /* ## Text Red Colors */
+  --text-c-r-primary: #BF0100;
+  --text-c-r-highlight: #800000;
+  --text-c-r-lowlight: #ED0104;
+
   /* ## Accent Colors */
   --accent-orange: #F1936D;
   --accent-purple: #B227F6;
@@ -101,6 +106,11 @@
     --text-c-primary: #8F92A6;
     --text-c-highlight: #EDEFF5;
     --text-c-lowlight: #5C607F;
+
+    /* ## Text Red Colors */
+    --text-c-r-primary: #BF0100;
+    --text-c-r-highlight: #ED0104;
+    --text-c-r-lowlight: #800000;
   }
 }
 
