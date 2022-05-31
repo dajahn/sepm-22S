@@ -48,7 +48,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             //Checks if user who trys to authenticate is currently not locked
             UserStatus userStatus = userService.getUserStatus(user);
             if (userStatus == UserStatus.LOCKED) {
-                throw new LockedException("This user is currently locked! Consult an ADMIN!");
+                throw new LockedException("This user is currently locked! Consult an Admin!");
             }
 
             //Compares the user with CustomUserDetailService#loadUserByUsername and check if the credentials are correct
