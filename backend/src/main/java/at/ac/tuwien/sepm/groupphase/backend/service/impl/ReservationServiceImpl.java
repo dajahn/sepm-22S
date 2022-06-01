@@ -11,23 +11,21 @@ import at.ac.tuwien.sepm.groupphase.backend.service.ReservationService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketPrintingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ReservationServiceImpl implements ReservationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final CartService cartService;
-    private final InvoiceService invoiceService;
     private final OrderRepository orderRepository;
-    private final TicketPrintingService ticketPrintingService;
 
-    public ReservationServiceImpl(CartService cartService, InvoiceService invoiceService, OrderRepository orderRepository, TicketPrintingService ticketPrintingService) {
+    public ReservationServiceImpl(CartService cartService, OrderRepository orderRepository) {
         this.cartService = cartService;
-        this.invoiceService = invoiceService;
         this.orderRepository = orderRepository;
-        this.ticketPrintingService = ticketPrintingService;
     }
 
     @Override
