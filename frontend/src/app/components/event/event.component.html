@@ -49,9 +49,13 @@
       </ng-container>
     </div>
 
-    <div class="d-flex flex-row justify-content-between" style="margin-top: 1rem; margin-bottom: 4rem">
+    <div class="d-flex flex-row justify-content-between" style="margin-top: 1rem; margin-bottom: 1rem">
       <span class="price">Total: {{sum | price}}</span>
       <input type="button" class="blue" value="ADD TO 🛒" (click)="addToCart()"
+             [disabled]="selectedTickets.length === 0">
+    </div>
+    <div class="d-flex flex-row justify-content-end" style="margin-bottom: 4rem">
+      <input type="button" id="reserveBtn" class="blue" value="    Reserve    " (click)="reserveTickets()"
              [disabled]="selectedTickets.length === 0">
     </div>
   </div>

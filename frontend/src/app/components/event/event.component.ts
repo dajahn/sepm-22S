@@ -13,6 +13,7 @@ import {CartService} from '../../services/cart.service';
 import {ToastService} from '../../services/toast-service.service';
 import {SectorType} from '../../dtos/sector';
 import {Globals} from '../../global/globals';
+import {ReservationService} from '../../services/reservation.service';
 
 @Component({
   selector: 'app-performance',
@@ -95,6 +96,7 @@ export class EventComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly globals: Globals,
+    private readonly reservationService: ReservationService
   ) {
   }
 
@@ -187,5 +189,22 @@ export class EventComponent implements OnInit {
     if (!!id) {
       this.router.navigate(['..', id], {relativeTo: this.route});
     }
+  }
+
+  reserveTickets() {
+    this.reservationService.addReservations(this.selectedTickets.map(ticket => ({
+      performance: ticket.performance.id,
+      type: ticket.sector.type,
+      item: ticket.sector.type === SectorType.SEAT ? (ticket as SeatTicket).seat.id : ticket.sector.id
+    }))).subscribe({
+      next: () => {
+        this.showSuccess('Successfully reserved tickets!');
+        this.router.navigate(['cart']);
+      },
+      error: error => {
+        console.log('Could not reserve tickets.', error);
+        this.showDanger('Unfortunately an error occurred while trying to reserve your items.');
+      }
+    });
   }
 }
