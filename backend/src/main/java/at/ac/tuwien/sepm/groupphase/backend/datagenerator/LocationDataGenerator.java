@@ -70,7 +70,7 @@ public class LocationDataGenerator {
                     point.setY(0);
                     sector.setPoint1(point);
                     point = new Point();
-                    point.setX(8 + j * 8);
+                    point.setX(7 + j * 8);
                     point.setY(4);
                     sector.setPoint2(point);
                     sector.setLocation(location);
