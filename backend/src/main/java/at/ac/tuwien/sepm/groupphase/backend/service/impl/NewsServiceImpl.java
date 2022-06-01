@@ -23,6 +23,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
@@ -76,6 +78,7 @@ public class NewsServiceImpl implements NewsService {
         return news;
     }
 
+    @Transactional
     @Override
     public PagedNewsDto getAll(int page, int size) {
         LOGGER.trace("getAll()");
@@ -92,6 +95,7 @@ public class NewsServiceImpl implements NewsService {
         return pagedNewsDto;
     }
 
+    @Transactional
     @Override
     public PagedNewsDto getUnread(String mail, int page, int size) {
         LOGGER.trace("getUnread()");
