@@ -328,3 +328,12 @@ i {
     margin-bottom: 1rem;
   }
 }
+
+ngb-pagination ul {
+  li{
+    a {
+      background-color: var(--bg-tertiary) !important;
+      color:var(--text-c-highlight) !important;
+    }
+  }
+}

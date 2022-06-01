@@ -59,6 +59,7 @@
             white-space: nowrap;
             overflow: hidden;            
             margin-left: 0.5em;
+            font-size: 0.75rem;
           
             text-overflow: ellipsis;
         }
@@ -66,6 +67,16 @@
             margin-left: auto;
             font-size: 0.75em;
 
+        }
+    }
+}
+
+@media(min-width:768px){
+    .newsDescription{
+        .newsHeader{
+            .newsTitle{
+                font-size:1rem;
+            }
         }
     }
 }
