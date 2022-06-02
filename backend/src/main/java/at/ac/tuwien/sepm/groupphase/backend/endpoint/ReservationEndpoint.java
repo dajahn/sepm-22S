@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.service.ReservationService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,16 +47,19 @@ public class ReservationEndpoint {
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping
-    @Operation(summary = "Set status of all cart orders to Reserved", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Reserves all given tickets", security = @SecurityRequirement(name = "apiKey"))
     public void reserveTickets(@Valid @NotNull @RequestBody List<CreateTicketDto> tickets) {
         try {
-            LOGGER.info("POST /api/v1/cart/reservation");
+            LOGGER.info("POST /api/v1/cart/reservation with {}", tickets);
             String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             User user = userService.findApplicationUserByEmail(email);
             reservationService.reserveTickets(user.getId(), tickets);
         } catch (NotFoundException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (ValidationException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
     }
 
@@ -64,14 +68,9 @@ public class ReservationEndpoint {
     @GetMapping
     @Operation(summary = "Get all reserved tickets of user", security = @SecurityRequirement(name = "apiKey"))
     public List<TicketDto> getAllReservedTickets() {
-        try {
-            LOGGER.info("GET /api/v1/cart/reservation");
-            String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            User user = userService.findApplicationUserByEmail(email);
-            return ticketMapper.ticketsToTicketDtos(reservationService.getReservedTickets(user.getId()));
-        } catch (NotFoundException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        }
+        LOGGER.info("GET /api/v1/cart/reservation");
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findApplicationUserByEmail(email);
+        return ticketMapper.ticketsToTicketDtos(reservationService.getReservedTickets(user.getId()));
     }
 }
