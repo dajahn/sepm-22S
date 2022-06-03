@@ -91,7 +91,7 @@ export class CreateEventComponent implements OnInit {
 
     this.eventService.save(event).subscribe({
       next: value => {
-        this.showSuccess(`Event created with tile '${event.name}'! YAY`);
+        this.showSuccess(`Event created with title '${event.name}'! YAY`);
         this.router.navigate(['/']);
       },
       error: err => {

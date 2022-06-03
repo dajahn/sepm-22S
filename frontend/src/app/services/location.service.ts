@@ -53,4 +53,13 @@ export class LocationService {
     }
     return this.http.get<Location[]>(baseUri + '/search', {params: terms});
   }
+
+  /**
+   * Saves a new location in the backend
+   *
+   * @param location Location to save
+   */
+  save(location: Location): Observable<Location> {
+    return this.http.post<Location>(baseUri, location);
+  }
 }

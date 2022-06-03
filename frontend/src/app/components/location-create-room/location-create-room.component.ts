@@ -7,6 +7,8 @@ import { Seat } from '../../dtos/seat';
 import { StandingSector } from '../../dtos/standing-sector';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import {LocationService} from '../../services/location.service';
+import {ToastService} from '../../services/toast-service.service';
 
 @Component({
   selector: 'app-location-create-room',
@@ -39,7 +41,10 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
   ToolType = ToolType;
   Direction = Direction;
 
-  constructor(private modalService: NgbModal, private formBuilder: FormBuilder) {
+  constructor(private modalService: NgbModal,
+              private formBuilder: FormBuilder,
+              private locationService: LocationService,
+              private toastService: ToastService) {
     this.editStandingSectorForm = this.formBuilder.group({
       capacity: ['', []],
       price: ['', []],
@@ -336,6 +341,33 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
 
       this.updateLocation();
     });
+  }
+
+  saveLocation() {
+    this.locationService.save(this.locationClean).subscribe({
+      next: value => {
+        console.log(`Location created with name '${this.locationClean.name}'!`);
+        this.showSuccess(`Location created with name '${this.locationClean.name}'  🎉!`);
+      },
+      error: err => {
+        console.error('Error creating location', err);
+        this.showDanger(err.error.split('"')[1]);
+      }
+    });
+  }
+
+  /**
+   * Displays message on a success.
+   */
+  showSuccess(msg: string) {
+    this.toastService.show(msg, {classname: 'bg-success', delay: 3000});
+  }
+
+  /**
+   * Displays message on a failure.
+   */
+  showDanger(msg: string) {
+    this.toastService.show(msg, {classname: 'bg-danger', delay: 5000});
   }
 
 }

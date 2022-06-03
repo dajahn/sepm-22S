@@ -19,6 +19,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.List;
@@ -49,7 +50,7 @@ public class Location {
     @NonNull
     private Address address;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.MERGE)
     @NonNull
     @ToString.Exclude
     private Set<Sector> sectors;

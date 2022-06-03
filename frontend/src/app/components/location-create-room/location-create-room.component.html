@@ -35,6 +35,9 @@
     <div class="tool tool-single-use" [class.enabled]="this.history.redo.length > 0" (click)="redo()">
         <i class="bi bi-arrow-clockwise"></i>
     </div>
+    <div>
+      <input type="button" class="blue" (click)="saveLocation()" value="Save">
+    </div>
 </div>
 
 <div class="plan-wrapper">
