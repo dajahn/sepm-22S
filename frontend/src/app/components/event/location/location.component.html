@@ -16,7 +16,7 @@
     <g>
       <svg
         (click)="getUnavailableStandingSpots(sector.id) < sector.capacity && onStandingSectorClick(sector)"
-        [class.clickable]="getUnavailableStandingSpots(sector.id) < sector.capacity"
+        [class.clickable]="creation || getUnavailableStandingSpots(sector.id) < sector.capacity"
         *ngFor="let sector of standingSectors$ | async"
         [attr.x]="sector.point1.x * 100"
         [attr.y]="sector.point1.y * 100"
@@ -56,7 +56,12 @@
           text-anchor="middle"
           fill="var(--text-c-highlight)"
           style="font-size: 2em">
-          {{getSelectedStandingSpots(sector.id)}}+{{getOccupiedStandingSpots(sector.id)}}/{{sector.capacity}}
+          <ng-template [ngIf]="creation">
+            {{sector.capacity}} Slots
+          </ng-template>
+          <ng-template [ngIf]="!creation">
+            {{getSelectedStandingSpots(sector.id)}}+{{getOccupiedStandingSpots(sector.id)}}/{{sector.capacity}}
+          </ng-template>
         </text>
       </svg>
     </g>

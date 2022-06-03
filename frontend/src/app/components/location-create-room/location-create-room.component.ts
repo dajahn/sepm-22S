@@ -2,9 +2,11 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { Location } from '../../dtos/location';
 import { SectorType } from '../../dtos/sector';
 import { SeatSector, SeatType } from '../../dtos/seat-sector';
-import { Point } from '../../dtos/point';
-import { addPoints, Seat } from '../../dtos/seat';
+import { addPoints, findMin, Point } from '../../dtos/point';
+import { Seat } from '../../dtos/seat';
 import { StandingSector } from '../../dtos/standing-sector';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-location-create-room',
@@ -14,6 +16,8 @@ import { StandingSector } from '../../dtos/standing-sector';
 export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
 
   @ViewChild('locationRef') locationRef: ElementRef<HTMLInputElement>;
+  @ViewChild('editStandingSectorModal') editStandingSectorModalRef: ElementRef<HTMLInputElement>;
+  public editStandingSectorForm: FormGroup;
 
   size: Point = {x: 25, y: 10};
   standingSectors: StandingSector[] = [];
@@ -21,10 +25,13 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
   previewSector = null;
   tool: Tool = new ToolCreateStanding(this);
 
+  editStandingSector: StandingSector = null;
+
   startPos: Point = null;
   currentPos: Point = null;
 
   location: Location = null;
+  locationClean: Location = null; // used for exporting data
 
   history: History = { undo: [], redo: [] };
 
@@ -32,11 +39,87 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
   ToolType = ToolType;
   Direction = Direction;
 
-  constructor() {
+  constructor(private modalService: NgbModal, private formBuilder: FormBuilder) {
+    this.editStandingSectorForm = this.formBuilder.group({
+      capacity: ['', []],
+      price: ['', []],
+    });
+
     this.updateLocation(true);
   }
 
   ngOnInit(): void {}
+
+  export() {
+    const location = JSON.parse(JSON.stringify(this.location));
+
+    /* Crop whitespace */
+
+    // find minimum
+    const minimum = location.sectors.reduce( (min: Point, sector: (StandingSector | SeatSector)) => {
+      if (sector.type === SectorType.STANDING) {
+        return findMin(min, (sector as StandingSector).point1);
+      } else if (sector.type === SectorType.SEAT) {
+        return (sector as SeatSector).seats.reduce((min1: Point, seat: Seat) => findMin(min1, seat.point), min);
+      }
+    }, this.size);
+
+    const direction = { x: - minimum.x, y: - minimum.y };
+
+    // move items
+    location.sectors.forEach(item => {
+      if (item.type === SectorType.STANDING) {
+        const sector = item as StandingSector;
+        sector.point1 = addPoints(sector.point1, direction);
+        sector.point2 = addPoints(sector.point2, direction);
+      } else if (item.type === SectorType.SEAT) {
+        (item as SeatSector).seats.forEach( seat => {
+          seat.point = addPoints(seat.point, direction);
+        });
+      }
+    });
+
+    /* add columns / rows to seats */
+    const seatSectors = location.sectors.filter(item => item.type === SectorType.SEAT);
+    // const firstSeat = seatSectors.reduce( (min: Point, sector: SeatSector) => (
+    //     ( sector as SeatSector ).seats.reduce( ( min1: Point, seat: Seat ) => findMin( min1, seat.point ), min )
+    //   ), this.size);
+
+    let grid: Seat[][] = Array(this.size.x).fill(0).map(() => Array(this.size.y).fill(null));
+
+    seatSectors.forEach((sector: SeatSector) => {
+      sector.seats.forEach( (seat: Seat) => {
+        grid[seat.point.x][seat.point.y] = seat;
+      });
+    });
+
+    // remove empty columns and rows
+
+    grid = grid?.filter(column => column.join('') !== '');
+
+    if (grid) {
+      for ( let y = 0; y < grid[0]?.length; y++ ) {
+        let missingSeats = 0;
+        for ( let x = 0; x < grid.length; x++ ) {
+          const seat = grid[x][y];
+          if (!seat) {
+            missingSeats++;
+            continue;
+          }
+          seat.row = y + 1;
+          seat.column = x + 1 - missingSeats;
+
+          console.log(seat.row, seat.column, x, missingSeats);
+        }
+      }
+    }
+
+    console.log(grid);
+
+
+    console.log(location);
+    this.locationClean = location;
+  }
 
   updateLocation(soft = false): void {
     this.updateStandingSectorNames();
@@ -64,10 +147,12 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
       location.sectors.push(this.previewSector);
     }
     this.location = location;
+
+    this.export();
   }
 
   updateStandingSectorNames() {
-    const sectors = this.standingSectors.sort((a, b) => 5 * (a.point1.x - b.point1.x) + (a.point1.y - b.point1.y));
+    const sectors = this.standingSectors.sort((a, b) => (a.point1.x - b.point1.x) + 5 * (a.point1.y - b.point1.y));
     const needNumber = sectors.length > 26;
     sectors.forEach((item, i) => {
       if ( needNumber ) {
@@ -116,6 +201,13 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
         this.tool = new ToolSelect(this);
         break;
     }
+  }
+
+  clear() {
+    this.standingSectors = [];
+    this.seatingSectors = [];
+
+    this.updateLocation();
   }
 
   undo() {
@@ -235,6 +327,17 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
       this.startPos = null;
     });
   }
+
+  openEditStandingSectorModal(sector: StandingSector): void {
+    this.editStandingSector = sector;
+    this.modalService.open(this.editStandingSectorModalRef, {ariaLabelledBy: 'modal-edit-standing-sector'}).result.then(() => {
+      this.editStandingSector.capacity = this.editStandingSectorForm.controls.capacity.value || 0;
+      this.editStandingSector.price = this.editStandingSectorForm.controls.price.value || 0;
+
+      this.updateLocation();
+    });
+  }
+
 }
 
 enum ToolType {
@@ -421,7 +524,16 @@ class ToolSelect implements Tool {
 
   updatePreview( start: Point, current: Point ): void {}
 
-  createSelection(start: Point, end: Point) {}
+  createSelection(start: Point, end: Point): void {
+    const sectors: StandingSector[] = this.ref.standingSectors.filter(
+      sector => isPointWithinArea(end, { point1: sector.point1, point2: sector.point2 })
+    );
+    if (sectors.length === 0) {
+      return;
+    }
+
+    this.ref.openEditStandingSectorModal(sectors[0]);
+  }
 
   getToolType(): ToolType {
     return ToolType.SELECT;
