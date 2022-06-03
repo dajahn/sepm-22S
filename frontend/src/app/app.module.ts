@@ -35,6 +35,7 @@ import { EventComponent } from './components/event/event.component';
 import { CapitalizeFirstPipe } from './pipes/capitalize-first.pipe';
 import { PricePipe } from './pipes/price.pipe';
 import { DurationPipe } from './pipes/duration.pipe';
+import { LocationCreateRoomComponent } from './components/location-create-room/location-create-room.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { DurationPipe } from './pipes/duration.pipe';
     DurationPipe,
     CapitalizeFirstPipe,
     PricePipe,
+    LocationCreateRoomComponent,
   ],
   imports: [
     BrowserModule,

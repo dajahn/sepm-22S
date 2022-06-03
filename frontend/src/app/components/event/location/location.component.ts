@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {Location} from '../../../dtos/location';
-import {filter, map, share, Subject} from 'rxjs';
+import { filter, map, share, Subject } from 'rxjs';
 import {SectorType} from '../../../dtos/sector';
 import {StandingSector} from '../../../dtos/standing-sector';
 import {SeatSector, SeatType} from '../../../dtos/seat-sector';
@@ -32,6 +32,9 @@ export class LocationComponent implements OnInit {
   @Output() standingSectorAdd = new EventEmitter<StandingSector>();
   @Output() seatRemove = new EventEmitter<{ sector: SeatSector; seat: Seat }>();
 
+  @Input() creation = false;
+  @Input() size: Point = null;
+
   location$ = new Subject<Location>();
 
   private occupiedSeats = new Map<number, boolean>();
@@ -61,16 +64,25 @@ export class LocationComponent implements OnInit {
   maxX$ = this.points$.pipe(map(points => points.reduce((max, point) => point.x > max ? point.x : max, 0)));
   maxY$ = this.points$.pipe(map(points => points.reduce((max, point) => point.y > max ? point.y : max, 0)));
 
-  standingSectors$ = this.separated$.pipe(
+  standingSectorsTemp$ = this.separated$.pipe(
     map(sectors => sectors.standing),
     share(),
   );
+
+  standingSectorPreviews$ = this.standingSectorsTemp$.pipe(map(data => data.filter( item => item.preview )), share());
+  standingSectors$ = this.standingSectorsTemp$.pipe(map(data => data.filter( item => !item.preview )), share());
+
   seatSectors$ = this.separated$.pipe(
     map(sectors => sectors.seat),
     share(),
   );
 
-  constructor() {
+  constructor(cdr: ChangeDetectorRef) {
+    // somehow this is needed in order for the component to update (?!)
+    this.location$.subscribe(() => {
+      cdr.detectChanges();
+    });
+    this.standingSectors$.subscribe();
   }
 
   get gradients() {

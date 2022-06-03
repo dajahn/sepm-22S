@@ -19,11 +19,12 @@ import { EventComponent } from './components/event/event.component';
 import {SearchComponent} from './components/search/search.component';
 import {CheckoutComponent} from './components/checkout/checkout.component';
 import {AntiAuthGuard} from './guards/anti-auth.guard';
+import { LocationCreateRoomComponent } from './components/location-create-room/location-create-room.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'events/topten', component: TopTenEventsComponent },
-  { path: 'message', redirectTo:'/' },
+  { path: 'message', redirectTo: '/' },
   { path: 'login',  canActivate: [AntiAuthGuard], component: LoginComponent },
   { path: 'register', canActivate: [AntiAuthGuard], component: RegisterComponent },
   { path: 'account/edit', canActivate: [AuthGuard], component: EditAccountComponent },
@@ -35,6 +36,7 @@ const routes: Routes = [
   { path: 'account/edit', canActivate: [AuthGuard], component: EditAccountComponent },
   { path: 'users', canActivate: [AdminGuard], component: UserManagementComponent, pathMatch: 'full' },
   { path: 'users/admins/create', canActivate: [AdminGuard], component: CreateUserComponent },
+  { path: 'location/create/room', canActivate: [AdminGuard], component: LocationCreateRoomComponent },
   { path: '', component: HomeComponent },
   { path: 'cart', component: CartComponent },
   { path: 'search', component: SearchComponent},

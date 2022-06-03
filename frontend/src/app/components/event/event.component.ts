@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {EventService} from 'src/app/services/event.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {catchError, EMPTY, filter, map, Observable, share, switchMap, tap} from 'rxjs';
+import { catchError, EMPTY, filter, map, Observable, share, switchMap, tap } from 'rxjs';
 import {PerformanceService} from '../../services/performance.service';
 import {StandingSector} from '../../dtos/standing-sector';
 import {Ticket} from '../../dtos/ticket';
@@ -22,6 +22,7 @@ import {Globals} from '../../global/globals';
 export class EventComponent implements OnInit {
 
   @ViewChild('performanceSelect') performanceSelect: HTMLSelectElement;
+  show = false;
 
   readonly event$ = this.route.params.pipe(
     map(params => params.eventId),
@@ -68,6 +69,7 @@ export class EventComponent implements OnInit {
     }),
     tap(performance => {
       this.performance = performance;
+      console.log(performance);
       this.selectedTickets = [];
     }),
     share(),
@@ -96,6 +98,7 @@ export class EventComponent implements OnInit {
     private readonly router: Router,
     private readonly globals: Globals,
   ) {
+    setTimeout(() => this.show = true, 200);
   }
 
   get sum() {

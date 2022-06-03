@@ -1,0 +1,56 @@
+<div class="tool-bar">
+    <div class="tool" [class.selected]="tool.getToolType() === ToolType.SELECT" (click)="selectTool(ToolType.SELECT)">
+        <i class="bi bi-cursor-fill" style="color: var(--text-c-lowlight)"></i>
+    </div>
+    <div class="separator"></div>
+    <div class="tool" [class.selected]="tool.getToolType() === ToolType.CREATE_STANDING" (click)="selectTool(ToolType.CREATE_STANDING)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90"><rect x="5" y="5" width="80" height="80" fill="var(--bg-tertiary)" stroke="var(--bg-secondary)" rx="10" ry="10" stroke-width="10" /></svg>
+    </div>
+    <div class="tool" [class.selected]="tool.getToolType() === ToolType.CREATE_SEATING_NONE" (click)="selectTool(ToolType.CREATE_SEATING_NONE)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90"><path class="seat" d="M 10 10 L 10 50 A 40 40 0 0 0 90 50 L 90 10 z" fill="var(--text-c-lowlight)" /></svg>
+    </div>
+    <div class="tool" [class.selected]="tool.getToolType() === ToolType.CREATE_SEATING_PREMIUM" (click)="selectTool(ToolType.CREATE_SEATING_PREMIUM)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90"><path class="seat" d="M 10 10 L 10 50 A 40 40 0 0 0 90 50 L 90 10 z" fill="url('#gradient-orange')" /></svg>
+    </div>
+    <div class="tool" [class.selected]="tool.getToolType() === ToolType.CREATE_SEATING_VIP" (click)="selectTool(ToolType.CREATE_SEATING_VIP)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90"><path class="seat" d="M 10 10 L 10 50 A 40 40 0 0 0 90 50 L 90 10 z" fill="url('#gradient-rainbow')" /></svg>
+    </div>
+    <div class="separator"></div>
+    <div class="tool" [class.selected]="tool.getToolType() === ToolType.DELETE" (click)="selectTool(ToolType.DELETE)">
+        <i class="bi bi-eraser-fill" style="color: var(--text-c-lowlight)"></i>
+    </div>
+    <div class="separator"></div>
+    <div class="tool tool-history" [class.enabled]="this.history.undo.length > 0" (click)="undo()">
+        <i class="bi bi-arrow-counterclockwise"></i>
+    </div>
+    <div class="tool tool-history" [class.enabled]="this.history.redo.length > 0" (click)="redo()">
+        <i class="bi bi-arrow-clockwise"></i>
+    </div>
+</div>
+
+
+
+
+
+<div class="plan-wrapper" [class.disable-pointer]="tool.getToolType() !== ToolType.SELECT">
+    <div class="expand expand-front" (click)="expand(Direction.FRONT)"><i class="bi bi-plus-square"></i></div>
+    <div class="expand expand-right" (click)="expand(Direction.RIGHT)"><i class="bi bi-plus-square"></i></div>
+    <div class="expand expand-back" (click)="expand(Direction.BACK)"><i class="bi bi-plus-square"></i></div>
+    <div class="expand expand-left" (click)="expand(Direction.LEFT)"><i class="bi bi-plus-square"></i></div>
+
+    <div
+        class="location-wrapper"
+        #locationRef
+    >
+        <app-location
+            class="flex-grow-1 w-100"
+            [location]="location"
+            [creation]="true"
+            [size]="size"
+        >
+        </app-location>
+
+    </div>
+</div>
+
+
