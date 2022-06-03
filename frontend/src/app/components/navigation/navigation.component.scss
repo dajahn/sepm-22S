@@ -78,9 +78,30 @@
       margin-bottom: 0;
     }
   }
+
+  &::-webkit-scrollbar{
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: var(--bg-secondary);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: var(--text-c-highlight);
+  }
 }
 
 /* ## Icons */
+.separator {
+  background-color: var(--text-c-lowlight);
+  height: 2px;
+  opacity: 0.5;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 .nav-button {
   background-color: transparent;
   height: 64px;
@@ -103,6 +124,24 @@
 
     i {
       color: var(--text-c-highlight);
+    }
+  }
+}
+
+.admin-button {
+  i {
+    color: var(--text-c-r-lowlight);
+  }
+
+  &:hover {
+    i {
+      color: var(--text-c-r-primary);;
+    }
+  }
+
+  &:active {
+    i {
+      color: var(--text-c-r-highlight);
     }
   }
 }
