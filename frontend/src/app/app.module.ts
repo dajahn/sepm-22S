@@ -36,6 +36,7 @@ import { CapitalizeFirstPipe } from './pipes/capitalize-first.pipe';
 import { PricePipe } from './pipes/price.pipe';
 import { DurationPipe } from './pipes/duration.pipe';
 import { LocationCreateRoomComponent } from './components/location-create-room/location-create-room.component';
+import { LocationCreateComponent } from './components/location-create/location-create.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { LocationCreateRoomComponent } from './components/location-create-room/l
     CapitalizeFirstPipe,
     PricePipe,
     LocationCreateRoomComponent,
+    LocationCreateComponent,
   ],
   imports: [
     BrowserModule,
