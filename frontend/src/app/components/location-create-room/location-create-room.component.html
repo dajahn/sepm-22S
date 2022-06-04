@@ -35,8 +35,11 @@
     <div class="tool tool-single-use" [class.enabled]="this.history.redo.length > 0" (click)="redo()">
         <i class="bi bi-arrow-clockwise"></i>
     </div>
+
+    <div class="separator"></div>
+
     <div>
-      <input type="button" class="blue" (click)="saveLocation()" value="Save">
+      <input type="button" class="blue" (click)="exportLocation()" value="Save">
     </div>
 </div>
 
@@ -82,11 +85,3 @@
         <input type="button" class="blue" value="save" (click)="modal.close()">
     </div>
 </ng-template>
-
-
-<!-- used for testing the export output -->
-<app-location
-    class="flex-grow-1 w-100"
-    [location]="locationClean"
->
-</app-location>

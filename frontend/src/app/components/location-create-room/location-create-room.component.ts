@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, Input, ViewChild } from '@angular/core';
 import { Location } from '../../dtos/location';
 import { SectorType } from '../../dtos/sector';
 import { SeatSector, SeatType } from '../../dtos/seat-sector';
@@ -7,8 +7,6 @@ import { Seat } from '../../dtos/seat';
 import { StandingSector } from '../../dtos/standing-sector';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import {LocationService} from '../../services/location.service';
-import {ToastService} from '../../services/toast-service.service';
 
 @Component({
   selector: 'app-location-create-room',
@@ -16,6 +14,11 @@ import {ToastService} from '../../services/toast-service.service';
   styleUrls: ['./location-create-room.component.scss']
 })
 export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
+
+  @Input()  data: Location = null;
+  @Output() dataChange = new EventEmitter<Location>();
+
+  @Output() export = new EventEmitter<void>();
 
   @ViewChild('locationRef') locationRef: ElementRef<HTMLInputElement>;
   @ViewChild('editStandingSectorModal') editStandingSectorModalRef: ElementRef<HTMLInputElement>;
@@ -33,7 +36,6 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
   currentPos: Point = null;
 
   location: Location = null;
-  locationClean: Location = null; // used for exporting data
 
   history: History = { undo: [], redo: [] };
 
@@ -41,10 +43,10 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
   ToolType = ToolType;
   Direction = Direction;
 
-  constructor(private modalService: NgbModal,
-              private formBuilder: FormBuilder,
-              private locationService: LocationService,
-              private toastService: ToastService) {
+  constructor(
+    private modalService: NgbModal,
+    private formBuilder: FormBuilder
+  ) {
     this.editStandingSectorForm = this.formBuilder.group({
       capacity: ['', []],
       price: ['', []],
@@ -53,9 +55,11 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
     this.updateLocation(true);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.location = this.data;
+  }
 
-  export() {
+  exportLocation() {
     const location = JSON.parse(JSON.stringify(this.location));
 
     /* Crop whitespace */
@@ -119,20 +123,17 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
       }
     }
 
-    console.log(grid);
-
-
-    console.log(location);
-    this.locationClean = location;
+    this.export.emit();
+    this.dataChange.emit(location);
   }
 
   updateLocation(soft = false): void {
     this.updateStandingSectorNames();
 
     const location = {
-      id: 1,
-      name: 'test',
-      address: null,
+      id: this.location?.id,
+      name: this.location?.name,
+      address: this.location?.address,
       sectors: [
         ...this.standingSectors,
         ...this.seatingSectors,
@@ -152,8 +153,6 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
       location.sectors.push(this.previewSector);
     }
     this.location = location;
-
-    this.export();
   }
 
   updateStandingSectorNames() {
@@ -341,33 +340,6 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
 
       this.updateLocation();
     });
-  }
-
-  saveLocation() {
-    this.locationService.save(this.locationClean).subscribe({
-      next: value => {
-        console.log(`Location created with name '${this.locationClean.name}'!`);
-        this.showSuccess(`Location created with name '${this.locationClean.name}'  🎉!`);
-      },
-      error: err => {
-        console.error('Error creating location', err);
-        this.showDanger(err.error.split('"')[1]);
-      }
-    });
-  }
-
-  /**
-   * Displays message on a success.
-   */
-  showSuccess(msg: string) {
-    this.toastService.show(msg, {classname: 'bg-success', delay: 3000});
-  }
-
-  /**
-   * Displays message on a failure.
-   */
-  showDanger(msg: string) {
-    this.toastService.show(msg, {classname: 'bg-danger', delay: 5000});
   }
 
 }
