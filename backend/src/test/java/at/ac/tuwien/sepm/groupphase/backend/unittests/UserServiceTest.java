@@ -14,7 +14,9 @@ import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -390,5 +392,19 @@ public class UserServiceTest implements UserTestData, AddressTestData {
         updateUserDto.setAddress(a);
     }
 
+    @Test
+    @Rollback
+    @Transactional
+    public void givenExistingUser_whenUserDelete_thenUserDeleted() {
+        //given
+        User user = userRepository.findAll().get(0);
+        long userId = user.getId();
+
+        //when
+        userService.deleteUser(userId);
+
+        //then
+        assertTrue(userRepository.findById(userId).isEmpty());
+    }
 
 }

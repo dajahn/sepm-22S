@@ -24,18 +24,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_ROLES;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_USER;
+import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.USER_ROLES;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -263,5 +268,25 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
+    @Test
+    @Rollback
+    @Transactional
+    public void givenExistingUser_whenUserDelete_thenUserDeleted() throws Exception {
+        //given
+        User user = userRepository.findAll().get(0);
+        long userId = user.getId();
+
+        //when
+        MvcResult mvcResult = this.mockMvc.perform(delete(USER_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(user.getEmail(), USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        //then
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertTrue(userRepository.findById(userId).isEmpty());
+    }
 
 }
