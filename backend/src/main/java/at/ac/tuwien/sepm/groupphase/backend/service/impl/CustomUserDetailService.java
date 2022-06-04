@@ -215,11 +215,9 @@ public class CustomUserDetailService implements UserService {
         return this.userRepository.loadUsers(userSearchDto.getNameSearch(), role, status);
     }
 
-    @Transactional
     @Override
     public void deleteUser(Long id) {
-        LOGGER.info("deleteUser(Long id) with id = {]", id);
-        orderRepository.deleteAllByUserId(id);
+        LOGGER.info("deleteUser(Long id) with id = {}", id);
         userRepository.deleteById(id);
     }
 }
