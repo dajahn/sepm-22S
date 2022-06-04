@@ -4,12 +4,12 @@
     <div class="d-flex flex-column align-items-end">
 
       <!-- # tickets, ticket, flame: -->
-      <div class="d-flex flex-row align-items-end">
+      <div class="d-flex flex-row align-items-end top-row">
 
         <!-- ## tickets, ticket -->
         <div class="d-flex flex-column align-items-end">
           <div class="blue-box">
-            <span class="colored blue">TICKETS</span>
+            <span class="colored blue">{{stats?.tickets | shortNumber}} TICKETS</span>
           </div>
           <span class="white">TICKET</span>
         </div>
@@ -18,21 +18,24 @@
         <span class="emoji fire">🔥</span>
       </div>
 
-      <!-- # events, line, news: -->
-      <div class="d-flex flex-row bottom-row">
+      <!-- # events, line, news, hand: -->
+      <div class="d-flex flex-row bottom-row" style="position: relative">
 
-        <!-- events -->
-        <div class="purple-box">
-          <span class="colored purple">EVENTS</span>
+        <!-- ## events -->
+        <div class="purple-box d-flex flex-row justify-content-center">
+          <span class="colored purple">{{stats?.events | shortNumber}} EVENTS</span>
         </div>
 
-        <!-- line, news -->
+        <!-- ## line, news -->
         <div class="d-flex flex-column align-items-end">
           <span class="white">LINE</span>
           <div class="orange-box">
-            <span class="colored orange">NEWS</span>
+            <span class="colored orange">{{stats?.news | shortNumber}} NEWS</span>
           </div>
         </div>
+
+        <!-- ## hand: -->
+        <span class="emoji hand">🤘🏻</span>
       </div>
 
       <!-- # join now: -->
@@ -41,7 +44,6 @@
       </a>
     </div>
 
-    <!-- # hand: -->
-    <span class="emoji hand">🤘🏻</span>
+
   </div>
 </div>

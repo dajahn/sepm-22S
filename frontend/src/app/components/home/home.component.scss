@@ -1,13 +1,16 @@
 /* DIV */
 #page-wrapper {
   height: 85vh;
-  margin-right: 12vw;
+  margin-right: 5vw;
   margin-top: -0.5vw;
 }
 
 #wrapper{
-  width: 51.7vw;
-  position: relative;
+  width: 54.8vw;
+}
+
+.top-row {
+  margin-right: 3.15vw;
 }
 
 .bottom-row {
@@ -22,8 +25,7 @@
 }
 
 .purple-box {
-  width: 21vw;
-  text-align: center;
+  width: 24vw;
 }
 
 .blue-box {
@@ -89,7 +91,7 @@
     transform: rotate(-10deg);
     position: absolute;
     z-index: 100;
-    top: 6.3vw;
-    left: 0;
+    top: -5.2vw;
+    left: -5.5vw;
   }
 }
