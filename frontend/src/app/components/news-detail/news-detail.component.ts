@@ -1,20 +1,24 @@
-import {Globals} from './../../global/globals';
-import {NewsService} from './../../services/news.service';
-import {Component, Input, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {News} from 'src/app/dtos/news';
+import { Globals } from './../../global/globals';
+import { NewsService } from './../../services/news.service';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { News } from 'src/app/dtos/news';
 
 @Component({
   selector: 'app-news-detail',
   templateUrl: './news-detail.component.html',
   styleUrls: ['./news-detail.component.scss']
 })
-export class NewsDetailComponent implements OnInit {
+export class NewsDetailComponent implements OnInit, OnChanges {
   @Input() public news: News;
 
   public link: string;
 
   constructor(private route: ActivatedRoute, private newsService: NewsService, private globals: Globals) {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.setLink();
   }
 
   ngOnInit(): void {
@@ -34,10 +38,10 @@ export class NewsDetailComponent implements OnInit {
     });
   }
 
-  private setLink(){
-      //When eventId exists set linkt to event
-      if(this.news && this.news.eventDto && this.news.eventDto.id) {
-this.link = '/events/'+this.news.eventDto.id;
-}
+  private setLink() {
+    //When eventId exists set linkt to event
+    if (this.news && this.news.eventDto && this.news.eventDto.id) {
+      this.link = '/events/' + this.news.eventDto.id;
+    }
   }
 }
