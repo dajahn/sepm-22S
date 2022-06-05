@@ -7,6 +7,8 @@ import {ToastService} from '../../services/toast-service.service';
 import {CreateUpdateUser, User} from '../../dtos/user';
 import {AuthRequest} from '../../dtos/auth-request';
 import {CountriesCodeToName} from '../../enums/countriesCodeToName';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ErrorMessageParser} from '../../utils/error-message-parser';
 
 @Component({
   selector: 'app-edit-account',
@@ -57,7 +59,8 @@ export class EditAccountComponent implements OnInit {
   currUserData: User;
 
   constructor(private formBuilder: FormBuilder, private userService: UserService,
-              private router: Router, private toastService: ToastService, private authService: AuthService) {
+              private router: Router, private toastService: ToastService, private authService: AuthService,
+              private modalService: NgbModal) {
     this.updateAccountForm = this.formBuilder.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.minLength(2), Validators.required]],
@@ -117,10 +120,14 @@ export class EditAccountComponent implements OnInit {
         });
       },
       error: err => {
-        this.showDanger(err.error.split('"')[1]);
-        this.error = err.error.message;
+        this.showDanger(ErrorMessageParser.parseResponseToErrorMessage(err));
+        this.error = ErrorMessageParser.parseResponseToErrorMessage(err);
       }
     });
+  }
+
+  showDeleteModal(deleteModal){
+    this.modalService.open(deleteModal, { size: 'sm', centered: true });
   }
 
   deleteAccount() {

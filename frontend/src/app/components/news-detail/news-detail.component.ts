@@ -12,11 +12,14 @@ import {News} from 'src/app/dtos/news';
 export class NewsDetailComponent implements OnInit {
   @Input() public news: News;
 
+  public link: string;
+
   constructor(private route: ActivatedRoute, private newsService: NewsService, private globals: Globals) {
   }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
+      this.setLink();
       if (params.hasOwnProperty('id')) {
         this.loadNewsDetail(params['id']);
       }
@@ -27,6 +30,14 @@ export class NewsDetailComponent implements OnInit {
     this.newsService.getById(id).subscribe((newsDto: News) => {
       this.news = newsDto;
       this.news.fileDto.url = this.globals.backendUri + this.news.fileDto.url;
+      this.setLink();
     });
+  }
+
+  private setLink(){
+      //When eventId exists set linkt to event
+      if(this.news && this.news.eventDto && this.news.eventDto.id) {
+this.link = '/events/'+this.news.eventDto.id;
+}
   }
 }

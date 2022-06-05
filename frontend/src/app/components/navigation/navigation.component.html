@@ -37,7 +37,7 @@
   <div *ngIf="authService.isLoggedIn()" id="side-menu">
 
     <!-- ## Default Navigation: -->
-    <ul *ngIf="!showAdminMenu" class="nav flex-column">
+    <ul class="nav flex-column">
       <!-- ### Homepage -->
       <li class="nav-item">
         <button class="nav-button" (click)="clickHome()" title="Home">
@@ -79,56 +79,44 @@
           <i [ngStyle]="currentRoute === routerLinks.reservations && {'color': 'var(--text-c-highlight)'}" class="bi bi-clipboard"></i>
         </button>
       </li>
-
-      <!-- ### Admin -->
-      <li class="nav-item" *ngIf="authService.getUserRole() === 'ADMIN'" title="Admin Tools">
-        <button class="nav-button" (click)="clickAdmin()">
-          <i class="bi bi-tools"></i>
-        </button>
-      </li>
     </ul>
 
+    <hr class="separator">
+
     <!-- ## Admin Navigation: -->
-    <ul *ngIf="showAdminMenu" class="nav flex-column">
+    <ul *ngIf="authService.getUserRole() === 'ADMIN'" class="nav flex-column">
       <!-- ### Create News -->
       <li class="nav-item">
-        <button class="nav-button" (click)="clickCreateNews()" title="Create News">
-          <i [ngStyle]="currentRoute === routerLinks.createNews && {'color': 'var(--text-c-highlight)'}" class="bi bi-newspaper"></i>
+        <button class="nav-button admin-button" (click)="clickCreateNews()" title="Create News">
+          <i [ngStyle]="currentRoute === routerLinks.createNews && {'color': 'var(--text-c-r-highlight)'}" class="bi bi-newspaper"></i>
         </button>
       </li>
 
       <!-- ### Create Event -->
       <li class="nav-item">
-        <button class="nav-button" (click)="clickCreateEvent()" title="Create Event">
-          <i [ngStyle]="currentRoute === routerLinks.createEvent && {'color': 'var(--text-c-highlight)'}" class="bi bi-ticket-detailed"></i>
+        <button class="nav-button admin-button" (click)="clickCreateEvent()" title="Create Event">
+          <i [ngStyle]="currentRoute === routerLinks.createEvent && {'color': 'var(--text-c-r-highlight)'}" class="bi bi-ticket-detailed"></i>
         </button>
       </li>
 
       <!-- ### Create Location -->
       <li class="nav-item">
-        <button class="nav-button" (click)="clickCreateLocation()" title="Create Location">
-          <i [ngStyle]="currentRoute === routerLinks.createLocation && {'color': 'var(--text-c-highlight)'}" class="bi bi-geo-fill"></i>
+        <button class="nav-button admin-button" (click)="clickCreateLocation()" title="Create Location">
+          <i [ngStyle]="currentRoute === routerLinks.createLocation && {'color': 'var(--text-c-r-highlight)'}" class="bi bi-geo-fill"></i>
         </button>
       </li>
 
       <!-- ### Add Admin -->
       <li class="nav-item">
-        <button class="nav-button" (click)="clickAddAdmin()" title="Add Admin">
-          <i [ngStyle]="currentRoute === routerLinks.addAdmin && {'color': 'var(--text-c-highlight)'}" class="bi bi-person-plus"></i>
+        <button class="nav-button admin-button" (click)="clickAddAdmin()" title="Add Admin">
+          <i [ngStyle]="currentRoute === routerLinks.addAdmin && {'color': 'var(--text-c-r-highlight)'}" class="bi bi-person-plus"></i>
         </button>
       </li>
 
       <!-- ### Unlock User -->
       <li class="nav-item">
-        <button class="nav-button" (click)="clickUnlockUser()" title="Unlock User">
-          <i [ngStyle]="currentRoute === routerLinks.unlockUser && {'color': 'var(--text-c-highlight)'}" class="bi bi-unlock"></i>
-        </button>
-      </li>
-
-      <!-- ### Close -->
-      <li class="nav-item" *ngIf="authService.getUserRole() === 'ADMIN'" title="Close Admin Tools">
-        <button class="nav-button" (click)="clickAdmin()">
-          <i class="bi bi-x-lg"></i>
+        <button class="nav-button admin-button" (click)="clickUnlockUser()" title="Unlock User">
+          <i [ngStyle]="currentRoute === routerLinks.unlockUser && {'color': 'var(--text-c-r-highlight)'}" class="bi bi-unlock"></i>
         </button>
       </li>
     </ul>

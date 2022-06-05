@@ -13,7 +13,9 @@
           </div>
           <div class="row">
             <div class="col-12">
-              <h4 class="text-center logo">Want to <a id="deleteLink" (click)="deleteAccount()">delete</a> your Account?
+              <h4 class="text-center logo">Want to <a id="deleteLink" (click)="showDeleteModal(deleteModal)">delete</a>
+                your
+                Account?
               </h4>
             </div>
           </div>
@@ -201,7 +203,7 @@
               </div>
               <div class="row mt-1">
                 <div class="col-12">
-<!--                  password must match - error message-->
+                  <!--                  password must match - error message-->
                   <ng-container>
                     <div class="error text-center"
                          *ngIf="(updateAccountForm.controls.password.dirty || updateAccountForm.controls.password.touched) &&
@@ -218,7 +220,7 @@
             <div class="row mt-5">
               <div class="col-12">
                 <div class="form-group d-grid">
-<!--                  Submit button-->
+                  <!--                  Submit button-->
                   <input [disabled]="!this.updateAccountForm.valid || ((updateAccountForm.controls.password.dirty || updateAccountForm.controls.password.touched) &&
                        (updateAccountForm.controls.passwordConfirm.dirty || updateAccountForm.controls.passwordConfirm.touched) &&
                        updateAccountForm.controls.passwordConfirm.value !== updateAccountForm.controls.password.value)"
@@ -233,3 +235,23 @@
     </div>
   </div>
 </div>
+
+
+<ng-template #deleteModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Profile Deletion</h4>
+    <button type="button" ngbAutofocus class="btn-close" aria-label="Close button" aria-describedby="modal-title"
+            (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <p><strong>Are you sure you want to delete your profile?</strong></p>
+    <p>This user profile will be permanently removed.
+      <span class="text-danger">This operation can not be undone.</span>
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('Ok click'); deleteAccount()">Ok
+    </button>
+  </div>
+</ng-template>

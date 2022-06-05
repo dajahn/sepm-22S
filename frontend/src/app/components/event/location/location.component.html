@@ -20,8 +20,8 @@
         *ngFor="let sector of standingSectors$ | async"
         [attr.x]="sector.point1.x * 100"
         [attr.y]="sector.point1.y * 100"
-        [attr.width]="(sector.point2.x - sector.point1.x) * 100"
-        [attr.height]="(sector.point2.y - sector.point1.y) * 100"
+        [attr.width]="(sector.point2.x - sector.point1.x + 1) * 100"
+        [attr.height]="(sector.point2.y - sector.point1.y + 1) * 100"
         fill="red">
         <title>
           Sector {{sector.name}}
@@ -30,8 +30,8 @@
         <rect
           x="10"
           y="10"
-          [attr.width]="(sector.point2.x - sector.point1.x) * 100 - 10 * 2"
-          [attr.height]="(sector.point2.y - sector.point1.y) * 100 - 10 * 2"
+          [attr.width]="(sector.point2.x - sector.point1.x + 1) * 100 - 10 * 2"
+          [attr.height]="(sector.point2.y - sector.point1.y + 1) * 100 - 10 * 2"
           fill="var(--bg-tertiary)"
           stroke="var(--bg-secondary)"
           [attr.rx]="10"

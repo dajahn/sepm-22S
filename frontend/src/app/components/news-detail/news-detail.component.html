@@ -5,7 +5,7 @@
     <h4 class="premiere">{{news.imageDescription}}</h4>
 </div>
 
-<div class="newsDescription">
+<div class="newsDescription" role="button" [routerLink]="link">
     <div class="newsHeader">
         <div class="imageIcon"
             *ngIf="news.eventDto && news.eventDto.thumbnail && news.eventDto.thumbnail.url; else elseBlock">
