@@ -165,15 +165,7 @@ public class EventServiceImpl implements EventService {
 
         if (!events.isEmpty()) {
             for (int i = 0; i < events.size(); i++) {
-                File file = events.get(i).getThumbnail();
-                TopTenEventDto tt = eventMapper.eventToTopTenEventDto(events.get(i), ticketCount.get(i));
-                if (file != null) {
-                    FileDto fileDto = new FileDto();
-                    fileDto.setType(file.getType());
-                    fileDto.setUrl("/files/" + file.getId().toString());
-                    tt.setThumbnail(fileDto);
-                }
-                topTenEventDtos.add(tt);
+                topTenEventDtos.add(eventMapper.eventToTopTenEventDto(events.get(i), ticketCount.get(i)));
             }
         } else {
             throw new NotFoundException("Could not find events in this category");

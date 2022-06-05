@@ -5,7 +5,6 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
@@ -27,7 +26,12 @@ public interface EventMapper {
     //Maps event, and it's ticket count to one dto.
     default TopTenEventDto eventToTopTenEventDto(Event event, int ticketCount) {
         TopTenEventDto result = new TopTenEventDto();
-        result.setThumbnail(null);
+
+        FileDto fileDto = new FileDto();
+        fileDto.setType(event.getThumbnail().getType());
+        fileDto.setUrl("/files/" + event.getThumbnail().getId().toString());
+        result.setThumbnail(fileDto);
+
         result.setName(event.getName());
         result.setId(event.getId());
         result.setCategory(event.getCategory());
