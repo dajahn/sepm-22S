@@ -60,6 +60,18 @@ public class ReservationEndpoint {
     @Transactional
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping("/toCart")
+    @Operation(summary = "Moves all reserved tickets to cart", security = @SecurityRequirement(name = "apiKey"))
+    public void moveReservedTicketsToCart(@Valid @NotNull @RequestBody List<CreateTicketDto> tickets) {
+        LOGGER.info("POST /api/v1/reservation with {}", tickets);
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findApplicationUserByEmail(email);
+        reservationService.moveTicketsToCart(user.getId(), tickets);
+    }
+
+    @Transactional
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{ticketId}")
     @Operation(summary = "Deletes reservation for a ticket", security = @SecurityRequirement(name = "apiKey"))
     public void deleteReservation(@PathVariable Long ticketId) {
@@ -67,18 +79,6 @@ public class ReservationEndpoint {
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findApplicationUserByEmail(email);
         reservationService.deleteReservation(user.getId(), ticketId);
-    }
-
-    @Transactional
-    @Secured("ROLE_USER")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping
-    @Operation(summary = "Deletes all reservations of user", security = @SecurityRequirement(name = "apiKey"))
-    public void deleteAllReservations() {
-        LOGGER.info("DELETE /api/v1/reservation");
-        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userService.findApplicationUserByEmail(email);
-        reservationService.deleteAll(user.getId());
     }
 
     @Secured("ROLE_USER")

@@ -40,4 +40,6 @@ public interface ReservationService {
      * @param userId  ID of user that wants to delete all of his reserved tickets
      */
     void deleteAll(Long userId);
+
+    void moveTicketsToCart(Long userId, List<CreateTicketDto> tickets);
 }

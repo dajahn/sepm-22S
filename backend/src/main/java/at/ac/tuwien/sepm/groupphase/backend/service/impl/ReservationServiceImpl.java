@@ -17,6 +17,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.SeatTicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StandingSectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StandingTicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
 import at.ac.tuwien.sepm.groupphase.backend.service.ReservationService;
 import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
@@ -40,9 +41,10 @@ public class ReservationServiceImpl implements ReservationService {
     private final PerformanceRepository performanceRepository;
 
     private final TicketRepository ticketRepository;
+    private final CartService cartService;
 
     public ReservationServiceImpl(OrderRepository orderRepository, StandingSectorRepository standingSectorRepository, SeatRepository seatRepository, StandingTicketRepository standingTicketRepository,
-                                  SeatTicketRepository seatTicketRepository, PerformanceRepository performanceRepository, TicketRepository ticketRepository) {
+                                  SeatTicketRepository seatTicketRepository, PerformanceRepository performanceRepository, TicketRepository ticketRepository, CartService cartService) {
         this.standingSectorRepository = standingSectorRepository;
         this.seatRepository = seatRepository;
         this.standingTicketRepository = standingTicketRepository;
@@ -50,6 +52,7 @@ public class ReservationServiceImpl implements ReservationService {
         this.orderRepository = orderRepository;
         this.performanceRepository = performanceRepository;
         this.ticketRepository = ticketRepository;
+        this.cartService = cartService;
     }
 
     @Override
@@ -131,6 +134,12 @@ public class ReservationServiceImpl implements ReservationService {
     public void deleteAll(Long userId) {
         LOGGER.trace("deleteAll() for user " + userId);
         this.orderRepository.deleteAllByTypeAndUserId(OrderType.RESERVATION, userId);
+    }
+
+    @Override
+    public void moveTicketsToCart(Long userId, List<CreateTicketDto> tickets) {
+        this.deleteAll(userId);
+        this.cartService.addTicketsToCart(userId, tickets);
     }
 
 }
