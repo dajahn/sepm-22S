@@ -51,18 +51,10 @@ public class ReservationEndpoint {
     @PostMapping
     @Operation(summary = "Reserves all given tickets", security = @SecurityRequirement(name = "apiKey"))
     public void reserveTickets(@Valid @NotNull @RequestBody List<CreateTicketDto> tickets) {
-        try {
-            LOGGER.info("POST /api/v1/reservation with {}", tickets);
-            String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            User user = userService.findApplicationUserByEmail(email);
-            reservationService.reserveTickets(user.getId(), tickets);
-        } catch (NotFoundException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        } catch (ValidationException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
-        }
+        LOGGER.info("POST /api/v1/reservation with {}", tickets);
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findApplicationUserByEmail(email);
+        reservationService.reserveTickets(user.getId(), tickets);
     }
 
     @Transactional
@@ -71,15 +63,10 @@ public class ReservationEndpoint {
     @DeleteMapping("/{ticketId}")
     @Operation(summary = "Deletes reservation for a ticket", security = @SecurityRequirement(name = "apiKey"))
     public void deleteReservation(@PathVariable Long ticketId) {
-        try {
-            LOGGER.info("DELETE /api/v1/reservation/{} ", ticketId);
-            String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            User user = userService.findApplicationUserByEmail(email);
-            reservationService.deleteReservation(user.getId(), ticketId);
-        } catch (NotFoundException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        }
+        LOGGER.info("DELETE /api/v1/reservation/{} ", ticketId);
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findApplicationUserByEmail(email);
+        reservationService.deleteReservation(user.getId(), ticketId);
     }
 
     @Transactional
