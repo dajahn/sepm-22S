@@ -16,6 +16,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatTicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StandingSectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.StandingTicketRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ReservationService;
 import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
@@ -38,14 +39,17 @@ public class ReservationServiceImpl implements ReservationService {
     private final SeatTicketRepository seatTicketRepository;
     private final PerformanceRepository performanceRepository;
 
+    private final TicketRepository ticketRepository;
+
     public ReservationServiceImpl(OrderRepository orderRepository, StandingSectorRepository standingSectorRepository, SeatRepository seatRepository, StandingTicketRepository standingTicketRepository,
-                                  SeatTicketRepository seatTicketRepository, PerformanceRepository performanceRepository) {
+                                  SeatTicketRepository seatTicketRepository, PerformanceRepository performanceRepository, TicketRepository ticketRepository) {
         this.standingSectorRepository = standingSectorRepository;
         this.seatRepository = seatRepository;
         this.standingTicketRepository = standingTicketRepository;
         this.seatTicketRepository = seatTicketRepository;
         this.orderRepository = orderRepository;
         this.performanceRepository = performanceRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     @Override
@@ -99,4 +103,41 @@ public class ReservationServiceImpl implements ReservationService {
         }
         return tickets;
     }
+
+    @Override
+    public void deleteReservation(Long userId, Long ticketId) {
+        LOGGER.trace("deleteReservation() for user " + userId + " with ticket=" + ticketId);
+        List<TicketOrder> orders = orderRepository.findTicketOrdersByTypeAndUserId(OrderType.RESERVATION, userId);
+        if (orders.isEmpty()) {
+            throw new NotFoundException("User does not have any reservations!");
+        }
+        TicketOrder order = null;
+        for (TicketOrder o : orders) {
+            List<Ticket> tickets = o.getTickets().stream().filter(x -> x.getId().equals(ticketId)).toList();
+
+            if (!tickets.isEmpty()) {
+                order = o;
+                break;
+            }
+        }
+        if (order == null) {
+            throw new NotFoundException("Ticket with id " + ticketId + " not found!");
+        }
+
+        List<Ticket> tickets = order.getTickets();
+        tickets.removeIf(t -> t.getId().equals(ticketId));
+
+        orderRepository.save(order);
+        ticketRepository.deleteById(ticketId);
+        if (tickets.size() == 0) {
+            orderRepository.deleteById(order.getId());
+        }
+    }
+
+    @Override
+    public void deleteAll(Long userId) {
+        LOGGER.trace("deleteAll() for user " + userId);
+        this.orderRepository.deleteAllByTypeAndUserId(OrderType.RESERVATION, userId);
+    }
+
 }

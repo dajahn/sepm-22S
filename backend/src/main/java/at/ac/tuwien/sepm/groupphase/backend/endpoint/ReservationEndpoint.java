@@ -16,7 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +52,7 @@ public class ReservationEndpoint {
     @Operation(summary = "Reserves all given tickets", security = @SecurityRequirement(name = "apiKey"))
     public void reserveTickets(@Valid @NotNull @RequestBody List<CreateTicketDto> tickets) {
         try {
-            LOGGER.info("POST /api/v1/cart/reservation with {}", tickets);
+            LOGGER.info("POST /api/v1/reservation with {}", tickets);
             String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             User user = userService.findApplicationUserByEmail(email);
             reservationService.reserveTickets(user.getId(), tickets);
@@ -63,12 +65,41 @@ public class ReservationEndpoint {
         }
     }
 
+    @Transactional
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{ticketId}")
+    @Operation(summary = "Deletes reservation for a ticket", security = @SecurityRequirement(name = "apiKey"))
+    public void deleteReservation(@PathVariable Long ticketId) {
+        try {
+            LOGGER.info("DELETE /api/v1/reservation/{} ", ticketId);
+            String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User user = userService.findApplicationUserByEmail(email);
+            reservationService.deleteReservation(user.getId(), ticketId);
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+    @Transactional
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping
+    @Operation(summary = "Deletes all reservations of user", security = @SecurityRequirement(name = "apiKey"))
+    public void deleteAllReservations() {
+        LOGGER.info("DELETE /api/v1/reservation");
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findApplicationUserByEmail(email);
+        reservationService.deleteAll(user.getId());
+    }
+
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     @Operation(summary = "Get all reserved tickets of user", security = @SecurityRequirement(name = "apiKey"))
     public List<TicketDto> getAllReservedTickets() {
-        LOGGER.info("GET /api/v1/cart/reservation");
+        LOGGER.info("GET /api/v1/reservation");
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findApplicationUserByEmail(email);
         return ticketMapper.ticketsToTicketDtos(reservationService.getReservedTickets(user.getId()));

@@ -199,7 +199,7 @@ export class EventComponent implements OnInit {
     }))).subscribe({
       next: () => {
         this.showSuccess('Successfully reserved tickets!');
-        this.router.navigate(['cart']);
+        this.router.navigate(['reservations']);
       },
       error: error => {
         console.log('Could not reserve tickets.', error);

@@ -24,4 +24,20 @@ public interface ReservationService {
      * @return A list of all reserved ticket of given user
      */
     List<Ticket> getReservedTickets(Long userId);
+
+    /**
+     * Delete a ticket reservation by id of a given user.
+     *
+     * @param userId  ID of user that wants to delete his reserved ticket
+     * @param orderId ID of order that should be deleted
+     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException if order does not contain ticket or user does not have any reservations
+     */
+    void deleteReservation(Long userId, Long orderId);
+
+    /**
+     * Deletes all reservations of specific user.
+     *
+     * @param userId  ID of user that wants to delete all of his reserved tickets
+     */
+    void deleteAll(Long userId);
 }

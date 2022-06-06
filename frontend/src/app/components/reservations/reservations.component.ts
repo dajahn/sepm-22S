@@ -6,6 +6,8 @@ import {Router} from '@angular/router';
 import {ReservationService} from '../../services/reservation.service';
 import {Ticket} from '../../dtos/ticket';
 import {SeatTicket} from '../../dtos/seat-ticket';
+import {CreateTicket} from '../../dtos/create-ticket';
+import {SectorType} from '../../dtos/sector';
 
 @Component({
   selector: 'app-reservations',
@@ -56,8 +58,15 @@ export class ReservationsComponent implements OnInit {
    * Removes reservation for ticket
    */
   onRemove(id: number) {
-    //TODO
-    console.log('should delete reservation for ticket with id '+id);
+    this.reservationService.deleteReservation(id).subscribe({
+      next: _ => {
+        this.loadReservations();
+      },
+      error: err => {
+        console.error(err);
+        this.showDanger('Sorry, something went wrong. Could not cancel your reservation 😔 Please try again later!');
+      }
+    });
   }
 
   /**
@@ -81,5 +90,35 @@ export class ReservationsComponent implements OnInit {
   showDanger(msg: string) {
     this.toastService.show(msg, {classname: 'bg-danger', delay: 5000});
   }
+  /**
+   * Deletes all reservations and them adds them into the cart.
+   */
+  addToCart() {
+    this.reservationService.deleteAllReservations().subscribe({
+      next: _ => {
+        const createTickets: CreateTicket[] = [];
+        for (const item of this.tickets) {
+          createTickets.push({
+            performance: item.performance.id,
+            type: item.sector.type,
+            item: item.sector.type === SectorType.SEAT ? (item as SeatTicket).seat.id : item.sector.id
+          });
+        }
 
+        this.cartService.addTicketsToCart(createTickets).subscribe({
+          next: () => {
+            this.showSuccess('Successfully added all items to your cart!');
+            this.router.navigate(['cart']);
+          },
+          error: error => {
+            console.log('Could not add items to cart.', error);
+            this.showDanger('Unfortunately an error occurred while trying to add your items to the cart.');
+          }
+        });
+      },
+      error: err => {
+        this.showDanger('Sorry, something went wrong. Could not cancel your reservations 😔 Please try again later!');
+      }
+    });
+  }
 }
