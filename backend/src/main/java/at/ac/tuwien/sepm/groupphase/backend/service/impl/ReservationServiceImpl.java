@@ -39,7 +39,6 @@ public class ReservationServiceImpl implements ReservationService {
     private final StandingTicketRepository standingTicketRepository;
     private final SeatTicketRepository seatTicketRepository;
     private final PerformanceRepository performanceRepository;
-
     private final TicketRepository ticketRepository;
     private final CartService cartService;
 
@@ -57,11 +56,11 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public void reserveTickets(Long userId, List<CreateTicketDto> tickets) {
-        LOGGER.trace("reserveTickets() for user " + userId);
+        LOGGER.trace("reserveTickets() for user {} with tickets = {}", userId, tickets);
         if (performanceRepository.findById(tickets.get(0).getPerformance()).isEmpty()) {
             throw new NotFoundException("Performance with id " + tickets.get(0).getPerformance() + " does not exist!");
         }
-        LocalDateTime validUntil = performanceRepository.findById(tickets.get(0).getPerformance()).get().getDateTime();
+        LocalDateTime validUntil = performanceRepository.findById(tickets.get(0).getPerformance()).get().getDateTime().minusMinutes(30);
         TicketOrder reservation = new TicketOrder(LocalDateTime.now(), userId, new ArrayList<>(), OrderType.RESERVATION, validUntil);
         reservation = orderRepository.save(reservation);
         Ticket ticket;
@@ -97,19 +96,14 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<Ticket> getReservedTickets(Long userId) {
-        LOGGER.trace("getReservedTickets() for user " + userId);
-        List<Ticket> tickets = new ArrayList<>();
-        List<TicketOrder> ticketOrders = orderRepository.findTicketOrdersByTypeAndUserId(OrderType.RESERVATION, userId);
-        for (TicketOrder t : ticketOrders) {
-            tickets.addAll(t.getTickets());
-        }
-        return tickets;
+    public List<TicketOrder> getReservedTickets(Long userId) {
+        LOGGER.trace("getReservedTickets() for user {}", userId);
+        return orderRepository.findTicketOrdersByTypeAndUserId(OrderType.RESERVATION, userId);
     }
 
     @Override
     public void deleteReservation(Long userId, Long ticketId) {
-        LOGGER.trace("deleteReservation() for user " + userId + " with ticket=" + ticketId);
+        LOGGER.trace("deleteReservation() for user {} with ticket={}", userId, ticketId);
         Optional<Ticket> ticket = ticketRepository.findById(ticketId);
         if (ticket.isEmpty()) {
             throw new NotFoundException("Ticket does not exist!");
@@ -132,12 +126,13 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public void deleteAll(Long userId) {
-        LOGGER.trace("deleteAll() for user " + userId);
+        LOGGER.trace("deleteAll() for user {}", userId);
         this.orderRepository.deleteAllByTypeAndUserId(OrderType.RESERVATION, userId);
     }
 
     @Override
     public void moveTicketsToCart(Long userId, List<CreateTicketDto> tickets) {
+        LOGGER.trace("moveTicketsToCart() for user {} with tickets {}", userId, tickets);
         this.deleteAll(userId);
         this.cartService.addTicketsToCart(userId, tickets);
     }

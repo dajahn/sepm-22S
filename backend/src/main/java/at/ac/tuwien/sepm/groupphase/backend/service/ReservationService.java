@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateTicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketOrderDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 
@@ -23,7 +24,7 @@ public interface ReservationService {
      * @param userId ID of user whose reversed tickets should be returned
      * @return A list of all reserved ticket of given user
      */
-    List<Ticket> getReservedTickets(Long userId);
+    List<TicketOrder> getReservedTickets(Long userId);
 
     /**
      * Delete a ticket reservation by id of a given user.
@@ -41,5 +42,11 @@ public interface ReservationService {
      */
     void deleteAll(Long userId);
 
+    /**
+     * Deletes all reservations and adds tickets to cart.
+     *
+     * @param userId ID of user that wants to add his reserved ticket into cart
+     * @param tickets tickets to be added to cart
+     */
     void moveTicketsToCart(Long userId, List<CreateTicketDto> tickets);
 }

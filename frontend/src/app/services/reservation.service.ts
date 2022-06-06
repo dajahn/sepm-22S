@@ -4,6 +4,7 @@ import {Globals} from '../global/globals';
 import {Ticket} from '../dtos/ticket';
 import {Observable} from 'rxjs';
 import {CreateTicket} from '../dtos/create-ticket';
+import {TicketOrder} from '../dtos/ticket-order';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +18,8 @@ export class ReservationService {
   /**
    * Fetches all reservations of current user.
    */
-  getReservations(): Observable<Ticket[]> {
-    return this.httpClient.get<Ticket[]>(this.reservationBaseUri);
+  getReservations(): Observable<TicketOrder[]> {
+    return this.httpClient.get<TicketOrder[]>(this.reservationBaseUri);
   }
 
   /**
@@ -37,9 +38,12 @@ export class ReservationService {
   }
 
   /**
-   * Deletes all reservations of current user.
+   * Moves all reserved tickets into cart.
+   *
+   * @param tickets all tickets to be moved to cart
    */
-  deleteAllReservations(): Observable<void> {
-    return this.httpClient.delete<void>(this.reservationBaseUri);
+  moveReservedTicketsToCart(tickets: CreateTicket[]): Observable<void>{
+    const uri = `${this.reservationBaseUri}/toCart`;
+    return this.httpClient.post<void>(uri, tickets);
   }
 }

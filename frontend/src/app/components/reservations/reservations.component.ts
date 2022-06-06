@@ -8,6 +8,7 @@ import {Ticket} from '../../dtos/ticket';
 import {SeatTicket} from '../../dtos/seat-ticket';
 import {CreateTicket} from '../../dtos/create-ticket';
 import {SectorType} from '../../dtos/sector';
+import {TicketOrder} from '../../dtos/ticket-order';
 
 @Component({
   selector: 'app-reservations',
@@ -16,7 +17,8 @@ import {SectorType} from '../../dtos/sector';
 })
 export class ReservationsComponent implements OnInit {
 
-  tickets: Ticket[];
+  orders: TicketOrder[];
+  ticketSum = 0;
 
   constructor(private cartService: CartService,
               private reservationService: ReservationService,
@@ -30,13 +32,16 @@ export class ReservationsComponent implements OnInit {
   }
 
   /**
-   * Loads reservedTickets
+   * Loads reserved Tickets
    */
   private loadReservations() {
     this.reservationService.getReservations().subscribe({
-      next: (tickets: Ticket[]) => {
-        console.log(tickets);
-        this.tickets = tickets;
+      next: (orders: TicketOrder[]) => {
+        this.orders = orders;
+        this.ticketSum=0;
+        this.orders.forEach(x => {
+          this.ticketSum += x.tickets?.length;
+        });
       },
       error: err => {
         console.error('Error fetching tickets', err);
@@ -90,34 +95,30 @@ export class ReservationsComponent implements OnInit {
   showDanger(msg: string) {
     this.toastService.show(msg, {classname: 'bg-danger', delay: 5000});
   }
+
   /**
    * Deletes all reservations and them adds them into the cart.
    */
   addToCart() {
-    this.reservationService.deleteAllReservations().subscribe({
-      next: _ => {
-        const createTickets: CreateTicket[] = [];
-        for (const item of this.tickets) {
-          createTickets.push({
-            performance: item.performance.id,
-            type: item.sector.type,
-            item: item.sector.type === SectorType.SEAT ? (item as SeatTicket).seat.id : item.sector.id
-          });
-        }
-
-        this.cartService.addTicketsToCart(createTickets).subscribe({
-          next: () => {
-            this.showSuccess('Successfully added all items to your cart!');
-            this.router.navigate(['cart']);
-          },
-          error: error => {
-            console.log('Could not add items to cart.', error);
-            this.showDanger('Unfortunately an error occurred while trying to add your items to the cart.');
-          }
+    const createTickets: CreateTicket[] = [];
+    for (const order of this.orders) {
+      for (const item of order.tickets) {
+        createTickets.push({
+          performance: item.performance.id,
+          type: item.sector.type,
+          item: item.sector.type === SectorType.SEAT ? (item as SeatTicket).seat.id : item.sector.id
         });
+      }
+    }
+
+    this.reservationService.moveReservedTicketsToCart(createTickets).subscribe({
+      next: _ => {
+        this.showSuccess('Successfully added all items to your cart!');
+        this.router.navigate(['cart']);
       },
-      error: err => {
-        this.showDanger('Sorry, something went wrong. Could not cancel your reservations 😔 Please try again later!');
+      error: error => {
+        console.log('Could not add items to cart.', error);
+        this.showDanger('Unfortunately an error occurred while trying to add your items to the cart.');
       }
     });
   }
