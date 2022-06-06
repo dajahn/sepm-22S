@@ -11,6 +11,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private authService: AuthService, private globals: Globals) {
 
+    // TODO remove unnecessary excluded uris!
     this.excluded_uris = [
       { url: this.globals.backendUri + '/authentication'},
       { url: this.globals.backendUri + '/users', method: 'POST'},

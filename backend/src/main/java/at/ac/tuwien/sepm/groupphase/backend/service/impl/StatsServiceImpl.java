@@ -30,9 +30,9 @@ public class StatsServiceImpl implements StatsService {
     public StatsDto getStats() {
         LOGGER.trace("getStats");
         return new StatsDto(
-            ticketRepository.findAll().size(),
-            eventRepository.findAll().size(),
-            newsRepository.findAll().size()
+            ticketRepository.count(),
+            eventRepository.count(),
+            newsRepository.count()
         );
     }
 }
