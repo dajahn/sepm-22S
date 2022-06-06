@@ -27,10 +27,14 @@ public interface EventMapper {
     default TopTenEventDto eventToTopTenEventDto(Event event, int ticketCount) {
         TopTenEventDto result = new TopTenEventDto();
 
-        FileDto fileDto = new FileDto();
-        fileDto.setType(event.getThumbnail().getType());
-        fileDto.setUrl("/files/" + event.getThumbnail().getId().toString());
-        result.setThumbnail(fileDto);
+        if(event.getThumbnail() != null) {
+            FileDto fileDto = new FileDto();
+            fileDto.setType(event.getThumbnail().getType());
+            fileDto.setUrl("/files/" + event.getThumbnail().getId().toString());
+            result.setThumbnail(fileDto);
+        }else {
+            result.setThumbnail(null);
+        }
 
         result.setName(event.getName());
         result.setId(event.getId());
