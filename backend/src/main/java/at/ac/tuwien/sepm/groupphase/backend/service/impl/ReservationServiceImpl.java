@@ -107,22 +107,15 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void deleteReservation(Long userId, Long ticketId) {
         LOGGER.trace("deleteReservation() for user " + userId + " with ticket=" + ticketId);
-        List<TicketOrder> orders = orderRepository.findTicketOrdersByTypeAndUserId(OrderType.RESERVATION, userId);
-        if (orders.isEmpty()) {
-            throw new NotFoundException("User does not have any reservations!");
+        Optional<Ticket> ticket = ticketRepository.findById(ticketId);
+        if (ticket.isEmpty()) {
+            throw new NotFoundException("Ticket does not exist!");
         }
-        TicketOrder order = null;
-        for (TicketOrder o : orders) {
-            List<Ticket> tickets = o.getTickets().stream().filter(x -> x.getId().equals(ticketId)).toList();
-
-            if (!tickets.isEmpty()) {
-                order = o;
-                break;
-            }
-        }
-        if (order == null) {
+        Optional<TicketOrder> orderOptional = orderRepository.findTicketOrderByTicketsContains(ticket.get());
+        if (orderOptional.isEmpty()) {
             throw new NotFoundException("Ticket with id " + ticketId + " not found!");
         }
+        TicketOrder order = orderOptional.get();
 
         List<Ticket> tickets = order.getTickets();
         tickets.removeIf(t -> t.getId().equals(ticketId));
