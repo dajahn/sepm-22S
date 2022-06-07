@@ -198,7 +198,8 @@ export class EventComponent implements OnInit {
       item: ticket.sector.type === SectorType.SEAT ? (ticket as SeatTicket).seat.id : ticket.sector.id
     }))).subscribe({
       next: () => {
-        this.showSuccess('Successfully reserved tickets!');
+        // eslint-disable-next-line max-len
+        this.showSuccess('Reserved tickets have to be collected until 30 minutes before the start of the event, otherwise the reservation is cancelled!');
         this.router.navigate(['reservations']);
       },
       error: error => {
