@@ -36,7 +36,7 @@ const routes: Routes = [
   { path: 'account/edit', canActivate: [AuthGuard], component: EditAccountComponent },
   { path: 'users', canActivate: [AdminGuard], component: UserManagementComponent, pathMatch: 'full' },
   { path: 'users/admins/create', canActivate: [AdminGuard], component: CreateUserComponent },
-  { path: 'location/create', canActivate: [AdminGuard], component: LocationCreateComponent },
+  { path: 'locations/create', canActivate: [AdminGuard], component: LocationCreateComponent },
   { path: '', component: HomeComponent },
   { path: 'cart', component: CartComponent },
   { path: 'search', component: SearchComponent},

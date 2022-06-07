@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, Inp
 import { Location } from '../../dtos/location';
 import { SectorType } from '../../dtos/sector';
 import { SeatSector, SeatType } from '../../dtos/seat-sector';
-import { addPoints, findMin, Point } from '../../dtos/point';
+import { addPoints, findMin, Point, POINT_MINUS_ONE } from '../../dtos/point';
 import { Seat } from '../../dtos/seat';
 import { StandingSector } from '../../dtos/standing-sector';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -406,10 +406,11 @@ class ToolCreateStanding implements Tool {
     this.ref.standingSectors.push({
       id: null,
       price: 0,
-      name: 'abcd',
+      name: '',
       capacity: 0,
       type: SectorType.STANDING,
-      ...area,
+      point1: area.point1,
+      point2: addPoints(area.point2, POINT_MINUS_ONE),
       preview: false,
     });
     this.ref.updateLocation();
@@ -562,7 +563,7 @@ const getSeatsForArea = ( { point1, point2 }: PointSet): Seat[] => {
 };
 
 const isPointWithinArea = ( target: Point, area: PointSet ): boolean => (
-  area.point1.x <= target.x && target.x < area.point2.x && area.point1.y <= target.y && target.y < area.point2.y
+  area.point1.x <= target.x && target.x <= area.point2.x && area.point1.y <= target.y && target.y <= area.point2.y
 );
 
 const normalizePointSet = (p1: Point, p2: Point): PointSet => {
