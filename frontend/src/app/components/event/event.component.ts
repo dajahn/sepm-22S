@@ -199,7 +199,7 @@ export class EventComponent implements OnInit {
     }))).subscribe({
       next: () => {
         // eslint-disable-next-line max-len
-        this.showSuccess('Reserved tickets have to be collected until 30 minutes before the start of the event, otherwise the reservation is cancelled!');
+        this.toastService.show('Reserved tickets have to be collected until 30 minutes before the start of the event, otherwise the reservation is cancelled!', {classname: 'bg-success', delay: 5000});
         this.router.navigate(['reservations']);
       },
       error: error => {
