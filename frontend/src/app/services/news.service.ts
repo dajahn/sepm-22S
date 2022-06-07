@@ -1,7 +1,8 @@
-import {News} from './../dtos/news';
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Globals} from '../global/globals';
+import { News, PagedNewsDto } from './../dtos/news';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Globals } from '../global/globals';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,15 +17,15 @@ export class NewsService {
     return this.httpClient.post(this.newsBaseURI, news);
   }
 
-  public getAllNews() {
-    return this.httpClient.get(this.newsBaseURI);
+  public getAllNews(page: number = 0, size: number = 5): Observable<PagedNewsDto> {
+    return this.httpClient.get<PagedNewsDto>(this.newsBaseURI + '?page=' + page + '&size=' + size);
   }
 
   public getById(id: number) {
     return this.httpClient.get(this.newsBaseURI + '/' + id);
   }
 
-  public getUnread() {
-    return this.httpClient.get(this.newsBaseURI + '/unread');
+  public getUnread(page: number = 0, size: number = 5): Observable<PagedNewsDto> {
+    return this.httpClient.get<PagedNewsDto>(this.newsBaseURI + '/unread?page=' + page + '&size=' + size);
   }
 }
