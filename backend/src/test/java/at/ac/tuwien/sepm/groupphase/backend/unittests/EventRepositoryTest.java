@@ -39,6 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -262,10 +264,12 @@ public class EventRepositoryTest implements EventTestData, LocationTestData, Add
         order = orderRepository.save(order);
         ticket.setOrder(order);
         ticket.setOrderId(order.getId());
+        Pageable pageable = PageRequest.of(0, 10);
 
         assertAll(
-            () -> assertEquals(1, eventRepository.findTopTenByCategory(LocalDateTime.now().minusYears(10), LocalDateTime.now().plusYears(10), EventCategory.CONCERT.ordinal()).size()),
-            () -> assertEquals(1, eventRepository.topTenEventsTicketCount(LocalDateTime.now().minusYears(10), LocalDateTime.now().plusYears(10), EventCategory.CONCERT.ordinal()).get(0))
+            () -> assertEquals(1, eventRepository.findTopTenByCategory(LocalDateTime.now().minusYears(10), LocalDateTime.now().plusYears(10), EventCategory.CONCERT,pageable).size()),
+            () -> assertEquals(EVENT_TEST_TITLE, eventRepository.findTopTenByCategory(LocalDateTime.now().minusYears(10), LocalDateTime.now().plusYears(10), EventCategory.CONCERT,pageable).get(0).getName()),
+            () -> assertEquals(1, eventRepository.topTenEventsTicketCount(LocalDateTime.now().minusYears(10), LocalDateTime.now().plusYears(10), EventCategory.CONCERT,pageable).get(0))
         );
     }
 }

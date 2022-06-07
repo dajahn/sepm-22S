@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.enums.EventCategory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -37,37 +38,34 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @param category category in which the events should be
      * @return Events
      */
+
     @Query(value =
-        "SELECT e.* FROM ticket_order o JOIN Ticket t JOIN Performance p JOIN Event e "
+        "SELECT e FROM Event e JOIN e.performances p, TicketOrder o JOIN o.tickets t "
             + "WHERE (e.category) = :category "
             + "AND o.type = 1 "
-            + "AND o.id = t.order_id "
-            + "AND p.id = t.performance_id "
-            + "AND p.event_id = e.id "
-            + "AND p.date_time >= :fromDate "
-            + "AND p.date_time <= :toDate "
-            + "GROUP BY e.id ORDER BY count(t.id) DESC limit 10", nativeQuery = true)
-    List<Event> findTopTenByCategory(@Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate, @Param("category") int category);
+            + "AND t.performance.id = any(select ev.id from e.performances ev where ev.dateTime >= :fromDate and ev.dateTime <= :toDate) "
+            + "AND p.dateTime >= :fromDate "
+            + "AND p.dateTime <= :toDate "
+            + "GROUP BY e.id ORDER BY count(distinct t.id) desc")
+    List<Event> findTopTenByCategory(@Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate, @Param("category") EventCategory category, Pageable pageable);
 
     /**
      * Find how many tickets were sold from each top ten event.
      *
-     * @param fromDate start of month in which the top ten events are
+     * @param fromDate start of month in which the top ten events are8
      * @param toDate   end of month in which the top ten events are
      * @param category category in which the events are
      * @return Count of sold tickets
      */
     @Query(value =
-        "select count(t.id) FROM ticket_order o JOIN Ticket t JOIN Performance p JOIN Event e "
+        "SELECT count(distinct t.id) FROM Event e JOIN e.performances p, TicketOrder o JOIN o.tickets t "
             + "WHERE (e.category) = :category "
             + "AND o.type = 1 "
-            + "AND o.id = t.order_id "
-            + "AND p.id = t.performance_id "
-            + "AND p.event_id = e.id "
-            + "AND p.date_time >= :fromDate "
-            + "AND p.date_time <= :toDate "
-            + "GROUP BY e.id ORDER BY count(t.id) DESC limit 10", nativeQuery = true)
-    List<Integer> topTenEventsTicketCount(@Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate, @Param("category") int category);
+            + "AND t.performance.id = any(select ev.id from e.performances ev where ev.dateTime >= :fromDate and ev.dateTime <= :toDate) "
+            + "AND p.dateTime >= :fromDate "
+            + "AND p.dateTime <= :toDate "
+            + "GROUP BY e.id ORDER BY count(distinct t.id) desc")
+    List<Integer> topTenEventsTicketCount(@Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate, @Param("category") EventCategory category, Pageable pageable);
 
     @Query(value = "select * from Event e "
             + "where (e.category = :category or :category = -1) "

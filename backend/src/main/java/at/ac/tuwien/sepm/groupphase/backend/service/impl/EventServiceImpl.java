@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreatePerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventSearchTermsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopTenEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ArtistMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
@@ -153,12 +154,15 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<TopTenEventDto> topTenEventsByCategory(EventCategory category) {
         LOGGER.trace("FindTopTenEvents this month in category: {}", category);
-        LocalDateTime from = LocalDateTime.now().with(firstDayOfMonth());
-        LocalDateTime to = LocalDateTime.now().with(lastDayOfMonth());
+        LocalDateTime from = LocalDateTime.now().with(firstDayOfMonth()).withHour(0).withMinute(0);
+        LocalDateTime to = LocalDateTime.now().with(lastDayOfMonth()).withHour(23).withMinute(59);
+        Pageable pageable = PageRequest.of(0, 10);
 
-        List<Event> events = eventRepository.findTopTenByCategory(from, to, category.ordinal());
-        List<Integer> ticketCount = eventRepository.topTenEventsTicketCount(from, to, category.ordinal());
+        List<Event> events = eventRepository.findTopTenByCategory(from, to, category, pageable);
+        List<Integer> ticketCount = eventRepository.topTenEventsTicketCount(from, to, category, pageable);
+
         List<TopTenEventDto> topTenEventDtos = new ArrayList<>();
+
         if (!events.isEmpty()) {
             for (int i = 0; i < events.size(); i++) {
                 topTenEventDtos.add(eventMapper.eventToTopTenEventDto(events.get(i), ticketCount.get(i)));
