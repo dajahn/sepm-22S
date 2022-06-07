@@ -5,7 +5,8 @@
 
 <!-- CONTENT -->
 <!-- (i) remove margin if 'register' or 'signup' route is activated -->
-<div id="wrapper" *ngIf="!hasRoute('login')  && !hasRoute('register') && !hasRoute('checkout'); else noWrapper">
+<div [ngClass]="isRoute('/') ? 'home-wrapper' : 'wrapper'"
+     *ngIf="!hasRoute('login')  && !hasRoute('register') && !hasRoute('checkout'); else noWrapper">
   <router-outlet></router-outlet>
 </div>
 <ng-template #noWrapper>

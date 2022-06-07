@@ -21,4 +21,14 @@ export class AppComponent {
     return this.router.url.includes(route);
   }
 
+  /**
+   * Checks if the current route equals an url
+   *
+   * @param route
+   * @returns
+   */
+  isRoute(route: string) {
+    return this.router.url === route;
+  }
+
 }
