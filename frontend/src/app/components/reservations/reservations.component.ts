@@ -9,6 +9,7 @@ import {SeatTicket} from '../../dtos/seat-ticket';
 import {CreateTicket} from '../../dtos/create-ticket';
 import {SectorType} from '../../dtos/sector';
 import {TicketOrder} from '../../dtos/ticket-order';
+import {Reservation} from '../../dtos/reservation';
 
 @Component({
   selector: 'app-reservations',
@@ -18,6 +19,7 @@ import {TicketOrder} from '../../dtos/ticket-order';
 export class ReservationsComponent implements OnInit {
 
   orders: TicketOrder[];
+  selectedReservations: Reservation[];
   ticketSum = 0;
 
   constructor(private cartService: CartService,
@@ -28,6 +30,7 @@ export class ReservationsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.selectedReservations = [];
     this.loadReservations();
   }
 
@@ -38,7 +41,7 @@ export class ReservationsComponent implements OnInit {
     this.reservationService.getReservations().subscribe({
       next: (orders: TicketOrder[]) => {
         this.orders = orders;
-        this.ticketSum=0;
+        this.ticketSum = 0;
         this.orders.forEach(x => {
           this.ticketSum += x.tickets?.length;
         });
@@ -76,10 +79,55 @@ export class ReservationsComponent implements OnInit {
 
   /**
    *
-   * Navigates to corresponding event and performance.
+   * Selects or un-selects a ticket if clicked
    */
-  inspectEvent(eventID: number, performanceID: number) {
-    this.router.navigate([`events/${eventID}/performances/${performanceID}`]).then();
+  ticketClicked(orderID: number, ticket: Ticket, index: number) {
+    let tmpInd = 0;
+    for (const item of this.orders) {
+      if (item.id === orderID) {
+        break;
+      }
+      tmpInd += item.tickets?.length;
+    }
+    tmpInd += index;
+    const tmpItem = this.selectedReservations[tmpInd];
+    if (tmpItem === null || tmpItem === undefined) {
+      this.selectedReservations[tmpInd] = {
+        orderId: orderID,
+        ticketId: ticket.id,
+        performance: ticket.performance.id,
+        type: ticket.sector.type,
+        item: ticket.sector.type === SectorType.SEAT ? (ticket as SeatTicket).seat.id : ticket.sector.id
+      };
+    } else {
+      delete this.selectedReservations[tmpInd];
+    }
+  }
+
+  /**
+   * Returns true, if no ticket is selected
+   */
+  areSelectedTicketsEmpty(){
+    return this.selectedReservations.filter(r => r !== null && r !== undefined).length ===0;
+  }
+
+  /**
+   * Returns true if a specific ticket is selected.
+   *
+   * @param orderID ID of order containing the ticket
+   * @param index of the ticket inside of the order
+   */
+  ticketIsSelected(orderID: number, index: number) {
+    let tmpInd = 0;
+    for (const item of this.orders) {
+      if (item.id === orderID) {
+        break;
+      }
+      tmpInd += item.tickets?.length;
+    }
+    tmpInd += index;
+    const tmpItem = this.selectedReservations[tmpInd];
+    return !(tmpItem === null || tmpItem === undefined);
   }
 
   /**
@@ -97,21 +145,15 @@ export class ReservationsComponent implements OnInit {
   }
 
   /**
-   * Deletes all reservations and them adds them into the cart.
+   * Deletes selected reservations and adds them to cart.
    */
   addToCart() {
-    const createTickets: CreateTicket[] = [];
-    for (const order of this.orders) {
-      for (const item of order.tickets) {
-        createTickets.push({
-          performance: item.performance.id,
-          type: item.sector.type,
-          item: item.sector.type === SectorType.SEAT ? (item as SeatTicket).seat.id : item.sector.id
-        });
-      }
+    this.selectedReservations = this.selectedReservations.filter(r => r !== null && r !== undefined);
+    if(this.selectedReservations.length === 0 ){
+      this.showDanger('There are no tickets selected.');
+      return;
     }
-
-    this.reservationService.moveReservedTicketsToCart(createTickets).subscribe({
+    this.reservationService.moveReservedTicketsToCart(this.selectedReservations).subscribe({
       next: _ => {
         this.showSuccess('Successfully added all items to your cart!');
         this.router.navigate(['cart']);

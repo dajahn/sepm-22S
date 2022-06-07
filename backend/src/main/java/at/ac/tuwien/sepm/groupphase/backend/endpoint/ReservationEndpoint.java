@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateTicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ReservationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketOrderDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.OrderMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
@@ -60,7 +61,7 @@ public class ReservationEndpoint {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/toCart")
     @Operation(summary = "Moves all reserved tickets to cart", security = @SecurityRequirement(name = "apiKey"))
-    public void moveReservedTicketsToCart(@Valid @NotNull @RequestBody List<CreateTicketDto> tickets) {
+    public void moveReservedTicketsToCart(@Valid @NotNull @RequestBody List<ReservationDto> tickets) {
         LOGGER.info("POST /api/v1/reservation with {}", tickets);
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findApplicationUserByEmail(email);

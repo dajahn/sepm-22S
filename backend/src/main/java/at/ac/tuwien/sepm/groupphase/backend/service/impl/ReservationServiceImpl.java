@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateTicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ReservationDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Seat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.StandingSector;
@@ -88,11 +89,9 @@ public class ReservationServiceImpl implements ReservationService {
                 }
                 default -> throw new NotImplementedException("Unexpected sector type.");
             }
-
             reservation.getTickets().add(ticket);
         }
         orderRepository.save(reservation);
-        //TODO maybe send email notification for reservation to customer
     }
 
     @Override
@@ -110,7 +109,7 @@ public class ReservationServiceImpl implements ReservationService {
         }
         Optional<TicketOrder> orderOptional = orderRepository.findTicketOrderByTicketsContains(ticket.get());
         if (orderOptional.isEmpty()) {
-            throw new NotFoundException("Ticket with id " + ticketId + " not found!");
+            throw new NotFoundException("No Order containing this Ticket found!");
         }
         TicketOrder order = orderOptional.get();
 
@@ -125,16 +124,41 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void deleteAll(Long userId) {
-        LOGGER.trace("deleteAll() for user {}", userId);
-        this.orderRepository.deleteAllByTypeAndUserId(OrderType.RESERVATION, userId);
+    public void deleteReservation(Long userId, Long orderId, Long ticketId) {
+        LOGGER.trace("deleteReservation() for user {} with ticket={}", userId, ticketId);
+        Optional<Ticket> ticket = ticketRepository.findById(ticketId);
+        if (ticket.isEmpty()) {
+            throw new NotFoundException("Ticket does not exist!");
+        }
+        Optional<TicketOrder> orderOptional = orderRepository.findById(orderId);
+        if (orderOptional.isEmpty()) {
+            throw new NotFoundException("No Order containing this Ticket found!");
+        }
+        TicketOrder order = orderOptional.get();
+
+        List<Ticket> tickets = order.getTickets();
+        tickets.removeIf(t -> t.getId().equals(ticketId));
+
+        orderRepository.save(order);
+        ticketRepository.deleteById(ticketId);
+        if (tickets.size() == 0) {
+            orderRepository.deleteById(order.getId());
+        }
     }
 
     @Override
-    public void moveTicketsToCart(Long userId, List<CreateTicketDto> tickets) {
+    public void moveTicketsToCart(Long userId, List<ReservationDto> tickets) {
         LOGGER.trace("moveTicketsToCart() for user {} with tickets {}", userId, tickets);
-        this.deleteAll(userId);
-        this.cartService.addTicketsToCart(userId, tickets);
+        List<CreateTicketDto> ticketDtos = new ArrayList<>();
+        for (ReservationDto t : tickets) {
+            CreateTicketDto tmp = new CreateTicketDto();
+            tmp.setItem(t.getItem());
+            tmp.setPerformance(t.getPerformance());
+            tmp.setType(t.getType());
+            this.deleteReservation(userId, t.getOrderId(), t.getTicketId());
+            ticketDtos.add(tmp);
+        }
+        this.cartService.addTicketsToCart(userId, ticketDtos);
     }
 
 }

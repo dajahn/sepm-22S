@@ -5,6 +5,7 @@ import {Ticket} from '../dtos/ticket';
 import {Observable} from 'rxjs';
 import {CreateTicket} from '../dtos/create-ticket';
 import {TicketOrder} from '../dtos/ticket-order';
+import {Reservation} from '../dtos/reservation';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +43,7 @@ export class ReservationService {
    *
    * @param tickets all tickets to be moved to cart
    */
-  moveReservedTicketsToCart(tickets: CreateTicket[]): Observable<void>{
+  moveReservedTicketsToCart(tickets: Reservation[]): Observable<void>{
     const uri = `${this.reservationBaseUri}/toCart`;
     return this.httpClient.post<void>(uri, tickets);
   }
