@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LocationService } from '../../services/location.service';
 import { ToastService } from '../../services/toast-service.service';
 import { Location } from '../../dtos/location';
+import { CountriesCodeToName } from '../../enums/countriesCodeToName';
 
 @Component({
   selector: 'app-location-create',
@@ -10,6 +11,9 @@ import { Location } from '../../dtos/location';
   styleUrls: ['./location-create.component.scss']
 })
 export class LocationCreateComponent implements OnInit {
+
+  public countriesCodeToName = CountriesCodeToName;
+  public countriesCodeToNameKeys = [];
 
   public form: FormGroup;
 
@@ -29,13 +33,47 @@ export class LocationCreateComponent implements OnInit {
   ) {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(255)]],
+      street: ['', [Validators.required, Validators.minLength(2)]],
+      zip: ['', [Validators.required, Validators.minLength(4)]],
+      city: ['', [Validators.required, Validators.minLength(2)]],
+      country: ['', [Validators.required]],
+    }, { updateOn: 'change' } );
+
+
+    this.location = {
+      id: null,
+      name: '',
+      address: null,
+      sectors: [],
+    };
+
+    this.form.valueChanges.subscribe((value) => {
+      const { name, street, zip: zipCode, city, country } = value;
+      console.log('lol', value);
+
+      this.location.name = name;
+      this.location.address = {
+        street,
+        zipCode,
+        city,
+        country,
+      };
+
+      console.log(this.location);
     });
+
+    this.countriesCodeToNameKeys = Object.keys(this.countriesCodeToName);
   }
 
   ngOnInit(): void {
   }
 
   save() {
+
+    if (!this.form.valid) {
+      return;
+    }
+
     this.locationService.save(this.location).subscribe({
       next: () => {
         console.log(`Location created with name '${this.location.name}'!`);
@@ -43,9 +81,14 @@ export class LocationCreateComponent implements OnInit {
       },
       error: err => {
         console.error('Error creating location', err);
-        this.showDanger(err.error?.split('"')[1] ?? 'Unknown error while creating location!');
+        this.showDanger(( err.error?.error || err.error?.split('"')[1] ) ?? 'Unknown error while creating location!');
       }
     });
+  }
+
+  showFormErrors( target: string ) {
+    const item = this.form.get([ target ]);
+    return ( item.dirty || item.touched ) && item.errors;
   }
 
 

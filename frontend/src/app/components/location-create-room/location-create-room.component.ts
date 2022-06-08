@@ -57,6 +57,8 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.location = this.data;
+    this.seatingSectors = this.data.sectors.filter(item => item.type === SectorType.SEAT).map(item => item as SeatSector);
+    this.standingSectors = this.data.sectors.filter(item => item.type === SectorType.STANDING).map(item => item as StandingSector);
   }
 
   exportLocation() {

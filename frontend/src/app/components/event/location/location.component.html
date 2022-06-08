@@ -136,6 +136,6 @@
       </svg>
     </g>
   </svg>
-  <span *ngIf="(location$ | async)?.address">📍  <a class="ms-2"
+  <span *ngIf="(location$ | async)?.address && !this.creation">📍  <a class="ms-2"
                [href]="getAddressMapsUrl((location$ | async)?.address)">{{getAddressString((location$ | async)?.address)}}</a></span>
 </div>

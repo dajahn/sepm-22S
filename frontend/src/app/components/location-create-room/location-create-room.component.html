@@ -1,5 +1,5 @@
 <div class="tool-bar">
-    <div class="tool" (click)="selectTool(ToolType.SELECT)">
+    <div class="tool" [class.selected]="tool.getToolType() === ToolType.SELECT" (click)="selectTool(ToolType.SELECT)">
         <i class="bi bi-cursor-fill" style="color: var(--text-c-lowlight);"></i>
     </div>
     <div class="separator"></div>
@@ -19,7 +19,7 @@
 
     <div class="separator"></div>
 
-    <div class="tool" (click)="selectTool(ToolType.DELETE)">
+    <div class="tool" [class.selected]="tool.getToolType() === ToolType.DELETE" (click)="selectTool(ToolType.DELETE)">
         <i class="bi bi-eraser-fill" style="color: var(--text-c-lowlight)"></i>
     </div>
 
