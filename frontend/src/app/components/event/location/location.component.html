@@ -57,7 +57,7 @@
           fill="var(--text-c-highlight)"
           style="font-size: 2em">
           <ng-template [ngIf]="creation">
-            {{sector.capacity}} Slots
+            {{sector.capacity}} Slots - {{ sector.price }} € / Ticket
           </ng-template>
           <ng-template [ngIf]="!creation">
             {{getSelectedStandingSpots(sector.id)}}+{{getOccupiedStandingSpots(sector.id)}}/{{sector.capacity}}
