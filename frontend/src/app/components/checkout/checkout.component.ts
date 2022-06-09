@@ -128,6 +128,25 @@ export class CheckoutComponent implements OnInit {
   }
 
   /**
+   * Adds a '/' automatically to the exp date
+   */
+  autoSlash(e) {
+    if (e.key === '/') {
+      e.preventDefault();
+    }
+    if (e.key === 'Backspace' || e.key === 'Delete') {
+      if (this.checkoutForm.value.exp.length === 3) {
+        this.checkoutForm.controls.exp.setValue(this.checkoutForm.value.exp.substring(0, 2));
+      } else {
+        return;
+      }
+    }
+    if (this.checkoutForm.value.exp.length === 2) {
+      this.checkoutForm.controls.exp.setValue(this.checkoutForm.value.exp + '/');
+    }
+  }
+
+  /**
    * Calculates the total price of all tickets combined
    */
   calculateTotalSum(): number{
