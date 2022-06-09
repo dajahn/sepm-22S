@@ -85,3 +85,20 @@
         <input type="button" class="blue" value="save" (click)="modal.close()">
     </div>
 </ng-template>
+
+<ng-template #editSeatingSectorModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Editing Sector {{ editSeatingSector.name }}</h4>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="editSeatingSectorForm">
+            <div class="form-group col-md-12 mb-2">
+                <label for="seat-price" class="control-label">Price (€/Ticket)</label>
+                <input type="number" formControlName="price" class="form-control" id="seat-price" placeholder="Price per Ticket" name="price" [value]="editSeatingSector.price">
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <input type="button" class="blue" value="save" (click)="modal.close()">
+    </div>
+</ng-template>

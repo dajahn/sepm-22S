@@ -27,7 +27,9 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
 
   @ViewChild('locationRef') locationRef: ElementRef<HTMLInputElement>;
   @ViewChild('editStandingSectorModal') editStandingSectorModalRef: ElementRef<HTMLInputElement>;
+  @ViewChild('editSeatingSectorModal') editSeatingSectorModalRef: ElementRef<HTMLInputElement>;
   public editStandingSectorForm: FormGroup;
+  public editSeatingSectorForm: FormGroup;
 
   size: Point = {x: 25, y: 10};
   standingSectors: StandingSector[] = [];
@@ -36,6 +38,7 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
   tool: Tool = new ToolCreateStanding(this);
 
   editStandingSector: StandingSector = null;
+  editSeatingSector: SeatSector = null;
 
   startPos: Point = null;
   currentPos: Point = null;
@@ -53,8 +56,12 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder
   ) {
     this.editStandingSectorForm = this.formBuilder.group({
-      capacity: ['', []],
-      price: ['', []],
+      capacity: [0, []],
+      price: [0, []],
+    });
+
+    this.editSeatingSectorForm = this.formBuilder.group({
+      price: [0, []],
     });
 
     this.updateLocation(true);
@@ -344,9 +351,27 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
 
   openEditStandingSectorModal(sector: StandingSector): void {
     this.editStandingSector = sector;
+    this.editStandingSectorForm.reset();
+
+    this.editStandingSectorForm.controls.capacity.setValue(this.editStandingSector.capacity || 0);
+    this.editStandingSectorForm.controls.price.setValue(this.editStandingSector.price || 0);
+
     this.modalService.open(this.editStandingSectorModalRef, {ariaLabelledBy: 'modal-edit-standing-sector'}).result.then(() => {
       this.editStandingSector.capacity = this.editStandingSectorForm.controls.capacity.value || 0;
       this.editStandingSector.price = this.editStandingSectorForm.controls.price.value || 0;
+
+      this.updateLocation();
+    });
+  }
+
+  openEditSeatingSectorModal(sector: SeatSector): void {
+    this.editSeatingSector = sector;
+    this.editSeatingSectorForm.reset();
+
+    this.editSeatingSectorForm.controls.price.setValue(this.editSeatingSector.price || 0);
+
+    this.modalService.open(this.editSeatingSectorModalRef, {ariaLabelledBy: 'modal-edit-seating-sector'}).result.then(() => {
+      this.editSeatingSector.price = this.editSeatingSectorForm.controls.price.value || 0;
 
       this.updateLocation();
     });
