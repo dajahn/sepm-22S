@@ -49,7 +49,6 @@ export default class ToolCreateSeating implements Tool {
       existingSector.seats = [ ...existingSector.seats, ...seats ];
     } else {
       this.ref.seatingSectors.push({
-        id: 1,
         price: 0,
         name: '',
         type: SectorType.SEAT,
@@ -83,7 +82,6 @@ const getSeatsForArea = ( { point1, point2 }: PointSet): Seat[] => {
   for ( let x = point1.x; x < point2.x; x++ ) {
     for ( let y = point1.y; y < point2.y; y++ ) {
       seats.push({
-        id: 0,
         row: 0,
         column: 0,
         point: { x, y },

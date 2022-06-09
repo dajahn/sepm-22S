@@ -13,7 +13,6 @@ export default class ToolCreateStanding implements Tool {
 
   startPreview( start: Point ): void {
     this.ref.previewSector = {
-      id: null,
       price: 0,
       name: '',
       capacity: 0,
@@ -40,7 +39,6 @@ export default class ToolCreateStanding implements Tool {
     this.ref.deleteItemsInArea( area );
 
     this.ref.standingSectors.push({
-      id: null,
       price: 0,
       name: '',
       capacity: 0,

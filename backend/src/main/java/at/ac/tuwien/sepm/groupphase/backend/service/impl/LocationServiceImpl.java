@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.LocationSearchTermsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SearchLocationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.LocationMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Location;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
 import at.ac.tuwien.sepm.groupphase.backend.util.LocationValidator;
@@ -83,6 +84,9 @@ public class LocationServiceImpl implements at.ac.tuwien.sepm.groupphase.backend
         LOGGER.trace("createLocation with {}", locationDto);
         LocationValidator.validateLocation(locationDto);
         Location location = locationMapper.createLocationDtoToLocation(locationDto);
+        for (Sector sector : location.getSectors()) {
+            sector.setLocation(location);
+        }
         return locationRepository.save(location);
     }
 
