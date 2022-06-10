@@ -17,9 +17,9 @@ export class UserManagementComponent implements OnInit {
   public user: User[];
 
   //Variables neeced for pagination
-  public totalUsers: number = 25;
-  public page: number = 1;
-  public pageSize: number = 10;
+  public totalUsers = 25;
+  public page = 1;
+  public pageSize = 10;
 
   public userForm: FormGroup;
 
