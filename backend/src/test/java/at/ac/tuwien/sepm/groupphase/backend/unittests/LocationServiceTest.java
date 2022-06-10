@@ -48,18 +48,60 @@ public class LocationServiceTest implements LocationTestData, AddressTestData {
 
     @Test
     public void givenLocationsInDb_whenFindById_thenFindLocation() {
-        // GIVEN
+//generate location for event
+        Location location = new Location();
+        location.setName(LOCATION_NAME);
 
-        // WHEN
-        Location loc = locationService.findById(1L);
+        Address address = new Address();
+        address.setStreet(STREET);
+        address.setZipCode(ZIP);
+        address.setCity(CITY);
+        address.setCountry(COUNTRY);
+        location.setAddress(address);
 
-        // THEN
-        assertEquals(1L, loc.getId());
-        assertEquals("Nargothrond", loc.getName());
-        assertEquals(Country.AT, loc.getAddress().getCountry());
-        assertEquals("North Nettie", loc.getAddress().getCity());
-        assertEquals("Lenore Ridges 74", loc.getAddress().getStreet());
-        assertEquals("77301", loc.getAddress().getZipCode());
+        Set<Sector> sectors = new HashSet<>();
+        for (int j = 0; j < STANDING_SEC_ROWS; j++) {
+            StandingSector sector = new StandingSector();
+            sector.setName(STANDING_SEC_NAME+j);
+            sector.setPrice(STANDING_SEC_PRICE);
+            sector.setCapacity(STANDING_SEC_CAPACITY);
+            Point point = new Point();
+            point.setX(j * 8);
+            point.setY(0);
+            sector.setPoint1(point);
+            point = new Point();
+            point.setX(8 + j * 8);
+            point.setY(4);
+            sector.setPoint2(point);
+            sector.setLocation(location);
+            sectors.add(sector);
+        }
+        for (int j = 0; j < SEAT_SEC_ROWS; j++) {
+            SeatSector sector = new SeatSector();
+            sector.setPrice(SEAT_SEC_PRICE);
+            sector.setSeatType(SeatType.values()[j]);
+            List<Seat> seats = new ArrayList<>();
+
+            for (int k = 0; k < SEAT_SEC_ROWS * SEA_SEC_COLS; k++) {
+                Point point = new Point();
+                point.setX(k);
+                point.setY(5 + j);
+                Seat seat = new Seat();
+                seat.setRow(j + 1);
+                seat.setColumn(k + 1);
+                seat.setPoint(point);
+                seats.add(seat);
+            }
+            sector.setSeats(seats);
+            sector.setLocation(location);
+            sectors.add(sector);
+        }
+        location.setSectors(sectors);
+        location = locationRepository.save(location);
+
+        Location loc2 = locationService.findById(location.getId());
+
+        assertEquals(location, loc2);
     }
 
     @Test
@@ -69,22 +111,67 @@ public class LocationServiceTest implements LocationTestData, AddressTestData {
 
     @Test
     public void givenLocationsInDb_whenSearchByName_thenFindListOfMatchingLocations() {
-        // GIVEN
-        SearchLocationDto searchLocationDto = new SearchLocationDto("T", 10);
+        for (int i = 0; i < 3; i++) {
+            //generate location for event
+            Location location = new Location();
+            location.setName(LOCATION_NAME + i + "LLLLLLLLLL");
 
-        // WHEN
-        List<Location> locations = locationService.find(searchLocationDto);
+            Address address = new Address();
+            address.setStreet(STREET);
+            address.setZipCode(ZIP);
+            address.setCity(CITY);
+            address.setCountry(COUNTRY);
+            location.setAddress(address);
 
-        // THEN
-        assertEquals(5, locations.size());
-        for (Location location : locations) {
-            assertTrue(location.getName().contains("T"));
+            Set<Sector> sectors = new HashSet<>();
+            for (int j = 0; j < STANDING_SEC_ROWS; j++) {
+                StandingSector sector = new StandingSector();
+                sector.setName(STANDING_SEC_NAME+j);
+                sector.setPrice(STANDING_SEC_PRICE);
+                sector.setCapacity(STANDING_SEC_CAPACITY);
+                Point point = new Point();
+                point.setX(j * 8);
+                point.setY(0);
+                sector.setPoint1(point);
+                point = new Point();
+                point.setX(8 + j * 8);
+                point.setY(4);
+                sector.setPoint2(point);
+                sector.setLocation(location);
+                sectors.add(sector);
+            }
+            for (int j = 0; j < SEAT_SEC_ROWS; j++) {
+                SeatSector sector = new SeatSector();
+                sector.setPrice(SEAT_SEC_PRICE);
+                sector.setSeatType(SeatType.values()[j]);
+                List<Seat> seats = new ArrayList<>();
+
+                for (int k = 0; k < SEAT_SEC_ROWS * SEA_SEC_COLS; k++) {
+                    Point point = new Point();
+                    point.setX(k);
+                    point.setY(5 + j);
+                    Seat seat = new Seat();
+                    seat.setRow(j + 1);
+                    seat.setColumn(k + 1);
+                    seat.setPoint(point);
+                    seats.add(seat);
+                }
+                sector.setSeats(seats);
+                sector.setLocation(location);
+                sectors.add(sector);
+            }
+            location.setSectors(sectors);
+            locationRepository.save(location);
         }
-        assertTrue(locations.stream().anyMatch(location -> "Tol Morwen".equals(location.getName())));
-        assertTrue(locations.stream().anyMatch(location -> "Taur-im-Duinath".equals(location.getName())));
-        assertTrue(locations.stream().anyMatch(location -> "Tol Brandir".equals(location.getName())));
-        assertTrue(locations.stream().anyMatch(location -> "Minas Tirith".equals(location.getName())));
+
+        SearchLocationDto searchLocationDto = new SearchLocationDto("LLLLLLLL", 10);
+        List<Location> locations = locationService.find(searchLocationDto);
+        assertEquals(3, locations.size());
+        for (Location a : locations) {
+            assertTrue(a.getName().contains("LLLLLLLLLL"));
+        }
     }
+
 
     @Test
     @Rollback
@@ -108,7 +195,6 @@ public class LocationServiceTest implements LocationTestData, AddressTestData {
         standingSectorDto.setCapacity(420);
         standingSectorDto.setPoint1(new PointDto(0,0));
         standingSectorDto.setPoint2(new PointDto(1,1));
-        standingSectorDto.setId(1L);
         sectorDtos[0] = standingSectorDto;
 
         createLocationDto.setSectors(sectorDtos);
