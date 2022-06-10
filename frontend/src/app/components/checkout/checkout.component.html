@@ -212,14 +212,119 @@
 
                 <!-- ### shipping -->
                 <div>
-                  <h4 class="order-headline shipping">Shipping Address</h4>
-                  <p>
+                  <div class="d-flex flex-row" *ngIf="!editAddress">
+                    <h4 class="order-headline shipping">Shipping Address</h4>
+
+                    <!-- #### edit address button -->
+                    <div class="d-none d-md-inline d-lg-block">
+                      <button type="button" (click)="editAddress=!editAddress" class="edit" title="Edit Address"><i class="bi bi-pencil-square"></i></button>
+                    </div>
+                  </div>
+
+                  <!-- #### shipping address -->
+                  <p *ngIf="!editAddress">
                     {{currUserData?.address.street}}<br>
                     {{currUserData?.address.zipCode}} {{currUserData?.address.city}}<br>
-                    {{currUserData?.address.country}}
+                    {{countriesCodeToName[currUserData?.address.country]}}
                   </p>
-                </div>
 
+                  <!-- #### shipping address -->
+                  <form *ngIf="editAddress" [formGroup]="editAddressForm">
+                    <div class="d-flex flex-column">
+
+                      <div class="d-flex flex-row">
+                        <h4 class="order-headline shipping">Shipping Address</h4>
+
+                        <!-- #### edit address button -->
+                        <div class="d-none d-md-inline d-lg-block">
+                          <button type="button" (click)="editAddress=!editAddress" class="edit" title="Close Edit Address"><i class="bi bi-pencil-square"></i></button>
+                          <button type="button" (click)="newAddress()" [disabled]="!this.editAddressForm.valid" class="edit" title="Apply new Address"><i class="bi bi-check-square"></i></button>
+                        </div>
+                      </div>
+
+                      <!-- V edit street -->
+                      <div>
+                        <div class="form-group">
+                          <label for="editStreet">Street</label>
+                          <input id="editStreet"
+                                 class="form-control edit-input"
+                                 formControlName="editStreet"
+                                 aria-describedby="editStreetHelp"
+                                 [value]="currUserData?.address.street">
+                        </div>
+                        <ng-container *ngFor="let validation of editAddressFormMessages.editStreet">
+                          <div class="error"
+                               *ngIf="editAddressForm.controls.editStreet.hasError(validation.type) && (editAddressForm.controls.editStreet.dirty || editAddressForm.controls.editStreet.touched)">
+                            <small class="form-text text-warning">{{ validation.message }} </small>
+                          </div>
+                        </ng-container>
+                      </div>
+
+                      <div class="d-flex flex-row">
+                        <!-- V edit zip code -->
+                        <div class="form-group">
+                          <label for="editZip">Zip Code</label>
+                          <input id="editZip"
+                                 class="form-control edit-input"
+                                 formControlName="editZip"
+                                 aria-describedby="editZipHelp"
+                                 [value]="currUserData?.address.zipCode">
+                        </div>
+
+                        <!-- V edit city -->
+                        <div class="form-group" style="margin-left: 0.5rem">
+                          <label for="editCity">City</label>
+                          <input id="editCity"
+                                 class="form-control edit-input"
+                                 formControlName="editCity"
+                                 aria-describedby="editCityHelp"
+                                 [value]="currUserData?.address.city">
+                        </div>
+                      </div>
+                      <ng-container *ngFor="let validation of editAddressFormMessages.editZip">
+                        <div class="error"
+                             *ngIf="editAddressForm.controls.editZip.hasError(validation.type) && (editAddressForm.controls.editZip.dirty || editAddressForm.controls.editZip.touched)">
+                          <small class="form-text text-warning">{{ validation.message }} </small>
+                        </div>
+                      </ng-container>
+                      <ng-container *ngFor="let validation of editAddressFormMessages.editCity">
+                        <div class="error"
+                             *ngIf="editAddressForm.controls.editCity.hasError(validation.type) && (editAddressForm.controls.editCity.dirty || editAddressForm.controls.editCity.touched)">
+                          <small class="form-text text-warning">{{ validation.message }} </small>
+                        </div>
+                      </ng-container>
+
+                      <!-- V edit country -->
+                      <div>
+                        <div class="form-group">
+                          <label for="editCountry">Country</label>
+                          <select id="editCountry"
+                                  class="form-control edit-input"
+                                  formControlName="editCountry"
+                                  name="editCountry"
+                                  aria-describedby="editCountryHelp"
+                                  required>
+                            <option *ngFor="let country of countriesCodeToNameKeys"
+                                    [value]="country"
+                                    [attr.selected]="country === currUserData?.address.country ? true : null">
+                              {{countriesCodeToName[country]}}
+                            </option>
+                          </select>
+                        </div>
+                        <ng-container *ngFor="let validation of editAddressFormMessages.editCountry">
+                          <div class="error"
+                               *ngIf="editAddressForm.controls.editCountry.hasError(validation.type) && (editAddressForm.controls.editCountry.dirty || editAddressForm.controls.editCountry.touched)">
+                            <small class="form-text text-warning">{{ validation.message }} </small>
+                          </div>
+                        </ng-container>
+                      </div>
+
+                      <!-- V confirm -->
+
+
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
 
