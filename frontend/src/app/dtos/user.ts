@@ -1,6 +1,6 @@
 import { UserStatus } from './../enums/user-status';
 import { Address } from './address';
-import {BackendUserRoles} from '../enums/backend-user-roles';
+import { BackendUserRoles } from '../enums/backend-user-roles';
 
 export interface UserSearchDto {
   status: UserStatus;
@@ -30,3 +30,7 @@ export interface User {
   lastNewsRead: Date;
 }
 
+export interface PagedUserDto {
+  users: User[];
+  totalCount: number;
+}

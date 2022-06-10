@@ -1,11 +1,11 @@
-import {UserSearchDto} from './../../dtos/user';
-import {ToastService} from './../../services/toast-service.service';
-import {UserStatus} from './../../enums/user-status';
-import {UserService} from './../../services/user.service';
-import {Component, OnInit} from '@angular/core';
-import {User} from 'src/app/dtos/user';
-import {FormBuilder, FormGroup} from '@angular/forms';
-
+import { PagedUserDto, UserSearchDto } from './../../dtos/user';
+import { ToastService } from './../../services/toast-service.service';
+import { UserStatus } from './../../enums/user-status';
+import { UserService } from './../../services/user.service';
+import { Component, OnInit } from '@angular/core';
+import { User } from 'src/app/dtos/user';
+import { FormBuilder, FormGroup } from '@angular/forms';
+const FILTER_PAG_REGEX = /[^0-9]/g;
 
 @Component({
   selector: 'app-user-management',
@@ -16,13 +16,18 @@ export class UserManagementComponent implements OnInit {
 
   public user: User[];
 
+  //Variables neeced for pagination
+  public totalUsers: number = 25;
+  public page: number = 1;
+  public pageSize: number = 10;
+
   public userForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder, private userService: UserService,
-              private toastService: ToastService) {
+    private toastService: ToastService) {
     this.userForm = this.formBuilder.group({
       userRole: [''],
-      userStatus: ['LOCKED'],
+      userStatus: [''],
       userMail: ['']
     });
   }
@@ -44,19 +49,33 @@ export class UserManagementComponent implements OnInit {
   }
 
   private showDanger(msg: string) {
-    this.toastService.show(msg, {classname: 'bg-danger text-light', delay: 5000});
+    this.toastService.show(msg, { classname: 'bg-danger text-light', delay: 5000 });
   }
 
   private loadUser(userSearch: UserSearchDto) {
-    this.userService.loadUser(userSearch).subscribe((data: User[]) => {
-      if (data.length === 0) {
+    //Loads paginated Users
+    this.userService.loadUser(userSearch, this.page - 1, this.pageSize).subscribe((data: PagedUserDto) => {
+      if (data.totalCount === 0) {
         this.showDanger('No Users with matching criteria found!');
       }
-      this.user = data;
+
+      this.totalUsers = data.totalCount;
+      this.user = data.users;
     }, (error) => {
       console.error(error);
       this.showDanger('Something went wrong!');
     });
+  }
+
+  //Handle switch to new page on pagination
+  public handlePageChange() {
+    const userSearch: UserSearchDto = {
+      status: this.userForm.controls.userStatus.value,
+      role: this.userForm.controls.userRole.value,
+      nameSearch: this.userForm.controls.userMail.value
+    };
+
+    this.loadUser(userSearch);
   }
 
   public handleSearch() {
@@ -70,7 +89,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   public unlockUser(user: User) {
-    this.userService.unlockUser(user.id).subscribe((resp: User) => {
+    this.userService.updateLockingState(user.id, false).subscribe((resp: User) => {
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       const userStatus: UserStatus = (<any>UserStatus)[resp.status];
 
@@ -86,7 +105,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   public lockUser(user: User) {
-    this.userService.lockUser(user.id).subscribe(
+    this.userService.updateLockingState(user.id, true).subscribe(
       (resp: User) => {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const userStatus: UserStatus = (<any>UserStatus)[resp.status];
@@ -104,6 +123,7 @@ export class UserManagementComponent implements OnInit {
           this.showDanger('Something went wrong!');
         }
       });
+
   }
 
   //Changes from OK to LOCKED and otherwise
@@ -115,4 +135,12 @@ export class UserManagementComponent implements OnInit {
     }
   }
 
+  public selectPage(page: string) {
+    this.page = parseInt(page, 10) || 1;
+    this.handlePageChange();
+  }
+
+  public formatInput(input: HTMLInputElement) {
+    input.value = input.value.replace(FILTER_PAG_REGEX, '');
+  }
 }
