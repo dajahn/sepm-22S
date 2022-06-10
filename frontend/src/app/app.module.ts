@@ -36,6 +36,7 @@ import { CapitalizeFirstPipe } from './pipes/capitalize-first.pipe';
 import { PricePipe } from './pipes/price.pipe';
 import { DurationPipe } from './pipes/duration.pipe';
 import { ShortNumberPipe } from './pipes/short-number.pipe';
+import { ReservationsComponent } from './components/reservations/reservations.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { ShortNumberPipe } from './pipes/short-number.pipe';
     CapitalizeFirstPipe,
     PricePipe,
     ShortNumberPipe,
+    ReservationsComponent
   ],
   imports: [
     BrowserModule,

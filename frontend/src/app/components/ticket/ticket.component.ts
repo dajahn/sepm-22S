@@ -18,6 +18,8 @@ export class TicketComponent implements OnInit {
   @Input() price: number;
   @Input() ticketClass: string;
   @Input() removeButton: boolean;
+  @Input() showGreenBorder = false; // if true, a green border around the ticket is shown
+  @Input() hoverTitle = 'Inspect'; // title for hovering a ticket
 
   @Output() remove = new EventEmitter(); // when remove button is clicked
   @Output() inspect = new EventEmitter(); // when the ticket is clicked
