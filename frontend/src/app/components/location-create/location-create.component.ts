@@ -39,17 +39,10 @@ export class LocationCreateComponent implements OnInit {
       country: ['', [Validators.required]],
     }, { updateOn: 'change' } );
 
-
-    this.location = {
-      id: null,
-      name: '',
-      address: null,
-      sectors: [],
-    };
+    this.setupLocation();
 
     this.form.valueChanges.subscribe((value) => {
       const { name, street, zip: zipCode, city, country } = value;
-      console.log('lol', value);
 
       this.location.name = name;
       this.location.address = {
@@ -58,8 +51,6 @@ export class LocationCreateComponent implements OnInit {
         city,
         country,
       };
-
-      console.log(this.location);
     });
 
     this.countriesCodeToNameKeys = Object.keys(this.countriesCodeToName);
@@ -68,9 +59,23 @@ export class LocationCreateComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  setupLocation(): void {
+    this.location = {
+      id: null,
+      name: '',
+      address: null,
+      sectors: [],
+    };
+  }
+
   save() {
 
     if (!this.form.valid) {
+      return;
+    }
+
+    if (this.location?.sectors?.length <= 0) {
+      this.showDanger('Please modify the location plan first');
       return;
     }
 
@@ -78,6 +83,8 @@ export class LocationCreateComponent implements OnInit {
       next: () => {
         console.log(`Location created with name '${this.location.name}'!`);
         this.showSuccess(`Location created with name '${this.location.name}'  🎉!`);
+        this.form.reset();
+        this.setupLocation();
       },
       error: err => {
         console.error('Error creating location', err);

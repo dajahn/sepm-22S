@@ -12,6 +12,7 @@ import ToolCreateStanding from './tools/ToolCreateStanding';
 import ToolCreateSeating from './tools/ToolCreateSeating';
 import ToolDelete from './tools/ToolDelete';
 import ToolSelect from './tools/ToolSelect';
+import { ToastService } from '../../services/toast-service.service';
 
 @Component({
   selector: 'app-location-create-room',
@@ -53,7 +54,8 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
 
   constructor(
     private modalService: NgbModal,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private toastService: ToastService,
   ) {
     this.editStandingSectorForm = this.formBuilder.group({
       capacity: [0, []],
@@ -75,6 +77,20 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
 
   exportLocation() {
     const location = JSON.parse(JSON.stringify(this.location));
+
+    const invalidSectors = [
+      ...this.seatingSectors.filter(item => !item.price),
+      ...this.standingSectors.filter(item => !item.price || !item.capacity)
+    ];
+
+    if (invalidSectors.length > 0) {
+      this.toastService.show(
+        'All Sectors must have a price and Standing Sectors must also specify a capacity. ' +
+        'Make sure to set the values using the "Select Tool" before saving!',
+        {classname: 'bg-danger', delay: 5000}
+      );
+      return;
+    }
 
     /* Crop whitespace */
 
@@ -134,8 +150,6 @@ export class LocationCreateRoomComponent implements OnInit, AfterViewInit {
           }
           seat.row = y + 1;
           seat.column = x + 1 - missingSeats;
-
-          console.log(seat.row, seat.column, x, missingSeats);
         }
       }
     }
