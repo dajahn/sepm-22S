@@ -60,11 +60,6 @@ public class LocationEndpoint {
     @Operation(summary = "Creates a new Location Entry", security = @SecurityRequirement(name = "apiKey"))
     public LocationDto createLocation(@RequestBody CreateLocationDto locationDto) {
         LOGGER.info("POST /api/v1/locations body: {}", locationDto);
-        try {
-            return locationMapper.locationEntityToLocationDto(locationService.createLocation(locationDto));
-        } catch (ValidationException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
-        }
+        return locationMapper.locationEntityToLocationDto(locationService.createLocation(locationDto));
     }
 }
