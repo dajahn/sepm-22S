@@ -1,10 +1,10 @@
-import {UserSearchDto} from './../../dtos/user';
-import {ToastService} from './../../services/toast-service.service';
-import {UserStatus} from './../../enums/user-status';
-import {UserService} from './../../services/user.service';
-import {Component, OnInit} from '@angular/core';
-import {User} from 'src/app/dtos/user';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import { UserSearchDto } from './../../dtos/user';
+import { ToastService } from './../../services/toast-service.service';
+import { UserStatus } from './../../enums/user-status';
+import { UserService } from './../../services/user.service';
+import { Component, OnInit } from '@angular/core';
+import { User } from 'src/app/dtos/user';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 
 @Component({
@@ -19,7 +19,7 @@ export class UserManagementComponent implements OnInit {
   public userForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder, private userService: UserService,
-              private toastService: ToastService) {
+    private toastService: ToastService) {
     this.userForm = this.formBuilder.group({
       userRole: [''],
       userStatus: ['LOCKED'],
@@ -44,7 +44,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   private showDanger(msg: string) {
-    this.toastService.show(msg, {classname: 'bg-danger text-light', delay: 5000});
+    this.toastService.show(msg, { classname: 'bg-danger text-light', delay: 5000 });
   }
 
   private loadUser(userSearch: UserSearchDto) {
@@ -114,5 +114,4 @@ export class UserManagementComponent implements OnInit {
       }
     }
   }
-
 }
