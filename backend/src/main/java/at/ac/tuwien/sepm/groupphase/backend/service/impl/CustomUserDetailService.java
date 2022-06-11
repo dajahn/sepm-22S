@@ -195,7 +195,7 @@ public class CustomUserDetailService implements UserService {
     @Transactional
     @Override
     public PagedUserDto getUser(UserSearchDto userSearchDto, int page, int size) {
-        LOGGER.info("{},{},{}", userSearchDto.getNameSearch(), userSearchDto.getRole(), userSearchDto.getStatus());
+        LOGGER.trace("getUser() userSearchName: {},role: {},status: {}", userSearchDto.getNameSearch(), userSearchDto.getRole(), userSearchDto.getStatus());
         int role = -1;
         int status = -1;
 

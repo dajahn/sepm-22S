@@ -38,9 +38,6 @@
         <!-- Placeholder -->
         <div class="col-2"></div>
         <div class="col-8">
-            <!-- Todo implement filter after locking state
-                implement search after mail-->
-
             <div *ngFor="let u of user;let i = index" class="userEntry mb-3 mt-3">
                 <div>
                     {{u.role}} | {{u.email}}
@@ -54,7 +51,7 @@
                 </div>
             </div>
 
-            <div *ngIf="totalUsers > pageSize" class="d-flex justify-content-center align-items-center">
+            <div *ngIf="totalUsers > pageSize; else noUsers" class="d-flex justify-content-center align-items-center">
                 <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="totalUsers"
                     (pageChange)="handlePageChange()">
                     <ng-template ngbPaginationPages let-page let-pages="pages">
@@ -76,8 +73,13 @@
                 </ngb-pagination>
             </div>
 
-
+            <ng-template #noUsers>
+                <div class="userEntry">
+                    <b>
+                        No users found that match the search criteria!
+                    </b>
+                </div>
+            </ng-template>
         </div>
-
     </div>
 </div>
