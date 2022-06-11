@@ -45,7 +45,12 @@
                         <label class="form-label" for="event">Event</label>
                         <div id="event" class="inputStyling d-flex justify-content-center align-items-center"
                             name="eventId" role="button" (click)="toggleAddEvent()">
-                            <i class="bi bi-plus-lg"></i>
+
+                            <i *ngIf="!addEvent;else removeEvent" class="bi bi-plus-lg"></i>
+
+                            <ng-template #removeEvent>
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </ng-template>
                         </div>
                     </div>
 
