@@ -10,9 +10,9 @@
 
     <h5>Get informed about the latest events.</h5>
 
+    <!-- Unread News -->
     <h4 class="headline">Unread News</h4>
     <div class="timeline mb-1">
-        <!-- content here -->
         <div *ngFor="let n of news;let i = index" class="eventPreview d-flex align-items-center mb-5">
             <label class="date me-3">{{n.date}}</label>
             <div class="content d-flex align-items-center"
@@ -27,11 +27,19 @@
                 </div>
             </div>
         </div>
-    </div>
-    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="totalUnreadNews"
-        (pageChange)="handlePageChange()">
-    </ngb-pagination>
 
+    </div>
+
+    <ngb-pagination *ngIf="news.length > 0;else noUnread" [(page)]="page" [pageSize]="pageSize"
+        [collectionSize]="totalUnreadNews" (pageChange)="handlePageChange()">
+    </ngb-pagination>
+    <ng-template #noUnread>
+        <div class="content">
+            There are no unread news available!
+        </div>
+    </ng-template>
+
+    <!-- All News -->
     <div class="d-inline-flex align-items-center" (click)="toggleExpandAllNews()" role="button">
         <i class="bi bi-plus"></i>
         <label class="header-label" role="button">Read all news</label>
@@ -52,13 +60,18 @@
                 </div>
             </div>
         </div>
-        <ngb-pagination [(page)]="allNewsPage" [pageSize]="pageSize" [collectionSize]="totalAllNews"
-            (pageChange)="handlePageChangeAllNews()">
+
+        <ngb-pagination *ngIf="allNews.length > 0;else noNews" [(page)]="allNewsPage" [pageSize]="pageSize"
+            [collectionSize]="totalAllNews" (pageChange)="handlePageChangeAllNews()">
         </ngb-pagination>
+        <ng-template #noNews>
+            <div class="content">
+                There are no news available!
+            </div>
+        </ng-template>
     </div>
 </div>
 
-<!-- TODO: display detail view -->
 <div class="detailView">
     <div *ngIf="currentSelectedIdUnreadNews !== -1">
         <app-news-detail [news]="news[currentSelectedIdUnreadNews]"></app-news-detail>

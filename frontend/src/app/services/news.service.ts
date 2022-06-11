@@ -17,15 +17,11 @@ export class NewsService {
     return this.httpClient.post(this.newsBaseURI, news);
   }
 
-  public getAllNews(page: number = 0, size: number = 5): Observable<PagedNewsDto> {
-    return this.httpClient.get<PagedNewsDto>(this.newsBaseURI + '?page=' + page + '&size=' + size);
-  }
-
   public getById(id: number) {
     return this.httpClient.get(this.newsBaseURI + '/' + id);
   }
 
-  public getUnread(page: number = 0, size: number = 5): Observable<PagedNewsDto> {
-    return this.httpClient.get<PagedNewsDto>(this.newsBaseURI + '/unread?page=' + page + '&size=' + size);
+  public getAllNews(page: number = 0, size: number = 5, loadUnread: boolean = false): Observable<PagedNewsDto> {
+    return this.httpClient.get<PagedNewsDto>(this.newsBaseURI + '?page=' + page + '&size=' + size + '&loadUnread=' + loadUnread);
   }
 }
