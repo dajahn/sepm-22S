@@ -13,7 +13,8 @@
     <!-- Unread News -->
     <h4 class="headline">Unread News</h4>
     <div class="timeline mb-1">
-        <div *ngFor="let n of news;let i = index" class="eventPreview d-flex align-items-center mb-5">
+        <div *ngFor="let n of news;let i = index" class="eventPreview d-flex align-items-center mb-5" [title]="n.title">
+
             <label class="date me-3">{{n.date}}</label>
             <div class="content d-flex align-items-center"
                 [ngClass]="{'rainbowBackground': i === currentSelectedIdUnreadNews}"
@@ -26,6 +27,7 @@
                     <label class="description">{{n.description}}</label>
                 </div>
             </div>
+
         </div>
 
     </div>
@@ -46,7 +48,9 @@
     </div>
     <div *ngIf="expandAllNews">
         <div class="timeline">
-            <div *ngFor="let n of allNews;let i = index" class="eventPreview d-flex align-items-center mb-5">
+            <div *ngFor="let n of allNews;let i = index" class="eventPreview d-flex align-items-center mb-5"
+                [title]="n.title">
+
                 <label class="date me-3">{{n.date}}</label>
                 <div class="content d-flex align-items-center"
                     [ngClass]="{'rainbowBackground': i === currentSelectedIdAllNews}" (click)="handelOnClickAllNews(i)">
@@ -58,6 +62,7 @@
                         <label class="description">{{n.description}}</label>
                     </div>
                 </div>
+
             </div>
         </div>
 

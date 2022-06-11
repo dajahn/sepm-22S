@@ -53,6 +53,9 @@
 
             .title {
                 color: var(--text-c-highlight);
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
             }
 
             .description {
