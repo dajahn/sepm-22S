@@ -40,10 +40,12 @@ export class NewsComponent implements OnInit {
 
   //Page Change of UnreadNewsPagination
   public handlePageChange() {
+    this.currentSelectedIdUnreadNews = -1;
     this.loadUnreadNews();
   }
 
   public handlePageChangeAllNews() {
+    this.currentSelectedIdAllNews = -1;
     this.loadAllNews();
   }
 
