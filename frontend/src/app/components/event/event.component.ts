@@ -22,7 +22,6 @@ import {Globals} from '../../global/globals';
 export class EventComponent implements OnInit {
 
   @ViewChild('performanceSelect') performanceSelect: HTMLSelectElement;
-  show = false;
 
   readonly event$ = this.route.params.pipe(
     map(params => params.eventId),
@@ -98,7 +97,6 @@ export class EventComponent implements OnInit {
     private readonly router: Router,
     private readonly globals: Globals,
   ) {
-    setTimeout(() => this.show = true, 200);
   }
 
   get sum() {
