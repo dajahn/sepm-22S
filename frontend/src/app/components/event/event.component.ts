@@ -68,7 +68,6 @@ export class EventComponent implements OnInit {
     }),
     tap(performance => {
       this.performance = performance;
-      console.log(performance);
       this.selectedTickets = [];
     }),
     share(),
