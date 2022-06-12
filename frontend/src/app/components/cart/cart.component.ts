@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {CartService} from '../../services/cart.service';
 import {Cart} from '../../dtos/cart';
 import {Ticket} from '../../dtos/ticket';
@@ -7,6 +7,9 @@ import {CheckoutService} from '../../services/checkout.service';
 import {ToastService} from '../../services/toast-service.service';
 import {Globals} from '../../global/globals';
 import {Router} from '@angular/router';
+import {PurchaseService} from '../../services/purchase.service';
+import {ErrorMessageParser} from '../../utils/error-message-parser';
+import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-cart',
@@ -22,9 +25,12 @@ export class CartComponent implements OnInit {
   constructor(
     private cartService: CartService,
     private checkoutService: CheckoutService,
+    private purchaseService: PurchaseService,
     private toastService: ToastService,
     public globals: Globals,
-    private router: Router) {}
+    private router: Router,
+    private modalService: NgbModal) {
+  }
 
   ngOnInit(): void {
     this.loadCart();
@@ -52,7 +58,7 @@ export class CartComponent implements OnInit {
    * Loads purchased Tickets
    */
   private loadPurchasedTickets(upcoming: boolean) {
-    this.cartService.getPurchasedTickets(upcoming).subscribe(
+    this.purchaseService.getPurchasedTickets(upcoming).subscribe(
       (data) => {
         if (upcoming) {
           this.upcomingTickets = data;
@@ -87,7 +93,7 @@ export class CartComponent implements OnInit {
   /**
    * Removes ticket from cart
    */
-  onRemove(id: number) {
+  onCartRemove(id: number) {
     this.cartService.removeTicketFromCart(id).subscribe({
       next: () => {
         console.log(`Successfully removed ticket ${id} from cart.`);
@@ -96,6 +102,30 @@ export class CartComponent implements OnInit {
       error: err => {
         console.error(`Error, could not remove ticket ${id} from cart.`, err);
         this.showDanger(`Sorry, ticket could not be removed from the cart 😔 Please try again later!`);
+      }
+    });
+  }
+
+  showPurchaseCancelModal(ticket: Ticket) {
+    const modal = this.modalService.open(CancellationModalContent, {size: 'sm', centered: true});
+    modal.componentInstance.ticket = ticket;
+    modal.componentInstance.cartComponent = this;
+  }
+
+  /**
+   * Cancels purchased ticket
+   */
+  onPurchaseCancel(content: CancellationModalContent) {
+    const id = content.ticket.id;
+    this.purchaseService.cancelPurchasedTicket(id).subscribe({
+      next: () => {
+        console.log(`Successfully cancelled purchased ticket ${id}.`);
+        this.upcomingTickets = this.upcomingTickets.filter((ticket) => ticket.id !== id);
+        content.close('Ok click');
+      },
+      error: err => {
+        console.error(`Error, could not cancel ticket ${id}.`, err);
+        this.showDanger(`Sorry, ticket could not be cancelled 😔\n${ErrorMessageParser.parseResponseToErrorMessage(err)}`);
       }
     });
   }
@@ -127,5 +157,39 @@ export class CartComponent implements OnInit {
    */
   inspect(eventID: number, performanceID: number) {
     this.router.navigate([`events/${eventID}/performances/${performanceID}`]).then();
+  }
+}
+
+@Component({
+  selector: 'app-cancellation-modal-content',
+  template: `
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-title">Purchase Cancellation</h4>
+      <button type="button" ngbAutofocus class="btn-close" aria-label="Close button" aria-describedby="modal-title"
+              (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <p><strong>Are you sure you want to cancel your ticket?</strong></p>
+      <p>This purchase will be permanently cancelled.
+        <span class="text-danger">This operation can not be undone.</span>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+      <button type="button" class="btn btn-danger" (click)="cartComponent.onPurchaseCancel(this)">Ok
+      </button>
+    </div>
+  `
+})
+// eslint-disable-next-line @angular-eslint/component-class-suffix
+export class CancellationModalContent {
+  @Input() ticket: Ticket;
+  @Input() cartComponent: CartComponent;
+
+  constructor(public modal: NgbActiveModal) {
+  }
+
+  close(result?: any) {
+    this.modal.close(result);
   }
 }

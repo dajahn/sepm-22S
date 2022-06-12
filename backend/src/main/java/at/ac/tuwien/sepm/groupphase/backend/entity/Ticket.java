@@ -19,6 +19,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import java.util.Objects;
 import java.util.UUID;
@@ -53,6 +54,9 @@ public abstract class Ticket {
     @JoinColumn(name = "order_id", insertable = false, updatable = false)
     @ToString.Exclude
     private TicketOrder order;
+
+    @OneToOne
+    private Cancellation cancellation;
 
     @ManyToOne
     @JoinColumn

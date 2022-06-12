@@ -8,12 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-import java.time.Duration;
-
-import java.time.LocalDateTime;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
@@ -42,7 +40,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(value =
         "SELECT e FROM Event e JOIN e.performances p, TicketOrder o JOIN o.tickets t "
             + "WHERE (e.category) = :category "
-            + "AND o.type = 1 "
+            + "AND o.type = at.ac.tuwien.sepm.groupphase.backend.enums.OrderType.PURCHASE "
             + "AND t.performance.id = any(select ev.id from e.performances ev where ev.dateTime >= :fromDate and ev.dateTime <= :toDate) "
             + "AND p.dateTime >= :fromDate "
             + "AND p.dateTime <= :toDate "
@@ -60,7 +58,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(value =
         "SELECT count(distinct t.id) FROM Event e JOIN e.performances p, TicketOrder o JOIN o.tickets t "
             + "WHERE (e.category) = :category "
-            + "AND o.type = 1 "
+            + "AND o.type = at.ac.tuwien.sepm.groupphase.backend.enums.OrderType.PURCHASE "
             + "AND t.performance.id = any(select ev.id from e.performances ev where ev.dateTime >= :fromDate and ev.dateTime <= :toDate) "
             + "AND p.dateTime >= :fromDate "
             + "AND p.dateTime <= :toDate "
@@ -68,9 +66,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Integer> topTenEventsTicketCount(@Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate, @Param("category") EventCategory category, Pageable pageable);
 
     @Query(value = "select * from Event e "
-            + "where (e.category = :category or :category = -1) "
-            + "and (UPPER(e.description) like UPPER(:description) or :description is null) "
-            + "and (e.duration >= :minDuration and e.duration <= :maxDuration or :minDuration is null) "
-            + "and (UPPER(e.name) like UPPER(:name) or :name is null)", nativeQuery = true)
+        + "where (e.category = :category or :category = -1) "
+        + "and (UPPER(e.description) like UPPER(:description) or :description is null) "
+        + "and (e.duration >= :minDuration and e.duration <= :maxDuration or :minDuration is null) "
+        + "and (UPPER(e.name) like UPPER(:name) or :name is null)", nativeQuery = true)
     List<Event> findAllBy(@Param("category") int category, @Param("description") String description, @Param("minDuration") Duration minDuration, @Param("maxDuration") Duration maxDuration, @Param("name") String name);
 }

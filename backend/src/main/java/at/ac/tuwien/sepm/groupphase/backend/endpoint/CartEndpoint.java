@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateTicketDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.OrderMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
@@ -12,11 +11,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -81,17 +78,6 @@ public class CartEndpoint {
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findApplicationUserByEmail(email);
         cartService.removeTicket(user.getId(), ticketId);
-    }
-
-    @Transactional(readOnly = true)
-    @Secured("ROLE_USER")
-    @GetMapping(value = "/purchased")
-    @Operation(summary = "Get summary of all upcoming purchased events", security = @SecurityRequirement(name = "apiKey"))
-    public List<TicketDto> findPurchasedEvents(Boolean upcoming) {
-        LOGGER.info("GET /api/v1/cart/purchased, upcoming? : {}", upcoming);
-        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userService.findApplicationUserByEmail(email);
-        return ticketMapper.ticketsToTicketDtos(cartService.getPurchasedTickets(user.getId(), upcoming));
     }
 
 }

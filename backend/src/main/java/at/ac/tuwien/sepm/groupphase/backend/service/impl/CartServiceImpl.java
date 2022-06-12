@@ -8,7 +8,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.StandingTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 import at.ac.tuwien.sepm.groupphase.backend.enums.OrderType;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRepository;
@@ -129,35 +128,6 @@ public class CartServiceImpl implements CartService {
         if (tickets.size() == 0) {
             LOGGER.trace("removeTicket(Long userId, Long ticketId): Removed order {}", cart);
             orderRepository.deleteAllByTypeAndUserId(OrderType.CART, userId);
-        }
-    }
-
-    @Override
-    public List<Ticket> getPurchasedTickets(Long userId, Boolean upcoming) {
-        LOGGER.trace("getPurchasedTickets(Long userId) for user with id: {}", userId);
-        List<TicketOrder> ticketOrders = orderRepository.findTicketOrdersByTypeAndUserId(OrderType.PURCHASE, userId);
-        List<Ticket> purchasedTickets = new ArrayList<>();
-        List<Ticket> result = new ArrayList<>();
-        if (!ticketOrders.isEmpty()) {
-            for (TicketOrder ticketOrder : ticketOrders) {
-                if (!ticketOrder.getTickets().isEmpty()) {
-                    purchasedTickets.addAll(ticketOrder.getTickets());
-                }
-            }
-            for (Ticket purchasedTicket : purchasedTickets) {
-                if (upcoming) {
-                    if (purchasedTicket.getPerformance().getDateTime().isAfter(LocalDateTime.now())) {
-                        result.add(purchasedTicket);
-                    }
-                } else {
-                    if (purchasedTicket.getPerformance().getDateTime().isBefore(LocalDateTime.now())) {
-                        result.add(purchasedTicket);
-                    }
-                }
-            }
-            return result;
-        } else {
-            throw new NotFoundException(String.format("Could not find purchased Tickets form User with id %d", userId));
         }
     }
 

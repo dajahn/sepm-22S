@@ -15,6 +15,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,14 +50,18 @@ public class CheckoutServiceTest implements CheckoutTestData {
         // GIVEN
         List<TicketOrder> orders = orderRepository.findAll();
         TicketOrder cart = null;
-        for (TicketOrder order: orders) {
-            if( order.getType() == OrderType.CART && order.getTickets().size() > 0) {
+        for (TicketOrder order : orders) {
+            if (order.getType() == OrderType.CART && order.getTickets().size() > 0) {
                 cart = order;
                 break;
             }
         }
+        cart.setValidUntil(LocalDateTime.now().plusMinutes(30));
+        orderRepository.save(cart);
         boolean gt = false;
-        if (cart.getTickets().size() > 0) gt = true;
+        if (cart.getTickets().size() > 0) {
+            gt = true;
+        }
         assertEquals(OrderType.CART, cart.getType());
         assertEquals(true, gt);
 
@@ -100,14 +105,16 @@ public class CheckoutServiceTest implements CheckoutTestData {
         // GIVEN
         List<TicketOrder> orders = orderRepository.findAll();
         TicketOrder cart = null;
-        for (TicketOrder order: orders) {
-            if( order.getType() == OrderType.CART && order.getTickets().size() > 0) {
+        for (TicketOrder order : orders) {
+            if (order.getType() == OrderType.CART && order.getTickets().size() > 0) {
                 cart = order;
                 break;
             }
         }
         boolean gt = false;
-        if (cart.getTickets().size() > 0) gt = true;
+        if (cart.getTickets().size() > 0) {
+            gt = true;
+        }
         assertEquals(OrderType.CART, cart.getType());
         assertEquals(true, gt);
         ValidationException vex;

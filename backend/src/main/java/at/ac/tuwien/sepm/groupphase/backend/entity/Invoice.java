@@ -20,8 +20,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -38,10 +42,10 @@ public class Invoice {
     @Column(nullable = false, updatable = false)
     private Long id;
 
-    @ManyToOne
+    @OneToMany
     @JoinColumn
     @NonNull
-    private TicketOrder order;
+    private List<Ticket> tickets;
 
     @Column(nullable = false)
     @NonNull
@@ -77,17 +81,40 @@ public class Invoice {
         return this.reference == null ? null : Invoice.class.getSimpleName() + "(id=" + this.reference.getId() + ")";
     }
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn
     private File pdf;
+
+    //TODO: remove when switching to an oop approach
+    @ManyToOne
+    private User user;
+
+    //TODO: move when switching to an oop approach
+    @OneToOne
+    @JoinColumn
+    private TicketOrder order;
+
+    //TODO: move when switching to an oop approach
+    @OneToOne
+    @JoinColumn
+    private Cancellation cancellation;
 
     @Column(nullable = false)
     @NonNull
     private LocalDate date = LocalDate.now();
 
-    public Invoice(TicketOrder order, InvoiceType type) {
+    public Invoice(TicketOrder order) {
+        this.tickets = new ArrayList<>(order.getTickets());
+        this.type = InvoiceType.NORMAL;
+        this.user = order.getUser();
         this.order = order;
-        this.type = type;
+    }
+
+    public Invoice(Cancellation cancellation) {
+        this.tickets = Collections.singletonList(cancellation.getTicket());
+        this.type = InvoiceType.CANCELLATION;
+        this.user = cancellation.getTicket().getOrder().getUser();
+        this.cancellation = cancellation;
     }
 
     @Override
