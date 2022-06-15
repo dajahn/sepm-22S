@@ -104,14 +104,15 @@ public class TicketOrderGenerator {
 
                 if (i < users.size() / 3) {
                     order.setType(OrderType.CART);
+                    order.setValidUntil(LocalDateTime.now().plusMinutes(30)); // VALID FOR 30 MINUTES
                 } else if (i < (users.size() / 3) * 2) {
                     order.setType(OrderType.RESERVATION);
+                    order.setValidUntil(LocalDateTime.now().plusMinutes(30)); // VALID FOR 30 MINUTES
                 } else {
                     order.setType(OrderType.PURCHASE);
                 }
 
                 order.setDateTime(LocalDateTime.of(LocalDate.ofInstant(faker.date().future(365, TimeUnit.DAYS).toInstant(), TimeZone.getDefault().toZoneId()), LocalTime.of(faker.random().nextInt(0, 23), 0)));
-                order.setValidUntil(order.getDateTime().plusHours(1)); // VALID FOR 1 HOUR
                 order.setUser(users.get(i));
                 order.setUserId(users.get(i).getId());
                 orderRepository.save(order);
@@ -120,7 +121,7 @@ public class TicketOrderGenerator {
 
                 order2.setType(OrderType.CART);
                 order2.setDateTime(LocalDateTime.of(LocalDate.ofInstant(faker.date().future(365, TimeUnit.DAYS).toInstant(), TimeZone.getDefault().toZoneId()), LocalTime.of(faker.random().nextInt(0, 23), 0)));
-                order2.setValidUntil(order2.getDateTime().plusHours(1)); // VALID FOR 1 HOUR
+                order2.setValidUntil(order2.getDateTime().plusMinutes(30)); // VALID FOR 30 MINUTES
                 order2.setUser(users.get(i));
                 order2.setUserId(users.get(i).getId());
                 orderRepository.save(order2);

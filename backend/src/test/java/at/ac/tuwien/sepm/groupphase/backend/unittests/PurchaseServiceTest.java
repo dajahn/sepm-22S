@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.SeatTicket;
 import at.ac.tuwien.sepm.groupphase.backend.enums.OrderType;
 import at.ac.tuwien.sepm.groupphase.backend.enums.SectorType;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatTicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PurchaseService;
@@ -16,6 +17,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,6 +36,9 @@ public class PurchaseServiceTest {
     @Autowired
     private CartService cartService;
 
+    @Autowired
+    private PerformanceRepository performanceRepository;
+
     private SeatTicket purchasedSeatTicket;
 
     @BeforeEach
@@ -51,6 +56,8 @@ public class PurchaseServiceTest {
     public void givenPurchasedSeatTicket_whenCancel_thenCanAddToCartAgain() {
         // given
         SeatTicket ticket = purchasedSeatTicket;
+        ticket.getPerformance().setDateTime(LocalDateTime.now().plusYears(1));
+        performanceRepository.save(ticket.getPerformance());
 
         // when
         ValidationException e = assertThrows(ValidationException.class, () ->
@@ -77,6 +84,8 @@ public class PurchaseServiceTest {
     public void givenCancelledTicket_whenCancelAgain_thenThrowValidationException() {
         // given
         SeatTicket ticket = purchasedSeatTicket;
+        ticket.getPerformance().setDateTime(LocalDateTime.now().plusYears(1));
+        performanceRepository.save(ticket.getPerformance());
         purchaseService.cancel(ticket.getOrder().getUserId(), ticket.getId());
 
         // when
