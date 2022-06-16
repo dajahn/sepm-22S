@@ -24,6 +24,16 @@
 
         </div>
       </div>
+      <div class="row mt-1">
+        <div class="col">
+          <ng-container>
+            <div class="error"
+                 *ngIf="locationError">
+              <small class="form-text text-warning">Location is required </small>
+            </div>
+          </ng-container>
+        </div>
+      </div>
       <div class="row mt-2">
 <!--        Date input-->
         <div class="col-8">
@@ -55,6 +65,17 @@
           </div>
         </div>
       </div>
+      <div class="row mt-1">
+        <div class="col">
+          <ng-container>
+            <div class="error text-center"
+                 *ngIf="this.time !== null && dateInvalid">
+              <small class="form-text text-warning">Performance must be after now. </small>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
 <!--      Used for spacing-->
       <div class="row mt-2">
       </div>

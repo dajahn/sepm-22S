@@ -92,7 +92,7 @@ export class CreateEventComponent implements OnInit {
     this.eventService.save(event).subscribe({
       next: value => {
         this.showSuccess(`Event created with tile '${event.name}'! YAY`);
-        this.router.navigate(['/']);
+        this.router.navigate([`/events/${value.id}`]);
       },
       error: err => {
         this.showDanger(ErrorMessageParser.parseResponseToErrorMessage(err));
