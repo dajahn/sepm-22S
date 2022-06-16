@@ -7,10 +7,10 @@
 
   <div class="row">
 <!--    Delete button-->
-    <div class="col-1 delButtonCol">
+    <div class="col-md-1 col-sm-2 delButtonCol">
       <button type="button" class="white" id="delButton" (click)="delete()">X</button>
     </div>
-    <div class="col-11">
+    <div class="col-md-11 col-sm-10">
       <div class="row">
 <!--        Location search field-->
         <div class="col">
@@ -36,7 +36,7 @@
       </div>
       <div class="row mt-2">
 <!--        Date input-->
-        <div class="col-8">
+        <div class="col-md-8 col-sm-12">
           <label for="date">Date</label>
           <div class="input-group">
             <input required id="date" placeholder="yyyy-mm-dd" type="text"
@@ -48,7 +48,7 @@
 
         </div>
 <!--        Time input-->
-        <div class="col-4">
+        <div class="col-md-4 col-sm-12">
           <label for="time">Time</label>
           <ngb-timepicker required id="time" name="time" [spinners]="false"
                           aria-describedby="durationHelp" [(ngModel)]="time"

@@ -24,6 +24,7 @@ export class CreateEventComponent implements OnInit {
   artists: Artist[];
   image: FileDto;
   backGroundImg: File;
+  public previewImage: string;
 
   eventFormMessages = {
     title: [
@@ -149,12 +150,13 @@ export class CreateEventComponent implements OnInit {
       this.backGroundImg = null;
       this.imageButtonClicked = true;
       this.image = null;
+      this.previewImage = null;
     } else {
       this.backGroundImg = files[0];
       this.imageButtonClicked = true;
       let base64img = await this.getBase64(files[0]);
+      this.previewImage = base64img;
       base64img = base64img.split(',')[1];
-
       this.image = {
         imageBase64: base64img,
         type: files[0].type
