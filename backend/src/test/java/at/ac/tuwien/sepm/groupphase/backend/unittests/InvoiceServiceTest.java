@@ -9,7 +9,9 @@ import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,6 +30,8 @@ public class InvoiceServiceTest {
     private InvoiceRepository invoiceRepository;
 
     @Test
+    @Transactional
+    @Rollback
     public void givenInvoiceHasRequiredValues_whenCreateInvoice_thenInvoiceIsSaved() {
         // GIVEN
         TicketOrder order = orderRepository.findById(1L).orElseThrow();
@@ -47,6 +51,8 @@ public class InvoiceServiceTest {
 
 
     @Test
+    @Transactional
+    @Rollback
     public void givenInvoiceHasRequiredValues_whenCreateInvoice_thenInvoiceGetsIdentification() {
         // GIVEN
         TicketOrder order = orderRepository.findById(1L).orElseThrow();
@@ -62,6 +68,8 @@ public class InvoiceServiceTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenOrderExists_whenCreateInvoiceFromOrder_thenInvoiceIsCreated() {
         // GIVEN
         TicketOrder order = orderRepository.findById(1L).orElseThrow();

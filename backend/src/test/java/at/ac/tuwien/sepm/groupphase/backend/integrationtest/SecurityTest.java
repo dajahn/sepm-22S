@@ -3,14 +3,22 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.BackendApplication;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepm.groupphase.backend.util.FileDtoDeserializer;
+import at.ac.tuwien.sepm.groupphase.backend.util.FileDtoSerializer;
+import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +44,7 @@ import javax.annotation.security.RolesAllowed;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -93,21 +102,30 @@ public class SecurityTest implements TestData {
     @Autowired
     private List<Object> components;
 
-    private News news = News.builder()
-        .title(TEST_NEWS_TITLE)
-        .description(TEST_NEWS_SUMMARY)
-        .date(LocalDate.from(TEST_NEWS_PUBLISHED_AT))
-        .build();
+    @Autowired
+    private FileRepository fileRepository;
+
+    private News news;
 
     @BeforeEach
     public void beforeEach() {
         newsRepository.deleteAll();
-        news = News.builder().title(TEST_NEWS_TITLE)
-            .description(TEST_NEWS_SUMMARY)
-            .date(LocalDate.from(TEST_NEWS_PUBLISHED_AT))
+
+        File file = File.builder()
+            .type(TEST_NEWS_IMG_TYPE)
+            .data(Base64.getDecoder().decode(TEST_NEWS_BASE64_IMG))
+            .build();
+
+        fileRepository.save(file);
+
+        news = News.builder()
+            .title(TEST_NEWS_TITLE)
+            .description(TEST_NEWS_DESCRIPTION)
+            .file(file)
+            .imageDescription(TEST_NEWS_IMAGE_DESCRIPTION)
+            .date(LocalDate.now())
             .build();
     }
-
     /**
      * This ensures every Rest Method is secured with Method Security.
      * It is very easy to forget securing one method causing a security vulnerability.

@@ -31,10 +31,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -123,6 +125,8 @@ public class NewsEndpointTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenNewsEmpty_then422() throws Exception {
         NewsDto newsDto = new NewsDto();
         newsDto.setTitle("");
@@ -142,6 +146,8 @@ public class NewsEndpointTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenNewsValid_then201() throws Exception {
         FileDto fileDto = new FileDto();
         fileDto.setType(TEST_NEWS_IMG_TYPE);
@@ -167,6 +173,8 @@ public class NewsEndpointTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenDescriptionTooLong_then422() throws Exception {
         NewsDto newsDto = new NewsDto();
         newsDto.setDescription(StringUtils.repeat("a",65536));
@@ -186,6 +194,8 @@ public class NewsEndpointTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenTitleTooLooLong_then422() throws Exception{
         NewsDto newsDto = new NewsDto();
         newsDto.setTitle(StringUtils.repeat("t",256));
@@ -205,6 +215,8 @@ public class NewsEndpointTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenGetAll_then200() throws Exception {
 
         newsRepository.save(news);

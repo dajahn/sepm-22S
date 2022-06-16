@@ -17,7 +17,9 @@ import at.ac.tuwien.sepm.groupphase.backend.service.LocationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,6 +40,8 @@ public class LocationServiceTest implements LocationTestData, AddressTestData {
 
 
     @Test
+    @Transactional
+    @Rollback
     public void givenLocationsInDb_whenFindById_thenFindLocation() {
 //generate location for event
         Location location = new Location();
@@ -96,11 +100,15 @@ public class LocationServiceTest implements LocationTestData, AddressTestData {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNoMatchingLocationsInDb_whenFindById_throwNotFoundException() {
         assertThrows(NotFoundException.class, () -> locationService.findById(-100L));
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenLocationsInDb_whenSearchByName_thenFindListOfMatchingLocations() {
         for (int i = 0; i < 3; i++) {
             //generate location for event

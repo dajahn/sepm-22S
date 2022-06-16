@@ -6,7 +6,9 @@ import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_USER;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,6 +20,8 @@ public class NewsServiceTest {
     private NewsService newsService;
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenFindByInvalidId_thenNotFoundException(){
         assertThrows(
             NotFoundException.class, () -> newsService.getById(100L,ADMIN_USER)
