@@ -26,7 +26,7 @@
   padding: 9.25px 9px;
 }
 
-.abort {
+.abort, .edit {
   padding: 0;
   line-height: 0;
   background-color: transparent;
@@ -36,6 +36,18 @@
     padding: 0;
     display: inline-block;
     color: var(--text-c-highlight);
+  }
+}
+
+.edit {
+  margin-left: 0.3rem;
+
+  i {
+    font-size: 1.1em;
+  }
+
+  &:disabled {
+    opacity: 0.6;
   }
 }
 
@@ -69,6 +81,27 @@ p {
 .order-headline {
   margin-bottom: 0.2rem;
 }
+
+.edit-input {
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  color: var(--text-c-highlight) !important;
+  border-color: var(--text-c-highlight) !important;
+  font-size: 0.8em !important;
+  line-height: 1em !important;
+  margin-bottom: 0.8rem !important;
+  border-bottom-width: 1px !important;
+}
+
+select {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.25rem !important;
+  font-weight: var(--font-w-regular) !important;
+}
+
 
 
 

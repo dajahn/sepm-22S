@@ -151,10 +151,10 @@ public class CheckoutServiceTest implements CheckoutTestData {
         assertEquals("Expiry date must follow the pattern MM/YY!", vex.getMessage());
         checkoutDto.setExp("12/12");
         vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
-        assertEquals("Credit cart is expired!", vex.getMessage());
+        assertEquals("Credit card is expired!", vex.getMessage());
         checkoutDto.setExp("01/12");
         vex = assertThrows(ValidationException.class, () -> checkoutService.checkout(userID, checkoutDto));
-        assertEquals("Credit cart is expired!", vex.getMessage());
+        assertEquals("Credit card is expired!", vex.getMessage());
         checkoutDto.setExp(EXP);
 
         // - invalid cvv or cvc
