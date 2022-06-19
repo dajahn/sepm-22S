@@ -286,6 +286,4 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
 
         assertEquals(HttpStatus.OK.value(),response.getStatus());
     }
-
-
 }

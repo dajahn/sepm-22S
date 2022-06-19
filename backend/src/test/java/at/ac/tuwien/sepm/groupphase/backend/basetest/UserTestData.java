@@ -9,4 +9,7 @@ public interface UserTestData {
     String USER_EMAIL ="ul9@example.com";
     String USER_PASSWORD="password123";
 
+    String ADMIN_EMAIL = "admin@example.com";
+
+    String ADMIN_PASSWORD="password";
 }
