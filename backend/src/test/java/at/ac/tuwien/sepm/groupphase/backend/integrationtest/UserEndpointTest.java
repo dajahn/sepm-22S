@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUpdateUserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
@@ -29,7 +30,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.io.StringReader;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_ROLES;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_USER;
@@ -38,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @ExtendWith(SpringExtension.class)
@@ -261,6 +265,26 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
+
+    @Test
+    public void givenNothing_whenGetUsersOrderedByLockingState_then200() throws Exception {
+        final String uri = USER_BASE_URI;
+        UserSearchDto userSearchDto = new UserSearchDto();
+
+        MvcResult mvcResult = this.mockMvc.perform(get(uri)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        ObjectMapper o = new ObjectMapper();
+        StringReader reader = new StringReader(response.getContentAsString());
+
+        Long usercount = userRepository.count();
+
+        assertEquals(HttpStatus.OK.value(),response.getStatus());
     }
 
 

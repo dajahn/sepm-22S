@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class NewsDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int NUMBER_OF_NEWS_TO_GENERATE = 11;
+    private static final int NUMBER_OF_NEWS_TO_GENERATE = 25;
     private final NewsRepository newsRepository;
     private final FileRepository fileRepository;
 

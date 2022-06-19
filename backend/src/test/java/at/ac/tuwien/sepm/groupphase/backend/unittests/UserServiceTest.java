@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.AddressTestData;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.UserTestData;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUpdateUserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -390,5 +392,18 @@ public class UserServiceTest implements UserTestData, AddressTestData {
         updateUserDto.setAddress(a);
     }
 
+    @Test
+    @Transactional
+    public void givenNothing_addFailedLoginAttemptToUser_thenIncreaseAttempts(){
+        User u = userRepository.findAll().get(0);
+        int failedBefore = u.getFailedLoginAttempts();
+
+        UserLoginDto userLoginDto = new UserLoginDto();
+
+        userService.addFailedLoginAttemptToUser(userMapper.userToUserLoginDto(u));
+        int failedAfter = u.getFailedLoginAttempts();
+
+        assertEquals(failedBefore+1,failedAfter);
+    }
 
 }
