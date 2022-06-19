@@ -27,19 +27,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/news")
 public class NewsEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final NewsService newsService;
-    private final FileService fileService;
     private final NewsMapper newsMapper;
 
-    public NewsEndpoint(NewsService newsService, FileService fileService, NewsMapper newsMapper) {
+    public NewsEndpoint(NewsService newsService, NewsMapper newsMapper) {
         this.newsService = newsService;
-        this.fileService = fileService;
         this.newsMapper = newsMapper;
     }
 
@@ -64,9 +61,18 @@ public class NewsEndpoint {
     @Secured("ROLE_USER")
     @GetMapping
     @Operation(summary = "Gets all the news Entries", security = @SecurityRequirement(name = "apiKey"))
-    public PagedNewsDto getNews(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+    public PagedNewsDto getNews(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size, @RequestParam(defaultValue = "false") boolean loadUnread) {
         LOGGER.info("GET /api/v1/news");
-        return this.newsService.getAll(page, size);
+        LOGGER.info("{}", loadUnread);
+        if (loadUnread) {
+            //User the unread data should be loaded for
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String mail = authentication.getName();
+
+            return this.newsService.getUnread(mail, page, size);
+        } else {
+            return this.newsService.getAll(page, size);
+        }
     }
 
     @Secured("ROLE_USER")
@@ -83,16 +89,5 @@ public class NewsEndpoint {
             LOGGER.error("{}", e);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-    }
-
-    @Secured("ROLE_USER")
-    @GetMapping(path = "/unread")
-    @Operation(summary = "Gets all unread news for user", security = @SecurityRequirement(name = "apiKey"))
-    public PagedNewsDto getUnreadNews(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
-        LOGGER.info("Get /api/v1/news/unread");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String mail = authentication.getName();
-
-        return this.newsService.getUnread(mail, page, size);
     }
 }

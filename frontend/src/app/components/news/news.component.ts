@@ -40,22 +40,23 @@ export class NewsComponent implements OnInit {
 
   //Page Change of UnreadNewsPagination
   public handlePageChange() {
+    this.currentSelectedIdUnreadNews = -1;
     this.loadUnreadNews();
   }
 
   public handlePageChangeAllNews() {
+    this.currentSelectedIdAllNews = -1;
     this.loadAllNews();
   }
 
   private loadUnreadNews() {
-    this.newsService.getUnread(this.page - 1, this.pageSize).subscribe((pagedNews: PagedNewsDto) => {
+    this.newsService.getAllNews(this.page - 1, this.pageSize, true).subscribe((pagedNews: PagedNewsDto) => {
       this.news = pagedNews.news;
       this.totalUnreadNews = pagedNews.totalCount;
 
       for (const n of this.news) {
         n.fileDto.url = this.globals.backendUri + n.fileDto.url;
       }
-      console.dir(pagedNews);
     });
   }
 
