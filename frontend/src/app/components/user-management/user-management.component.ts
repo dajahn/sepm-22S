@@ -61,6 +61,8 @@ export class UserManagementComponent implements OnInit {
 
       this.totalUsers = data.totalCount;
       this.user = data.users;
+
+      debugger;
     }, (error) => {
       console.error(error);
       this.showDanger('Something went wrong!');
