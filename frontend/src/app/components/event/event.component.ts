@@ -38,7 +38,10 @@ export class EventComponent implements OnInit {
   );
 
   readonly thumbnail$ = this.event$.pipe(
-    map(event => event?.thumbnail?.url ? this.globals.backendUri + event?.thumbnail?.url : ''),
+    map(event => event?.thumbnail?.url),
+    filter(url => !!url),
+    map(url => this.globals.backendUri + url),
+    share(),
   );
 
   readonly performanceId$ = this.event$.pipe(
@@ -199,7 +202,10 @@ export class EventComponent implements OnInit {
     }))).subscribe({
       next: () => {
         // eslint-disable-next-line max-len
-        this.toastService.show('Reserved tickets have to be collected until 30 minutes before the start of the event, otherwise the reservation is cancelled!', {classname: 'bg-success', delay: 5000});
+        this.toastService.show('Reserved tickets have to be collected until 30 minutes before the start of the event, otherwise the reservation is cancelled!', {
+          classname: 'bg-success',
+          delay: 5000
+        });
         this.router.navigate(['reservations']);
       },
       error: error => {

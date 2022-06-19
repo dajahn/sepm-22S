@@ -1,11 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
-import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
 import com.github.javafaker.Faker;
 import io.micrometer.core.instrument.util.IOUtils;
 import org.slf4j.Logger;
@@ -22,9 +20,7 @@ import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
