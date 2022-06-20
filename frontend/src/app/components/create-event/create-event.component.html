@@ -92,8 +92,11 @@
             <div class="col-lg-9">
               <label for="category">Category</label>
               <select class="form-control" required name="category" formControlName="category" id="category">
-                <option value="{{eventCategory.CONCERT}}">Concert</option>
-                <option value="{{eventCategory.CONFERENCE}}">Conference</option>
+                <option value="" disabled selected>Select the Event Category</option>
+                <option *ngFor="let ev of eventCategoriesKeys"
+                        value="{{ev}}">{{eventCategories[ev] | capitalizeFirst}}</option>
+<!--                <option value="{{eventCategories.CONCERT}}">Concert</option>-->
+<!--                <option value="{{eventCategories.CONFERENCE}}">Conference</option>-->
               </select>
               <!--          Category validations-->
               <div class="row mt-1">

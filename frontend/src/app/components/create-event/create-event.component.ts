@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {EventCategory} from '../../enums/event-category';
 import {CreatePerformance} from '../../dtos/performance';
 import {Artist} from '../../dtos/artist';
-import {CreateEvent} from '../../dtos/event';
+import {CreateEvent, EventCategory} from '../../dtos/event';
 import {EventService} from '../../services/event.service';
 import {DurationUtil} from '../../utils/duration-util';
 import {ToastService} from '../../services/toast-service.service';
@@ -18,7 +17,8 @@ import {ErrorMessageParser} from '../../utils/error-message-parser';
 })
 export class CreateEventComponent implements OnInit {
   eventForm: FormGroup;
-  eventCategory = EventCategory;
+  eventCategories = EventCategory;
+  eventCategoriesKeys = [];
   time: any;
   performances: CreatePerformance[];
   artists: Artist[];
@@ -61,12 +61,14 @@ export class CreateEventComponent implements OnInit {
     this.eventForm = this.formBuilder.group({
       title: ['', [Validators.compose([Validators.required, Validators.minLength(4)])]],
       duration: ['', [Validators.required]],
-      category: [this.eventCategory.CONCERT, [Validators.required]],
+      category: [EventCategory.CONCERT, [Validators.required]],
       description: ['', [Validators.required]],
       thumbnail: ['', [Validators.required]]
     });
     this.performances = [];
     this.artists = [];
+    this.eventCategoriesKeys = Object.keys(this.eventCategories);
+    console.log(this.eventCategoriesKeys);
   }
 
   ngOnInit(): void {
@@ -78,6 +80,7 @@ export class CreateEventComponent implements OnInit {
       const hoursDiff = item.dateTime.getHours() - item.dateTime.getTimezoneOffset() / 60;
       item.dateTime.setHours(hoursDiff);
     }
+    console.log(createPerformances);
 
     const event: CreateEvent = {
       id: null,
