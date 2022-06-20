@@ -10,7 +10,7 @@
 </div>
 
 <h5>
-  {{(performance$ | async)?.location?.name}} - {{(performance$ | async)?.dateTime | date:'dd/MM/YYYY hh:mm'}}
+  {{(performance$ | async)?.location?.name}} - {{(performance$ | async)?.dateTime | date:'dd/MM/YYYY HH:mm'}}
 </h5>
 
 <div class="d-flex flex-row h-100 gap-5">
@@ -74,7 +74,7 @@
       <option
         *ngFor="let performance of getFuturePerformances((event$ | async)?.performances)"
         [value]="performance.id">
-        {{performance.location.name}}: {{performance.dateTime | date:'dd/MM/YYYY hh:mm'}}
+        {{performance.location.name}}: {{performance.dateTime | date:'dd/MM/YYYY HH:mm'}}
       </option>
     </select>
     <app-location
