@@ -30,7 +30,9 @@ import io.micrometer.core.instrument.util.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -61,6 +63,8 @@ public class EventServiceTest implements EventTestData, LocationTestData, Addres
     private ArtistMapper artistMapper;
 
     @Test
+    @Rollback
+    @Transactional
     public void givenNothing_whenSaveEvent_thenFindListWithOneElementAndFindEventById() throws IOException {
         //generate location for event
         Location location = new Location();
@@ -153,6 +157,8 @@ public class EventServiceTest implements EventTestData, LocationTestData, Addres
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void givenIncorrectInput_whenSaveEvent_thenThrowValidationException() throws IOException {
         //generate location for event
         Location location = new Location();

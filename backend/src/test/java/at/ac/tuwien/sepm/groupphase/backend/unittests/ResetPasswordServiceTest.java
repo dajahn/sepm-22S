@@ -10,7 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -33,6 +35,8 @@ public class ResetPasswordServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @Test
+    @Rollback
+    @Transactional
     public void givenUserForEmailExists_whenForgotPassword_thenPasswordResetIsCreated() {
         // GIVEN
         User user = userRepository.findById(1L).orElseThrow();
@@ -51,6 +55,8 @@ public class ResetPasswordServiceTest {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void givenUserForEmailDoesNotExists_whenForgotPassword_thenNotFoundExceptionIsThrown() {
         // GIVEN
         String email = "doesnot@exist.here";
@@ -64,6 +70,8 @@ public class ResetPasswordServiceTest {
 
 
     @Test
+    @Rollback
+    @Transactional
     public void givenPasswordResetExists_whenResetPassword_thenUsersPasswordIsUpdated() {
         // GIVEN
         User user = userRepository.findById(2L).orElseThrow();

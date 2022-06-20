@@ -11,8 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,6 +30,8 @@ public class UserRepositoryTest implements UserTestData, AddressTestData {
     private UserRepository userRepository;
 
     @Test
+    @Rollback
+    @Transactional
     public void givenNothing_whenSaveUser_thenFindListWithOneElementAndFindUserById() {
         userRepository.deleteAll();
         Address a = new Address(STREET, ZIP, CITY, COUNTRY);

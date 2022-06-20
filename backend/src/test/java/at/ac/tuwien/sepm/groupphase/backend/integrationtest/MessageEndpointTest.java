@@ -19,10 +19,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -76,6 +78,8 @@ public class MessageEndpointTest implements TestData {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void givenNothing_whenFindAll_thenEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI)
             .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
@@ -93,6 +97,8 @@ public class MessageEndpointTest implements TestData {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void givenOneMessage_whenFindAll_thenListWithSizeOneAndMessageWithAllPropertiesExceptSummary()
         throws Exception {
         messageRepository.save(message);
@@ -120,6 +126,8 @@ public class MessageEndpointTest implements TestData {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void givenOneMessage_whenFindById_thenMessageWithAllProperties() throws Exception {
         messageRepository.save(message);
 
@@ -141,6 +149,8 @@ public class MessageEndpointTest implements TestData {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void givenOneMessage_whenFindByNonExistingId_then404() throws Exception {
         messageRepository.save(message);
 
@@ -153,6 +163,8 @@ public class MessageEndpointTest implements TestData {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void givenNothing_whenPost_thenMessageWithAllSetPropertiesPlusIdAndPublishedDate() throws Exception {
         message.setPublishedAt(null);
         MessageInquiryDto messageInquiryDto = messageMapper.messageToMessageInquiryDto(message);
@@ -182,6 +194,8 @@ public class MessageEndpointTest implements TestData {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void givenNothing_whenPostInvalid_then400() throws Exception {
         message.setTitle(null);
         message.setSummary(null);

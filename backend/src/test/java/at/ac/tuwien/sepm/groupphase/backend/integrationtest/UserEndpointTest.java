@@ -24,10 +24,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -228,6 +230,8 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void givenNothing_whenUpdateUserValueInvalid_then422()
         throws Exception {
         User inDb = userService.registerUser(createUpdateUserDto, true);
@@ -247,6 +251,8 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void givenNothing_whenUpdateUserOnInvalidId_then404()
         throws Exception {
         String body = MAPPER.writeValueAsString(createUpdateUserDto);

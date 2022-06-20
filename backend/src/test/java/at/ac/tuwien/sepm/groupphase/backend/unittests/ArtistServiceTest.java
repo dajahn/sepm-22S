@@ -11,8 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,6 +32,8 @@ public class ArtistServiceTest implements ArtistTestData {
 
 
     @Test
+    @Rollback
+    @Transactional
     public void givenArtistsInDb_whenFindById_thenFindArtist() {
         Artist a = artistRepository.save(new Artist(ARTIST_NAME, ARTIST_DESCRIPTION));
         Artist b = artistService.findById(a.getId());
@@ -38,11 +42,15 @@ public class ArtistServiceTest implements ArtistTestData {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void givenNoMatchingArtistInDb_whenFindById_throwNotFoundException() {
         assertThrows(NotFoundException.class, () ->  artistService.findById(-1L));
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void givenArtistsInDb_whenSearchByName_thenFindListOfMatchingArtists() {
         artistRepository.save(new Artist(ARTIST_NAME + "ZZZZ", ARTIST_DESCRIPTION));
         artistRepository.save(new Artist(ARTIST_NAME + "ZZZ", ARTIST_DESCRIPTION));

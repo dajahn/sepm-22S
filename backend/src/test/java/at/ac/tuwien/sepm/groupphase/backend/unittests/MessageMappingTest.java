@@ -9,8 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,8 @@ public class MessageMappingTest implements TestData {
     private MessageMapper messageMapper;
 
     @Test
+    @Rollback
+    @Transactional
     public void givenNothing_whenMapDetailedMessageDtoToEntity_thenEntityHasAllProperties() {
         DetailedMessageDto detailedMessageDto = messageMapper.messageToDetailedMessageDto(message);
         assertAll(
@@ -45,6 +49,8 @@ public class MessageMappingTest implements TestData {
     }
 
     @Test
+    @Rollback
+    @Transactional
     public void givenNothing_whenMapListWithTwoMessageEntitiesToSimpleDto_thenGetListWithSizeTwoAndAllProperties() {
         List<Message> messages = new ArrayList<>();
         messages.add(message);
