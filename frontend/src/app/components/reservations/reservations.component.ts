@@ -6,10 +6,10 @@ import {Router} from '@angular/router';
 import {ReservationService} from '../../services/reservation.service';
 import {Ticket} from '../../dtos/ticket';
 import {SeatTicket} from '../../dtos/seat-ticket';
-import {CreateTicket} from '../../dtos/create-ticket';
 import {SectorType} from '../../dtos/sector';
 import {TicketOrder} from '../../dtos/ticket-order';
 import {Reservation} from '../../dtos/reservation';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-reservations',
@@ -26,12 +26,20 @@ export class ReservationsComponent implements OnInit {
               private reservationService: ReservationService,
               private toastService: ToastService,
               public globals: Globals,
-              private router: Router) {
+              private router: Router,
+              private datePipe: DatePipe) {
   }
 
   ngOnInit(): void {
     this.selectedReservations = [];
     this.loadReservations();
+  }
+
+  getValidUntil(dateString: string): string{
+    const formattedString = this.datePipe.transform(dateString, 'yyyy-MM-dd HH:mm');
+    const date = new Date(formattedString);
+    date.setMinutes(date.getMinutes()-30);
+    return this.datePipe.transform(date.toISOString(), 'dd/MM/yyyy HH:mm');
   }
 
   /**
@@ -40,7 +48,7 @@ export class ReservationsComponent implements OnInit {
   private loadReservations() {
     this.reservationService.getReservations().subscribe({
       next: (orders: TicketOrder[]) => {
-        this.orders = orders;
+        this.orders = orders.reverse();
         this.ticketSum = 0;
         this.orders.forEach(x => {
           this.ticketSum += x.tickets?.length;
