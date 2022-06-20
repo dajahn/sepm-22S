@@ -62,7 +62,7 @@ public class ReservationServiceImpl implements ReservationService {
             throw new NotFoundException("Performance with id " + tickets.get(0).getPerformance() + " does not exist!");
         }
         LocalDateTime validUntil = performanceRepository.findById(tickets.get(0).getPerformance()).get().getDateTime().minusMinutes(30);
-        if(validUntil.isBefore(LocalDateTime.now())){
+        if (validUntil.isBefore(LocalDateTime.now())) {
             throw new ValidationException("Cannot reserve tickets 30 minutes or earlier before an event.");
         }
         TicketOrder reservation = new TicketOrder(LocalDateTime.now(), userId, new ArrayList<>(), OrderType.RESERVATION, validUntil);
