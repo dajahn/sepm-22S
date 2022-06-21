@@ -8,7 +8,6 @@ import { AppComponent } from './app.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
-import { MessageComponent } from './components/message/message.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { httpInterceptorProviders } from './interceptors';
 import { NewsCreateComponent } from './components/news-create/news-create.component';
@@ -45,7 +44,6 @@ import { ReservationsComponent } from './components/reservations/reservations.co
     FooterComponent,
     HomeComponent,
     LoginComponent,
-    MessageComponent,
     CartComponent,
     TicketComponent,
     NewsCreateComponent,

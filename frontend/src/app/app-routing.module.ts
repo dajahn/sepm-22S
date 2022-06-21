@@ -23,36 +23,41 @@ import {ReservationsComponent} from './components/reservations/reservations.comp
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
-  {path: 'events/topten', component: TopTenEventsComponent},
-  {path: 'message', redirectTo: '/'},
   {path: 'login', canActivate: [AntiAuthGuard], component: LoginComponent},
   {path: 'register', canActivate: [AntiAuthGuard], component: RegisterComponent},
-  {path: 'account/edit', canActivate: [AuthGuard], component: EditAccountComponent},
-  {path: 'news', canActivate: [AuthGuard], component: NewsComponent},
-  {path: 'news/create', canActivate: [AdminGuard], component: NewsCreateComponent},
-  {path: 'news/:id', component: NewsDetailComponent},
-  {path: 'events/create', canActivate: [AdminGuard], component: CreateEventComponent},
-  {path: 'cart', component: CartComponent},
-  {path: 'account/edit', canActivate: [AuthGuard], component: EditAccountComponent},
-  {path: 'users', canActivate: [AdminGuard], component: UserManagementComponent, pathMatch: 'full'},
-  {path: 'users/admins/create', canActivate: [AdminGuard], component: CreateUserComponent},
-  {path: '', component: HomeComponent},
-  {path: 'cart', component: CartComponent},
-  {path: 'search', component: SearchComponent},
-  {path: 'reset-password/:hash', component: ResetPasswordComponent},
+  {path: 'reset-password/:hash', canActivate: [AntiAuthGuard], component: ResetPasswordComponent},
   {
-    path: 'events/:eventId',
-    canActivate: [AuthGuard],
-    children: [
-      {path: '', component: EventComponent},
-      {path: 'performances/:performanceId', component: EventComponent}
+    path: 'events', canActivate: [AuthGuard], children: [
+      {path: 'topten', component: TopTenEventsComponent},
+      {path: 'create', canActivate: [AdminGuard], component: CreateEventComponent},
+      {
+        path: ':eventId',
+        canActivate: [AuthGuard],
+        children: [
+          {path: '', component: EventComponent},
+          {path: 'performances/:performanceId', component: EventComponent}
+        ]
+      },
     ]
   },
+  {path: 'message', redirectTo: '/'},
+  {
+    path: 'news', canActivate: [AuthGuard], children: [
+      {path: '', component: NewsComponent},
+      {path: 'create', canActivate: [AdminGuard], component: NewsCreateComponent},
+      {path: ':id', component: NewsDetailComponent}
+    ]
+  },
+  {path: 'account/edit', canActivate: [AuthGuard], component: EditAccountComponent},
+  {
+    path: 'users', canActivate: [AdminGuard], children: [
+      {path: '', component: UserManagementComponent, pathMatch: 'full'},
+      {path: 'admins/create', component: CreateUserComponent}
+    ]
+  },
+  {path: 'search', canActivate: [AuthGuard], component: SearchComponent},
   {path: 'cart', canActivate: [AuthGuard], component: CartComponent},
   {path: 'checkout', canActivate: [AuthGuard], component: CheckoutComponent},
-  {path: 'users', canActivate: [AdminGuard], component: UserManagementComponent, pathMatch: 'full'},
-  {path: 'users/admins/create', canActivate: [AdminGuard], component: CreateUserComponent},
-  {path: 'reset-password/:hash', canActivate: [AntiAuthGuard], component: ResetPasswordComponent},
   {path: 'reservations', canActivate: [AuthGuard], component: ReservationsComponent}
 ];
 

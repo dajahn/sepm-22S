@@ -41,8 +41,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
@@ -83,6 +85,8 @@ public class EventRepositoryTest implements EventTestData, LocationTestData, Add
     private TicketRepository ticketRepository;
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenSaveEvent_thenFindListWithOneElementAndFindEventById() {
         //generate location for event
         Location location = new Location();
@@ -166,6 +170,8 @@ public class EventRepositoryTest implements EventTestData, LocationTestData, Add
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenSaveEventAndPurchaseOrder_thenFindTopTenEvents() {
         eventRepository.deleteAll();
         orderRepository.deleteAll();
