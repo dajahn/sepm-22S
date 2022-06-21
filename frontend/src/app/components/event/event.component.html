@@ -60,7 +60,7 @@
     <div class="d-flex flex-row justify-content-end" style="margin-bottom: 4rem">
       <div class="d-grid">
         <input type="button" id="reserveBtn" class="btn blue add-btn" value="Reserve" (click)="reserveTickets()"
-               [disabled]="selectedTickets.length === 0">
+               [disabled]="selectedTickets.length === 0 || isReservationTimeValid()">
       </div>
 <!--    <div class="col-1"></div>-->
     </div>

@@ -14,6 +14,7 @@ import {ToastService} from '../../services/toast-service.service';
 import {SectorType} from '../../dtos/sector';
 import {Globals} from '../../global/globals';
 import {ReservationService} from '../../services/reservation.service';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-performance',
@@ -96,7 +97,8 @@ export class EventComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly globals: Globals,
-    private readonly reservationService: ReservationService
+    private readonly reservationService: ReservationService,
+    private readonly datePipe: DatePipe
   ) {
   }
 
@@ -199,7 +201,10 @@ export class EventComponent implements OnInit {
     }))).subscribe({
       next: () => {
         // eslint-disable-next-line max-len
-        this.toastService.show('Reserved tickets have to be collected until 30 minutes before the start of the event, otherwise the reservation is cancelled!', {classname: 'bg-success', delay: 5000});
+        this.toastService.show('Reserved tickets have to be collected until 30 minutes before the start of the event, otherwise the reservation is cancelled!', {
+          classname: 'bg-success',
+          delay: 5000
+        });
         this.router.navigate(['reservations']);
       },
       error: error => {
@@ -207,5 +212,15 @@ export class EventComponent implements OnInit {
         this.showDanger('Unfortunately an error occurred while trying to reserve your items.');
       }
     });
+  }
+
+  isReservationTimeValid() {
+    const date: Date = new Date();
+    date.setMinutes(date.getMinutes() + 30);
+    const currDateString = this.datePipe.transform(date, 'yyyy-MM-dd HH:mm');
+    const eventDateString = this.datePipe.transform(this.performance.dateTime, 'yyyy-MM-dd HH:mm');
+    console.log(currDateString);
+    console.log(eventDateString);
+    return (eventDateString <= currDateString);
   }
 }

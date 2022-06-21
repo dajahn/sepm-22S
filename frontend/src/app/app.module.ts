@@ -34,8 +34,9 @@ import { EventComponent } from './components/event/event.component';
 import { CapitalizeFirstPipe } from './pipes/capitalize-first.pipe';
 import { PricePipe } from './pipes/price.pipe';
 import { DurationPipe } from './pipes/duration.pipe';
-import { ShortNumberPipe } from './pipes/short-number.pipe';
 import { ReservationsComponent } from './components/reservations/reservations.component';
+import {DatePipe} from '@angular/common';
+import {ShortNumberPipe} from './pipes/short-number.pipe';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,7 @@ import { ReservationsComponent } from './components/reservations/reservations.co
     NgbModule,
     FormsModule,
   ],
-  providers: [httpInterceptorProviders],
+  providers: [httpInterceptorProviders, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {
