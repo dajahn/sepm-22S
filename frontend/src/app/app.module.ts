@@ -72,13 +72,10 @@ import {ShortNumberPipe} from './pipes/short-number.pipe';
     DurationPipe,
     CapitalizeFirstPipe,
     PricePipe,
-<<<<<<< HEAD
     LocationCreateRoomComponent,
     LocationCreateComponent,
-=======
     ShortNumberPipe,
     ReservationsComponent
->>>>>>> develop
   ],
   imports: [
     BrowserModule,
