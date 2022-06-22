@@ -19,6 +19,7 @@ import {EventComponent} from './components/event/event.component';
 import {SearchComponent} from './components/search/search.component';
 import {CheckoutComponent} from './components/checkout/checkout.component';
 import {AntiAuthGuard} from './guards/anti-auth.guard';
+import { LocationCreateComponent } from './components/location-create/location-create.component';
 import {ReservationsComponent} from './components/reservations/reservations.component';
 
 const routes: Routes = [
@@ -26,6 +27,7 @@ const routes: Routes = [
   {path: 'login', canActivate: [AntiAuthGuard], component: LoginComponent},
   {path: 'register', canActivate: [AntiAuthGuard], component: RegisterComponent},
   {path: 'reset-password/:hash', canActivate: [AntiAuthGuard], component: ResetPasswordComponent},
+  { path: 'locations/create', canActivate: [AdminGuard], component: LocationCreateComponent },
   {
     path: 'events', canActivate: [AuthGuard], children: [
       {path: 'topten', component: TopTenEventsComponent},

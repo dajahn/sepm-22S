@@ -11,6 +11,7 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Mapper
@@ -33,6 +34,22 @@ public interface SectorMapper {
         }
 
         return sectorDtos;
+    }
+
+    /**
+     * This method is necessary because a Mapper cannot map arrays to sets out of the box.
+     *
+     * @param sectorDtos the SectorDto Array that should be mapped
+     * @return the mapped Sector Set
+     */
+    @IterableMapping
+    default Set<Sector> sectorDtoArrayToSectorSet(SectorDto[] sectorDtos) {
+        Set<Sector> sectors = new HashSet<>();
+        for (SectorDto sectorDto : sectorDtos) {
+            sectors.add(sectorDtoToSector(sectorDto));
+        }
+
+        return sectors;
     }
 
     /**
@@ -68,6 +85,17 @@ public interface SectorMapper {
 
     /**
      * This method is necessary because a Mapper cannot map abstract classes.
+     * Uses dynamic binding to create the corresponding Sector for a SectorDto.
+     *
+     * @param sectorDto the Sector that should be mapped
+     * @return the mapped SectorD
+     */
+    default Sector sectorDtoToSector(SectorDto sectorDto) {
+        return sectorDto.mapToEntity(this);
+    }
+
+    /**
+     * This method is necessary because a Mapper cannot map abstract classes.
      * Uses dynamic binding to create the corresponding small SectorDto for a Sector.
      *
      * @param sector the Sector that should be mapped
@@ -84,4 +112,8 @@ public interface SectorMapper {
 
     @Named("smallSector")
     SmallSeatSectorDto seatSectorToSmallSeatSectorDto(SeatSector sector);
+
+    StandingSector standingSectorDtoToStandingSector(StandingSectorDto sectorDto);
+
+    SeatSector seatSectorDtoToSeatSector(SeatSectorDto sectorDto);
 }

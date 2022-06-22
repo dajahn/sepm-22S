@@ -27,7 +27,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class SeatSector extends Sector {

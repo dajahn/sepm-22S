@@ -34,6 +34,8 @@ import { EventComponent } from './components/event/event.component';
 import { CapitalizeFirstPipe } from './pipes/capitalize-first.pipe';
 import { PricePipe } from './pipes/price.pipe';
 import { DurationPipe } from './pipes/duration.pipe';
+import { LocationCreateRoomComponent } from './components/location-create-room/location-create-room.component';
+import { LocationCreateComponent } from './components/location-create/location-create.component';
 import { ReservationsComponent } from './components/reservations/reservations.component';
 import {DatePipe} from '@angular/common';
 import {ShortNumberPipe} from './pipes/short-number.pipe';
@@ -70,6 +72,8 @@ import {ShortNumberPipe} from './pipes/short-number.pipe';
     DurationPipe,
     CapitalizeFirstPipe,
     PricePipe,
+    LocationCreateRoomComponent,
+    LocationCreateComponent,
     ShortNumberPipe,
     ReservationsComponent
   ],

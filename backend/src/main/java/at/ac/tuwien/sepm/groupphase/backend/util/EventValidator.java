@@ -52,7 +52,7 @@ public class EventValidator {
             throw new ValidationException("Event Name must not be empty!");
         }
         if (createEventDto.getName().length() > 126) {
-            throw new ValidationException("Event Name ist too long!");
+            throw new ValidationException("Event Name is too long!");
         }
         if (createEventDto.getDescription() == null) {
             throw new ValidationException("Event Description must not be null!");
