@@ -400,5 +400,19 @@ public class UserServiceTest implements UserTestData, AddressTestData {
         updateUserDto.setAddress(a);
     }
 
+    @Test
+    @Rollback
+    @Transactional
+    public void givenExistingUser_whenUserDelete_thenUserDeleted() {
+        //given
+        User user = userRepository.findAll().get(0);
+        long userId = user.getId();
+
+        //when
+        userService.deleteUser(userId);
+
+        //then
+        assertTrue(userRepository.findById(userId).isEmpty());
+    }
 
 }
