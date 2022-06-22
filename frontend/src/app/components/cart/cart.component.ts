@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {CartService} from '../../services/cart.service';
 import {Cart} from '../../dtos/cart';
-import {Ticket} from '../../dtos/ticket';
+import {PagedTicket, Ticket} from '../../dtos/ticket';
 import {SeatTicket} from '../../dtos/seat-ticket';
 import {CheckoutService} from '../../services/checkout.service';
 import {ToastService} from '../../services/toast-service.service';
@@ -19,6 +19,10 @@ export class CartComponent implements OnInit {
   upcomingTickets: Ticket[];
   pastTickets: Ticket[];
 
+  pageSize = 6;
+  pastPurchasedPage = 1;
+  totalAllPastPurchasedPage = 0;
+
   constructor(
     private cartService: CartService,
     private checkoutService: CheckoutService,
@@ -28,8 +32,8 @@ export class CartComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCart();
-    this.loadPurchasedTickets(true);
-    this.loadPurchasedTickets(false);
+    this.loadUpcomingPurchasedTickets();
+    this.loadPastPurchasedTickets();
   }
 
   /**
@@ -49,22 +53,33 @@ export class CartComponent implements OnInit {
   }
 
   /**
-   * Loads purchased Tickets
+   * Loads upcoming purchased Tickets
    */
-  private loadPurchasedTickets(upcoming: boolean) {
-    this.cartService.getPurchasedTickets(upcoming).subscribe(
-      (data) => {
-        if (upcoming) {
-          this.upcomingTickets = data;
-        } else {
-          this.pastTickets = data;
-        }
+  private loadUpcomingPurchasedTickets() {
+    this.cartService.getUpcomingPurchasedTickets().subscribe({
+      next: (tickets: Ticket[]) => {
+        console.log(tickets);
+        this.upcomingTickets = tickets;
       },
-      error => {
-        console.error('Error fetching purchased Tickets', error);
-        this.showDanger('Sorry, something went wrong. Could not load your puchased Tickets 😔');
+      error: err => {
+        console.error('Error fetching upcoming purchased Tickets', err);
+        this.showDanger('Sorry, something went wrong. Could not load your purchased Tickets 😔');
       }
-    );
+    });
+  }
+
+  private loadPastPurchasedTickets() {
+    this.cartService.getPastPurchasedTickets(this.pastPurchasedPage - 1, this.pageSize).subscribe({
+      next: (pagedTicket: PagedTicket) => {
+        console.log(pagedTicket);
+        this.totalAllPastPurchasedPage = pagedTicket.totalCount;
+        this.pastTickets = pagedTicket.tickets;
+      },
+      error: err => {
+        console.error('Error fetching past purchased Tickets', err);
+        this.showDanger('Sorry, something went wrong. Could not load your purchased Tickets 😔');
+      }
+    });
   }
 
 
@@ -127,5 +142,9 @@ export class CartComponent implements OnInit {
    */
   inspect(eventID: number, performanceID: number) {
     this.router.navigate([`events/${eventID}/performances/${performanceID}`]).then();
+  }
+
+  handlePageChangePastPurchasedPage() {
+    this.loadPastPurchasedTickets();
   }
 }

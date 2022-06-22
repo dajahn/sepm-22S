@@ -7,13 +7,13 @@ export class ShortNumberPipe implements PipeTransform {
 
   transform(number: number, args?: any): any {
     if (isNaN(number)) {
-      return null;
+      return 0;
     }
     if (number === null) {
-      return null;
+      return 0;
     }
     if (number === 0) {
-      return null;
+      return 0;
     }
     let abs = Math.abs(number);
     const rounder = Math.pow(10, 1);
