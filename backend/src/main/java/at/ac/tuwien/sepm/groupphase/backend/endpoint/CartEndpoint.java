@@ -2,9 +2,11 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateTicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedTicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.OrderMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -85,13 +88,27 @@ public class CartEndpoint {
 
     @Transactional(readOnly = true)
     @Secured("ROLE_USER")
-    @GetMapping(value = "/purchased")
+    @GetMapping(value = "/purchased/upcoming")
     @Operation(summary = "Get summary of all upcoming purchased events", security = @SecurityRequirement(name = "apiKey"))
-    public List<TicketDto> findPurchasedEvents(Boolean upcoming) {
-        LOGGER.info("GET /api/v1/cart/purchased, upcoming? : {}", upcoming);
+    public List<TicketDto> findUpcomingPurchasedEvents() {
+        LOGGER.info("GET /api/v1/cart/purchased/upcoming");
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findApplicationUserByEmail(email);
-        return ticketMapper.ticketsToTicketDtos(cartService.getPurchasedTickets(user.getId(), upcoming));
+        return ticketMapper.ticketsToTicketDtos(cartService.getUpcomingPurchasedTickets(user.getId()));
+    }
+
+    @Transactional(readOnly = true)
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/purchased/past")
+    @Operation(summary = "Get summary of all past purchased events", security = @SecurityRequirement(name = "apiKey"))
+    public PagedTicketDto findPastPurchasedEvents(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "6") int size
+    ) {
+        LOGGER.info("GET /api/v1/cart/purchased/past");
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findApplicationUserByEmail(email);
+        return this.cartService.getPastPurchasedTickets(user.getId(), page, size);
     }
 
 }
