@@ -10,7 +10,7 @@
 </div>
 
 <h5>
-  {{(performance$ | async)?.location?.name}} - {{(performance$ | async)?.dateTime | date:'dd/MM/YYYY hh:mm'}}
+  {{(performance$ | async)?.location?.name}} - {{(performance$ | async)?.dateTime | date:'dd/MM/YYYY HH:mm'}}
 </h5>
 
 <div class="d-flex flex-row h-100 gap-5">
@@ -60,7 +60,7 @@
     <div class="d-flex flex-row justify-content-end" style="margin-bottom: 4rem">
       <div class="d-grid">
         <input type="button" id="reserveBtn" class="btn blue add-btn" value="Reserve" (click)="reserveTickets()"
-               [disabled]="selectedTickets.length === 0">
+               [disabled]="selectedTickets.length === 0 || isReservationTimeValid()">
       </div>
 <!--    <div class="col-1"></div>-->
     </div>
@@ -74,7 +74,7 @@
       <option
         *ngFor="let performance of getFuturePerformances((event$ | async)?.performances)"
         [value]="performance.id">
-        {{performance.location.name}}: {{performance.dateTime | date:'dd/MM/YYYY hh:mm'}}
+        {{performance.location.name}}: {{performance.dateTime | date:'dd/MM/YYYY HH:mm'}}
       </option>
     </select>
     <app-location

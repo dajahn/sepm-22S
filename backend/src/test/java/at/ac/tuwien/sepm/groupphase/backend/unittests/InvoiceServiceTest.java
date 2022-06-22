@@ -30,8 +30,8 @@ public class InvoiceServiceTest {
     private InvoiceRepository invoiceRepository;
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenInvoiceHasRequiredValues_whenCreateInvoice_thenInvoiceIsSaved() {
         // GIVEN
         TicketOrder order = orderRepository.findById(1L).orElseThrow();
@@ -51,8 +51,8 @@ public class InvoiceServiceTest {
 
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenInvoiceHasRequiredValues_whenCreateInvoice_thenInvoiceGetsIdentification() {
         // GIVEN
         TicketOrder order = orderRepository.findById(1L).orElseThrow();
@@ -68,8 +68,8 @@ public class InvoiceServiceTest {
     }
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenOrderExists_whenCreateInvoiceFromOrder_thenInvoiceIsCreated() {
         // GIVEN
         TicketOrder order = orderRepository.findById(1L).orElseThrow();

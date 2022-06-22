@@ -9,6 +9,7 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -30,7 +31,11 @@ public class PasswordReset {
     private UUID hash;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", updatable = false)
+    @JoinColumn(
+        name = "user_id",
+        updatable = false,
+        foreignKey = @ForeignKey(name = "fk_passwordreset_user", foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE")
+    )
     private User user;
 
     @Column

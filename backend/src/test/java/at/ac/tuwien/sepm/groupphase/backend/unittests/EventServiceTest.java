@@ -63,8 +63,8 @@ public class EventServiceTest implements EventTestData, LocationTestData, Addres
     private ArtistMapper artistMapper;
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenNothing_whenSaveEvent_thenFindListWithOneElementAndFindEventById() throws IOException {
         //generate location for event
         Location location = new Location();
@@ -157,8 +157,8 @@ public class EventServiceTest implements EventTestData, LocationTestData, Addres
     }
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenIncorrectInput_whenSaveEvent_thenThrowValidationException() throws IOException {
         //generate location for event
         Location location = new Location();

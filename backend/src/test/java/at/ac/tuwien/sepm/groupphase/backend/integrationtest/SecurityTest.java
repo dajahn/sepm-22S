@@ -3,15 +3,22 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.BackendApplication;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.MessageInquiryDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.MessageMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Message;
-import at.ac.tuwien.sepm.groupphase.backend.repository.MessageRepository;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
+import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepm.groupphase.backend.util.FileDtoDeserializer;
+import at.ac.tuwien.sepm.groupphase.backend.util.FileDtoSerializer;
+import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,12 +31,10 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.DeclareRoles;
@@ -37,7 +42,9 @@ import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,13 +85,13 @@ public class SecurityTest implements TestData {
     private MockMvc mockMvc;
 
     @Autowired
-    private MessageRepository messageRepository;
+    private NewsRepository newsRepository;
+
+    @Autowired
+    private NewsMapper newsMapper;
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Autowired
-    private MessageMapper messageMapper;
 
     @Autowired
     private JwtTokenizer jwtTokenizer;
@@ -95,32 +102,36 @@ public class SecurityTest implements TestData {
     @Autowired
     private List<Object> components;
 
-    private Message message = Message.MessageBuilder.aMessage()
-        .withTitle(TEST_NEWS_TITLE)
-        .withSummary(TEST_NEWS_SUMMARY)
-        .withText(TEST_NEWS_TEXT)
-        .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
-        .build();
+    @Autowired
+    private FileRepository fileRepository;
+
+    private News news;
 
     @BeforeEach
     public void beforeEach() {
-        messageRepository.deleteAll();
-        message = Message.MessageBuilder.aMessage()
-            .withTitle(TEST_NEWS_TITLE)
-            .withSummary(TEST_NEWS_SUMMARY)
-            .withText(TEST_NEWS_TEXT)
-            .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
+        newsRepository.deleteAll();
+
+        File file = File.builder()
+            .type(TEST_NEWS_IMG_TYPE)
+            .data(Base64.getDecoder().decode(TEST_NEWS_BASE64_IMG))
+            .build();
+
+        fileRepository.save(file);
+
+        news = News.builder()
+            .title(TEST_NEWS_TITLE)
+            .description(TEST_NEWS_DESCRIPTION)
+            .file(file)
+            .imageDescription(TEST_NEWS_IMAGE_DESCRIPTION)
+            .date(LocalDate.now())
             .build();
     }
-
     /**
      * This ensures every Rest Method is secured with Method Security.
      * It is very easy to forget securing one method causing a security vulnerability.
      * Feel free to remove / disable / adapt if you do not use Method Security (e.g. if you prefer Web Security to define who may perform which actions) or want to use Method Security on the service layer.
      */
     @Test
-    @Rollback
-    @Transactional
     public void ensureSecurityAnnotationPresentForEveryEndpoint() {
         List<Pair<Class<?>, Method>> notSecured = components.stream()
             .map(AopUtils::getTargetClass) // beans may be proxies, get the target class instead
@@ -139,10 +150,8 @@ public class SecurityTest implements TestData {
     }
 
     @Test
-    @Rollback
-    @Transactional
     public void givenUserLoggedIn_whenFindAll_then200() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI)
+        MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI)
             .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
             .andDo(print())
             .andReturn();
@@ -153,12 +162,9 @@ public class SecurityTest implements TestData {
             () -> assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType())
         );
     }
-
     @Test
-    @Rollback
-    @Transactional
     public void givenNoOneLoggedIn_whenFindAll_then401() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI))
+        MvcResult mvcResult = this.mockMvc.perform(get(NEWS_BASE_URI))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -166,58 +172,4 @@ public class SecurityTest implements TestData {
         assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
     }
 
-    @Test
-    @Rollback
-    @Transactional
-    public void givenAdminLoggedIn_whenPost_then201() throws Exception {
-        MessageInquiryDto messageInquiryDto = messageMapper.messageToMessageInquiryDto(message);
-        String body = objectMapper.writeValueAsString(messageInquiryDto);
-
-        MvcResult mvcResult = this.mockMvc.perform(post(MESSAGE_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
-            .andDo(print())
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-    }
-
-    @Test
-    @Rollback
-    @Transactional
-    public void givenNoOneLoggedIn_whenPost_then403() throws Exception {
-        message.setPublishedAt(null);
-        MessageInquiryDto messageInquiryDto = messageMapper.messageToMessageInquiryDto(message);
-        String body = objectMapper.writeValueAsString(messageInquiryDto);
-
-        MvcResult mvcResult = this.mockMvc.perform(post(MESSAGE_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body))
-            .andDo(print())
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
-    }
-
-    @Test
-    @Rollback
-    @Transactional
-    public void givenUserLoggedIn_whenPost_then403() throws Exception {
-        message.setPublishedAt(null);
-        MessageInquiryDto messageInquiryDto = messageMapper.messageToMessageInquiryDto(message);
-        String body = objectMapper.writeValueAsString(messageInquiryDto);
-
-        MvcResult mvcResult = this.mockMvc.perform(post(MESSAGE_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body)
-            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
-            .andDo(print())
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
-    }
 }

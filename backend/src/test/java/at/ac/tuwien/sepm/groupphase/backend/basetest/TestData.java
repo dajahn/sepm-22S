@@ -20,7 +20,6 @@ public interface TestData {
     MediaType TEST_NEWS_IMG_TYPE = MediaType.parseMediaType("image/jpeg");
     String TEST_NEWS_IMAGE_DESCRIPTION = "Schönbrunn: 01.01.2000";
     String BASE_URI = "/api/v1";
-    String MESSAGE_BASE_URI = BASE_URI + "/messages";
     String NEWS_BASE_URI = BASE_URI + "/news";
 
 

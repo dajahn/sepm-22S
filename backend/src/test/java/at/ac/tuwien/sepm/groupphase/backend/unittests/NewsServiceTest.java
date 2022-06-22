@@ -20,8 +20,8 @@ public class NewsServiceTest {
     private NewsService newsService;
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenNothing_whenFindByInvalidId_thenNotFoundException(){
         assertThrows(
             NotFoundException.class, () -> newsService.getById(100L,ADMIN_USER)

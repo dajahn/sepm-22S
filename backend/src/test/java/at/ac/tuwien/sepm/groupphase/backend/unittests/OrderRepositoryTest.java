@@ -71,8 +71,8 @@ public class OrderRepositoryTest implements LocationTestData, EventTestData, Art
     private TicketRepository ticketRepository;
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenNothing_whenSaveEventAndPurchaseOrder_thenFindPurchasedUpcomingOrPastTickets() {
         eventRepository.deleteAll();
         orderRepository.deleteAll();

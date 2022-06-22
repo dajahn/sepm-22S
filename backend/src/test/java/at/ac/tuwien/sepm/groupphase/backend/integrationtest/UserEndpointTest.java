@@ -35,9 +35,12 @@ import java.time.LocalDateTime;
 
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_ROLES;
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.ADMIN_USER;
+import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.USER_ROLES;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -91,6 +94,8 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenCreate_thenCreatedUserWithAllSetPropertiesPlusId()
         throws Exception {
         createUpdateUserDto.setEmail("user"+  System.currentTimeMillis()+"@example.com");
@@ -119,6 +124,8 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenCreateAdminUserWithAdminRights_thenCreatedUserWithAllSetPropertiesPlusId()
         throws Exception {
         createUpdateUserDto.setEmail("user"+  System.currentTimeMillis()+"@example.com");
@@ -149,6 +156,8 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenCreateAdminUserWithoutAdminRights_then422()
         throws Exception {
         createUpdateUserDto.setRole(UserRole.ADMIN);
@@ -165,6 +174,8 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenCreateUserValueInvalid_then422()
         throws Exception {
         createUpdateUserDto.setFirstName(null);
@@ -181,6 +192,8 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenPostInvalid_then400()
         throws Exception {
         String body = MAPPER.writeValueAsString("");
@@ -197,6 +210,8 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
 
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenUpdate_thenNoContentAndUserUpdatedInDb()
         throws Exception {
         createUpdateUserDto.setEmail("user"+ System.currentTimeMillis()+"@example.com");
@@ -230,8 +245,8 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     }
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenNothing_whenUpdateUserValueInvalid_then422()
         throws Exception {
         User inDb = userService.registerUser(createUpdateUserDto, true);
@@ -251,8 +266,8 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     }
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenNothing_whenUpdateUserOnInvalidId_then404()
         throws Exception {
         String body = MAPPER.writeValueAsString(createUpdateUserDto);
@@ -269,5 +284,25 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
+    @Test
+    @Rollback
+    @Transactional
+    public void givenExistingUser_whenUserDelete_thenUserDeleted() throws Exception {
+        //given
+        User user = userRepository.findAll().get(0);
+        long userId = user.getId();
+
+        //when
+        MvcResult mvcResult = this.mockMvc.perform(delete(USER_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(user.getEmail(), USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        //then
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertTrue(userRepository.findById(userId).isEmpty());
+    }
 
 }

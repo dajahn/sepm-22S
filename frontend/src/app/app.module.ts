@@ -8,7 +8,6 @@ import { AppComponent } from './app.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
-import { MessageComponent } from './components/message/message.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { httpInterceptorProviders } from './interceptors';
 import { NewsCreateComponent } from './components/news-create/news-create.component';
@@ -35,8 +34,9 @@ import { EventComponent } from './components/event/event.component';
 import { CapitalizeFirstPipe } from './pipes/capitalize-first.pipe';
 import { PricePipe } from './pipes/price.pipe';
 import { DurationPipe } from './pipes/duration.pipe';
-import { ShortNumberPipe } from './pipes/short-number.pipe';
 import { ReservationsComponent } from './components/reservations/reservations.component';
+import {DatePipe} from '@angular/common';
+import {ShortNumberPipe} from './pipes/short-number.pipe';
 
 @NgModule({
   declarations: [
@@ -45,7 +45,6 @@ import { ReservationsComponent } from './components/reservations/reservations.co
     FooterComponent,
     HomeComponent,
     LoginComponent,
-    MessageComponent,
     CartComponent,
     TicketComponent,
     NewsCreateComponent,
@@ -82,7 +81,7 @@ import { ReservationsComponent } from './components/reservations/reservations.co
     NgbModule,
     FormsModule,
   ],
-  providers: [httpInterceptorProviders],
+  providers: [httpInterceptorProviders, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {

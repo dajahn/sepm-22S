@@ -204,8 +204,8 @@ public class EventEndpointTest implements EventTestData, ArtistTestData, Locatio
     }
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenNothing_whenCreate_thenCreatedEventWithAllSetPropertiesPlusId()
         throws Exception {
         createEventDto.setName(EVENT_TEST_TITLE);
@@ -236,8 +236,8 @@ public class EventEndpointTest implements EventTestData, ArtistTestData, Locatio
     }
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenNothing_whenPostPayloadInvalid_then422() throws Exception {
         createEventDto.setName("    ");
         String body = MAPPER.writeValueAsString(createEventDto);
@@ -257,8 +257,8 @@ public class EventEndpointTest implements EventTestData, ArtistTestData, Locatio
 
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenNothing_whenPostInvalid_then400() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(post(EVENT_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)

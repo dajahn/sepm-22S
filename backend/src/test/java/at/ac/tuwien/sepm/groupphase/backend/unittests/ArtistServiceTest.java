@@ -32,8 +32,8 @@ public class ArtistServiceTest implements ArtistTestData {
 
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenArtistsInDb_whenFindById_thenFindArtist() {
         Artist a = artistRepository.save(new Artist(ARTIST_NAME, ARTIST_DESCRIPTION));
         Artist b = artistService.findById(a.getId());
@@ -42,15 +42,15 @@ public class ArtistServiceTest implements ArtistTestData {
     }
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenNoMatchingArtistInDb_whenFindById_throwNotFoundException() {
         assertThrows(NotFoundException.class, () ->  artistService.findById(-1L));
     }
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenArtistsInDb_whenSearchByName_thenFindListOfMatchingArtists() {
         artistRepository.save(new Artist(ARTIST_NAME + "ZZZZ", ARTIST_DESCRIPTION));
         artistRepository.save(new Artist(ARTIST_NAME + "ZZZ", ARTIST_DESCRIPTION));

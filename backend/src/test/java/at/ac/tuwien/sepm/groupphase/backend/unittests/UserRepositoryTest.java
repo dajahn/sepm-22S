@@ -30,8 +30,8 @@ public class UserRepositoryTest implements UserTestData, AddressTestData {
     private UserRepository userRepository;
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenNothing_whenSaveUser_thenFindListWithOneElementAndFindUserById() {
         userRepository.deleteAll();
         Address a = new Address(STREET, ZIP, CITY, COUNTRY);

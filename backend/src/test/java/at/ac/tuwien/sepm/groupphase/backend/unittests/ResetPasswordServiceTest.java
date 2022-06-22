@@ -35,8 +35,8 @@ public class ResetPasswordServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenUserForEmailExists_whenForgotPassword_thenPasswordResetIsCreated() {
         // GIVEN
         User user = userRepository.findById(1L).orElseThrow();
@@ -55,8 +55,8 @@ public class ResetPasswordServiceTest {
     }
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenUserForEmailDoesNotExists_whenForgotPassword_thenNotFoundExceptionIsThrown() {
         // GIVEN
         String email = "doesnot@exist.here";
@@ -70,8 +70,8 @@ public class ResetPasswordServiceTest {
 
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenPasswordResetExists_whenResetPassword_thenUsersPasswordIsUpdated() {
         // GIVEN
         User user = userRepository.findById(2L).orElseThrow();

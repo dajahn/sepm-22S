@@ -85,8 +85,8 @@ public class EventRepositoryTest implements EventTestData, LocationTestData, Add
     private TicketRepository ticketRepository;
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenNothing_whenSaveEvent_thenFindListWithOneElementAndFindEventById() {
         //generate location for event
         Location location = new Location();
@@ -170,8 +170,8 @@ public class EventRepositoryTest implements EventTestData, LocationTestData, Add
     }
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenNothing_whenSaveEventAndPurchaseOrder_thenFindTopTenEvents() {
         eventRepository.deleteAll();
         orderRepository.deleteAll();

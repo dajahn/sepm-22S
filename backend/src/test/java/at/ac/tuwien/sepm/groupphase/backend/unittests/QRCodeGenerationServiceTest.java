@@ -31,8 +31,8 @@ public class QRCodeGenerationServiceTest {
     private QRCodeGenerationService qrCodeGenerationService;
 
     @Test
-    @Rollback
     @Transactional
+    @Rollback
     public void givenUUIDInput_whenGenerateQRCode_thenQRCodeIsReturned() throws IOException, NotFoundException {
         // GIVEN
         String input = UUID.randomUUID().toString();
