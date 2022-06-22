@@ -4,9 +4,9 @@
 
     <!-- # Ticket: -->
     <div class="d-flex flex-row justify-content-between align-items-center ticket-wrapper"
-         [style.background]="classStyle().background"
+         [style.background]="classStyle().background" [ngClass]="{'selected': showGreenBorder}"
          (click)="inspect.emit('data')"
-         title="Inspect">
+         title="{{hoverTitle}}">
       <div class="flex-fill d-flex flex-row align-items-center" style="height: 100%;">
 
         <!-- ## Image -->
@@ -45,7 +45,7 @@
     </div>
 
     <!-- # Remove Button: -->
-    <button *ngIf="removeButton" type="button" class="btn remove" (click)="remove.emit('data')" title="Remove"><i class="bi bi-x"></i></button>
+    <button [ngStyle]="!removeButton && {'visibility': 'hidden'}" type="button" class="btn remove" (click)="remove.emit('data')" title="Remove"><i class="bi bi-x"></i></button>
   </div>
 </div>
 
@@ -56,10 +56,10 @@
   <div class="d-flex flex-row align-items-start">
 
     <!-- # Ticket: -->
-    <div class="d-flex flex-column ticket-wrapper"
+    <div class="d-flex flex-column ticket-wrapper" [ngClass]="{'selected': showGreenBorder}"
          [style.background]="classStyle().background"
          (click)="inspect.emit('data')"
-         title="Inspect">
+         title="{{hoverTitle}}">
 
       <!-- ## Top -->
       <div class="d-flex flex-row align-items-center">

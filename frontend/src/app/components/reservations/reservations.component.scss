@@ -1,0 +1,32 @@
+.empty {
+  margin-bottom: 3rem;
+}
+
+.ticket-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 535px);
+  grid-gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.price {
+  color: var(--text-c-lowlight);
+  margin-left: 1rem;
+}
+.reservation-number{
+  margin-bottom: 0.5rem;
+}
+
+
+/* MEDIA QUERIES */
+@media (max-width: 600px) {
+
+  /* # Mobile: */
+  .ticket-grid {
+    grid-template-columns: repeat(auto-fit, 100%);
+  }
+}
+.selected{
+  border: 10px solid black;
+}

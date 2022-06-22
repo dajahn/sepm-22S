@@ -8,7 +8,6 @@ import { AppComponent } from './app.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
-import { MessageComponent } from './components/message/message.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { httpInterceptorProviders } from './interceptors';
 import { NewsCreateComponent } from './components/news-create/news-create.component';
@@ -37,6 +36,9 @@ import { PricePipe } from './pipes/price.pipe';
 import { DurationPipe } from './pipes/duration.pipe';
 import { LocationCreateRoomComponent } from './components/location-create-room/location-create-room.component';
 import { LocationCreateComponent } from './components/location-create/location-create.component';
+import { ReservationsComponent } from './components/reservations/reservations.component';
+import {DatePipe} from '@angular/common';
+import {ShortNumberPipe} from './pipes/short-number.pipe';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,6 @@ import { LocationCreateComponent } from './components/location-create/location-c
     FooterComponent,
     HomeComponent,
     LoginComponent,
-    MessageComponent,
     CartComponent,
     TicketComponent,
     NewsCreateComponent,
@@ -71,8 +72,13 @@ import { LocationCreateComponent } from './components/location-create/location-c
     DurationPipe,
     CapitalizeFirstPipe,
     PricePipe,
+<<<<<<< HEAD
     LocationCreateRoomComponent,
     LocationCreateComponent,
+=======
+    ShortNumberPipe,
+    ReservationsComponent
+>>>>>>> develop
   ],
   imports: [
     BrowserModule,
@@ -82,7 +88,7 @@ import { LocationCreateComponent } from './components/location-create/location-c
     NgbModule,
     FormsModule,
   ],
-  providers: [httpInterceptorProviders],
+  providers: [httpInterceptorProviders, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {

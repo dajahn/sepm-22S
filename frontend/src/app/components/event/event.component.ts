@@ -13,6 +13,8 @@ import {CartService} from '../../services/cart.service';
 import {ToastService} from '../../services/toast-service.service';
 import {SectorType} from '../../dtos/sector';
 import {Globals} from '../../global/globals';
+import {ReservationService} from '../../services/reservation.service';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-performance',
@@ -37,7 +39,10 @@ export class EventComponent implements OnInit {
   );
 
   readonly thumbnail$ = this.event$.pipe(
-    map(event => event?.thumbnail?.url ? this.globals.backendUri + event?.thumbnail?.url : ''),
+    map(event => event?.thumbnail?.url),
+    filter(url => !!url),
+    map(url => this.globals.backendUri + url),
+    share(),
   );
 
   readonly performanceId$ = this.event$.pipe(
@@ -95,6 +100,8 @@ export class EventComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly globals: Globals,
+    private readonly reservationService: ReservationService,
+    private readonly datePipe: DatePipe
   ) {
   }
 
@@ -187,5 +194,36 @@ export class EventComponent implements OnInit {
     if (!!id) {
       this.router.navigate(['..', id], {relativeTo: this.route});
     }
+  }
+
+  reserveTickets() {
+    this.reservationService.addReservations(this.selectedTickets.map(ticket => ({
+      performance: ticket.performance.id,
+      type: ticket.sector.type,
+      item: ticket.sector.type === SectorType.SEAT ? (ticket as SeatTicket).seat.id : ticket.sector.id
+    }))).subscribe({
+      next: () => {
+        // eslint-disable-next-line max-len
+        this.toastService.show('Reserved tickets have to be collected until 30 minutes before the start of the event, otherwise the reservation is cancelled!', {
+          classname: 'bg-success',
+          delay: 5000
+        });
+        this.router.navigate(['reservations']);
+      },
+      error: error => {
+        console.log('Could not reserve tickets.', error);
+        this.showDanger('Unfortunately an error occurred while trying to reserve your items.');
+      }
+    });
+  }
+
+  isReservationTimeValid() {
+    const date: Date = new Date();
+    date.setMinutes(date.getMinutes() + 30);
+    const currDateString = this.datePipe.transform(date, 'yyyy-MM-dd HH:mm');
+    const eventDateString = this.datePipe.transform(this.performance.dateTime, 'yyyy-MM-dd HH:mm');
+    console.log(currDateString);
+    console.log(eventDateString);
+    return (eventDateString <= currDateString);
   }
 }

@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {EventCategory} from '../../enums/event-category';
 import {CreatePerformance} from '../../dtos/performance';
 import {Artist} from '../../dtos/artist';
-import {CreateEvent} from '../../dtos/event';
+import {CreateEvent, EventCategory} from '../../dtos/event';
 import {EventService} from '../../services/event.service';
 import {DurationUtil} from '../../utils/duration-util';
 import {ToastService} from '../../services/toast-service.service';
@@ -18,12 +17,14 @@ import {ErrorMessageParser} from '../../utils/error-message-parser';
 })
 export class CreateEventComponent implements OnInit {
   eventForm: FormGroup;
-  eventCategory = EventCategory;
+  eventCategories = EventCategory;
+  eventCategoriesKeys = [];
   time: any;
   performances: CreatePerformance[];
   artists: Artist[];
   image: FileDto;
   backGroundImg: File;
+  public previewImage: string;
 
   eventFormMessages = {
     title: [
@@ -60,12 +61,14 @@ export class CreateEventComponent implements OnInit {
     this.eventForm = this.formBuilder.group({
       title: ['', [Validators.compose([Validators.required, Validators.minLength(4)])]],
       duration: ['', [Validators.required]],
-      category: [this.eventCategory.CONCERT, [Validators.required]],
+      category: [EventCategory.CONCERT, [Validators.required]],
       description: ['', [Validators.required]],
       thumbnail: ['', [Validators.required]]
     });
     this.performances = [];
     this.artists = [];
+    this.eventCategoriesKeys = Object.keys(this.eventCategories);
+    console.log(this.eventCategoriesKeys);
   }
 
   ngOnInit(): void {
@@ -77,6 +80,7 @@ export class CreateEventComponent implements OnInit {
       const hoursDiff = item.dateTime.getHours() - item.dateTime.getTimezoneOffset() / 60;
       item.dateTime.setHours(hoursDiff);
     }
+    console.log(createPerformances);
 
     const event: CreateEvent = {
       id: null,
@@ -91,8 +95,8 @@ export class CreateEventComponent implements OnInit {
 
     this.eventService.save(event).subscribe({
       next: value => {
-        this.showSuccess(`Event created with title '${event.name}'! YAY`);
-        this.router.navigate(['/']);
+        this.showSuccess(`Event created with tile '${event.name}'! YAY`);
+        this.router.navigate([`/events/${value.id}`]);
       },
       error: err => {
         this.showDanger(ErrorMessageParser.parseResponseToErrorMessage(err));
@@ -149,12 +153,13 @@ export class CreateEventComponent implements OnInit {
       this.backGroundImg = null;
       this.imageButtonClicked = true;
       this.image = null;
+      this.previewImage = null;
     } else {
       this.backGroundImg = files[0];
       this.imageButtonClicked = true;
       let base64img = await this.getBase64(files[0]);
+      this.previewImage = base64img;
       base64img = base64img.split(',')[1];
-
       this.image = {
         imageBase64: base64img,
         type: files[0].type

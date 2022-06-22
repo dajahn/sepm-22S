@@ -1,11 +1,49 @@
-<div class="jumbotron mt-5">
-  <h1 class="display-4">Welcome to the SEPM group phase!</h1>
-  <hr class="my-4">
-  <a *ngIf="!authService.isLoggedIn()" class="btn btn-primary btn-lg" routerLink="/login" role="button">Login</a>
-  <div *ngIf="authService.isLoggedIn()">
-    <p>Check out the latest message from the SEPM group phase.</p>
-    <p class="lead">
-      <a class="btn btn-primary btn-lg" routerLink="/message" role="button">Message</a>
-    </p>
+<!-- WRAPPER -->
+<div class="d-flex flex-row justify-content-center align-items-center" id="page-wrapper">
+  <div id="wrapper">
+    <div class="d-flex flex-column align-items-end">
+
+      <!-- # tickets, ticket, flame: -->
+      <div class="d-flex flex-row align-items-end top-row">
+
+        <!-- ## tickets, ticket -->
+        <div class="d-flex flex-column align-items-end">
+          <div class="blue-box">
+            <span class="colored blue">{{stats?.tickets | shortNumber}} TICKETS</span>
+          </div>
+          <span class="white">TICKET</span>
+        </div>
+
+        <!-- ## flame -->
+        <span class="emoji fire">🔥</span>
+      </div>
+
+      <!-- # events, line, news, hand: -->
+      <div class="d-flex flex-row bottom-row" style="position: relative">
+
+        <!-- ## events -->
+        <div class="purple-box d-flex flex-row justify-content-center">
+          <span class="colored purple">{{stats?.events | shortNumber}} EVENTS</span>
+        </div>
+
+        <!-- ## line, news -->
+        <div class="d-flex flex-column align-items-end">
+          <span class="white">LINE</span>
+          <div class="orange-box">
+            <span class="colored orange">{{stats?.news | shortNumber}} NEWS</span>
+          </div>
+        </div>
+
+        <!-- ## hand: -->
+        <span class="emoji hand">🤘🏻</span>
+      </div>
+
+      <!-- # join now: -->
+      <a [routerLink]="'/register'" class="gray" *ngIf="!authService.isLoggedIn()" title="Sign Up">
+        JOIN NOW!
+      </a>
+    </div>
+
+
   </div>
 </div>

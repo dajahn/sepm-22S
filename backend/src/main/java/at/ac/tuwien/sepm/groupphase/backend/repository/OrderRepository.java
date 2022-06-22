@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 import at.ac.tuwien.sepm.groupphase.backend.enums.OrderType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -43,4 +44,6 @@ public interface OrderRepository extends JpaRepository<TicketOrder, Long> {
      * @param userId the ID of the user
      */
     void deleteAllByUserId(long userId);
+
+    Optional<TicketOrder> findTicketOrderByTicketsContains(Ticket ticket);
 }

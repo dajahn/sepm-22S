@@ -47,6 +47,8 @@ public class LocationServiceTest implements LocationTestData, AddressTestData {
     private LocationService locationService;
 
     @Test
+    @Transactional
+    @Rollback
     public void givenLocationsInDb_whenFindById_thenFindLocation() {
 //generate location for event
         Location location = new Location();
@@ -105,11 +107,15 @@ public class LocationServiceTest implements LocationTestData, AddressTestData {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNoMatchingLocationsInDb_whenFindById_throwNotFoundException() {
         assertThrows(NotFoundException.class, () -> locationService.findById(-100L));
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenLocationsInDb_whenSearchByName_thenFindListOfMatchingLocations() {
         for (int i = 0; i < 3; i++) {
             //generate location for event

@@ -10,7 +10,9 @@ import com.google.zxing.common.HybridBinarizer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
@@ -29,6 +31,8 @@ public class QRCodeGenerationServiceTest {
     private QRCodeGenerationService qrCodeGenerationService;
 
     @Test
+    @Transactional
+    @Rollback
     public void givenUUIDInput_whenGenerateQRCode_thenQRCodeIsReturned() throws IOException, NotFoundException {
         // GIVEN
         String input = UUID.randomUUID().toString();
