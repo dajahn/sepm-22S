@@ -39,7 +39,10 @@ export class EventComponent implements OnInit {
   );
 
   readonly thumbnail$ = this.event$.pipe(
-    map(event => event?.thumbnail?.url ? this.globals.backendUri + event?.thumbnail?.url : ''),
+    map(event => event?.thumbnail?.url),
+    filter(url => !!url),
+    map(url => this.globals.backendUri + url),
+    share(),
   );
 
   readonly performanceId$ = this.event$.pipe(

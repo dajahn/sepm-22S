@@ -2,16 +2,19 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Location;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.enums.EventCategory;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.LocationRepository;
+import at.ac.tuwien.sepm.groupphase.backend.util.ImageUtility;
 import com.github.javafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -53,30 +56,26 @@ public class EventDataGenerator {
         if (eventRepository.count() > 0) {
             LOGGER.debug("Events already generated");
         } else {
+            Faker faker = new Faker();
+
             List<Location> locations = locationRepository.findAll();
             List<Artist> artists = artistRepository.findAll();
 
             for (int i = 0; i < NUMBER_OF_EVENTS_TO_GENERATE; i++) {
-                Faker faker = new Faker();
-
                 Event event = new Event();
                 event.setName(faker.rockBand().name());
                 event.setDescription(faker.lorem().paragraph());
                 event.setCategory(EventCategory.values()[faker.random().nextInt(0, 1)]);
                 event.setDuration(Duration.ofMinutes(faker.random().nextInt(60, 180)));
 
-                Event event2 = new Event();
-                event2.setName(faker.pokemon().name());
-                event2.setDescription(faker.lorem().paragraph());
-                event2.setCategory(EventCategory.values()[faker.random().nextInt(0, 1)]);
-                event2.setDuration(Duration.ofMinutes(faker.random().nextInt(60, 180)));
+                File file = new File(MediaType.IMAGE_JPEG, ImageUtility.randomJpeg(64, 64));
+                event.setThumbnail(file);
 
                 Set<Artist> eventArtists = new HashSet<>();
                 int artistNumber = faker.random().nextInt(1, 4);
                 for (int j = 0; j < artistNumber; j++) {
                     eventArtists.add(artists.get(faker.random().nextInt(0, artists.size() - 1)));
                 }
-                event2.setArtists(eventArtists);
                 event.setArtists(eventArtists);
 
                 List<Performance> performances = new ArrayList<>();
@@ -91,19 +90,8 @@ public class EventDataGenerator {
                     performance.setEvent(event);
                     performances.add(performance);
                 }
-
-                List<Performance> performances2 = new ArrayList<>();
-                for (Location location : locations) {
-                    if (faker.random().nextBoolean()) {
-                        Performance performance = new Performance();
-                        performance.setLocation(location);
-                        performance.setDateTime(LocalDateTime.of(LocalDate.ofInstant(faker.date().past(365, TimeUnit.DAYS).toInstant(), TimeZone.getDefault().toZoneId()), LocalTime.of(faker.random().nextInt(0, 23), 0)));
-                        performance.setEvent(event);
-                        performances2.add(performance);
-                    }
-                }
-                event2.setPerformances(performances2);
                 event.setPerformances(performances);
+
                 LOGGER.debug("Saving event {}", event);
                 eventRepository.save(event);
             }

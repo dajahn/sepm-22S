@@ -1,7 +1,7 @@
 <!-- HEADLINE -->
 <div class="d-flex flex-row align-items-center gap-3 mb-3">
-  <ng-container *ngIf="thumbnail$ | async">
-    <img class="thumbnail" height="64px" width="64px" [src]="thumbnail$ | async" alt="Event thumbnail">
+  <ng-container *ngIf="(thumbnail$ | async) as thumbnail">
+    <img class="thumbnail" height="64px" width="64px" [src]="thumbnail" alt="Event thumbnail">
   </ng-container>
   <h2 class="m-0">
     {{(event$ | async)?.name}}
@@ -50,19 +50,19 @@
     </div>
 
     <div class="d-flex flex-row justify-content-between" style="margin-top: 1rem; margin-bottom: 1rem">
-        <span class="price">Total: {{sum | price}}</span>
+      <span class="price">Total: {{sum | price}}</span>
       <div class="d-grid">
         <input type="button" class="btn blue add-btn" value="ADD TO 🛒" (click)="addToCart()"
                [disabled]="selectedTickets.length === 0">
       </div>
-<!--      <div class="col-1"></div>-->
+      <!--      <div class="col-1"></div>-->
     </div>
     <div class="d-flex flex-row justify-content-end" style="margin-bottom: 4rem">
       <div class="d-grid">
         <input type="button" id="reserveBtn" class="btn blue add-btn" value="Reserve" (click)="reserveTickets()"
                [disabled]="selectedTickets.length === 0 || isReservationTimeValid()">
       </div>
-<!--    <div class="col-1"></div>-->
+      <!--    <div class="col-1"></div>-->
     </div>
   </div>
   <div class="d-flex flex-column align-items-center flex-fill w-100 gap-4">

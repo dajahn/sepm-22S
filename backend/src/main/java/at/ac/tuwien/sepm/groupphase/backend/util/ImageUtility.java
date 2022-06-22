@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.util;
 
+import at.ac.tuwien.sepm.groupphase.backend.exception.UnexpectedException;
+import org.h2.util.IOUtils;
+
 import java.io.ByteArrayOutputStream;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
+import java.net.URL;
 
 /**
  * This class has basic Image methods.
@@ -10,41 +12,36 @@ import java.util.zip.Inflater;
  */
 public class ImageUtility {
 
-    public static byte[] compressImage(byte[] data) {
+    public static byte[] randomJpeg(int width, int height, Category category) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        Deflater deflater = new Deflater();
-        deflater.setLevel(Deflater.BEST_COMPRESSION);
-        deflater.setInput(data);
-        deflater.finish();
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] tmp = new byte[4 * 1024];
-        while (!deflater.finished()) {
-            int size = deflater.deflate(tmp);
-            outputStream.write(tmp, 0, size);
-        }
         try {
-            outputStream.close();
+            IOUtils.copyAndClose(
+                new URL("https://placeimg.com/" + width + "/" + height + "/" + (category == null ? "all" : category.value)).openStream(),
+                outputStream
+            );
         } catch (Exception e) {
-            return null;
+            throw new UnexpectedException("Error while loading random JPEG.", e);
         }
+
         return outputStream.toByteArray();
     }
 
-    public static byte[] decompressImage(byte[] data) {
-        Inflater inflater = new Inflater();
-        inflater.setInput(data);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] tmp = new byte[4 * 1024];
-        try {
-            while (!inflater.finished()) {
-                int count = inflater.inflate(tmp);
-                outputStream.write(tmp, 0, count);
-            }
-            outputStream.close();
-        } catch (Exception exception) {
-            return null;
+    public static byte[] randomJpeg(int width, int height) {
+        return randomJpeg(width, height, null);
+    }
+
+    enum Category {
+        ANIMALS("animals"),
+        ARCHITECTURE("architecture"),
+        NATURE("nature"),
+        PEOPLE("people"),
+        TECH("tech");
+
+        private final String value;
+
+        Category(String value) {
+            this.value = value;
         }
-        return outputStream.toByteArray();
     }
 }

@@ -1,23 +1,17 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.converter.MediaTypeConverter;
-import lombok.Builder;
+import at.ac.tuwien.sepm.groupphase.backend.util.CompressionUtility;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.http.MediaType;
-
-
-import lombok.NoArgsConstructor;
-import lombok.Data;
-import lombok.AllArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -28,6 +22,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import java.util.Objects;
 
 /**
@@ -58,6 +54,16 @@ public class File {
     @NonNull
     @ToString.Exclude
     private byte[] data;
+
+    public byte[] getData() {
+        return CompressionUtility.decompress(data);
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void compressData() {
+        data = CompressionUtility.compress(data);
+    }
 
     @Override
     public boolean equals(Object o) {
