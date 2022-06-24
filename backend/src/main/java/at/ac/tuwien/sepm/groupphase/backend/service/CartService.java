@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateTicketDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedTicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedTicketsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 
@@ -47,5 +47,5 @@ public interface CartService {
      * @param userId the ID of the logged-in user
      * @return the purchased TicketOrder for past events of the currently logged-in user
      */
-    PagedTicketDto getPastPurchasedTickets(Long userId, int page, int size);
+    PagedTicketsDto getPastPurchasedTickets(Long userId, int page, int size);
 }

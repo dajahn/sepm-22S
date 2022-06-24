@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateTicketDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedTicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedTicketsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Seat;
@@ -11,7 +11,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.StandingTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 import at.ac.tuwien.sepm.groupphase.backend.enums.OrderType;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SeatRepository;
@@ -143,20 +142,20 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<Ticket> getUpcomingPurchasedTickets(Long userId) {
         LOGGER.trace("getUpcomingPurchasedTickets(Long userId) for user with id: {}", userId);
-        return orderRepository.findTicketOrderByUserIdAndTypeAndDateTimeAfter(
+        return ticketRepository.findByOrderUserIdAndOrderTypeAndPerformanceDateTimeAfterOrderByPerformanceDateTime(
             userId, OrderType.PURCHASE, LocalDateTime.now()
         );
     }
 
     @Override
-    public PagedTicketDto getPastPurchasedTickets(Long userId, int page, int size) {
+    public PagedTicketsDto getPastPurchasedTickets(Long userId, int page, int size) {
         LOGGER.trace("getPastPurchasedTickets(Long userId) for user with id: {}", userId);
-        Long totalCount = orderRepository.getCountTicketsByUserIdAndOrderTypeAndDateTimeLessThanEqual(userId, OrderType.PURCHASE, LocalDateTime.now());
+        Long totalCount = ticketRepository.countByOrderUserIdAndOrderTypeAndPerformanceDateTimeLessThanEqual(userId, OrderType.PURCHASE, LocalDateTime.now());
         Pageable pageable = PageRequest.of(page, size);
-        Page<Ticket> tickets = orderRepository.findTicketOrderByUserIdAndTypeAndDateTimeLessThanEqual(
+        Page<Ticket> tickets = ticketRepository.findByOrderUserIdAndOrderTypeAndPerformanceDateTimeLessThanEqualOrderByPerformanceDateTime(
             userId, OrderType.PURCHASE, LocalDateTime.now(), pageable
         );
         List<TicketDto> ticketDtos = tickets.stream().map(this.ticketMapper::ticketToTicketDto).toList();
-        return new PagedTicketDto(ticketDtos, totalCount);
+        return new PagedTicketsDto(ticketDtos, totalCount);
     }
 }

@@ -2,11 +2,10 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateTicketDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedTicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedTicketsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.OrderMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -14,11 +13,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -101,7 +98,7 @@ public class CartEndpoint {
     @Secured("ROLE_USER")
     @GetMapping(value = "/purchased/past")
     @Operation(summary = "Get summary of all past purchased events", security = @SecurityRequirement(name = "apiKey"))
-    public PagedTicketDto findPastPurchasedEvents(
+    public PagedTicketsDto findPastPurchasedEvents(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "6") int size
     ) {

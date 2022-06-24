@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PagedTicketDto {
+public class PagedTicketsDto {
     List<TicketDto> tickets;
     Long totalCount;
 }
