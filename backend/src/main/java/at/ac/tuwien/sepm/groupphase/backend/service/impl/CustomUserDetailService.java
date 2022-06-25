@@ -220,11 +220,9 @@ public class CustomUserDetailService implements UserService {
         return pagedUserDto;
     }
 
-    @Transactional
     @Override
     public void deleteUser(Long id) {
-        LOGGER.info("deleteUser(Long id) with id = {]", id);
-        orderRepository.deleteAllByUserId(id);
+        LOGGER.info("deleteUser(Long id) with id = {}", id);
         userRepository.deleteById(id);
     }
 }

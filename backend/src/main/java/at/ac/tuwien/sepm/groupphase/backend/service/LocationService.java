@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateLocationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.LocationSearchTermsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SearchLocationDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Location;
@@ -24,5 +25,19 @@ public interface LocationService {
      */
     Location findById(Long id);
 
+    /**
+     * Returns a list of all locations which fit to the search terms.
+     *
+     * @param searchTermsDto Search Terms
+     * @return a list of locations
+     */
     List<Location> findAllLocationsBy(LocationSearchTermsDto searchTermsDto);
+
+    /**
+     * Inserts a new location.
+     *
+     * @param locationDto Location to insert
+     * @return the inserted location
+     */
+    Location createLocation(CreateLocationDto locationDto);
 }

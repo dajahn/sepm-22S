@@ -1,7 +1,7 @@
 <div class="d-flex flex-column align-items-center w-100 gap-4">
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    [attr.viewBox]="[0, 0, (((maxX$ | async) || 0) + 1) * 100, (((maxY$ | async) || 0) + 1) * 100].join(' ')">
+    [attr.viewBox]="[0, 0, ((this.creation ? this.size.x : (maxX$ | async) || 0) + 1) * 100, ((this.creation ? this.size.y : (maxY$ | async) || 0) + 1) * 100].join(' ')">
     <defs>
       <linearGradient id="gradient-orange" gradientTransform="rotate(90)">
         <stop offset="0%" stop-color="var(--gradient-orange-color-0)"/>
@@ -16,12 +16,13 @@
     <g>
       <svg
         (click)="getUnavailableStandingSpots(sector.id) < sector.capacity && onStandingSectorClick(sector)"
-        [class.clickable]="getUnavailableStandingSpots(sector.id) < sector.capacity"
+        [class.clickable]="creation || getUnavailableStandingSpots(sector.id) < sector.capacity"
         *ngFor="let sector of standingSectors$ | async"
         [attr.x]="sector.point1.x * 100"
         [attr.y]="sector.point1.y * 100"
         [attr.width]="(sector.point2.x - sector.point1.x + 1) * 100"
         [attr.height]="(sector.point2.y - sector.point1.y + 1) * 100"
+        [class.preview]="sector.preview"
         fill="red">
         <title>
           Sector {{sector.name}}
@@ -55,7 +56,12 @@
           text-anchor="middle"
           fill="var(--text-c-highlight)"
           style="font-size: 2em">
-          {{getSelectedStandingSpots(sector.id)}}+{{getOccupiedStandingSpots(sector.id)}}/{{sector.capacity}}
+          <ng-template [ngIf]="creation">
+            {{sector.capacity}} Slots - {{ sector.price }} € / Ticket
+          </ng-template>
+          <ng-template [ngIf]="!creation">
+            {{getSelectedStandingSpots(sector.id)}}+{{getOccupiedStandingSpots(sector.id)}}/{{sector.capacity}}
+          </ng-template>
         </text>
       </svg>
     </g>
@@ -66,7 +72,9 @@
           (click)="isSeatOccupied(seat.id) || onSeatClick(sector, seat)"
           [class.clickable]="!isSeatOccupied(seat.id)"
           [attr.x]="seat.point.x * 100"
-          [attr.y]="seat.point.y * 100">
+          [attr.y]="seat.point.y * 100"
+          [class.preview]="sector.preview"
+        >
           <title>
             Row {{seat.row}}, Seat {{seat.column}}
             {{'\n'}}Price: {{sector.price | price}} {{sector.seatType === 'NONE' ? '' : '(' + (sector.seatType |
@@ -105,7 +113,29 @@
         </svg>
       </g>
     </g>
+    <!--  standing sector preview, so it is display on top of the seats  -->
+    <g>
+      <svg
+              *ngFor="let sector of standingSectorPreviews$ | async"
+              [attr.x]="sector.point1.x * 100"
+              [attr.y]="sector.point1.y * 100"
+              [attr.width]="(sector.point2.x - sector.point1.x) * 100"
+              [attr.height]="(sector.point2.y - sector.point1.y) * 100"
+              [class.preview]="sector.preview"
+              fill="red">
+        <rect
+                x="10"
+                y="10"
+                [attr.width]="(sector.point2.x - sector.point1.x) * 100 - 10 * 2"
+                [attr.height]="(sector.point2.y - sector.point1.y) * 100 - 10 * 2"
+                fill="var(--bg-tertiary)"
+                stroke="var(--bg-secondary)"
+                [attr.rx]="10"
+                [attr.ry]="10"
+                [attr.stroke-width]="10"/>
+      </svg>
+    </g>
   </svg>
-  <span>📍  <a class="ms-2"
+  <span *ngIf="(location$ | async)?.address && !this.creation">📍  <a class="ms-2"
                [href]="getAddressMapsUrl((location$ | async)?.address)">{{getAddressString((location$ | async)?.address)}}</a></span>
 </div>

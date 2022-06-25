@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.enums.SectorType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,5 +20,10 @@ public class StandingSectorDto extends SectorDto {
 
     public StandingSectorDto() {
         super(SectorType.STANDING);
+    }
+
+    @Override
+    public Sector mapToEntity(SectorMapper mapper) {
+        return mapper.standingSectorDtoToStandingSector(this);
     }
 }

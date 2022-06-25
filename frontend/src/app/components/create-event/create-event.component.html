@@ -2,10 +2,11 @@
 
   <div class="row pt-3">
     <!--  Placeholder-->
-    <div class="col-3">
+    <div class="col-md-3">
     </div>
-    <!--header-->
-    <div class="col-6">
+
+    <div class="col-lg-6">
+      <!--header-->
       <div class="row">
         <div class="col-12">
           <h1 class="text-center">Create Event</h1>
@@ -58,7 +59,7 @@
 
           <div class="row mt-3">
             <!--          Duration input field-->
-            <div class="col-3">
+            <div class="col-lg-3">
               <label for="duration">Duration</label>
               <ngb-timepicker required formControlName="duration" id="duration" [spinners]="false"
                               aria-describedby="durationHelp" [(ngModel)]="time"></ngb-timepicker>
@@ -88,11 +89,14 @@
             </div>
 
             <!--          Category select field-->
-            <div class="col-9">
+            <div class="col-lg-9">
               <label for="category">Category</label>
               <select class="form-control" required name="category" formControlName="category" id="category">
-                <option value="{{eventCategory.CONCERT}}">Concert</option>
-                <option value="{{eventCategory.CONFERENCE}}">Conference</option>
+                <option value="" disabled selected>Select the Event Category</option>
+                <option *ngFor="let ev of eventCategoriesKeys"
+                        value="{{ev}}">{{eventCategories[ev] | capitalizeFirst}}</option>
+<!--                <option value="{{eventCategories.CONCERT}}">Concert</option>-->
+<!--                <option value="{{eventCategories.CONFERENCE}}">Conference</option>-->
               </select>
               <!--          Category validations-->
               <div class="row mt-1">
@@ -139,7 +143,7 @@
 
           <div class="row mt-3">
             <!--            Thumbnail input field-->
-            <div class="col-3">
+            <div class="col-md-3">
               <label>Thumbnail</label>
               <label title="Add Artist" for="file-upload" id="file-upload-label"
                      class="custom-file-upload white d-flex justify-content-center align-items-center"
@@ -165,14 +169,16 @@
               <div class="row mt-1">
                 <div class="col">
                   <ng-container>
-                    <div class="clearfix imgHint">
-                      <div *ngIf="backGroundImg && backGroundImg.name" class="float-end">
-                        <small>
-                            <span class="me-1">
-                                <i class="bi bi-trash" (click)="removeImageCandidate()" role="button"></i>
+                    <div class="clearfix imgHint mt-1" style="margin-left: -2rem">
+                      <div *ngIf="backGroundImg && backGroundImg.name" class="float-end col-md-10" (click)="removeImageCandidate()" role="button">
+                        <small class="d-flex align-items-center">
+                          <img class="preview" [src]="previewImage" alt="Preview of the image!">
+                          {{(backGroundImg.name.length>15)? (backGroundImg.name | slice:0:15)+'...':(backGroundImg.name)}}
+                          <span class="me-1">
+                                <i class="bi bi-x" ></i>
                             </span>
-                          {{backGroundImg.name}}
                         </small>
+
                       </div>
                     </div>
                   </ng-container>
@@ -180,7 +186,7 @@
               </div>
 
             </div>
-            <div class="col-9">
+            <div class="col-md-9">
               <!--            Add performances button-->
               <label for="btnPerformance">Performance(s)</label>
               <div class="form-group d-grid">

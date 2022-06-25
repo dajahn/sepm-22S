@@ -27,6 +27,8 @@ export class CreatePerformanceComponent implements OnInit {
   searchLocationFailed: boolean;
   deleted= false;
   today: NgbDateStruct;
+  locationError: boolean;
+  dateInvalid: boolean;
 
   constructor(private locationService: LocationService) {
 
@@ -61,12 +63,21 @@ export class CreatePerformanceComponent implements OnInit {
   }
 
   updatePerformance() {
+    if(this.time !== null && this.time !== undefined){
+      const dt = new Date(this.dateModel.year, this.dateModel.month - 1, this.dateModel.day, this.time.hour, this.time.minute);
+      this.dateInvalid= dt < new Date();
+    }
     if(this.time !== null) {
       this.performance.dateTime = new Date(this.dateModel.year,
         this.dateModel.month - 1, this.dateModel.day, this.time.hour, this.time.minute);
     } else {
       this.performance.dateTime = new Date(this.dateModel.year,
         this.dateModel.month - 1, this.dateModel.day,null, null);
+    }
+    if (typeof this.location !== 'object' || this.location === undefined || this.location === null) {
+      this.locationError = true;
+    } else {
+      this.locationError = false;
     }
     if(this.location !== undefined) {
       this.performance.location = {
@@ -113,5 +124,4 @@ export class CreatePerformanceComponent implements OnInit {
         return of([]);
       })
     );
-
 }
