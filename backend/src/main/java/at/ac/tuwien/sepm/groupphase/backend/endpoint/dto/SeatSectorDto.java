@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Seat;
+import at.ac.tuwien.sepm.groupphase.backend.entity.SeatSector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.enums.SeatType;
 import at.ac.tuwien.sepm.groupphase.backend.enums.SectorType;
@@ -22,7 +24,11 @@ public class SeatSectorDto extends SectorDto {
     }
 
     @Override
-    public Sector mapToEntity(SectorMapper mapper) {
-        return mapper.seatSectorDtoToSeatSector(this);
+    public SeatSector mapToEntity(SectorMapper mapper) {
+        SeatSector sector = mapper.seatSectorDtoToSeatSector(this);
+        for(Seat seat : sector.getSeats()) {
+            seat.setSector(sector);
+        }
+        return sector;
     }
 }
