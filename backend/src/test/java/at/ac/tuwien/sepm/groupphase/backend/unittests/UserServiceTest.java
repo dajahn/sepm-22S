@@ -4,10 +4,15 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.AddressTestData;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.UserTestData;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUpdateUserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedUserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserRole;
 import at.ac.tuwien.sepm.groupphase.backend.enums.UserStatus;
+import at.ac.tuwien.sepm.groupphase.backend.exception.CouldNotLockUserException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -415,4 +420,91 @@ public class UserServiceTest implements UserTestData, AddressTestData {
         assertTrue(userRepository.findById(userId).isEmpty());
     }
 
+
+    @Test
+    @Transactional
+    @Rollback
+    public void givenNothing_addFailedLoginAttemptToUser_thenIncreaseAttempts(){
+        User u = userRepository.findAll().get(0);
+        int failedBefore = u.getFailedLoginAttempts();
+
+        userService.addFailedLoginAttemptToUser(userMapper.userToUserLoginDto(u));
+        int failedAfter = u.getFailedLoginAttempts();
+
+        assertEquals(failedBefore+1,failedAfter);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void givenNothing_resetFailedLoginAttemptsForUser_thenResetAttempts(){
+        User u = userRepository.findAll().get(0);
+
+        userService.addFailedLoginAttemptToUser(userMapper.userToUserLoginDto(u));
+        userService.addFailedLoginAttemptToUser(userMapper.userToUserLoginDto(u));
+        userService.addFailedLoginAttemptToUser(userMapper.userToUserLoginDto(u));
+
+        int failed = u.getFailedLoginAttempts();
+
+        assertEquals(failed,3);
+
+        userService.resetFailedLoginAttemptsForUser(userMapper.userToUserLoginDto(u));
+
+        failed = u.getFailedLoginAttempts();
+
+        assertEquals(failed,0);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void givenUnlockedUser_getUserStatus_thenReceiveUnlockedStatus() {
+        User u = userRepository.findAll().get(0);
+
+        UserStatus userStatus = u.getStatus();
+
+        assertEquals(UserStatus.OK,userStatus);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void givenLockedUser_whenGetUserStatus_thenReceiveLockedStatus() {
+        User u = userRepository.findAll().get(0);
+
+        u.setStatus(UserStatus.LOCKED);
+
+        UserStatus userStatus = u.getStatus();
+
+        assertEquals(UserStatus.LOCKED,userStatus);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void givenAdmin_whenTrysToLockHimself_thenGetErr() {
+        User u = userRepository.findUserByEmail(ADMIN_EMAIL);
+
+        assertThrows(CouldNotLockUserException.class, () -> userService.updateLockingState(u.getId(),true,ADMIN_EMAIL));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void givenInvalidID_whenTryToLock_thenGetNotFoundException() {
+        assertThrows(NotFoundException.class, () -> userService.updateLockingState(-1L,true,ADMIN_EMAIL));
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void givenNothing_whenGetUserByService_thenGetUser() {
+        UserSearchDto userSearchDto = new UserSearchDto();
+        PagedUserDto pagedUserDto = userService.getUser(userSearchDto,1,5);
+
+        Long userCount = userRepository.count();
+
+        assertEquals(pagedUserDto.getTotalCount(),userCount);
+        assertEquals(pagedUserDto.getUsers().size(),userCount > 5?5:userCount);
+    }
 }

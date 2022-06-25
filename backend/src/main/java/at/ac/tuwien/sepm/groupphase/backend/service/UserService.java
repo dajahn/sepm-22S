@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUpdateUserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedUserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
@@ -89,28 +90,22 @@ public interface UserService extends UserDetailsService {
     List<User> getLockedUser();
 
     /**
-     * Unlocks a user by id.
+     * Un/Locks a user by id.
      *
-     * @param id id of the user
-     * @return User object wich was unlocked
-     */
-    User unlockUserById(Long id);
-
-    /**
-     * Locks a user by id.
-     *
-     * @param id   of the user
+     * @param id of the user
+     * @param locked wheter the user should be set to locked or unlocked
      * @param mail of the admin which executes the request
-     * @return the user object
      */
-    User lockUserById(Long id, String mail);
+    User updateLockingState(Long id, boolean locked, String mail);
 
 
     /**
      * Gets all users by a userSearchDto(Filter).
      *
      * @param userSearchDto the filter
-     * @return list of user
+     * @param page current page (pagination)
+     * @param size of the page (pagination)
+     * @return paged list of user with the total amount of users
      */
-    List<User> getUser(UserSearchDto userSearchDto);
+    PagedUserDto getUser(UserSearchDto userSearchDto, int page, int size);
 }

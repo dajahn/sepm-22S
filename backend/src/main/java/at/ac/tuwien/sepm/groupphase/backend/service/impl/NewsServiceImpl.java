@@ -103,6 +103,7 @@ public class NewsServiceImpl implements NewsService {
 
         Pageable pageable = PageRequest.of(page, size);
         List<News> news = newsRepository.loadUnreadNews(user.getId(), pageable);
+
         List<NewsDto> newsDtos = mapOtherDtos(news);
 
         PagedNewsDto pagedNewsDto = new PagedNewsDto();

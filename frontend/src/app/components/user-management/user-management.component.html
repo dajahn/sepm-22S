@@ -38,21 +38,50 @@
         <!-- Placeholder -->
         <div class="col-2"></div>
         <div class="col-8">
-            <!-- Todo implement filter after locking state
-                implement search after mail-->
-
-            <div *ngFor="let u of user;let i = index" class="userEntry mb-3 mt-3">
-                <div>
-                    {{u.role}} | {{u.email}}
+            <div *ngIf="totalUsers !== 0; else noUsers">
+                <div  *ngFor="let u of user;let i = index" class="userEntry mb-3 mt-3">
+                    <div>
+                        {{u.role}} | {{u.email}}
+                    </div>
+                    <div role="button">
+                        <i title="unlock user" *ngIf="u.status === 'LOCKED';else elseBlock" class="bi bi-lock lockIcon"
+                            (click)="unlockUser(u)"></i>
+                        <ng-template #elseBlock>
+                            <i title="lock user" class="bi bi-unlock lockIcon" (click)="lockUser(u)"></i>
+                        </ng-template>
+                    </div>
                 </div>
-                <div role="button">
-                    <i title="unlock user" *ngIf="u.status === 'LOCKED';else elseBlock" class="bi bi-lock lockIcon"
-                        (click)="unlockUser(u)"></i>
-                    <ng-template #elseBlock>
-                        <i title="lock user" class="bi bi-unlock lockIcon" (click)="lockUser(u)"></i>
-                    </ng-template>
+    
+                <div *ngIf="totalUsers > pageSize" class="d-flex justify-content-center align-items-center">
+                    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="totalUsers"
+                        (pageChange)="handlePageChange()">
+                        <ng-template ngbPaginationPages let-page let-pages="pages">
+                            <li class="ngb-custom-pages-item" *ngIf="pages.length > 0">
+                                <div class="mb-3 d-flex flex-nowrap px-2">
+                                    <label id="paginationInputLabel" for="paginationInput"
+                                        class="col-form-label me-2 ms-1">Page</label>
+                                    <input #i type="text" inputmode="numeric" pattern="[0-9]*"
+                                        class="form-control custom-pages-input" id="paginationInput" [value]="page"
+                                        (keyup.enter)="selectPage(i.value)" (blur)="selectPage(i.value)"
+                                        (input)="formatInput($any($event).target)"
+                                        aria-labelledby="paginationInputLabel paginationDescription"
+                                        style="width: 2.5rem" />
+                                    <span id="paginationDescription" class="col-form-label text-nowrap px-2">
+                                        of {{pages.length}}</span>
+                                </div>
+                            </li>
+                        </ng-template>
+                    </ngb-pagination>
                 </div>
             </div>
+
+            <ng-template #noUsers>
+                <div class="userEntry">
+                    <b>
+                        No users found that match the search criteria!
+                    </b>
+                </div>
+            </ng-template>
         </div>
     </div>
 </div>

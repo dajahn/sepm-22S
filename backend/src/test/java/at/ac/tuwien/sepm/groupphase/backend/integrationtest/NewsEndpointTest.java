@@ -1,30 +1,25 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedNewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
-import at.ac.tuwien.sepm.groupphase.backend.entity.converter.MediaTypeConverter;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepm.groupphase.backend.util.FileDtoDeserializer;
 import at.ac.tuwien.sepm.groupphase.backend.util.FileDtoSerializer;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.internal.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -53,6 +48,7 @@ import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.TEST_NEWS_I
 import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestData.TEST_NEWS_TITLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -83,8 +79,6 @@ public class NewsEndpointTest {
 
     @Autowired
     private static ObjectMapper MAPPER;
-
-
     private News news;
     private File file;
 
@@ -92,7 +86,7 @@ public class NewsEndpointTest {
     public void beforeEach(){
         newsRepository.deleteAll();
 
-        File file = File.builder()
+        file = File.builder()
             .type(TEST_NEWS_IMG_TYPE)
             .data(Base64.getDecoder().decode(TEST_NEWS_BASE64_IMG))
             .build();
@@ -229,6 +223,19 @@ public class NewsEndpointTest {
         MockHttpServletResponse response = mvcResult.getResponse();
         PagedNewsDto pagedNewsDto = MAPPER.readValue(response.getContentAsString(),PagedNewsDto.class);
         assertEquals(1,pagedNewsDto.getNews().size());
+    }
+
+    @Test
+    @Transactional
+    public void givenWrongId_whenGetNewsById_then404() throws Exception {
+        String wrongUrl = NEWS_BASE_URI+"/-1";
+        MvcResult mvcResult = this.mockMvc
+            .perform(get(wrongUrl).header(securityProperties.getAuthHeader(),jwtTokenizer.getAuthToken(ADMIN_USER,ADMIN_ROLES)))
+            .andDo(print())
+            .andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.NOT_FOUND.value(),response.getStatus());
     }
 
 }
