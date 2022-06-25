@@ -86,7 +86,7 @@ public class NewsEndpointTest {
     public void beforeEach(){
         newsRepository.deleteAll();
 
-        File file = File.builder()
+        file = File.builder()
             .type(TEST_NEWS_IMG_TYPE)
             .data(Base64.getDecoder().decode(TEST_NEWS_BASE64_IMG))
             .build();

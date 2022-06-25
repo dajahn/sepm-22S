@@ -83,6 +83,7 @@ public class NewsServiceTest {
 
     @Test
     @Transactional
+    @Rollback
     public void givenNothing_whenCreateNewsEntry_thenGetCreatedNews() throws IOException {
         FileDto fileDto = new FileDto();
         fileDto.setType(TEST_NEWS_IMG_TYPE);
@@ -100,6 +101,7 @@ public class NewsServiceTest {
 
     @Test
     @Transactional
+    @Rollback
     public void givenNothing_whenGetAll_thenGetPagedNews() {
         //Check if right page size gets returned
         int size = 5;
@@ -113,6 +115,7 @@ public class NewsServiceTest {
 
     @Test
     @Transactional
+    @Rollback
     public void givenNewNews_whenGetUnreadChangeIfRead_thenSetToRead() throws IOException {
         newsRepository.save(news);
 

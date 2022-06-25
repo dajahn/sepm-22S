@@ -423,6 +423,7 @@ public class UserServiceTest implements UserTestData, AddressTestData {
 
     @Test
     @Transactional
+    @Rollback
     public void givenNothing_addFailedLoginAttemptToUser_thenIncreaseAttempts(){
         User u = userRepository.findAll().get(0);
         int failedBefore = u.getFailedLoginAttempts();
@@ -435,6 +436,7 @@ public class UserServiceTest implements UserTestData, AddressTestData {
 
     @Test
     @Transactional
+    @Rollback
     public void givenNothing_resetFailedLoginAttemptsForUser_thenResetAttempts(){
         User u = userRepository.findAll().get(0);
 
@@ -455,6 +457,7 @@ public class UserServiceTest implements UserTestData, AddressTestData {
 
     @Test
     @Transactional
+    @Rollback
     public void givenUnlockedUser_getUserStatus_thenReceiveUnlockedStatus() {
         User u = userRepository.findAll().get(0);
 
@@ -465,6 +468,7 @@ public class UserServiceTest implements UserTestData, AddressTestData {
 
     @Test
     @Transactional
+    @Rollback
     public void givenLockedUser_whenGetUserStatus_thenReceiveLockedStatus() {
         User u = userRepository.findAll().get(0);
 
@@ -477,6 +481,7 @@ public class UserServiceTest implements UserTestData, AddressTestData {
 
     @Test
     @Transactional
+    @Rollback
     public void givenAdmin_whenTrysToLockHimself_thenGetErr() {
         User u = userRepository.findUserByEmail(ADMIN_EMAIL);
 
@@ -485,12 +490,14 @@ public class UserServiceTest implements UserTestData, AddressTestData {
 
     @Test
     @Transactional
+    @Rollback
     public void givenInvalidID_whenTryToLock_thenGetNotFoundException() {
         assertThrows(NotFoundException.class, () -> userService.updateLockingState(-1L,true,ADMIN_EMAIL));
     }
 
     @Test
     @Transactional
+    @Rollback
     public void givenNothing_whenGetUserByService_thenGetUser() {
         UserSearchDto userSearchDto = new UserSearchDto();
         PagedUserDto pagedUserDto = userService.getUser(userSearchDto,1,5);
@@ -500,5 +507,4 @@ public class UserServiceTest implements UserTestData, AddressTestData {
         assertEquals(pagedUserDto.getTotalCount(),userCount);
         assertEquals(pagedUserDto.getUsers().size(),userCount > 5?5:userCount);
     }
-
 }

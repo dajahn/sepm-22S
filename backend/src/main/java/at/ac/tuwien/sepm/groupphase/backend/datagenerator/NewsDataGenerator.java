@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
+import at.ac.tuwien.sepm.groupphase.backend.util.ImageUtility;
 import com.github.javafaker.Faker;
 import io.micrometer.core.instrument.util.IOUtils;
 import org.slf4j.Logger;
@@ -46,20 +47,22 @@ public class NewsDataGenerator {
             return;
         }
 
-        FileInputStream fis = new FileInputStream("src/main/resources/images/newsMockImageBase64.txt");
-        String fileString = IOUtils.toString(fis, Charset.availableCharsets().get("UTF-8"));
-        byte[] toStore = Base64.getDecoder().decode(fileString);
+        /*
+            FileInputStream fis = new FileInputStream("src/main/resources/images/newsMockImageBase64.txt");
+            String fileString = IOUtils.toString(fis, Charset.availableCharsets().get("UTF-8"));
+            byte[] toStore = Base64.getDecoder().decode(fileString);
 
-        fis = new FileInputStream("src/main/resources/images/eventStockBase64.txt");
-        fileString = IOUtils.toString(fis, Charset.availableCharsets().get("UTF-8"));
-        byte[] toStore2 = Base64.getDecoder().decode(fileString);
+            fis = new FileInputStream("src/main/resources/images/eventStockBase64.txt");
+            fileString = IOUtils.toString(fis, Charset.availableCharsets().get("UTF-8"));
+            byte[] toStore2 = Base64.getDecoder().decode(fileString);
+        */
 
         for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
             Faker faker = new Faker();
 
             File file = File.builder()
                 .type(MediaType.parseMediaType("image/jpeg"))
-                .data(faker.random().nextBoolean() ? toStore : toStore2)
+                .data(ImageUtility.randomJpeg(400, 300))
                 .build();
 
             this.fileRepository.save(file);

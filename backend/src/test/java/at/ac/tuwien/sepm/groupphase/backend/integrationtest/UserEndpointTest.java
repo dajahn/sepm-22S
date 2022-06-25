@@ -58,9 +58,6 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     private MockMvc mockMvc;
 
     @Autowired
-    private FileRepository fileRepository;
-
-    @Autowired
     private JwtTokenizer jwtTokenizer;
 
     @Autowired
@@ -310,6 +307,8 @@ public class UserEndpointTest implements UserTestData, AddressTestData {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenGetUsersOrderedByLockingState_then200() throws Exception {
         final String uri = USER_BASE_URI;
         UserSearchDto userSearchDto = new UserSearchDto();
