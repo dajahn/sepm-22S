@@ -45,12 +45,12 @@ public class Location {
     @NonNull
     private Address address;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "location")
     @NonNull
     @ToString.Exclude
     private Set<Sector> sectors;
 
-    @OneToMany
+    @OneToMany(mappedBy = "location")
     @ToString.Exclude
     private List<Performance> performances;
 

@@ -72,7 +72,7 @@ public class Event {
     @NonNull
     private Set<Artist> artists;
 
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "event")
     @OrderBy("dateTime ASC")
     @ToString.Exclude
     @NonNull

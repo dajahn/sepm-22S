@@ -24,6 +24,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
@@ -127,6 +128,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public void deleteReservation(Long userId, Long orderId, Long ticketId) {
         LOGGER.trace("deleteReservation() for user {} with ticket={}", userId, ticketId);
         Optional<Ticket> ticket = ticketRepository.findById(ticketId);
@@ -150,6 +152,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public void moveTicketsToCart(Long userId, List<ReservationDto> tickets) {
         LOGGER.trace("moveTicketsToCart() for user {} with tickets {}", userId, tickets);
         List<CreateTicketDto> ticketDtos = new ArrayList<>();

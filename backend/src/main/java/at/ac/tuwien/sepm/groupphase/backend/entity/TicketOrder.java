@@ -52,7 +52,7 @@ public class TicketOrder {
     )
     private User user;
 
-    @OneToMany(fetch = javax.persistence.FetchType.EAGER, cascade = javax.persistence.CascadeType.ALL)
+    @OneToMany(fetch = javax.persistence.FetchType.EAGER, cascade = javax.persistence.CascadeType.ALL, mappedBy = "order")
     @NonNull
     private List<Ticket> tickets;
 
