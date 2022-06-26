@@ -3,9 +3,12 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.CheckoutTestData;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CheckoutDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
+import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import at.ac.tuwien.sepm.groupphase.backend.enums.OrderType;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
 import at.ac.tuwien.sepm.groupphase.backend.service.CheckoutService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +33,13 @@ public class CheckoutServiceTest implements CheckoutTestData {
     private CheckoutService checkoutService;
 
     @Autowired
+    private CartService cartService;
+
+    @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private CheckoutDto checkoutDto;
 
@@ -79,13 +88,12 @@ public class CheckoutServiceTest implements CheckoutTestData {
     @Transactional
     public void givenEmptyCart_whenCheckout_thenThrowValidationException() {
         // GIVEN
-        Optional<TicketOrder> tmp = orderRepository.findById(1L);
-        TicketOrder cart = tmp.get();
+        User user = userRepository.findAll().get(0);
+        TicketOrder cart = cartService.getCart(user.getId());
         cart.getTickets().clear();
         cart.setTickets(cart.getTickets());
-        orderRepository.save(cart);
-        tmp = orderRepository.findById(1L);
-        cart = tmp.get();
+        orderRepository.saveAndFlush(cart);
+        cart = orderRepository.findById(cart.getId()).get();
         assertEquals(OrderType.CART, cart.getType());
         assertEquals(0, cart.getTickets().size());
         long userID = cart.getUserId();

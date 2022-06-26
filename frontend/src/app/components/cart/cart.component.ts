@@ -22,6 +22,8 @@ export class CartComponent implements OnInit {
   upcomingTickets: Ticket[];
   pastTickets: Ticket[];
 
+  selectedPurchasedTickets: number[] = [];
+
   pageSize = 6;
   pastPurchasedPage = 1;
   totalAllPastPurchasedPage = 0;
@@ -75,7 +77,7 @@ export class CartComponent implements OnInit {
   }
 
   private loadPastPurchasedTickets() {
-    this.cartService.getPastPurchasedTickets(this.pastPurchasedPage - 1, this.pageSize).subscribe({
+    this.purchaseService.getPastPurchasedTickets(this.pastPurchasedPage - 1, this.pageSize).subscribe({
       next: (pagedTicket: PagedTicket) => {
         console.log(pagedTicket);
         this.totalAllPastPurchasedPage = pagedTicket.totalCount;
@@ -121,25 +123,55 @@ export class CartComponent implements OnInit {
     });
   }
 
-  showPurchaseCancelModal(ticket: Ticket) {
+  showPurchaseCancelModal() {
     const modal = this.modalService.open(CancellationModalContent, {size: 'sm', centered: true});
-    modal.componentInstance.ticket = ticket;
+    modal.componentInstance.tickets = [...this.selectedPurchasedTickets];
     modal.componentInstance.cartComponent = this;
+  }
+
+  /**
+   * Selects a purchased ticket, or deselects it, if it has already been selected
+   *
+   * @param ticketId ID of the ticket to be selected
+   */
+  selectPurchasedTicket(ticketId: number) {
+    if (this.isPurchasedTicketSelected(ticketId)) {
+      this.selectedPurchasedTickets = this.selectedPurchasedTickets.filter(id => id !== ticketId);
+    } else {
+      this.selectedPurchasedTickets.push(ticketId);
+    }
+  }
+
+  /**
+   * Checks if a purchased ticket has been selected
+   *
+   * @param ticketId ID of the ticket to be checked
+   */
+  isPurchasedTicketSelected(ticketId: number): boolean {
+    return this.selectedPurchasedTickets.some(id => id === ticketId);
+  }
+
+  /**
+   * Checks if there is no purchased ticket selected
+   */
+  areNoPurchasedTicketsSelected(): boolean {
+    return this.selectedPurchasedTickets.length === 0;
   }
 
   /**
    * Cancels purchased ticket
    */
   onPurchaseCancel(content: CancellationModalContent) {
-    const id = content.ticket.id;
-    this.purchaseService.cancelPurchasedTicket(id).subscribe({
+    const tickets = content.tickets;
+    this.purchaseService.cancelPurchasedTickets(tickets).subscribe({
       next: () => {
-        console.log(`Successfully cancelled purchased ticket ${id}.`);
-        this.upcomingTickets = this.upcomingTickets.filter((ticket) => ticket.id !== id);
+        console.log(`Successfully cancelled purchased tickets ${tickets}.`);
+        this.upcomingTickets = this.upcomingTickets.filter((ticket) => !tickets.some(id => ticket.id === id));
+        this.selectedPurchasedTickets = [];
         content.close('Ok click');
       },
       error: err => {
-        console.error(`Error, could not cancel ticket ${id}.`, err);
+        console.error(`Error, could not cancel tickets ${tickets}.`, err);
         this.showDanger(`Sorry, ticket could not be cancelled 😔\n${ErrorMessageParser.parseResponseToErrorMessage(err)}`);
       }
     });
@@ -188,9 +220,9 @@ export class CartComponent implements OnInit {
               (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-      <p><strong>Are you sure you want to cancel your ticket?</strong></p>
-      <p>This purchase will be permanently cancelled.
-        <span class="text-danger">This operation can not be undone.</span>
+      <p><strong>Are you sure you want to cancel the selected tickets?</strong></p>
+      <p>This purchases will be permanently cancelled.
+        <span class="text-danger">This operation cannot be undone.</span>
       </p>
     </div>
     <div class="modal-footer">
@@ -202,7 +234,7 @@ export class CartComponent implements OnInit {
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export class CancellationModalContent {
-  @Input() ticket: Ticket;
+  @Input() tickets: number[];
   @Input() cartComponent: CartComponent;
 
   constructor(public modal: NgbActiveModal) {

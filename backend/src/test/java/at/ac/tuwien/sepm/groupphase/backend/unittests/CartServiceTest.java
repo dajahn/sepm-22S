@@ -1,8 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateTicketDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedTicketsDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Seat;
@@ -25,6 +23,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,14 +51,14 @@ public class CartServiceTest {
     private SeatSectorRepository seatSectorRepository;
 
     @Autowired
-    private TicketMapper ticketMapper;
+    private EntityManager entityManager;
 
     @Test
     @Rollback
     @Transactional
     public void givenCart_whenAddTicketsToCart_thenCartIncreased() {
         // GIVEN
-        User user = userRepository.findUserByEmail("Dora.Dach0@example.com");
+        User user = userRepository.findAll().get(0);
         int before = cartService.getCart(user.getId()).getTickets().size();
 
         // WHEN
@@ -80,12 +79,13 @@ public class CartServiceTest {
     @Transactional
     public void givenNotEmptyCart_whenRemoveTicket_thenCartDecreased() {
         // GIVEN
-        User user = userRepository.findUserByEmail("Dora.Dach0@example.com");
-        int before = cartService.getCart(user.getId()).getTickets().size();
+        User user = userRepository.findAll().get(0);
+        TicketOrder cart = cartService.getCart(user.getId());
+        int before = cart.getTickets().size();
         assertTrue(before > 0);
 
         // WHEN
-        cartService.removeTicket(user.getId(), 1L);
+        cartService.removeTicket(cart.getUserId(), cart.getTickets().get(0).getId());
 
         // THEN
         assertEquals(cartService.getCart(user.getId()).getTickets().size(), (before - 1));
@@ -96,7 +96,8 @@ public class CartServiceTest {
     @Transactional
     public void givenTicketsInCart_whenGetCart_thenShowTicketsInCart() {
         // GIVEN
-        User user = userRepository.findUserByEmail("Dora.Dach0@example.com");
+        User user = userRepository.findAll().get(0);
+        orderRepository.delete(cartService.getCart(user.getId()));
         TicketOrder order = generateOrder(user, OrderType.CART, false, 5);
 
         // WHEN
@@ -104,40 +105,6 @@ public class CartServiceTest {
 
         // THEN
         assertTrue(cart.getTickets().containsAll(order.getTickets()));
-    }
-
-    @Test
-    @Rollback
-    @Transactional
-    public void givenUpcomingPurchasedTickets_whenGetUpcomingPurchasedTickets_thenShowUpcomingPurchasedTickets() {
-        // GIVEN
-        User user = userRepository.findUserByEmail("Dora.Dach0@example.com");
-        TicketOrder order = generateOrder(user, OrderType.PURCHASE, false, 5);
-
-        assertEquals(5, order.getTickets().size());
-
-        // WHEN
-        List<Ticket> upcoming = cartService.getUpcomingPurchasedTickets(user.getId());
-
-        // THEN
-        assertTrue(upcoming.containsAll(order.getTickets()));
-    }
-
-    @Test
-    @Rollback
-    @Transactional
-    public void givenPastPurchasedTickets_whenGetPastPurchasedTickets_thenShowPastPurchasedTickets() {
-        // GIVEN
-        User user = userRepository.findUserByEmail("Dora.Dach0@example.com");
-        TicketOrder order = generateOrder(user, OrderType.PURCHASE, true, 6);
-
-        List<TicketDto> tickets = order.getTickets().stream().map(ticketMapper::ticketToTicketDto).toList();
-
-        // WHEN
-        PagedTicketsDto past = cartService.getPastPurchasedTickets(user.getId(), 0, 6);
-
-        // THEN
-        assertTrue(past.getTickets().containsAll(tickets));
     }
 
     private TicketOrder generateOrder(User user, OrderType type, boolean past, int numberOfTickets) {
@@ -169,7 +136,9 @@ public class CartServiceTest {
                 tickets.add(ticket);
                 if (counter == numberOfTickets) {
                     break;
-                } else counter++;
+                } else {
+                    counter++;
+                }
             }
             if (counter == numberOfTickets) {
                 break;

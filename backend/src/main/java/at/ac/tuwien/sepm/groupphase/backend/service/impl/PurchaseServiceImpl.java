@@ -1,102 +1,106 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedTicketsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Cancellation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
-import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 import at.ac.tuwien.sepm.groupphase.backend.enums.OrderType;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CancellationRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.OrderRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PurchaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PurchaseServiceImpl implements PurchaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final OrderRepository orderRepository;
     private final TicketRepository ticketRepository;
     private final CancellationRepository cancellationRepository;
     private final InvoiceService invoiceService;
+    private final TicketMapper ticketMapper;
+    private final EntityManager entityManager;
 
     public PurchaseServiceImpl(
-        OrderRepository orderRepository,
         TicketRepository ticketRepository,
         CancellationRepository cancellationRepository,
-        InvoiceService invoiceService
+        InvoiceService invoiceService,
+        TicketMapper ticketMapper,
+        EntityManager entityManager
     ) {
-        this.orderRepository = orderRepository;
         this.ticketRepository = ticketRepository;
         this.cancellationRepository = cancellationRepository;
         this.invoiceService = invoiceService;
+        this.ticketMapper = ticketMapper;
+        this.entityManager = entityManager;
     }
 
     @Override
-    public List<Ticket> getPurchasedTickets(Long userId, Boolean upcoming) {
-        LOGGER.trace("getPurchasedTickets(Long userId) for user with id: {}", userId);
-        List<TicketOrder> ticketOrders = orderRepository.findTicketOrdersByTypeAndUserId(OrderType.PURCHASE, userId);
-        List<Ticket> purchasedTickets = new ArrayList<>();
-        List<Ticket> result = new ArrayList<>();
-        if (!ticketOrders.isEmpty()) {
-            for (TicketOrder ticketOrder : ticketOrders) {
-                if (!ticketOrder.getTickets().isEmpty()) {
-                    purchasedTickets.addAll(ticketOrder.getTickets());
-                }
-            }
-            for (Ticket purchasedTicket : purchasedTickets) {
-                if (purchasedTicket.getCancellation() == null) {
-                    if (upcoming) {
-                        if (purchasedTicket.getPerformance().getDateTime().isAfter(LocalDateTime.now())) {
-                            result.add(purchasedTicket);
-                        }
-                    } else {
-                        if (purchasedTicket.getPerformance().getDateTime().isBefore(LocalDateTime.now())) {
-                            result.add(purchasedTicket);
-                        }
-                    }
-                }
-            }
-            return result;
-        } else {
-            throw new NotFoundException(String.format("Could not find purchased Tickets form User with id %d", userId));
-        }
+    public List<Ticket> getUpcomingPurchasedTickets(Long userId) {
+        LOGGER.trace("getUpcomingPurchasedTickets(Long userId) for user with id: {}", userId);
+        return ticketRepository.findByOrderUserIdAndOrderTypeAndPerformanceDateTimeAfterOrderByPerformanceDateTime(
+            userId, OrderType.PURCHASE, LocalDateTime.now()
+        );
+    }
+
+    @Override
+    public PagedTicketsDto getPastPurchasedTickets(Long userId, int page, int size) {
+        LOGGER.trace("getPastPurchasedTickets(Long userId) for user with id: {}", userId);
+        Long totalCount = ticketRepository.countByOrderUserIdAndOrderTypeAndPerformanceDateTimeLessThanEqual(userId, OrderType.PURCHASE, LocalDateTime.now());
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Ticket> tickets = ticketRepository.findByOrderUserIdAndOrderTypeAndPerformanceDateTimeLessThanEqualOrderByPerformanceDateTime(
+            userId, OrderType.PURCHASE, LocalDateTime.now(), pageable
+        );
+        List<TicketDto> ticketDtos = tickets.stream().map(this.ticketMapper::ticketToTicketDto).toList();
+        return new PagedTicketsDto(ticketDtos, totalCount);
     }
 
     @Override
     @Transactional
-    public void cancel(Long userId, Long ticketId) {
-        LOGGER.trace("cancel(Long userId, Long ticketId) with userId = {} and ticketId = {}", userId, ticketId);
-        Optional<Ticket> result = ticketRepository.findByOrderTypeAndOrderUserIdAndId(OrderType.PURCHASE, userId, ticketId);
-        if (result.isEmpty()) {
-            throw new NotFoundException("The ticket you wanted to cancel was not found.");
+    public void cancel(Long userId, List<Long> ticketIds) {
+        LOGGER.trace("cancel(Long userId, Long ticketId) with userId = {} and ticketIds = {}", userId, ticketIds);
+
+        if (ticketIds == null || ticketIds.isEmpty()) {
+            throw new ValidationException("Cannot cancel zero tickets.");
         }
 
-        Ticket ticket = result.get();
-        if (ticket.getCancellation() != null) {
-            throw new ValidationException("The ticket has already been cancelled.");
+        List<Ticket> tickets = ticketRepository.findByOrderTypeAndOrderUserIdAndIdIn(OrderType.PURCHASE, userId, ticketIds);
+        if (tickets.size() != ticketIds.size()) {
+            throw new NotFoundException("At least one ticket you wanted to cancel was not found.");
         }
 
-        if (LocalDateTime.now().isAfter(ticket.getPerformance().getDateTime())) {
-            throw new ValidationException("The performance is already over, the ticket cannot be cancelled.");
-        }
-
-        Cancellation cancellation = new Cancellation(LocalDateTime.now(), ticket.getId());
-        ticket.setCancellation(cancellation);
-        ticketRepository.save(ticket);
+        Cancellation cancellation = new Cancellation(LocalDateTime.now(), userId, new ArrayList<>(tickets));
         cancellation = cancellationRepository.save(cancellation);
-        cancellation.setTicket(ticket);
+
+        for (Ticket ticket : tickets) {
+            if (ticket.getCancellation() != null) {
+                throw new ValidationException("At least one ticket has already been cancelled.");
+            }
+            if (LocalDateTime.now().isAfter(ticket.getPerformance().getDateTime())) {
+                throw new ValidationException("The performance of at least one ticket is already over, it cannot be cancelled.");
+            }
+            ticket.setCancellationId(cancellation.getId());
+        }
+
+        ticketRepository.saveAll(tickets);
+        entityManager.flush();
+        entityManager.refresh(cancellation);
+
         invoiceService.create(cancellation);
     }
 

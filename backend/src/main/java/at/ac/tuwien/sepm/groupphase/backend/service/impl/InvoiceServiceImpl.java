@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Cancellation;
+import at.ac.tuwien.sepm.groupphase.backend.entity.CancellationInvoice;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
 import at.ac.tuwien.sepm.groupphase.backend.entity.InvoiceId;
+import at.ac.tuwien.sepm.groupphase.backend.entity.OrderInvoice;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 import at.ac.tuwien.sepm.groupphase.backend.repository.InvoiceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceProcessingService;
@@ -29,19 +31,19 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice create(TicketOrder order) {
+    public OrderInvoice create(TicketOrder order) {
         LOGGER.trace("create(Order order) with order={}", order);
 
-        Invoice invoice = new Invoice(order);
+        OrderInvoice invoice = new OrderInvoice(order);
         this.create(invoice);
         return invoice;
     }
 
     @Override
-    public Invoice create(Cancellation cancellation) {
+    public CancellationInvoice create(Cancellation cancellation) {
         LOGGER.trace("create(Cancellation cancellation) with cancellation={}", cancellation);
 
-        Invoice invoice = new Invoice(cancellation);
+        CancellationInvoice invoice = new CancellationInvoice(cancellation);
         this.create(invoice);
         return invoice;
     }

@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Cancellation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
+import at.ac.tuwien.sepm.groupphase.backend.entity.OrderInvoice;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CancellationRepository;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,7 +50,7 @@ public class InvoiceServiceTest {
     public void givenInvoiceHasRequiredValues_whenCreateInvoice_thenInvoiceIsSaved() {
         // GIVEN
         TicketOrder order = orderRepository.findById(1L).orElseThrow();
-        Invoice invoice = new Invoice(order);
+        Invoice invoice = new OrderInvoice(order);
 
         // WHEN
         invoiceService.create(invoice);
@@ -69,7 +71,7 @@ public class InvoiceServiceTest {
     public void givenInvoiceHasRequiredValues_whenCreateInvoice_thenInvoiceGetsIdentification() {
         // GIVEN
         TicketOrder order = orderRepository.findById(1L).orElseThrow();
-        Invoice invoice = new Invoice(order);
+        Invoice invoice = new OrderInvoice(order);
 
         // WHEN
         invoiceService.create(invoice);
@@ -108,9 +110,8 @@ public class InvoiceServiceTest {
         Ticket ticket = ticketRepository.findById(1L).orElseThrow();
         Cancellation cancellation = ticket.getCancellation();
         if (cancellation == null) {
-            cancellation = new Cancellation(LocalDateTime.now(), ticket.getId());
+            cancellation = new Cancellation(LocalDateTime.now(), ticket.getOrder().getUserId(), Collections.singletonList(ticket));
             cancellation = cancellationRepository.save(cancellation);
-            cancellation.setTicket(ticket);
         }
 
         // WHEN

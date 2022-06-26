@@ -1,9 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateTicketDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedTicketsDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Seat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.StandingSector;
@@ -22,9 +19,6 @@ import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
 import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +38,6 @@ public class CartServiceImpl implements CartService {
     private final StandingTicketRepository standingTicketRepository;
     private final SeatTicketRepository seatTicketRepository;
     private final TicketRepository ticketRepository;
-    private final TicketMapper ticketMapper;
 
     public CartServiceImpl(
         OrderRepository orderRepository,
@@ -52,14 +45,13 @@ public class CartServiceImpl implements CartService {
         SeatRepository seatRepository,
         StandingTicketRepository standingTicketRepository,
         SeatTicketRepository seatTicketRepository,
-        TicketRepository ticketRepository, TicketMapper ticketMapper) {
+        TicketRepository ticketRepository) {
         this.orderRepository = orderRepository;
         this.standingSectorRepository = standingSectorRepository;
         this.seatRepository = seatRepository;
         this.standingTicketRepository = standingTicketRepository;
         this.seatTicketRepository = seatTicketRepository;
         this.ticketRepository = ticketRepository;
-        this.ticketMapper = ticketMapper;
     }
 
     @Transactional
@@ -137,25 +129,5 @@ public class CartServiceImpl implements CartService {
             LOGGER.trace("removeTicket(Long userId, Long ticketId): Removed order {}", cart);
             orderRepository.deleteAllByTypeAndUserId(OrderType.CART, userId);
         }
-    }
-
-    @Override
-    public List<Ticket> getUpcomingPurchasedTickets(Long userId) {
-        LOGGER.trace("getUpcomingPurchasedTickets(Long userId) for user with id: {}", userId);
-        return ticketRepository.findByOrderUserIdAndOrderTypeAndPerformanceDateTimeAfterOrderByPerformanceDateTime(
-            userId, OrderType.PURCHASE, LocalDateTime.now()
-        );
-    }
-
-    @Override
-    public PagedTicketsDto getPastPurchasedTickets(Long userId, int page, int size) {
-        LOGGER.trace("getPastPurchasedTickets(Long userId) for user with id: {}", userId);
-        Long totalCount = ticketRepository.countByOrderUserIdAndOrderTypeAndPerformanceDateTimeLessThanEqual(userId, OrderType.PURCHASE, LocalDateTime.now());
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Ticket> tickets = ticketRepository.findByOrderUserIdAndOrderTypeAndPerformanceDateTimeLessThanEqualOrderByPerformanceDateTime(
-            userId, OrderType.PURCHASE, LocalDateTime.now(), pageable
-        );
-        List<TicketDto> ticketDtos = tickets.stream().map(this.ticketMapper::ticketToTicketDto).toList();
-        return new PagedTicketsDto(ticketDtos, totalCount);
     }
 }

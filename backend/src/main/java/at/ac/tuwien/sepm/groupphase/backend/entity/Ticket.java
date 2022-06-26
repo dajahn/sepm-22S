@@ -19,7 +19,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import java.util.Objects;
 import java.util.UUID;
@@ -55,7 +54,12 @@ public abstract class Ticket {
     @ToString.Exclude
     private TicketOrder order;
 
-    @OneToOne
+    @Column(name = "cancellation_id")
+    private Long cancellationId;
+
+    @ManyToOne(fetch = javax.persistence.FetchType.LAZY)
+    @JoinColumn(name = "cancellation_id", insertable = false, updatable = false)
+    @ToString.Exclude
     private Cancellation cancellation;
 
     @ManyToOne

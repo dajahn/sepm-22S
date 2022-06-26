@@ -108,7 +108,6 @@ public class TicketOrderGenerator {
                 TicketOrder purchaseOrder = new TicketOrder();
                 purchaseOrder.setType(OrderType.PURCHASE);
                 purchaseOrder.setDateTime(now.minusYears(1));
-                purchaseOrder.setValidUntil(purchaseOrder.getDateTime().plusHours(1));
                 purchaseOrder.setUser(users.get(u));
                 purchaseOrder.setUserId(users.get(u).getId());
                 orderRepository.save(purchaseOrder);

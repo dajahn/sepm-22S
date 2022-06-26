@@ -43,18 +43,4 @@ export class CartService {
     console.log(`Remove ticket ${ticketId} from cart.`);
     return this.httpClient.delete<void>(`${this.cartBaseUri}/tickets/${ticketId}`);
   }
-
-  /**
-   * Get upcoming purchased Tickets of the currently logged-in user.
-   */
-  getUpcomingPurchasedTickets(): Observable<Ticket[]> {
-    return this.httpClient.get<Ticket[]>(this.cartBaseUri + '/purchased/upcoming');
-  }
-
-  /**
-   * Get past purchased Tickets of the currently logged-in user.
-   */
-  getPastPurchasedTickets(page: number = 0, size: number = 6): Observable<PagedTicket> {
-    return this.httpClient.get<PagedTicket>(this.cartBaseUri + '/purchased/past' + '?page=' + page + '&size=' + size);
-  }
 }
