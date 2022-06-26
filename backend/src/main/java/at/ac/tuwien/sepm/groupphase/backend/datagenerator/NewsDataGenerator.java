@@ -47,16 +47,6 @@ public class NewsDataGenerator {
             return;
         }
 
-        /*
-            FileInputStream fis = new FileInputStream("src/main/resources/images/newsMockImageBase64.txt");
-            String fileString = IOUtils.toString(fis, Charset.availableCharsets().get("UTF-8"));
-            byte[] toStore = Base64.getDecoder().decode(fileString);
-
-            fis = new FileInputStream("src/main/resources/images/eventStockBase64.txt");
-            fileString = IOUtils.toString(fis, Charset.availableCharsets().get("UTF-8"));
-            byte[] toStore2 = Base64.getDecoder().decode(fileString);
-        */
-
         for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
             Faker faker = new Faker();
 
@@ -67,7 +57,7 @@ public class NewsDataGenerator {
 
             this.fileRepository.save(file);
 
-            LocalDateTime t = LocalDateTime.of(LocalDate.ofInstant(faker.date().future(365, TimeUnit.DAYS).toInstant(), TimeZone.getDefault().toZoneId()), LocalTime.of(faker.random().nextInt(0, 23), 0));
+            LocalDateTime t = LocalDateTime.of(LocalDate.ofInstant(faker.date().past(365, TimeUnit.DAYS).toInstant(), TimeZone.getDefault().toZoneId()), LocalTime.of(faker.random().nextInt(0, 23), 0));
 
             News n = News.builder()
                 .title("News: " + faker.artist().name() + " filler")
