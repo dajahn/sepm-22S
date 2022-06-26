@@ -27,7 +27,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class SeatSector extends Sector {
@@ -36,7 +36,7 @@ public class SeatSector extends Sector {
     @NonNull
     private SeatType seatType;
 
-    @OneToMany(fetch = javax.persistence.FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = javax.persistence.FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "sector")
     @OrderBy("row, column")
     @NonNull
     private List<Seat> seats = new ArrayList<>();

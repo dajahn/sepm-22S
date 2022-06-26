@@ -23,6 +23,8 @@
 <ng-template #cartNotEmpty>
   <div *ngFor="let order of orders">
     <h4 class="reservation-number">Reservation Number: {{order.id}}</h4>
+    <h5 style="margin-bottom: 1rem">Reservation valid until {{getValidUntil(order.tickets[0].performance.dateTime)}}</h5>
+
     <!-- ## Filled -->
     <div class="ticket-grid">
       <div *ngFor="let ticket of order.tickets; let i = index">
@@ -33,7 +35,7 @@
                     [showGreenBorder] = "ticketIsSelected(order.id, i)"
                     [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
                     [title]="ticket.performance.event?.name"
-                    [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
+                    [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY HH:mm'"
                     [performance]="ticket.performance.location.name"
                     [price]="ticket?.sector.price"
                     rowTitle="ROW"
@@ -52,7 +54,7 @@
                     [showGreenBorder] = "ticketIsSelected(order.id, i)"
                     [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
                     [title]="ticket.performance.event?.name"
-                    [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
+                    [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY HH:mm'"
                     [performance]="ticket.performance.location.name"
                     [price]="ticket.sector.price"
                     rowTitle="SECTOR"

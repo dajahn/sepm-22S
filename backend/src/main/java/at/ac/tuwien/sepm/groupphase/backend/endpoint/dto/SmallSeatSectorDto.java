@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.enums.SeatType;
 import at.ac.tuwien.sepm.groupphase.backend.enums.SectorType;
 import lombok.Data;
@@ -16,5 +18,10 @@ public class SmallSeatSectorDto extends SectorDto {
 
     public SmallSeatSectorDto() {
         super(SectorType.SEAT);
+    }
+
+    @Override
+    public Sector mapToEntity(SectorMapper mapper) {
+        return null;
     }
 }

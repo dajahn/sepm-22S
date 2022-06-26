@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -75,6 +76,7 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
+    @Transactional
     public Event createEvent(CreateEventDto eventDto) throws IOException {
         LOGGER.trace("createEvent with {}", eventDto);
         eventValidator.validateEvent(eventDto);

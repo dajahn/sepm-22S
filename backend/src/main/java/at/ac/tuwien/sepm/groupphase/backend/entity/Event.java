@@ -55,8 +55,9 @@ public class Event {
     @NonNull
     private Duration duration;
 
-    @OneToOne(cascade = {CascadeType.MERGE})
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "thumbnail_id")
+    @ToString.Exclude
     private File thumbnail;
 
     @Column(nullable = false)
@@ -71,7 +72,7 @@ public class Event {
     @NonNull
     private Set<Artist> artists;
 
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "event")
     @OrderBy("dateTime ASC")
     @ToString.Exclude
     @NonNull

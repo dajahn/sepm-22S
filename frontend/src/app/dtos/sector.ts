@@ -1,8 +1,9 @@
 export interface Sector {
-  id: number;
+  id?: number;
   type: SectorType;
   price: number;
   name: string;
+  preview: boolean;
 }
 
 export enum SectorType {

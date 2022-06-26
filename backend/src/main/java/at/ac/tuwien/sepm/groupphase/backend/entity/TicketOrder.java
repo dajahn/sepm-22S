@@ -11,6 +11,7 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -43,10 +44,15 @@ public class TicketOrder {
     private Long userId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(
+        name = "user_id",
+        insertable = false,
+        updatable = false,
+        foreignKey = @ForeignKey(name = "fk_order_user", foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL")
+    )
     private User user;
 
-    @OneToMany(fetch = javax.persistence.FetchType.EAGER, cascade = javax.persistence.CascadeType.ALL)
+    @OneToMany(fetch = javax.persistence.FetchType.EAGER, cascade = javax.persistence.CascadeType.ALL, mappedBy = "order")
     @NonNull
     private List<Ticket> tickets;
 

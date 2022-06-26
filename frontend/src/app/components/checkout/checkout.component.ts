@@ -8,6 +8,7 @@ import {CheckoutService} from '../../services/checkout.service';
 import {User} from '../../dtos/user';
 import {UserService} from '../../services/user.service';
 import {Checkout} from '../../dtos/checkout';
+import {CountriesCodeToName} from '../../enums/countriesCodeToName';
 
 @Component({
   selector: 'app-checkout',
@@ -18,6 +19,9 @@ export class CheckoutComponent implements OnInit {
 
   currUserData: User;
   cart: Cart;
+  editAddress = false;
+  countriesCodeToName = CountriesCodeToName;
+  countriesCodeToNameKeys = [];
 
   checkoutForm: FormGroup;
   checkoutFormMessages = {
@@ -40,6 +44,26 @@ export class CheckoutComponent implements OnInit {
       {type: 'pattern', message: 'Card number must be numeric'}
     ]
   };
+
+  editAddressForm: FormGroup;
+  editAddressFormMessages = {
+    editStreet: [
+      {type: 'required', message: 'Street is required'},
+      {type: 'minlength', message: 'Street must contain at least 2 characters'}
+    ],
+    editZip: [
+      {type: 'required', message: 'ZIP Code is required'},
+      {type: 'minlength', message: 'ZIP Code must contain at least 4 characters'}
+    ],
+    editCity: [
+      {type: 'required', message: 'City is required'},
+      {type: 'minlength', message: 'City must contain at least 2 characters'}
+    ],
+    editCountry: [
+      {type: 'required', message: 'Country is required'}
+    ],
+  };
+
   error: string;
 
 
@@ -56,6 +80,15 @@ export class CheckoutComponent implements OnInit {
       exp: ['', [Validators.required, Validators.minLength(5), Validators.pattern('^(0[1-9]|1[0-2])\\/?([0-9]{4}|[0-9]{2})$')]],
       csc: ['', [Validators.required, Validators.minLength(3), Validators.pattern('^[0-9]*$')]],
     });
+
+    this.editAddressForm = this.formBuilder.group({
+      editStreet: ['', [Validators.minLength(2), Validators.required]],
+      editZip: ['', [Validators.minLength(4), Validators.required]],
+      editCity: ['', [Validators.minLength(2), Validators.required]],
+      editCountry: ['', [Validators.required]],
+    });
+
+    this.countriesCodeToNameKeys = Object.keys(this.countriesCodeToName);
   }
 
   ngOnInit(): void {
@@ -94,6 +127,10 @@ export class CheckoutComponent implements OnInit {
     this.userService.getOwnData().subscribe({
       next: userData => {
         this.currUserData = userData;
+        this.editAddressForm.controls.editStreet.setValue(userData.address.street);
+        this.editAddressForm.controls.editZip.setValue(userData.address.zipCode);
+        this.editAddressForm.controls.editCity.setValue(userData.address.city);
+        this.editAddressForm.controls.editCountry.setValue(userData.address.country);
       }, error: err => {
         console.error('Error fetching user', err);
         this.showDanger('Sorry, something went wrong. Could not load the user data 😔 Please try again later!');
@@ -128,6 +165,25 @@ export class CheckoutComponent implements OnInit {
   }
 
   /**
+   * Adds a '/' automatically to the exp date
+   */
+  autoSlash(e) {
+    if (e.key === '/') {
+      e.preventDefault();
+    }
+    if (e.key === 'Backspace' || e.key === 'Delete') {
+      if (this.checkoutForm.value.exp.length === 3) {
+        this.checkoutForm.controls.exp.setValue(this.checkoutForm.value.exp.substring(0, 2));
+      } else {
+        return;
+      }
+    }
+    if (this.checkoutForm.value.exp.length === 2) {
+      this.checkoutForm.controls.exp.setValue(this.checkoutForm.value.exp + '/');
+    }
+  }
+
+  /**
    * Calculates the total price of all tickets combined
    */
   calculateTotalSum(): number{
@@ -153,5 +209,16 @@ export class CheckoutComponent implements OnInit {
    */
   vanishError() {
     this.error = null;
+  }
+
+  /**
+   * Applies new shipping address
+   */
+  newAddress() {
+    this.currUserData.address.street = this.editAddressForm.value.editStreet;
+    this.currUserData.address.zipCode = this.editAddressForm.value.editZip;
+    this.currUserData.address.city = this.editAddressForm.value.editCity;
+    this.currUserData.address.country = this.editAddressForm.value.editCountry;
+    this.editAddress = false;
   }
 }

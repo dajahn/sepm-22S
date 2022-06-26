@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUpdateUserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedUserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
@@ -18,6 +20,10 @@ import at.ac.tuwien.sepm.groupphase.backend.util.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -162,45 +168,34 @@ public class CustomUserDetailService implements UserService {
 
     @Transactional
     @Override
-    public User unlockUserById(Long id) {
-        LOGGER.trace("unlockUserById({})", id);
+    public User updateLockingState(Long id, boolean locked, String mail) {
+        LOGGER.trace("updateLockingState({},{})", id, locked);
         Optional<User> user = this.userRepository.findById(id);
 
         if (user.isEmpty()) {
-            LOGGER.debug("User was empty so cannot be unlocked!");
-            throw new NotFoundException("User does not exist!");
+            LOGGER.debug("User was empty so cannot be (un)-locked!");
+            throw new NotFoundException("User not found!");
+        }
+        if (user.get().getEmail().equals(mail)) {
+            LOGGER.debug("User cannot lock himself, Email: {}", mail);
+            throw new CouldNotLockUserException("User cannot (un)-lock himself!");
         }
 
-        user.get().setStatus(UserStatus.OK);
-        user.get().setFailedLoginAttempts(0);
+        if (locked) {
+            user.get().setStatus(UserStatus.LOCKED);
+        } else {
+            user.get().setStatus(UserStatus.OK);
+            user.get().setFailedLoginAttempts(0);
+        }
+
         userRepository.save(user.get());
         return user.get();
     }
 
     @Transactional
     @Override
-    public User lockUserById(Long id, String mail) {
-        LOGGER.trace("unlockUserById({})", id);
-        Optional<User> user = this.userRepository.findById(id);
-
-        if (user.isEmpty()) {
-            LOGGER.debug("User was empty so cannot be unlocked!");
-            throw new NotFoundException("User not found!");
-        }
-        if (user.get().getEmail().equals(mail)) {
-            LOGGER.debug("User cannot lock himself, Email: {}", mail);
-            throw new CouldNotLockUserException("User cannot lock himself!");
-        }
-
-        user.get().setStatus(UserStatus.LOCKED);
-        user.get().setFailedLoginAttempts(0);
-        userRepository.save(user.get());
-        return user.get();
-    }
-
-    @Override
-    public List<User> getUser(UserSearchDto userSearchDto) {
-        LOGGER.info("{},{},{}", userSearchDto.getNameSearch(), userSearchDto.getRole(), userSearchDto.getStatus());
+    public PagedUserDto getUser(UserSearchDto userSearchDto, int page, int size) {
+        LOGGER.trace("getUser() userSearchName: {},role: {},status: {}", userSearchDto.getNameSearch(), userSearchDto.getRole(), userSearchDto.getStatus());
         int role = -1;
         int status = -1;
 
@@ -212,14 +207,22 @@ public class CustomUserDetailService implements UserService {
             status = userSearchDto.getStatus().ordinal();
         }
 
-        return this.userRepository.loadUsers(userSearchDto.getNameSearch(), role, status);
+        Pageable pageable = PageRequest.of(page, size);
+
+        List<User> u =  this.userRepository.loadUsers(userSearchDto.getNameSearch(), role, status, pageable);
+        List<UserDto> userDtos = userMapper.entitiesToUserDto(u);
+
+        Long totalCount = this.userRepository.getMatchingUsersCount(userSearchDto.getNameSearch(), role, status);
+
+        PagedUserDto pagedUserDto = new PagedUserDto();
+        pagedUserDto.setUsers(userDtos);
+        pagedUserDto.setTotalCount(totalCount);
+        return pagedUserDto;
     }
 
-    @Transactional
     @Override
     public void deleteUser(Long id) {
-        LOGGER.info("deleteUser(Long id) with id = {]", id);
-        orderRepository.deleteAllByUserId(id);
+        LOGGER.info("deleteUser(Long id) with id = {}", id);
         userRepository.deleteById(id);
     }
 }

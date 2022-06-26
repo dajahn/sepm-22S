@@ -34,6 +34,9 @@ export class NewsDetailComponent implements OnInit, OnChanges {
     this.newsService.getById(id).subscribe((newsDto: News) => {
       this.news = newsDto;
       this.news.fileDto.url = this.globals.backendUri + this.news.fileDto.url;
+      if (this.news.eventDto) {
+        this.news.eventDto.thumbnail.url = this.globals.backendUri + this.news.eventDto.thumbnail.url;
+      }
       this.setLink();
     });
   }

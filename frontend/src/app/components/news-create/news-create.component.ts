@@ -19,6 +19,7 @@ export class NewsCreateComponent implements OnInit {
   public image: File;
   public event: Event;
   public fileDto: FileDto;
+  public previewImage: string;
 
   public submitted = false;
   public addEvent = false;
@@ -29,7 +30,7 @@ export class NewsCreateComponent implements OnInit {
       title: ['', [Validators.required, Validators.maxLength(255)]],
       description: ['', [Validators.required, Validators.maxLength(255)]],
       imageDescription: ['', [Validators.required, Validators.maxLength(255)]],
-      image: [''],
+      image: ['', [Validators.required]],
       eventId: ['']
     });
 
@@ -61,8 +62,6 @@ export class NewsCreateComponent implements OnInit {
       return;
     }
 
-
-
     const news: News = {
       title: this.newsForm.controls.title.value,
       description: this.newsForm.controls.description.value,
@@ -73,6 +72,8 @@ export class NewsCreateComponent implements OnInit {
     };
 
     if (this.event != null) {
+      delete this.event.thumbnail;
+
       news.eventDto = {
         ...this.event
       };
@@ -104,22 +105,24 @@ export class NewsCreateComponent implements OnInit {
   }
 
   public async handleFileInput(files: any) {
-    //TODO: Possibility to upload multiple files?
     if (files == null) {
       this.image = null;
+      this.fileDto = {};
+      return;
     }
 
     this.image = files[0];
 
     //Sets the base64 of the dto
     let base64img = await this.getBase64(this.image);
+    this.previewImage = base64img;
     base64img = base64img.split(',')[1];
     this.fileDto.imageBase64 = base64img;
     this.fileDto.type = this.image.type;
   }
 
   public removeImageCandidate() {
-    this.imgUpload.nativeElement.value = null;
+    this.newsForm.controls.image.setValue(null);
     this.handleFileInput(null);
   }
 }

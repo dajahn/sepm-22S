@@ -1,9 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.embeddable.Address;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -20,7 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -49,12 +45,12 @@ public class Location {
     @NonNull
     private Address address;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "location")
     @NonNull
     @ToString.Exclude
     private Set<Sector> sectors;
 
-    @OneToMany
+    @OneToMany(mappedBy = "location")
     @ToString.Exclude
     private List<Performance> performances;
 

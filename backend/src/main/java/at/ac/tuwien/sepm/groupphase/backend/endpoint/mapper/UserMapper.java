@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateUpdateUserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.User;
 import org.mapstruct.Mapper;
 
@@ -17,5 +18,5 @@ public interface UserMapper {
 
     CreateUpdateUserDto userToCreateUpdateUser(User user);
 
-
+    UserLoginDto userToUserLoginDto(User user);
 }

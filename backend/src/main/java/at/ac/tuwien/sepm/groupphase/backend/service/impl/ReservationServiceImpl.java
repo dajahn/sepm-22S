@@ -24,6 +24,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
@@ -62,6 +63,9 @@ public class ReservationServiceImpl implements ReservationService {
             throw new NotFoundException("Performance with id " + tickets.get(0).getPerformance() + " does not exist!");
         }
         LocalDateTime validUntil = performanceRepository.findById(tickets.get(0).getPerformance()).get().getDateTime().minusMinutes(30);
+        if (validUntil.isBefore(LocalDateTime.now())) {
+            throw new ValidationException("Cannot reserve tickets 30 minutes or earlier before an event.");
+        }
         TicketOrder reservation = new TicketOrder(LocalDateTime.now(), userId, new ArrayList<>(), OrderType.RESERVATION, validUntil);
         reservation = orderRepository.save(reservation);
         Ticket ticket;
@@ -124,6 +128,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public void deleteReservation(Long userId, Long orderId, Long ticketId) {
         LOGGER.trace("deleteReservation() for user {} with ticket={}", userId, ticketId);
         Optional<Ticket> ticket = ticketRepository.findById(ticketId);
@@ -147,6 +152,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public void moveTicketsToCart(Long userId, List<ReservationDto> tickets) {
         LOGGER.trace("moveTicketsToCart() for user {} with tickets {}", userId, tickets);
         List<CreateTicketDto> ticketDtos = new ArrayList<>();

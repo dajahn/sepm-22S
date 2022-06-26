@@ -1,4 +1,4 @@
-import { UserSearchDto } from './../dtos/user';
+import { PagedUserDto, UserSearchDto } from './../dtos/user';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Globals } from '../global/globals';
@@ -39,17 +39,14 @@ export class UserService {
     return this.httpClient.post<void>(this.baseUri + '/reset-password', { hash, password });
   }
 
-  loadUser(userSearch: UserSearchDto): Observable<User[]> {
-    const queryParams: string = Object.keys(userSearch).map(key => key + '=' + userSearch[key]).join('&');
-    return this.httpClient.get<User[]>(this.baseUri + '?' + queryParams);
+  loadUser(userSearch: UserSearchDto, page: number, pageSize: number): Observable<PagedUserDto> {
+    let queryParams: string = Object.keys(userSearch).map(key => key + '=' + userSearch[key]).join('&');
+    queryParams += `&page=${page}&size=${pageSize}`;
+    return this.httpClient.get<PagedUserDto>(this.baseUri + '?' + queryParams);
   }
 
-  unlockUser(id: number): Observable<User> {
-    return this.httpClient.put<User>(this.baseUri + '/unlock/' + id, {});
-  }
-
-  lockUser(id: number): Observable<User> {
-    return this.httpClient.put<User>(this.baseUri + '/lock/ ' + id, {});
+  updateLockingState(id: number, locked: boolean): Observable<User> {
+    return this.httpClient.put<User>(this.baseUri + '/lockingState/' + id, locked);
   }
 
   deleteUser(): Observable<void> {

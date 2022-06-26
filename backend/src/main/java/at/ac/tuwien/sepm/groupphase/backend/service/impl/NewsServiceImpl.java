@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,6 +104,7 @@ public class NewsServiceImpl implements NewsService {
 
         Pageable pageable = PageRequest.of(page, size);
         List<News> news = newsRepository.loadUnreadNews(user.getId(), pageable);
+
         List<NewsDto> newsDtos = mapOtherDtos(news);
 
         PagedNewsDto pagedNewsDto = new PagedNewsDto();

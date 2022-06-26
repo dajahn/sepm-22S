@@ -42,10 +42,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -202,6 +204,8 @@ public class EventEndpointTest implements EventTestData, ArtistTestData, Locatio
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenCreate_thenCreatedEventWithAllSetPropertiesPlusId()
         throws Exception {
         createEventDto.setName(EVENT_TEST_TITLE);
@@ -232,6 +236,8 @@ public class EventEndpointTest implements EventTestData, ArtistTestData, Locatio
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenPostPayloadInvalid_then422() throws Exception {
         createEventDto.setName("    ");
         String body = MAPPER.writeValueAsString(createEventDto);
@@ -251,6 +257,8 @@ public class EventEndpointTest implements EventTestData, ArtistTestData, Locatio
 
 
     @Test
+    @Transactional
+    @Rollback
     public void givenNothing_whenPostInvalid_then400() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(post(EVENT_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
