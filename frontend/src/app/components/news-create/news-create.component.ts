@@ -72,6 +72,8 @@ export class NewsCreateComponent implements OnInit {
     };
 
     if (this.event != null) {
+      delete this.event.thumbnail;
+
       news.eventDto = {
         ...this.event
       };
