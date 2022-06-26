@@ -3,9 +3,13 @@ package at.ac.tuwien.sepm.groupphase.backend.repository;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 import at.ac.tuwien.sepm.groupphase.backend.enums.OrderType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +38,7 @@ public interface OrderRepository extends JpaRepository<TicketOrder, Long> {
      *
      * @param type   the type of the order
      * @param userId the ID of the user
-     * @return all orders uf the user
+     * @return all orders of the user
      */
     List<TicketOrder> findTicketOrdersByTypeAndUserId(OrderType type, long userId);
 
@@ -46,4 +50,8 @@ public interface OrderRepository extends JpaRepository<TicketOrder, Long> {
     void deleteAllByUserId(long userId);
 
     Optional<TicketOrder> findTicketOrderByTicketsContains(Ticket ticket);
+
+
+
+
 }

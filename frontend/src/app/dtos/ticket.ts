@@ -6,3 +6,8 @@ export interface Ticket {
   performance: Performance;
   sector: Sector;
 }
+
+export interface PagedTicket {
+  tickets: Ticket[];
+  totalCount: number;
+}

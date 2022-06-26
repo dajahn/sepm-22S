@@ -4,7 +4,7 @@
 
 
 <!-- CART -->
-<h4 class="headline">in you cart ({{cart?.tickets.length}})</h4>
+<h4 class="headline">in you cart ({{cart?.tickets.length | shortNumber}})</h4>
 
 <!-- # Cart Grid: -->
 <!-- ## Empty Cart -->
@@ -59,7 +59,7 @@
 
 
 <!-- PURCHASED UPCOMING EVENTS -->
-<h4 class="headline">purchased upcoming events ({{upcomingTickets?.length}})</h4>
+<h4 class="headline">purchased upcoming events ({{upcomingTickets?.length | shortNumber}})</h4>
 
 <!-- # Purchased Tickets Grid: -->
 <!-- ## No purchased Tickets -->
@@ -107,7 +107,7 @@
 
 
 <!-- PURCHASED PAST EVENTS -->
-<h4 class="headline" style="margin-top: 4rem">past events ({{pastTickets?.length}})</h4>
+<h4 class="headline" style="margin-top: 4rem">past events ({{totalAllPastPurchasedPage | shortNumber}})</h4>
 
 <!-- # Purchased Tickets Grid: -->
 <!-- ## No purchased Tickets -->
@@ -145,4 +145,12 @@
       </app-ticket>
     </div>
   </div>
+
+  <!-- ### Pagination -->
+  <ngb-pagination *ngIf="totalAllPastPurchasedPage > pageSize"
+                  [(page)]="pastPurchasedPage"
+                  [pageSize]="pageSize"
+                  [collectionSize]="totalAllPastPurchasedPage"
+                  (pageChange)="handlePageChangePastPurchasedPage()">
+  </ngb-pagination>
 </ng-template>
