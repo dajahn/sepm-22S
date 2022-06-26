@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateTicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PagedTicketsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 
@@ -11,7 +12,7 @@ public interface CartService {
     /**
      * Adds the given to the cart of the logged-in user.
      *
-     * @param userId the ID of the logged-in user
+     * @param userId  the ID of the logged-in user
      * @param tickets the tickets that should be added to the cart
      */
     void addTicketsToCart(Long userId, List<CreateTicketDto> tickets);
@@ -27,7 +28,7 @@ public interface CartService {
     /**
      * Removes a ticket (by its ID) from the cart of the logged-in user.
      *
-     * @param userId the ID of the logged-in user
+     * @param userId   the ID of the logged-in user
      * @param ticketId the ID of the ticked which should be removed
      */
     void removeTicket(Long userId, Long ticketId);
@@ -36,8 +37,15 @@ public interface CartService {
      * Gets all purchased tickets for upcoming events of the currently logged-in user.
      *
      * @param userId the ID of the logged-in user
-     * @param upcoming true if Event of purchased Ticket should be in the future, wrong if in the past
-     * @return the purchased TicketOrder of the currently logged-in user
+     * @return the purchased TicketOrder for upcoming events of the currently logged-in user
      */
-    List<Ticket> getPurchasedTickets(Long userId, Boolean upcoming);
+    List<Ticket> getUpcomingPurchasedTickets(Long userId);
+
+    /**
+     * Gets all purchased tickets for past events of the currently logged-in user.
+     *
+     * @param userId the ID of the logged-in user
+     * @return the purchased TicketOrder for past events of the currently logged-in user
+     */
+    PagedTicketsDto getPastPurchasedTickets(Long userId, int page, int size);
 }

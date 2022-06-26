@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {CreateTicket} from '../dtos/create-ticket';
 import {Observable} from 'rxjs';
 import {Cart} from '../dtos/cart';
-import {Ticket} from '../dtos/ticket';
+import {PagedTicket, Ticket} from '../dtos/ticket';
 
 @Injectable({
   providedIn: 'root'
@@ -45,14 +45,16 @@ export class CartService {
   }
 
   /**
-   * Get purchased Tickets of the currently logged-in user.
-   *
-   * @param upcoming if the performance of the ticket should be in the future
+   * Get upcoming purchased Tickets of the currently logged-in user.
    */
-  getPurchasedTickets(upcoming: boolean): Observable<Ticket[]> {
-    console.log(`Get purchased Tickets of logged-in user.`);
-    let terms = new HttpParams();
-    terms = terms.set('upcoming', upcoming);
-    return this.httpClient.get<Ticket[]>(this.cartBaseUri+ '/purchased', {params:terms});
+  getUpcomingPurchasedTickets(): Observable<Ticket[]> {
+    return this.httpClient.get<Ticket[]>(this.cartBaseUri + '/purchased/upcoming');
+  }
+
+  /**
+   * Get past purchased Tickets of the currently logged-in user.
+   */
+  getPastPurchasedTickets(page: number = 0, size: number = 6): Observable<PagedTicket> {
+    return this.httpClient.get<PagedTicket>(this.cartBaseUri + '/purchased/past' + '?page=' + page + '&size=' + size);
   }
 }
