@@ -56,6 +56,9 @@ export class NewsComponent implements OnInit {
 
       for (const n of this.news) {
         n.fileDto.url = this.globals.backendUri + n.fileDto.url;
+        if (n.eventDto) {
+          n.eventDto.thumbnail.url = this.globals.backendUri + n.eventDto.thumbnail.url;
+        }
       }
     });
   }
@@ -67,6 +70,9 @@ export class NewsComponent implements OnInit {
 
       for (const n of this.allNews) {
         n.fileDto.url = this.globals.backendUri + n.fileDto.url;
+        if (n.eventDto) {
+          n.eventDto.thumbnail.url = this.globals.backendUri + n.eventDto.thumbnail.url;
+        }
       }
     });
   }
