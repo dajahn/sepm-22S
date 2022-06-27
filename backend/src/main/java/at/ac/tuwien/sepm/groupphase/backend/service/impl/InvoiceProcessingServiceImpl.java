@@ -5,7 +5,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
-import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceStatus;
 import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.InvoiceRepository;
@@ -60,11 +59,9 @@ public class InvoiceProcessingServiceImpl implements InvoiceProcessingService {
         float totalPrice = 0;
         int sign = invoice.getType() == InvoiceType.CANCELLATION ? -1 : 1;
 
-        TicketOrder order = invoice.getOrder();
-
         HashMap<Long, PerformanceItem> performances = new HashMap<>();
 
-        for (Ticket ticket : order.getTickets()) {
+        for (Ticket ticket : invoice.getTickets()) {
 
             Performance performance = ticket.getPerformance();
             Long id = performance.getId();

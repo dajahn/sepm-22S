@@ -28,7 +28,7 @@ export class NewsCreateComponent implements OnInit {
     , private toastService: ToastService, private router: Router) {
     this.newsForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.maxLength(255)]],
-      description: ['', [Validators.required, Validators.maxLength(255)]],
+      description: ['', [Validators.required, Validators.maxLength(1023)]],
       imageDescription: ['', [Validators.required, Validators.maxLength(255)]],
       image: ['', [Validators.required]],
       eventId: ['']

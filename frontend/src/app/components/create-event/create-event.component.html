@@ -95,8 +95,6 @@
                 <option value="" disabled selected>Select the Event Category</option>
                 <option *ngFor="let ev of eventCategoriesKeys"
                         value="{{ev}}">{{eventCategories[ev] | capitalizeFirst}}</option>
-<!--                <option value="{{eventCategories.CONCERT}}">Concert</option>-->
-<!--                <option value="{{eventCategories.CONFERENCE}}">Conference</option>-->
               </select>
               <!--          Category validations-->
               <div class="row mt-1">
@@ -140,14 +138,12 @@
                                          [number]="i"></app-create-event-add-artist>
           </ng-container>
 
-
           <div class="row mt-3">
             <!--            Thumbnail input field-->
             <div class="col-md-3">
               <label>Thumbnail</label>
-              <label title="Add Artist" for="file-upload" id="file-upload-label"
-                     class="custom-file-upload white d-flex justify-content-center align-items-center"
-                     [ngStyle]="backGroundImg !== null && backGroundImg !== undefined && {'background-image':  backGroundImg.webkitRelativePath}">
+              <label title="Add Thumbnail" for="file-upload" id="file-upload-label"
+                     class="white pe-auto d-flex justify-content-center align-items-center user-select-all">
                 <i class="bi bi-image"></i>
               </label>
               <input id="file-upload" required formControlName="thumbnail" name="thumbnail" class="form-control"
@@ -164,29 +160,28 @@
                   </ng-container>
                 </div>
               </div>
-              <!--            Thumbnail input confirmation & delete button-->
 
-              <div class="row mt-1">
-                <div class="col">
-                  <ng-container>
-                    <div class="clearfix imgHint mt-1" style="margin-left: -2rem">
-                      <div *ngIf="backGroundImg && backGroundImg.name" class="float-end col-md-10" (click)="removeImageCandidate()" role="button">
-                        <small class="d-flex align-items-center">
-                          <img class="preview" [src]="previewImage" alt="Preview of the image!">
-                          {{(backGroundImg.name.length>15)? (backGroundImg.name | slice:0:15)+'...':(backGroundImg.name)}}
-                          <span class="me-1">
+              <!--            Thumbnail input confirmation & delete button for small screen-->
+
+              <div class="row  mb-sm-4 mb-md-0 mb-lg-0" id="showImgSmallScreen">
+                <ng-container>
+                  <div class="clearfix imgHint " >
+                    <div *ngIf="backGroundImg && backGroundImg.name" class="col-md-10" (click)="removeImageCandidate()" role="button">
+                      <small class="d-flex align-items-center">
+                        <img class="preview" [src]="previewImage" alt="Preview of the image!">
+                        {{(backGroundImg.name.length>15)? (backGroundImg.name | slice:0:15)+'...':(backGroundImg.name)}}
+                        <span class="me-1">
                                 <i class="bi bi-x" ></i>
                             </span>
-                        </small>
+                      </small>
 
-                      </div>
                     </div>
-                  </ng-container>
-                </div>
+                  </div>
+                </ng-container>
               </div>
 
             </div>
-            <div class="col-md-9">
+            <div class="col-md-9 ">
               <!--            Add performances button-->
               <label for="btnPerformance">Performance(s)</label>
               <div class="form-group d-grid">
@@ -204,6 +199,26 @@
                   </ng-container>
                 </div>
               </div>
+            </div>
+          </div>
+          <!--            Thumbnail input confirmation & delete button for big screens-->
+
+          <div class="row" id="showImgBigScreen">
+            <div class="col-md-3">
+              <ng-container>
+                <div class="clearfix imgHint " style="margin-left: -2rem">
+                  <div *ngIf="backGroundImg && backGroundImg.name" class="float-end col-md-10" (click)="removeImageCandidate()" role="button">
+                    <small class="d-flex align-items-center">
+                      <img class="preview" [src]="previewImage" alt="Preview of the image!">
+                      {{(backGroundImg.name.length>15)? (backGroundImg.name | slice:0:15)+'...':(backGroundImg.name)}}
+                      <span class="me-1">
+                                <i class="bi bi-x" ></i>
+                            </span>
+                    </small>
+
+                  </div>
+                </div>
+              </ng-container>
             </div>
           </div>
           <!--          Containers for performances-->
@@ -226,5 +241,4 @@
       </div>
     </div>
   </div>
-
 </div>

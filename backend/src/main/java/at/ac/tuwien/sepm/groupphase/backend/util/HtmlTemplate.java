@@ -37,7 +37,7 @@ public class HtmlTemplate {
      * Template for generic emails, including a title and some content. <br>
      * parameters: title, content
      */
-    public static final HtmlTemplate EMAIL_GENERIC = new HtmlTemplate("email_generic");  // todo: load images locally (not web)
+    public static final HtmlTemplate EMAIL_GENERIC = new HtmlTemplate("email_generic");
 
     /**
      * Template for notifying the user about a new invoice.
@@ -56,7 +56,7 @@ public class HtmlTemplate {
     /**
      * Template for generic emails, including a title and some content.
      */
-    public static final HtmlTemplate EMAIL_PASSWORD_RESET_NOTIFICATION = new HtmlTemplate("email_password_reset"); // todo: load images locally (not web)
+    public static final HtmlTemplate EMAIL_PASSWORD_RESET_NOTIFICATION = new HtmlTemplate("email_password_reset");
 
 
     /**

@@ -45,7 +45,7 @@ public class News {
     private String title;
 
     @NonNull
-    @Column(nullable = false, name = "description", length = 65535)
+    @Column(nullable = false, name = "description", length = 1023)
     private String description;
 
     @NonNull

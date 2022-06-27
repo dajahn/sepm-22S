@@ -29,7 +29,7 @@
                   [columnValue]="toSeatTicket(ticket).seat.column+''"
                   [ticketClass]="toSeatTicket(ticket).sector.seatType"
                   (inspect)="inspect(ticket.performance.event.id, ticket.performance.id)"
-                  (remove)="onRemove(ticket.id)">
+                  (remove)="onCartRemove(ticket.id)">
       </app-ticket>
 
       <!-- ### Standing -->
@@ -43,7 +43,7 @@
                   rowTitle="SECTOR"
                   [rowValue]="ticket.sector.name"
                   (inspect)="inspect(ticket.performance.event.id, ticket.performance.id)"
-                  (remove)="onRemove(ticket.id)">
+                  (remove)="onCartRemove(ticket.id)">
       </app-ticket>
     </div>
   </div>
@@ -73,7 +73,8 @@
     <div *ngFor="let ticket of upcomingTickets">
       <!-- ### Seat -->
       <app-ticket *ngIf="ticket?.sector.type === 'SEAT'"
-                  removeButton="true"
+                  [hoverTitle]='"Select Ticket"'
+                  [showGreenBorder]="isPurchasedTicketSelected(ticket.id)"
                   [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
                   [title]="ticket.performance.event?.name"
                   [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
@@ -84,12 +85,13 @@
                   columnTitle="SEAT"
                   [columnValue]="toSeatTicket(ticket).seat.column+''"
                   [ticketClass]="toSeatTicket(ticket).sector.seatType"
-                  (inspect)="inspect(ticket.performance.event.id, ticket.performance.id)">
+                  (inspect)="selectPurchasedTicket(ticket.id)">
       </app-ticket>
 
       <!-- ### Standing -->
       <app-ticket *ngIf="ticket?.sector.type === 'STANDING'"
-                  removeButton="true"
+                  [hoverTitle]='"Select Ticket"'
+                  [showGreenBorder]="isPurchasedTicketSelected(ticket.id)"
                   [imageSrc]="ticket.performance.event?.thumbnail?.url ? globals.backendUri + ticket.performance.event?.thumbnail?.url : ''"
                   [title]="ticket.performance.event?.name"
                   [datetime]="ticket.performance.dateTime | date: 'dd/MM/YYYY hh:mm'"
@@ -97,10 +99,18 @@
                   [price]="ticket.sector.price"
                   rowTitle="SECTOR"
                   [rowValue]="ticket.sector.name"
-                  (inspect)="inspect(ticket.performance.event.id, ticket.performance.id)">
+                  (inspect)="selectPurchasedTicket(ticket.id)">
       </app-ticket>
     </div>
   </div>
+
+  <div class="d-flex flex-row justify-content-between" style="margin-top: 1rem; margin-bottom: 1rem">
+    <div class="d-grid">
+      <input type="button" class="btn blue add-btn" value="CANCEL" (click)="showPurchaseCancelModal()"
+             [disabled]="areNoPurchasedTicketsSelected()">
+    </div>
+  </div>
+  <p *ngIf="areNoPurchasedTicketsSelected()" class="small">Click on tickets to select them</p>
 </ng-template>
 
 

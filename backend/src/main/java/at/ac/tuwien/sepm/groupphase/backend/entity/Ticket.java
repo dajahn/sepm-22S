@@ -54,6 +54,14 @@ public abstract class Ticket {
     @ToString.Exclude
     private TicketOrder order;
 
+    @Column(name = "cancellation_id")
+    private Long cancellationId;
+
+    @ManyToOne(fetch = javax.persistence.FetchType.LAZY)
+    @JoinColumn(name = "cancellation_id", insertable = false, updatable = false)
+    @ToString.Exclude
+    private Cancellation cancellation;
+
     @ManyToOne
     @JoinColumn
     private File pdf;

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {CartService} from '../../services/cart.service';
 import {Cart} from '../../dtos/cart';
 import {PagedTicket, Ticket} from '../../dtos/ticket';
@@ -7,6 +7,9 @@ import {CheckoutService} from '../../services/checkout.service';
 import {ToastService} from '../../services/toast-service.service';
 import {Globals} from '../../global/globals';
 import {Router} from '@angular/router';
+import {PurchaseService} from '../../services/purchase.service';
+import {ErrorMessageParser} from '../../utils/error-message-parser';
+import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-cart',
@@ -19,6 +22,8 @@ export class CartComponent implements OnInit {
   upcomingTickets: Ticket[];
   pastTickets: Ticket[];
 
+  selectedPurchasedTickets: number[] = [];
+
   pageSize = 6;
   pastPurchasedPage = 1;
   totalAllPastPurchasedPage = 0;
@@ -26,9 +31,12 @@ export class CartComponent implements OnInit {
   constructor(
     private cartService: CartService,
     private checkoutService: CheckoutService,
+    private purchaseService: PurchaseService,
     private toastService: ToastService,
     public globals: Globals,
-    private router: Router) {}
+    private router: Router,
+    private modalService: NgbModal) {
+  }
 
   ngOnInit(): void {
     this.loadCart();
@@ -56,7 +64,7 @@ export class CartComponent implements OnInit {
    * Loads upcoming purchased Tickets
    */
   private loadUpcomingPurchasedTickets() {
-    this.cartService.getUpcomingPurchasedTickets().subscribe({
+    this.purchaseService.getUpcomingPurchasedTickets().subscribe({
       next: (tickets: Ticket[]) => {
         console.log(tickets);
         this.upcomingTickets = tickets;
@@ -69,7 +77,7 @@ export class CartComponent implements OnInit {
   }
 
   private loadPastPurchasedTickets() {
-    this.cartService.getPastPurchasedTickets(this.pastPurchasedPage - 1, this.pageSize).subscribe({
+    this.purchaseService.getPastPurchasedTickets(this.pastPurchasedPage - 1, this.pageSize).subscribe({
       next: (pagedTicket: PagedTicket) => {
         console.log(pagedTicket);
         this.totalAllPastPurchasedPage = pagedTicket.totalCount;
@@ -102,7 +110,7 @@ export class CartComponent implements OnInit {
   /**
    * Removes ticket from cart
    */
-  onRemove(id: number) {
+  onCartRemove(id: number) {
     this.cartService.removeTicketFromCart(id).subscribe({
       next: () => {
         console.log(`Successfully removed ticket ${id} from cart.`);
@@ -111,6 +119,60 @@ export class CartComponent implements OnInit {
       error: err => {
         console.error(`Error, could not remove ticket ${id} from cart.`, err);
         this.showDanger(`Sorry, ticket could not be removed from the cart 😔 Please try again later!`);
+      }
+    });
+  }
+
+  showPurchaseCancelModal() {
+    const modal = this.modalService.open(CancellationModalContent, {size: 'sm', centered: true});
+    modal.componentInstance.tickets = [...this.selectedPurchasedTickets];
+    modal.componentInstance.cartComponent = this;
+  }
+
+  /**
+   * Selects a purchased ticket, or deselects it, if it has already been selected
+   *
+   * @param ticketId ID of the ticket to be selected
+   */
+  selectPurchasedTicket(ticketId: number) {
+    if (this.isPurchasedTicketSelected(ticketId)) {
+      this.selectedPurchasedTickets = this.selectedPurchasedTickets.filter(id => id !== ticketId);
+    } else {
+      this.selectedPurchasedTickets.push(ticketId);
+    }
+  }
+
+  /**
+   * Checks if a purchased ticket has been selected
+   *
+   * @param ticketId ID of the ticket to be checked
+   */
+  isPurchasedTicketSelected(ticketId: number): boolean {
+    return this.selectedPurchasedTickets.some(id => id === ticketId);
+  }
+
+  /**
+   * Checks if there is no purchased ticket selected
+   */
+  areNoPurchasedTicketsSelected(): boolean {
+    return this.selectedPurchasedTickets.length === 0;
+  }
+
+  /**
+   * Cancels purchased ticket
+   */
+  onPurchaseCancel(content: CancellationModalContent) {
+    const tickets = content.tickets;
+    this.purchaseService.cancelPurchasedTickets(tickets).subscribe({
+      next: () => {
+        console.log(`Successfully cancelled purchased tickets ${tickets}.`);
+        this.upcomingTickets = this.upcomingTickets.filter((ticket) => !tickets.some(id => ticket.id === id));
+        this.selectedPurchasedTickets = [];
+        content.close('Ok click');
+      },
+      error: err => {
+        console.error(`Error, could not cancel tickets ${tickets}.`, err);
+        this.showDanger(`Sorry, ticket could not be cancelled 😔\n${ErrorMessageParser.parseResponseToErrorMessage(err)}`);
       }
     });
   }
@@ -146,5 +208,39 @@ export class CartComponent implements OnInit {
 
   handlePageChangePastPurchasedPage() {
     this.loadPastPurchasedTickets();
+  }
+}
+
+@Component({
+  selector: 'app-cancellation-modal-content',
+  template: `
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-title">Purchase Cancellation</h4>
+      <button type="button" ngbAutofocus class="btn-close" aria-label="Close button" aria-describedby="modal-title"
+              (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <p><strong>Are you sure you want to cancel the selected tickets?</strong></p>
+      <p>This purchases will be permanently cancelled.
+        <span class="text-danger">This operation cannot be undone.</span>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+      <button type="button" class="btn btn-danger" (click)="cartComponent.onPurchaseCancel(this)">Ok
+      </button>
+    </div>
+  `
+})
+// eslint-disable-next-line @angular-eslint/component-class-suffix
+export class CancellationModalContent {
+  @Input() tickets: number[];
+  @Input() cartComponent: CartComponent;
+
+  constructor(public modal: NgbActiveModal) {
+  }
+
+  close(result?: any) {
+    this.modal.close(result);
   }
 }

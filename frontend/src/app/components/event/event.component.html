@@ -28,6 +28,7 @@
       <ng-container *ngFor="let ticket of selectedTickets">
         <!-- ### Seat -->
         <app-ticket *ngIf="ticket?.sector.type === 'SEAT'"
+                    removeButton="true"
                     class="pe-2"
                     [price]="ticket?.sector.price"
                     rowTitle="ROW"
@@ -40,6 +41,7 @@
 
         <!-- ### Standing -->
         <app-ticket *ngIf="ticket?.sector.type === 'STANDING'"
+                    removeButton="true"
                     class="pe-2"
                     [price]="ticket.sector.price"
                     rowTitle="SECTOR"
