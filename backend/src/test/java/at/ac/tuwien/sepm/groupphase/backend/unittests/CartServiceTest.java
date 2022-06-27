@@ -83,7 +83,8 @@ public class CartServiceTest {
         TicketOrder cart = cartService.getCart(user.getId());
         if(cart.getTickets().isEmpty()) {
             orderRepository.delete(cart);
-            cart = generateOrder(user, OrderType.CART, false, 5);
+            cart = generateOrder(user, OrderType.CART, false, 3);
+            entityManager.flush();
         }
         int before = cart.getTickets().size();
         assertTrue(before > 0);
@@ -102,6 +103,7 @@ public class CartServiceTest {
         // GIVEN
         User user = userRepository.findAll().get(0);
         orderRepository.delete(cartService.getCart(user.getId()));
+        entityManager.flush();
         TicketOrder order = generateOrder(user, OrderType.CART, false, 5);
 
         // WHEN
