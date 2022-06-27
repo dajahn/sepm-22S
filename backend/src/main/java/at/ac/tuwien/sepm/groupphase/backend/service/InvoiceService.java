@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Cancellation;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
 
@@ -11,6 +12,13 @@ public interface InvoiceService {
      * @param order the order from which an invoice should be created
      */
     Invoice create(TicketOrder order);
+
+    /**
+     * Creates a new invoice for the supplied cancellation.
+     *
+     * @param cancellation the cancellation from which an invoice should be created
+     */
+    Invoice create(Cancellation cancellation);
 
     /**
      * Creates a new invoice as well as setting a unique id.
@@ -33,23 +41,24 @@ public interface InvoiceService {
      */
     void save(Invoice invoice);
 
-    /**
-     * Cancels the given invoice and created a new cancellation invoice.
-     *
-     * @param invoice the invoice which should be canceled
-     * @return the newly created cancellation invoice
-     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException if the provided invoice does not match the required criteria
-     */
-    Invoice cancel(Invoice invoice);
 
-    /**
-     * Cancels the given invoice and created a new cancellation invoice.
-     * <br>
-     * Invariant: order must have exactly one "NORMAL" invoice
-     *
-     * @param order the order which invoice should be canceled
+    /*
+      Cancels the given invoice and created a new cancellation invoice.
+
+      @param invoice the invoice which should be canceled
      * @return the newly created cancellation invoice
      * @throws at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException if the provided invoice does not match the required criteria
      */
-    Invoice cancel(TicketOrder order);
+    //Invoice cancel(Invoice invoice);
+
+    /*
+      Cancels the given invoice and created a new cancellation invoice.
+      <br>
+      Invariant: order must have exactly one "NORMAL" invoice
+
+      @param order the order which invoice should be canceled
+     * @return the newly created cancellation invoice
+     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException if the provided invoice does not match the required criteria
+     */
+    //Invoice cancel(TicketOrder order);
 }

@@ -1,11 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Cancellation;
+import at.ac.tuwien.sepm.groupphase.backend.entity.CancellationInvoice;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Invoice;
 import at.ac.tuwien.sepm.groupphase.backend.entity.InvoiceId;
+import at.ac.tuwien.sepm.groupphase.backend.entity.OrderInvoice;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketOrder;
-import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceStatus;
-import at.ac.tuwien.sepm.groupphase.backend.enums.InvoiceType;
-import at.ac.tuwien.sepm.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.InvoiceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceProcessingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.InvoiceService;
@@ -15,9 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -33,10 +31,19 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice create(TicketOrder order) {
+    public OrderInvoice create(TicketOrder order) {
         LOGGER.trace("create(Order order) with order={}", order);
 
-        Invoice invoice = new Invoice(order, InvoiceType.NORMAL);
+        OrderInvoice invoice = new OrderInvoice(order);
+        this.create(invoice);
+        return invoice;
+    }
+
+    @Override
+    public CancellationInvoice create(Cancellation cancellation) {
+        LOGGER.trace("create(Cancellation cancellation) with cancellation={}", cancellation);
+
+        CancellationInvoice invoice = new CancellationInvoice(cancellation);
         this.create(invoice);
         return invoice;
     }
@@ -69,6 +76,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceRepository.save(invoice);
     }
 
+    //TODO: consult raphael about removal of these methods
+    /*
     @Override
     @Transactional
     public Invoice cancel(Invoice invoice) {
@@ -83,7 +92,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             .reference(invoice)
             .type(InvoiceType.CANCELLATION)
             .status(InvoiceStatus.CREATED)
-            .order(invoice.getOrder())
+            .tickets(invoice.getTickets())
             .date(LocalDate.now())
             .build();
 
@@ -112,4 +121,5 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         return this.cancel(invoices.get(0));
     }
+    */
 }
