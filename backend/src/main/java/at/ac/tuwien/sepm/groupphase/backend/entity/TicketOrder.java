@@ -19,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -55,6 +56,7 @@ public class TicketOrder {
 
     @OneToMany(fetch = javax.persistence.FetchType.EAGER, cascade = javax.persistence.CascadeType.ALL, mappedBy = "order")
     @NonNull
+    @OrderColumn(name = "ticket_order")
     private List<Ticket> tickets;
 
     @Column
@@ -65,7 +67,7 @@ public class TicketOrder {
     @NonNull
     private LocalDateTime validUntil;
 
-    @OneToOne
+    @OneToOne(mappedBy = "order", orphanRemoval = true)
     private OrderInvoice invoice;
 
     @Override

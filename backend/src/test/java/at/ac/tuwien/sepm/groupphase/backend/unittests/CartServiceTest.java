@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CreateTicketDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Seat;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatSector;
@@ -23,7 +22,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +47,6 @@ public class CartServiceTest {
 
     @Autowired
     private SeatSectorRepository seatSectorRepository;
-
-    @Autowired
-    private EntityManager entityManager;
 
     @Test
     @Rollback
@@ -81,10 +76,9 @@ public class CartServiceTest {
         // GIVEN
         User user = userRepository.findAll().get(0);
         TicketOrder cart = cartService.getCart(user.getId());
-        if(cart.getTickets().isEmpty()) {
+        if (cart.getTickets().isEmpty()) {
             orderRepository.delete(cart);
             cart = generateOrder(user, OrderType.CART, false, 3);
-            entityManager.flush();
         }
         int before = cart.getTickets().size();
         assertTrue(before > 0);
@@ -103,7 +97,6 @@ public class CartServiceTest {
         // GIVEN
         User user = userRepository.findAll().get(0);
         orderRepository.delete(cartService.getCart(user.getId()));
-        entityManager.flush();
         TicketOrder order = generateOrder(user, OrderType.CART, false, 5);
 
         // WHEN

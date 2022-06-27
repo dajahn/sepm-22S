@@ -24,7 +24,8 @@ import java.util.List;
 public class CancellationInvoice extends Invoice {
 
     @OneToOne
-    @JoinColumn
+    @JoinColumn(name = "cancellation_id")
+
     @NonNull
     private Cancellation cancellation;
 

@@ -58,7 +58,7 @@ public class Cancellation {
     @OrderColumn(name = "ticket_order")
     private List<Ticket> tickets;
 
-    @OneToOne
+    @OneToOne(mappedBy = "cancellation", orphanRemoval = true)
     private CancellationInvoice invoice;
 
     @Override

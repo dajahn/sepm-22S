@@ -24,7 +24,7 @@ import java.util.List;
 public class OrderInvoice extends Invoice {
 
     @OneToOne
-    @JoinColumn
+    @JoinColumn(name = "order_id")
     @NonNull
     private TicketOrder order;
 
