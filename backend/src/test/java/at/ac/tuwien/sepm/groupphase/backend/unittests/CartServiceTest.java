@@ -81,6 +81,10 @@ public class CartServiceTest {
         // GIVEN
         User user = userRepository.findAll().get(0);
         TicketOrder cart = cartService.getCart(user.getId());
+        if(cart.getTickets().isEmpty()) {
+            orderRepository.delete(cart);
+            cart = generateOrder(user, OrderType.CART, false, 5);
+        }
         int before = cart.getTickets().size();
         assertTrue(before > 0);
 
