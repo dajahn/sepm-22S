@@ -28,7 +28,7 @@ public class NewsValidator {
         if (newsDto.getTitle().length() > 255) {
             throw new ValidationException("New Title ist too long!");
         }
-        if (newsDto.getDescription().length() > 65535) {
+        if (newsDto.getDescription().length() > 1023) {
             throw new ValidationException("News Description ist too long!");
         }
         if (newsDto.getFileDto().getImageBase64().trim().isEmpty()) {
