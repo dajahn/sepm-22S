@@ -1,111 +1,132 @@
 .newsTimeline {
-    float: left;
+  float: left;
 }
 
 .eventPreview {
-    position: relative;
-    margin-left: 1rem;
+  position: relative;
+  margin-left: 1rem;
 
-    &::after {
-        content: '';
-        position: absolute;
-        width: 7px;
-        height: 7px;
-        left: -22px;
-        background-color: var(--text-c-primary);
-        border: 1px solid var(--text-c-primary);
-        top: 26px;
-        border-radius: 50%;
-        z-index: 1;
+  &::after {
+    content: '';
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    left: -22px;
+    background-color: var(--text-c-primary);
+    border: 1px solid var(--text-c-primary);
+    top: 26px;
+    border-radius: 50%;
+    z-index: 1;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  .date {
+    font-weight: var(--font-w-light);
+  }
+
+  .content {
+    background-color: var(--bg-tertiary);
+
+    border-radius: 10px;
+    width: 360px;
+
+    .previewIcon {
+      padding: 5px;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+
+    .previewNews {
+      padding: 7px;
+      width: 300px;
+
+      .title {
+        color: var(--text-c-highlight);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      .description {
+        padding-right: 7px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        color: var(--text-c-highlight);
+        display: inline-block;
+        width: inherit;
+        margin-right: 5px;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
     }
 
     &:hover {
-        cursor: pointer;
+      background-image: var(--gradient-rainbow-bg-secondary);
     }
-
-    .date {
-        font-weight: var(--font-w-light);
-    }
-
-    .content {
-        background-color: var(--bg-tertiary);
-
-        border-radius: 10px;
-        width: 360px;
-
-        .previewIcon {
-            padding: 5px;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            img {
-                max-width: 100%;
-                max-height: 100%;
-            }
-        }
-
-        .previewNews {
-            padding: 7px;
-            width: 300px;
-
-            .title {
-                color: var(--text-c-highlight);
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-            }
-
-            .description {
-                padding-right: 7px;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-                color: var(--text-c-highlight);
-                display: inline-block;
-                width: inherit;
-                margin-right: 5px;
-
-                &:hover {
-                    cursor: pointer;
-                }
-            }
-        }
-
-        &:hover {
-            background-image: var(--gradient-rainbow-bg-secondary);
-        }
-    }
+  }
 }
 
 .timeline {
-    position: relative;
-    max-width: 1200px;
-    margin: 0 auto;
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /* The actual timeline (the vertical ruler) */
 .timeline::after {
-    content: '';
-    position: absolute;
-    width: 1px;
-    background-color: var(--text-c-lowlight);
-    top: 0;
-    bottom: 0;
-    margin-left: -3px;
+  content: '';
+  position: absolute;
+  width: 1px;
+  background-color: var(--text-c-lowlight);
+  top: 0;
+  bottom: 0;
+  margin-left: -3px;
 }
 
 .rainbowBackground {
-    background-image: var(--gradient-rainbow-bg-secondary);
+  background-image: var(--gradient-rainbow-bg-secondary);
 }
 
 .detailView {
-    position: absolute;
-    right: 0px;
+  position: fixed;
+  right: 0;
+  height: 100%;
+  max-height: calc(100vh - 8rem);
+  padding-left: 6.3em;
+  margin-bottom: 4rem;
+  overflow-y: auto;
 
-    @media (max-width:1300px) {
-        display: none;
-    }
+  &::-webkit-scrollbar{
+    display: block;
+    width: calc(4px + 1em);
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: var(--text-c-highlight);
+    border: 0.5em solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+  }
+
+  @media (max-width: 1300px) {
+    display: none;
+  }
 }
