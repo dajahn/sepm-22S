@@ -353,3 +353,10 @@ ngb-pagination ul {
     }
   }
 }
+
+ngb-datepicker {
+  .form-select {
+    color: var(--text-c-primary) !important;
+    padding: 0 !important;
+  }
+}

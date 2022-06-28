@@ -192,12 +192,15 @@ export class CreateEventComponent implements OnInit {
 
   validPerformances() {
     let b = true;
+    const tmp = new Date();
     this.performances.forEach(perf => {
       if (perf !== null && (perf.location === null || perf.location === undefined)) {
         b = false;
       } else if (perf != null && (perf.location.id === undefined || perf.location.name === undefined)) {
         b = false;
       } else if (perf != null && perf.dateTime.getHours() === 0 && perf.dateTime.getMinutes() === 0) {
+        b = false;
+      } else if (perf !== null && (isNaN(perf.dateTime.valueOf()) || perf.dateTime < tmp)) {
         b = false;
       }
     });

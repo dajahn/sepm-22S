@@ -6,13 +6,13 @@
   </div>
 
   <div class="row">
-<!--    Delete button-->
+    <!--    Delete button-->
     <div class="col-md-1 col-sm-2 delButtonCol">
       <button type="button" class="white" id="delButton" (click)="delete()">X</button>
     </div>
     <div class="col-md-11 col-sm-10">
       <div class="row">
-<!--        Location search field-->
+        <!--        Location search field-->
         <div class="col">
           <label for="locationName_{{number}}">Location</label>
           <input [(ngModel)]="location" (ngModelChange)="updatePerformance()"
@@ -35,7 +35,7 @@
         </div>
       </div>
       <div class="row mt-2">
-<!--        Date input-->
+        <!--        Date input-->
         <div class="col-md-8 col-sm-12">
           <label for="date">Date</label>
           <div class="input-group">
@@ -45,9 +45,30 @@
             <button class="btn white" (click)="d.toggle()" type="button"> 📅</button>
             <!--          icon does not work again as HTML encoded value-->
           </div>
-
+          <div class="row mt-1">
+            <div class="col">
+              <ng-container>
+                <div class="error text-center"
+                     *ngIf=" dateModel !== null && dateStructureInvalid">
+                  <small class="form-text text-warning">Invalid Date. </small>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <div class="row mt-1">
+            <div class="col">
+              <ng-container>
+                <div class="error text-center"
+                     *ngIf=" dateModel === null">
+                  <small class="form-text text-warning">Date is required. </small>
+                </div>
+              </ng-container>
+            </div>
+          </div>
         </div>
-<!--        Time input-->
+
+
+        <!--        Time input-->
         <div class="col-md-4 col-sm-12">
           <label for="time">Time</label>
           <ngb-timepicker required id="time" name="time" [spinners]="false"
@@ -63,25 +84,34 @@
               </ng-container>
             </div>
           </div>
+          <div class="row mt-1">
+            <div class="col">
+              <ng-container>
+                <div class="error"
+                     *ngIf="time !== null && time !== undefined
+                         && time.hour ===0 && time.minute ===0">
+                  <small class="form-text text-warning">Invalid Time.</small>
+                </div>
+              </ng-container>
+            </div>
+          </div>
         </div>
       </div>
       <div class="row mt-1">
         <div class="col">
           <ng-container>
             <div class="error text-center"
-                 *ngIf="this.time !== null && dateInvalid">
+                 *ngIf="this.time !== null && dateInvalid && !dateStructureInvalid">
               <small class="form-text text-warning">Performance must be after now. </small>
             </div>
           </ng-container>
         </div>
       </div>
 
-<!--      Used for spacing-->
+      <!--      Used for spacing-->
       <div class="row mt-2">
       </div>
-
     </div>
-
   </div>
 </div>
 

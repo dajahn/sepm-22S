@@ -25,10 +25,11 @@ export class CreatePerformanceComponent implements OnInit {
   dateModel: NgbDateStruct;
   location: SmallLocation;
   searchLocationFailed: boolean;
-  deleted= false;
+  deleted = false;
   today: NgbDateStruct;
   locationError: boolean;
   dateInvalid: boolean;
+  dateStructureInvalid: boolean;
 
   constructor(private locationService: LocationService) {
 
@@ -63,23 +64,27 @@ export class CreatePerformanceComponent implements OnInit {
   }
 
   updatePerformance() {
-    if(this.time !== null && this.time !== undefined){
-      const dt = new Date(this.dateModel.year, this.dateModel.month - 1, this.dateModel.day, this.time.hour, this.time.minute);
-      this.dateInvalid= dt < new Date();
+    //check if date model is a valid date
+    if (this.dateModel !== null && this.dateModel !== undefined) {
+      const timestamp = new Date(this.dateModel.year, this.dateModel.month - 1, this.dateModel.day).valueOf();
+      console.log(timestamp);
+      this.dateStructureInvalid = isNaN(timestamp) === true;
     }
-    if(this.time !== null) {
+    //check if date + time is after now
+    if (this.time !== null && this.time !== undefined && this.dateModel !== null && this.dateModel !== undefined) {
+      const dt = new Date(this.dateModel.year, this.dateModel.month - 1, this.dateModel.day, this.time.hour, this.time.minute);
+      this.dateInvalid = dt < new Date();
+    }
+    //safe date & time
+    if (this.time !== null && this.dateModel !== null && this.dateModel !== undefined) {
       this.performance.dateTime = new Date(this.dateModel.year,
         this.dateModel.month - 1, this.dateModel.day, this.time.hour, this.time.minute);
     } else {
-      this.performance.dateTime = new Date(this.dateModel.year,
-        this.dateModel.month - 1, this.dateModel.day,null, null);
+      this.performance.dateTime = new Date(null,
+        null, null, null, null);
     }
-    if (typeof this.location !== 'object' || this.location === undefined || this.location === null) {
-      this.locationError = true;
-    } else {
-      this.locationError = false;
-    }
-    if(this.location !== undefined) {
+    this.locationError = typeof this.location !== 'object' || this.location === undefined || this.location === null;
+    if (this.location !== undefined) {
       this.performance.location = {
         id: this.location.id,
         name: this.location.name,
@@ -114,13 +119,11 @@ export class CreatePerformanceComponent implements OnInit {
           tap(() => this.searchLocationFailed = false),
           catchError(() => {
             this.searchLocationFailed = true;
-            // this.showDanger('Something went wrong while fetching the possible fathers');
             return of([]);
           }));
       }),
       catchError(() => {
         this.searchLocationFailed = true;
-        // this.showDanger('Something went wrong while fetching the possible mothers');
         return of([]);
       })
     );
