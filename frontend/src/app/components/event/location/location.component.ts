@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Location} from '../../../dtos/location';
 import {BehaviorSubject, filter, map, share} from 'rxjs';
 import {SectorType} from '../../../dtos/sector';
@@ -77,7 +77,11 @@ export class LocationComponent implements OnInit {
     share(),
   );
 
-  constructor() {
+  constructor(cdr: ChangeDetectorRef) {
+    this.location$.subscribe(() => {
+      cdr.detectChanges();
+    });
+    this.standingSectors$.subscribe();
   }
 
   get gradients() {
